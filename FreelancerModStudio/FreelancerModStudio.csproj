@@ -1,0 +1,282 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8FFDB3D5-4135-435B-A446-F2D8D088AA44}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FreelancerModStudio</RootNamespace>
+    <AssemblyName>FreelancerModStudio</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <ApplicationIcon>Resources\LogoIcon.ico</ApplicationIcon>
+    <StartupObject>FreelancerModStudio.Program</StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.3.3374.34007, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AutoUpdate\AutoUpdate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\ObjectListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SeperatorLine.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\UICultureChanger.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="frmAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAbout.Designer.cs">
+      <DependentUpon>frmAbout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AutoUpdate\frmAutoUpdate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AutoUpdate\frmAutoUpdate.Designer.cs">
+      <DependentUpon>frmAutoUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmBugList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmBugList.Designer.cs">
+      <DependentUpon>frmBugList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmDefaultEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDefaultEditor.Designer.cs">
+      <DependentUpon>frmDefaultEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmNewMod.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmNewMod.Designer.cs">
+      <DependentUpon>frmNewMod.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmProperties.Designer.cs">
+      <DependentUpon>frmProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helper.cs" />
+    <Compile Include="Settings\INIData.cs" />
+    <Compile Include="Settings\Mod.cs" />
+    <Compile Include="Settings\Settings.cs">
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmMain.de.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMain.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Resources\CloseMod.ico" />
+    <None Include="Resources\File.ico" />
+    <None Include="Resources\Filedll.ico" />
+    <None Include="Resources\Fileini.ico" />
+    <None Include="Resources\Filetxt.ico" />
+    <None Include="Resources\Filewav.ico" />
+    <None Include="Resources\LogoAbout.png" />
+    <None Include="Resources\Mod.ico" />
+    <None Include="Resources\NewMod.ico" />
+    <None Include="Resources\NewWindow.ico" />
+    <None Include="Resources\OpenMod.ico" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Strings.de.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.de.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Serializer.cs" />
+    <Compile Include="ShellUtilities.cs" />
+    <Compile Include="Properties\Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="frmSolutionExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSolutionExplorer.Designer.cs">
+      <DependentUpon>frmSolutionExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Template.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\About.ico" />
+    <Content Include="Resources\Add.ico" />
+    <Content Include="Resources\BuildMod.ico" />
+    <Content Include="Resources\Close.ico" />
+    <Content Include="Resources\Delete.ico" />
+    <Content Include="Resources\Error.ico" />
+    <Content Include="Resources\Filter.ico" />
+    <Content Include="Resources\Folder.ico" />
+    <Content Include="Resources\FullScreen.ico" />
+    <Content Include="Resources\GoTo.ico" />
+    <Content Include="Resources\HomePage.ico" />
+    <Content Include="Resources\Link.ico" />
+    <None Include="Resources\LogoIcon.ico" />
+    <Content Include="Resources\NewFolder.ico" />
+    <Content Include="Resources\Note.ico" />
+    <Content Include="Resources\Open.ico" />
+    <Content Include="Resources\OpenFolder.ico" />
+    <None Include="Resources\Properties.ico" />
+    <Content Include="Resources\ReDo.ico" />
+    <Content Include="Resources\ReportIssue.ico" />
+    <Content Include="Resources\Save.ico" />
+    <Content Include="Resources\SaveAll.ico" />
+    <Content Include="Resources\Settings.ico" />
+    <Content Include="Resources\SolutionExplorer.ico" />
+    <Content Include="Resources\ToDo.ico" />
+    <Content Include="Resources\UnDo.ico" />
+    <Content Include="Resources\UpFolder.ico" />
+    <None Include="Settings\Template.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="frmAbout.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoUpdate\frmAutoUpdate.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmAutoUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmBugList.de.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmBugList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmBugList.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmBugList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDefaultEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmDefaultEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmNewMod.de.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmNewMod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmNewMod.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmNewMod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmProperties.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings.de.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSolutionExplorer.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmSolutionExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

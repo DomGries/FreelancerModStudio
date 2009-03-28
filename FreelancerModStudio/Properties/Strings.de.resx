@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>Info über {0}</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="LoadSettingsException" xml:space="preserve">
+    <value>Die Einstellungs-Datei "{0}" konnte nicht geladen werden.</value>
+  </data>
+  <data name="LoadTemplateException" xml:space="preserve">
+    <value>Die Vorlagen-Datei "{0}" konnte nicht geladen werden.</value>
+  </data>
+  <data name="SaveSettingsException" xml:space="preserve">
+    <value>Die Einstellungs-Datei "{0}" konnte nicht gespeichert werden.</value>
+  </data>
+  <data name="CloseSave" xml:space="preserve">
+    <value>Der aktuelle Mod wird geschlossen.
+
+Möchten Sie die Änderungen in {0} speichern?</value>
+  </data>
+  <data name="NewModName" xml:space="preserve">
+    <value>Mod{0}</value>
+  </data>
+  <data name="InvalidModNameChars" xml:space="preserve">
+    <value>Der Modname darf die folgenden Zeichen nicht enthalten: / ? : &amp; * " &lt; &gt; | # %
+
+Bitte geben Sie einen gültigen Namen ein.</value>
+  </data>
+  <data name="InvalidModPathChars" xml:space="preserve">
+    <value>Der Modpfad darf die folgenden Zeichen nicht enthalten: / ? : &amp; * " &lt; &gt; | # %
+
+Bitte geben Sie einen gültigen Namen ein.</value>
+  </data>
+  <data name="InvalidModHomepage" xml:space="preserve">
+    <value>Die angegebene Mod-Homepage ist ungültig.</value>
+  </data>
+  <data name="UpdatesCheckingHeader" xml:space="preserve">
+    <value>Nach Updates suchen</value>
+  </data>
+  <data name="UpdatesCheckingDescription" xml:space="preserve">
+    <value>{0} sucht jetzt nach neuen Updates...</value>
+  </data>
+  <data name="UpdatesNotAviableHeader" xml:space="preserve">
+    <value>Keine Updates gefunden</value>
+  </data>
+  <data name="UpdatesNotAviableDescription" xml:space="preserve">
+    <value>Es sind keine neuen Updates verfügbar. Je nach Einstellungen wird automatisch überprüft, ob Updates für {0} zur Verfügung stehen.</value>
+  </data>
+  <data name="UpdatesAviableHeader" xml:space="preserve">
+    <value>Neue Updates gefunden</value>
+  </data>
+  <data name="UpdatesAviableDescription" xml:space="preserve">
+    <value>Es sind neue Updates für {0} verfügbar. Möchten Sie diese jetzt downloaden?</value>
+  </data>
+  <data name="UpdatesDownloadingHeader" xml:space="preserve">
+    <value>Updates downloaden</value>
+  </data>
+  <data name="UpdatesDownloadingDescription" xml:space="preserve">
+    <value>{0} lädt jetzt die neuen Updates herunter...</value>
+  </data>
+  <data name="UpdatesDownloadedHeader" xml:space="preserve">
+    <value>Downloaden beendet</value>
+  </data>
+  <data name="UpdatesDownloadedDescription" xml:space="preserve">
+    <value>Die Updates wurden erfolgreich heruntergeladen. Sie müssen {0} neustarten um die Updates zu installieren.</value>
+  </data>
+  <data name="UpdatesDownloadException" xml:space="preserve">
+    <value>Beim Downloaden ist ein Fehler aufgetreten. Bitte überprüfen Sie ihre Internetverbindung und gehen Sie sicher, dass ihre Firewall {0} nicht blockiert.
+
+Falls das Problem fortbesteht, downloaden und installieren Sie das Update händisch.</value>
+  </data>
+  <data name="DownloadSpeed" xml:space="preserve">
+    <value>{0} von {1} MB</value>
+  </data>
+  <data name="UpdatesFormText" xml:space="preserve">
+    <value>Programm-Update</value>
+  </data>
+  <data name="UpdatesFormDownloadText" xml:space="preserve">
+    <value>{0}% - Programm-Update</value>
+  </data>
+  <data name="UpdatesFinishButton" xml:space="preserve">
+    <value>&amp;Fertigstellen</value>
+  </data>
+  <data name="UpdatesDownloadButton" xml:space="preserve">
+    <value>&amp;Downloaden</value>
+  </data>
+  <data name="UpdatesHideButton" xml:space="preserve">
+    <value>&amp;Verstecken</value>
+  </data>
+  <data name="UpdatesInstallButton" xml:space="preserve">
+    <value>&amp;Installieren</value>
+  </data>
+  <data name="UpdatesAbortButton" xml:space="preserve">
+    <value>&amp;Abbrechen</value>
+  </data>
+  <data name="UpdatesLaterButton" xml:space="preserve">
+    <value>&amp;Später</value>
+  </data>
+</root>

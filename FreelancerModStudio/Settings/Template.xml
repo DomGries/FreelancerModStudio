@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FreelancerModStudio-Template-1.0 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<CostumTypes>
+		<Enums>
+			<Enum name="Direction" type="String">
+				<Values>
+					<Value>top</Value>
+					<Value>bottom</Value>
+					<Value>right</Value>
+					<Value>left</Value>
+				</Values>
+			</Enum>
+		</Enums>
+	</CostumTypes>
+	<Languages>
+		<Language id="en">
+			<Comments>
+				<Comment name="universe.system.nickname">the nickname of the system</Comment>
+				<Comment name="universe.system.file">the filepath of the system</Comment>
+			</Comments>
+		</Language>
+	</Languages>
+	<Files>
+		<File name="universe">
+			<Identity type="Name" />
+			<Path>data\universe\universe.ini</Path>
+			<Blocks>
+				<!--Single-->
+				<Block name="Time" mode="Single">
+					<Values>
+						<Value type="UInt16">seconds_per_day</Value>
+					</Values>
+				</Block>
+				<!--Multiple-->
+				<Block name="Base" mode="Multiple">
+				</Block>
+				<Block name="System" mode="Multiple">
+					<Categories>
+						<Category name="General">
+							<Values>
+								<Value mode="Single" type="Link" link="system.SystemInfo.name" comment="universe.system.nickname">nickname</Value>
+								<Value mode="Single" type="PathLink" pathLinkStart="universe" comment="universe.system.file">file</Value>
+								<Value mode="Single" type="Point">pos</Value>
+								<Value mode="Single" type="UInt16">visit</Value>
+								<Value mode="Single" type="UInt32">strid_name</Value>
+								<Value mode="Single" type="UInt32">ids_info</Value>
+								<Value mode="Single" type="Float">NavMapScale</Value>
+							</Values>
+						</Category>
+					</Categories>
+				</Block>
+			</Blocks>
+			<Editors>
+				<Editor>Default</Editor>
+			</Editors>
+		</File>
+		<File name="system">
+			<Identity type="Header">SystemInfo</Identity>
+			<Path link="system.SystemInfo.name">data\universe\system\%\%.ini</Path>
+			<Blocks>
+				<!--Single-->
+				<Block name="SystemInfo" mode="Single">
+					<Categories>
+						<Category name="General">
+							<Values>
+								<Value mode="Single" type="String">name</Value>
+								<Value mode="Single" type="RGB">space_color</Value>
+								<Value mode="Single" type="String">local_faction</Value>
+							</Values>
+						</Category>
+					</Categories>
+				</Block>
+				<Block name="Music" mode="Single">
+				</Block>
+				<Block name="Archetype" mode="Single">
+				</Block>
+				<Block name="Dust" mode="Single">
+				</Block>
+				<Block name="Ambient" mode="Single">
+				</Block>
+				<Block name="TexturePanels" mode="Single">
+				</Block>
+				<Block name="Background" mode="Single">
+				</Block>
+				<!--Multiple-->
+				<Block name="Zone" mode="Multiple">
+				</Block>
+				<Block name="Object" mode="Multiple">
+				</Block>
+				<Block name="Asteroids" mode="Multiple">
+				</Block>
+				<Block name="LightSource" mode="Multiple">
+				</Block>
+				<Block name="EncounterParameters" mode="Multiple">
+				</Block>
+			</Blocks>
+			<Editors>
+				<Editor>Default</Editor>
+			</Editors>
+		</File>
+	</Files>
+</FreelancerModStudio-Template-1.0>

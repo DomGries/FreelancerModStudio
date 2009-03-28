@@ -67,7 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoUpdate\AutoUpdate.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\ObjectListView.cs">
       <SubType>Component</SubType>
@@ -174,7 +173,8 @@
     <Compile Include="frmSolutionExplorer.Designer.cs">
       <DependentUpon>frmSolutionExplorer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Template.cs" />
+    <Compile Include="Settings\Template.cs">
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\About.ico" />
@@ -205,7 +205,6 @@
     <Content Include="Resources\UnDo.ico" />
     <Content Include="Resources\UpFolder.ico" />
     <None Include="Settings\Template.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="frmAbout.resx">
       <SubType>Designer</SubType>

@@ -344,7 +344,7 @@ namespace FreelancerModStudio
             if (Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Enabled)
                 proxy = Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Uri;
 
-            AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, "", "", new Uri(Helper.Settings.Data.Data.General.AutoUpdate.NewestVersionFile), true, true);
+            AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, "", "", new Uri(Helper.Settings.Data.Data.General.AutoUpdate.NewestVersionFile), false, false);
             autoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
 
             autoUpdate.Check();

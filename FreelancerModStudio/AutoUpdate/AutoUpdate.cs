@@ -42,7 +42,9 @@ namespace FreelancerModStudio.AutoUpdate
             if (!string.IsNullOrEmpty(username))
                 this.mWebClient.Credentials = new NetworkCredential(username, password);
 
-            if (!string.IsNullOrEmpty(proxy))
+            if (string.IsNullOrEmpty(proxy))
+                this.mWebClient.Proxy = null;
+            else
                 this.mWebClient.Proxy = new WebProxy(proxy);
 
             //set event handlers

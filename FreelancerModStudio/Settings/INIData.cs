@@ -5,7 +5,7 @@ using System.IO;
 
 namespace FreelancerModStudio.Settings
 {
-    class INIData
+    public class INIData
     {
         private string mFile;
         public List<INIGroup> Data;
@@ -117,7 +117,7 @@ namespace FreelancerModStudio.Settings
         }
     }
 
-    class INIGroup
+    public class INIGroup
     {
         public string Name;
         public List<INIOption> Values = new List<INIOption>();
@@ -128,7 +128,7 @@ namespace FreelancerModStudio.Settings
         }
     }
 
-    class INIOption
+    public class INIOption
     {
         public string Name;
         public string Value;

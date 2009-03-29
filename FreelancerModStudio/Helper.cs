@@ -81,22 +81,23 @@ namespace FreelancerModStudio
                 else
                 {
                     //download update
-                    if (Data.Data.General.AutoUpdate.Enabled && Data.Data.General.AutoUpdate.NewestVersionFile != null && Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(2) <= DateTime.Now.Date)
+                    if (Data.Data.General.AutoUpdate.Enabled && Data.Data.General.AutoUpdate.NewestVersionFile != null && Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
                     {
                         string proxy = "";
+                        string username = "";
+                        string password = "";
 
                         if (Data.Data.General.AutoUpdate.Proxy.Enabled)
+                        {
                             proxy = Data.Data.General.AutoUpdate.Proxy.Uri;
+                            username = Data.Data.General.AutoUpdate.Proxy.Username;
+                            password = Data.Data.General.AutoUpdate.Proxy.Password;
+                        }
 
-                        AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, "", "", new Uri(Data.Data.General.AutoUpdate.NewestVersionFile),
-                            Data.Data.General.AutoUpdate.SilentDownload, true);
+                        AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, username, password, new Uri(Data.Data.General.AutoUpdate.NewestVersionFile), Data.Data.General.AutoUpdate.SilentDownload, true);
+                        autoUpdate.Check();
                     }
                 }
-            }
-
-            private static void AutoUpdate_RestartApplication(object sender, EventArgs e)
-            {
-                Settings.Save();
             }
         }
 

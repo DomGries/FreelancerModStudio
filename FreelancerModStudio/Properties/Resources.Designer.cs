@@ -88,6 +88,15 @@ namespace FreelancerModStudio.Properties {
             }
         }
         
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 1.0.0.0 ähnelt.
+        /// </summary>
+        internal static string DefaultModVersion {
+            get {
+                return ResourceManager.GetString("DefaultModVersion", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap Delete {
             get {
                 object obj = ResourceManager.GetObject("Delete", resourceCulture);
@@ -161,6 +170,27 @@ namespace FreelancerModStudio.Properties {
         internal static System.Drawing.Bitmap GoTo {
             get {
                 object obj = ResourceManager.GetObject("GoTo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap HiddenFile {
+            get {
+                object obj = ResourceManager.GetObject("HiddenFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap HiddenFolder {
+            get {
+                object obj = ResourceManager.GetObject("HiddenFolder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap HiddenFolderOpen {
+            get {
+                object obj = ResourceManager.GetObject("HiddenFolderOpen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -337,6 +367,20 @@ namespace FreelancerModStudio.Properties {
         internal static System.Drawing.Bitmap UpFolder {
             get {
                 object obj = ResourceManager.GetObject("UpFolder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap WebSearch {
+            get {
+                object obj = ResourceManager.GetObject("WebSearch", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap WebSearch_Large {
+            get {
+                object obj = ResourceManager.GetObject("WebSearch_Large", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -14,29 +14,21 @@ namespace FreelancerModStudio.AutoUpdate
         public frmAutoUpdate()
         {
             this.InitializeComponent();
-            this.Icon = FreelancerModStudio.Properties.Resources.LogoIcon;
+            this.Icon = Properties.Resources.LogoIcon;
+            this.pictureBox1.Image = Properties.Resources.WebSearch_Large;
         }
 
         private PageType mCurrentPage = PageType.Checking;
 
-        public event EventHandler<ActionEventArgs> ActionRequired;
-
-        public class ActionEventArgs : EventArgs
-        {
-            public readonly ActionType Action;
-
-            public ActionEventArgs(ActionType action)
-            {
-                this.Action = action;
-            }
-        }
+        public delegate void ActionRequiredType(ActionType value);
+        public ActionRequiredType ActionRequired;
 
         public enum ActionType { Abort, Download, Install }
 
-        protected virtual void OnAction(ActionEventArgs e)
+        private void OnAction(ActionType action)
         {
             if (this.ActionRequired != null)
-                this.ActionRequired(this, e);
+                this.ActionRequired(action);
         }
 
         public void SetCurrentPage(PageType page)
@@ -146,12 +138,19 @@ namespace FreelancerModStudio.AutoUpdate
             switch (this.mCurrentPage)
             {
                 case PageType.Aviable:
-                    this.OnAction(new ActionEventArgs(ActionType.Download));
+                    this.OnAction(ActionType.Download);
+
+                    break;
+
+                case PageType.Downloading:
+                    //hide form
+                    this.mCurrentPage = PageType.DownloadFinished;
+                    this.Close();
 
                     break;
 
                 case PageType.DownloadFinished:
-                    this.OnAction(new ActionEventArgs(ActionType.Install));
+                    this.OnAction(ActionType.Install);
                     this.Close();
 
                     break;
@@ -163,10 +162,7 @@ namespace FreelancerModStudio.AutoUpdate
         private void frmAutoUpdate_FormClosing(object sender, FormClosingEventArgs e)
         {
             if ((this.mCurrentPage == PageType.Checking || this.mCurrentPage == PageType.Downloading))
-            {
-                this.OnAction(new ActionEventArgs(ActionType.Abort));
-                e.Cancel = true;
-            }
+                this.OnAction(ActionType.Abort);
         }
     }
 }

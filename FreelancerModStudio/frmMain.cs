@@ -11,6 +11,7 @@ namespace FreelancerModStudio
     public partial class frmMain : Form
     {
         private Settings.Mod mMod;
+        private List<Settings.INIGroup> mData;
 
         private bool mModChanged = false;
 
@@ -23,7 +24,7 @@ namespace FreelancerModStudio
             this.Icon = Properties.Resources.LogoIcon;
 
             this.GetSettings();
-
+            
             this.mFrmProperties.Show(dockPanel1);
             this.mFrmSolutionExplorer.Show(dockPanel1);
         }
@@ -52,9 +53,14 @@ namespace FreelancerModStudio
         {
             Settings.INIData iniData = new FreelancerModStudio.Settings.INIData(@"E:\DAT\Visual Studio 2005\Kopie von FreelancerModStudio\templates\DATA\igraph.ini");
             iniData.Read();
-            List<Settings.INIGroup> data = iniData.Data;
-            iniData.File = iniData.File + "2.ini";
-            iniData.Write();
+            mData = iniData.Data;
+
+            frmDefaultEditor defaultEditor = new frmDefaultEditor();
+            defaultEditor.ShowData(mData);
+            defaultEditor.Show(this.dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+
+            //iniData.File = iniData.File + "2.ini";
+            //iniData.Write();
         }
 
         private void mnuFullScreen_Click(object sender, EventArgs e)
@@ -283,6 +289,7 @@ namespace FreelancerModStudio
                 System.IO.Directory.CreateDirectory(path);
 
             this.mMod.Save(System.IO.Path.Combine(path, about.Name + Properties.Resources.ModExtension));
+            this.mFrmSolutionExplorer.ShowProject(this.mMod);
 
             this.ModChanged = false;
         }
@@ -321,7 +328,7 @@ namespace FreelancerModStudio
                 if (!this.CancelDocumentClose())
                 {
                     //create mod
-                    this.CreateMod(new Settings.Mod.About(frmNewMod.txtName.Text, frmNewMod.txtAuthor.Text, Properties.Resources.DefaultVersion, frmNewMod.txtHomepage.Text, frmNewMod.txtDescription.Text), frmNewMod.txtSaveLocation.Text.Trim());
+                    this.CreateMod(new Settings.Mod.About(frmNewMod.txtName.Text, frmNewMod.txtAuthor.Text, Properties.Resources.DefaultModVersion, frmNewMod.txtHomepage.Text, frmNewMod.txtDescription.Text), frmNewMod.txtSaveLocation.Text.Trim());
 
                     //set mod save location
                     Helper.Settings.Data.Data.Forms.NewMod.ModSaveLocation = frmNewMod.txtSaveLocation.Text.Trim();
@@ -340,11 +347,17 @@ namespace FreelancerModStudio
         private void mnuCheckUpdate_Click(object sender, EventArgs e)
         {
             string proxy = "";
+            string username = "";
+            string password = "";
 
             if (Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Enabled)
+            {
                 proxy = Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Uri;
+                username = Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Username;
+                password = Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Password;
+            }
 
-            AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, "", "", new Uri(Helper.Settings.Data.Data.General.AutoUpdate.NewestVersionFile), false, false);
+            AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, username, password, new Uri(Helper.Settings.Data.Data.General.AutoUpdate.NewestVersionFile), false, false);
             autoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
 
             autoUpdate.Check();
@@ -359,6 +372,11 @@ namespace FreelancerModStudio
                 this.mModChanged = false;
                 this.Close();
             }
+        }
+
+        private void mnuOpenMod_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

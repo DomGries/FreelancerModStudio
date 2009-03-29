@@ -13,7 +13,7 @@ namespace FreelancerModStudio
         static void Main()
         {
 			Helper.Settings.Load();
-            Helper.Template.Load();
+            //Helper.Template.Load();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

@@ -18,10 +18,8 @@ namespace FreelancerModStudio.AutoUpdate
 
         private WebClient mWebClient;
 
-        private frmAutoUpdate mFrmAutoUpdate;
-
-        private Thread mCheckUpdateThread;
-        private Thread mAutoUpdateFormThread;
+        private frmAutoUpdate mUpdaterForm;
+        private Thread mUpdaterFormThread;
 
         public event EventHandler<CancelEventArgs> RestartingApplication;
 
@@ -47,10 +45,6 @@ namespace FreelancerModStudio.AutoUpdate
             else
                 this.mWebClient.Proxy = new WebProxy(proxy);
 
-            //set event handlers
-            this.mWebClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(this.Download_ProgressChanged);
-            this.mWebClient.DownloadFileCompleted += new AsyncCompletedEventHandler(this.Download_Completed);
-
             //set local viariable
             this.mCheckFileUri = checkFileUri;
             this.mSilentCheck = silentCheck;
@@ -59,31 +53,15 @@ namespace FreelancerModStudio.AutoUpdate
 
         public void Check()
         {
-            ThreadPriority priority = ThreadPriority.Normal;
-            if (this.mSilentCheck)
-                priority = ThreadPriority.Lowest;
-
-            Helper.Thread.Start(ref this.mCheckUpdateThread, new ThreadStart(this.CheckUpdate), priority, true);
-        }
-
-        private void CheckUpdate()
-        {
+            //display checking form
             if (!this.mSilentDownload || !this.mSilentCheck)
                 this.SetPage(frmAutoUpdate.PageType.Checking);
 
-            Helper.Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
+            //set event handlers
+            this.mWebClient.DownloadStringCompleted += new DownloadStringCompletedEventHandler(this.Download_CheckFile_Completed);
 
             //download the checkfile
-            string content = "";
-
-            try
-            {
-                content = this.mWebClient.DownloadString(this.mCheckFileUri);
-            }
-            catch { }
-
-            //check if file is newer
-            this.UpdateAviable(this.IsNewer(content));
+            this.mWebClient.DownloadStringAsync(this.mCheckFileUri);
         }
 
         private void UpdateAviable(bool value)
@@ -104,21 +82,21 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void SetPage(frmAutoUpdate.PageType value)
         {
-            if (this.mAutoUpdateFormThread == null)
+            if (!Helper.Thread.IsRunning(ref this.mUpdaterFormThread))
             {
-                this.mFrmAutoUpdate = new frmAutoUpdate();
-                this.mFrmAutoUpdate.SetCurrentPage(value);
-                this.mFrmAutoUpdate.ActionRequired += new EventHandler<frmAutoUpdate.ActionEventArgs>(this.AutoUpdateForm_ActionRequired);
+                this.mUpdaterForm = new frmAutoUpdate();
+                this.mUpdaterForm.SetCurrentPage(value);
+                this.mUpdaterForm.ActionRequired += this.AutoUpdateForm_ActionRequired;
 
-                Helper.Thread.Start(ref this.mAutoUpdateFormThread, this.ShowAutoUpdateForm, ThreadPriority.Normal, true);
+                Helper.Thread.Start(ref this.mUpdaterFormThread, this.ShowAutoUpdateForm, ThreadPriority.Normal, true);
             }
             else
-                this.mFrmAutoUpdate.Invoke(new SetStatusInvoker(this.mFrmAutoUpdate.SetCurrentPage), value);
+                this.mUpdaterForm.Invoke(new SetStatusInvoker(this.mUpdaterForm.SetCurrentPage), value);
         }
 
         private void ShowAutoUpdateForm()
         {
-            this.mFrmAutoUpdate.ShowDialog();
+            this.mUpdaterForm.ShowDialog();
         }
 
         private bool IsNewer(string fileContent)
@@ -146,31 +124,65 @@ namespace FreelancerModStudio.AutoUpdate
                         return false;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Helper.Exceptions.Show(ex);
+            }
 
             return false;
         }
 
         private void DownloadUpdate()
         {
+            //display download form
             if (!this.mSilentDownload || !this.mSilentCheck)
                 this.SetPage(frmAutoUpdate.PageType.Downloading);
 
             string destFile = Path.Combine(System.Windows.Forms.Application.StartupPath, Path.Combine(FreelancerModStudio.Properties.Resources.UpdateDownloadPath, Path.GetFileName(this.mUpdateFileUri.AbsolutePath)));
 
+            //create update directory if not existing
             if (!Directory.Exists(Path.GetDirectoryName(destFile)))
                 Directory.CreateDirectory(Path.GetDirectoryName(destFile));
+
+            //set event handlers
+            this.mWebClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(this.Download_Update_ProgressChanged);
+            this.mWebClient.DownloadFileCompleted += new AsyncCompletedEventHandler(this.Download_Update_Completed);
 
             //download the update
             this.mWebClient.DownloadFileAsync(this.mUpdateFileUri, destFile);
         }
 
-        private void Download_Completed(object sender, AsyncCompletedEventArgs e)
+        private void Download_CheckFile_Completed(object sender, DownloadStringCompletedEventArgs e)
         {
+            if (e.Cancelled)
+                return;
+
             if (e.Error != null)
             {
                 //exception occured while downloading
-                if (this.mFrmAutoUpdate != null)
+                if (this.mUpdaterForm != null)
+                    this.Abort();
+
+                Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), e.Error));
+            }
+            else
+            {
+                Helper.Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
+
+                //check if file is newer
+                this.UpdateAviable(this.IsNewer(e.Result));
+            }
+        }
+
+        private void Download_Update_Completed(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+                return;
+
+            if (e.Error != null)
+            {
+                //exception occured while downloading
+                if (this.mUpdaterForm != null)
                     this.Abort();
 
                 Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), e.Error));
@@ -178,36 +190,30 @@ namespace FreelancerModStudio.AutoUpdate
             else
             {
                 //download update completed
-                if (!this.mSilentDownload || !this.mSilentCheck)
-                    this.SetPage(frmAutoUpdate.PageType.DownloadFinished);
+                //if (!this.mSilentDownload || !this.mSilentCheck)
+                this.SetPage(frmAutoUpdate.PageType.DownloadFinished);
 
                 Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName = Path.GetFileName(this.mUpdateFileUri.AbsolutePath);
                 Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = false;
                 Helper.Settings.Data.Data.General.AutoUpdate.Update.Downloaded = true;
                 Helper.Settings.Data.Data.General.AutoUpdate.Update.SilentInstall = this.mSilentSetup;
-                Helper.Settings.Save();
             }
         }
 
-        private void Download_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             if (!this.mSilentDownload)
-                this.mFrmAutoUpdate.Invoke(new ProgressChangedInvoker(this.mFrmAutoUpdate.ChangeProgress), new object[] { e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage });
+                this.mUpdaterForm.Invoke(new ProgressChangedInvoker(this.mUpdaterForm.ChangeProgress), new object[] { e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage });
         }
 
         private void Abort()
         {
             this.mWebClient.CancelAsync();
-            this.mCheckUpdateThread.Join();
-
-            //close the auto update form
-            Helper.Thread.Abort(ref this.mAutoUpdateFormThread, true);
-            this.mAutoUpdateFormThread = null;
         }
 
-        private void AutoUpdateForm_ActionRequired(object sender, frmAutoUpdate.ActionEventArgs e)
+        private void AutoUpdateForm_ActionRequired(frmAutoUpdate.ActionType action)
         {
-            switch (e.Action)
+            switch (action)
             {
                 case frmAutoUpdate.ActionType.Abort:
                     this.Abort();
@@ -227,7 +233,7 @@ namespace FreelancerModStudio.AutoUpdate
         {
             if (Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName != null)
             {
-                string file = Path.Combine(System.Windows.Forms.Application.StartupPath, String.Format(FreelancerModStudio.Properties.Resources.UpdateDownloadPath, Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName));
+                string file = Path.Combine(System.Windows.Forms.Application.StartupPath, Path.Combine(FreelancerModStudio.Properties.Resources.UpdateDownloadPath, Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName));
 
                 //start file (setup) and exit app
                 if (File.Exists(file))
@@ -240,13 +246,10 @@ namespace FreelancerModStudio.AutoUpdate
 
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Downloaded = false;
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = true;
-                    Helper.Settings.Data.Data.General.AutoUpdate.Update.SilentInstall = false;
-                    Helper.Settings.Save();
 
                     string arguments = "";
 
                     if (Helper.Settings.Data.Data.General.AutoUpdate.Update.SilentInstall)
-                        //TODO: get argument command via update.txt
                         arguments = "/SILENT";
 
                     System.Diagnostics.Process.Start(file, arguments);
@@ -279,8 +282,6 @@ namespace FreelancerModStudio.AutoUpdate
                 Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = false;
             }
         }
-
-        public enum DownloadFileType { CheckFile, Update }
     }
 
     class UpdateInformationParser

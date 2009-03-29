@@ -28,14 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.objectListView1 = new DataListView();
+            this.objectListView1 = new FreelancerModStudio.DataListView();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
-            // dataListView1
+            // objectListView1
             // 
             this.objectListView1.AlternateRowBackColor = System.Drawing.Color.Empty;
             this.objectListView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.objectListView1.DataSource = null;
             this.objectListView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectListView1.EmptyListMsg = "No entries aviable...";
             this.objectListView1.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -43,8 +44,7 @@
             this.objectListView1.HideSelection = false;
             this.objectListView1.LabelEdit = true;
             this.objectListView1.Location = new System.Drawing.Point(0, 0);
-            this.objectListView1.Name = "dataListView1";
-            this.objectListView1.ShowGroups = false;
+            this.objectListView1.Name = "objectListView1";
             this.objectListView1.Size = new System.Drawing.Size(292, 266);
             this.objectListView1.TabIndex = 0;
             this.objectListView1.UseAlternatingBackColors = true;
@@ -58,6 +58,7 @@
             this.ClientSize = new System.Drawing.Size(292, 266);
             this.Controls.Add(this.objectListView1);
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.Document)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "frmDefaultEditor";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
             this.TabText = "Default Editor";
@@ -69,7 +70,8 @@
 
         #endregion
 
-        private ObjectListView objectListView1;
+        private DataListView objectListView1;
+
 
 
 

@@ -164,6 +164,7 @@
             this.mnuOpenMod.Image = global::FreelancerModStudio.Properties.Resources.OpenMod;
             this.mnuOpenMod.Name = "mnuOpenMod";
             resources.ApplyResources(this.mnuOpenMod, "mnuOpenMod");
+            this.mnuOpenMod.Click += new System.EventHandler(this.mnuOpenMod_Click);
             // 
             // mnuRecentFilesSeperator
             // 
@@ -372,6 +373,7 @@
             // 
             // mnuCheckUpdate
             // 
+            this.mnuCheckUpdate.Image = global::FreelancerModStudio.Properties.Resources.WebSearch;
             this.mnuCheckUpdate.Name = "mnuCheckUpdate";
             resources.ApplyResources(this.mnuCheckUpdate, "mnuCheckUpdate");
             this.mnuCheckUpdate.Click += new System.EventHandler(this.mnuCheckUpdate_Click);

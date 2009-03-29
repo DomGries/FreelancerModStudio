@@ -187,6 +187,9 @@
     <Content Include="Resources\Folder.ico" />
     <Content Include="Resources\FullScreen.ico" />
     <Content Include="Resources\GoTo.ico" />
+    <Content Include="Resources\HiddenFile.ico" />
+    <Content Include="Resources\HiddenFolder.ico" />
+    <Content Include="Resources\HiddenFolderOpen.ico" />
     <Content Include="Resources\HomePage.ico" />
     <Content Include="Resources\Link.ico" />
     <None Include="Resources\LogoIcon.ico" />
@@ -204,6 +207,7 @@
     <Content Include="Resources\ToDo.ico" />
     <Content Include="Resources\UnDo.ico" />
     <Content Include="Resources\UpFolder.ico" />
+    <Content Include="Resources\WebSearch.ico" />
     <None Include="Settings\Template.xml">
     </None>
     <EmbeddedResource Include="frmAbout.resx">

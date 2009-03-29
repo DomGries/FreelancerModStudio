@@ -41,16 +41,21 @@
             this.lblDownloaded = new System.Windows.Forms.Label();
             this.seperatorLine1 = new SeperatorLine();
             this.seperatorLine2 = new SeperatorLine();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.pnlDownload.SuspendLayout();
+            this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Window;
-            this.panel1.Controls.Add(this.lblHeader);
+            this.panel1.Controls.Add(this.panel4);
+            this.panel1.Controls.Add(this.pictureBox1);
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
@@ -123,6 +128,18 @@
             resources.ApplyResources(this.seperatorLine2, "seperatorLine2");
             this.seperatorLine2.Name = "seperatorLine2";
             // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.lblHeader);
+            resources.ApplyResources(this.panel4, "panel4");
+            this.panel4.Name = "panel4";
+            // 
+            // pictureBox1
+            // 
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.TabStop = false;
+            // 
             // frmAutoUpdate
             // 
             this.AcceptButton = this.btnNext;
@@ -142,6 +159,8 @@
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.pnlDownload.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -160,5 +179,7 @@
 		private System.Windows.Forms.Label lblDescription;
 		private System.Windows.Forms.Panel pnlDownload;
 		private System.Windows.Forms.Label lblDownloaded;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.PictureBox pictureBox1;
 	}
 }

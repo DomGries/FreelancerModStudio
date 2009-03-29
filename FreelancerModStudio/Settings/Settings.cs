@@ -56,8 +56,9 @@ namespace FreelancerModStudio.Settings
 
 		public class AutoUpdate
 		{
-			public bool Enabled = true;
-			public bool SilentDownload = true;
+            public bool Enabled = true;
+            public int CheckInterval = 3;
+			public bool SilentDownload = false;
 			public string NewestVersionFile = "http://freelancermodstudio.googlecode.com/files/NewestVersion.txt";
 
 			public System.DateTime LastCheck;
@@ -77,7 +78,9 @@ namespace FreelancerModStudio.Settings
 		public class Proxy
 		{
 			public bool Enabled = false;
-			public string Uri;
+            public string Uri;
+            public string Username;
+            public string Password;
 		}
 
 		public class Forms

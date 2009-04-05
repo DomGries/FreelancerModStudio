@@ -12,11 +12,12 @@ namespace FreelancerModStudio
         [STAThread]
         static void Main()
         {
-			Helper.Settings.Load();
-            //Helper.Template.Load();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            Helper.Settings.Load();
+            //Helper.Template.Load();
+
             Application.Run(new frmMain());
 
             Helper.Settings.Save();

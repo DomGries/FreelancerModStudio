@@ -83,19 +83,26 @@ namespace FreelancerModStudio
                     //download update
                     if (Data.Data.General.AutoUpdate.Enabled && Data.Data.General.AutoUpdate.NewestVersionFile != null && Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
                     {
-                        string proxy = "";
-                        string username = "";
-                        string password = "";
-
-                        if (Data.Data.General.AutoUpdate.Proxy.Enabled)
+                        //download in thread with lowest performance
+                        System.Threading.Thread autoUpdateThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate
                         {
-                            proxy = Data.Data.General.AutoUpdate.Proxy.Uri;
-                            username = Data.Data.General.AutoUpdate.Proxy.Username;
-                            password = Data.Data.General.AutoUpdate.Proxy.Password;
-                        }
+                            string proxy = "";
+                            string username = "";
+                            string password = "";
 
-                        AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, username, password, new Uri(Data.Data.General.AutoUpdate.NewestVersionFile), Data.Data.General.AutoUpdate.SilentDownload, true);
-                        autoUpdate.Check();
+                            if (Data.Data.General.AutoUpdate.Proxy.Enabled)
+                            {
+                                proxy = Data.Data.General.AutoUpdate.Proxy.Uri;
+                                username = Data.Data.General.AutoUpdate.Proxy.Username;
+                                password = Data.Data.General.AutoUpdate.Proxy.Password;
+                            }
+
+                            AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, username, password, new Uri(Data.Data.General.AutoUpdate.NewestVersionFile), true, Data.Data.General.AutoUpdate.SilentDownload);
+                            autoUpdate.Check();
+                        }));
+                        autoUpdateThread.Priority = System.Threading.ThreadPriority.Lowest;
+                        autoUpdateThread.IsBackground = true;
+                        autoUpdateThread.Start();
                     }
                 }
             }

@@ -113,13 +113,16 @@ namespace FreelancerModStudio
 
         private void GetSettings()
         {
-            if (Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Location, new Point(0, 0), true) &&
-                Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Location, new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height), false))
-                this.Location = Helper.Settings.Data.Data.Forms.Main.Location;
+            if (Helper.Settings.Data.Data.Forms.Main.Size != new Size(0, 0))
+            {
+                if (Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Location, new Point(0, 0), true) &&
+                    Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Location, new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height), false))
+                    this.Location = Helper.Settings.Data.Data.Forms.Main.Location;
 
-            if (Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Size, new Size(0, 0), true) &&
-                Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Size, new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height), false))
-                this.Size = Helper.Settings.Data.Data.Forms.Main.Size;
+                if (Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Size, new Size(0, 0), true) &&
+                    Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Size, new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height), false))
+                    this.Size = Helper.Settings.Data.Data.Forms.Main.Size;
+            }
 
             if (Helper.Settings.Data.Data.Forms.Main.Maximized)
                 this.WindowState = FormWindowState.Maximized;

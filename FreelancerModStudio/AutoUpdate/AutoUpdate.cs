@@ -34,7 +34,6 @@ namespace FreelancerModStudio.AutoUpdate
 
         public AutoUpdate(string proxy, string username, string password, Uri checkFileUri, bool silentCheck, bool silentDownload)
         {
-            //TODO: kill silent automatic updater in background if it is running
             this.mWebClient = new WebClient();
 
             if (!string.IsNullOrEmpty(username))
@@ -54,7 +53,7 @@ namespace FreelancerModStudio.AutoUpdate
         public void Check()
         {
             //display checking form
-            if (!this.mSilentDownload || !this.mSilentCheck)
+            if (!this.mSilentCheck)
                 this.SetPage(frmAutoUpdate.PageType.Checking);
 
             //set event handlers
@@ -75,7 +74,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
             else
             {
-                if (!this.mSilentDownload || !this.mSilentCheck)
+                if (!this.mSilentCheck)
                     this.SetPage(frmAutoUpdate.PageType.NotAviable);
             }
         }

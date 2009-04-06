@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
 [assembly: AssemblyTitle("Freelancer Mod Studio")]
-[assembly: AssemblyDescription("Freelancer Mod Studio is a fast and powerful all-in-one GUI modding solution for experienced as well as beginning modders.")]
+[assembly: AssemblyDescription("Freelancer Mod Studio is a fast and powerful all-in-one GUI modding solution.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("stfx")]
 [assembly: AssemblyProduct("Freelancer Mod Studio")]

@@ -15,12 +15,8 @@ namespace FreelancerModStudio
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Helper.Settings.Load();
-            //Helper.Template.Load();
-
-            Application.Run(new frmMain());
-
-            Helper.Settings.Save();
+            //initialize program
+            Helper.Program.Start();
         }
     }
 }

@@ -6,16 +6,16 @@ namespace FreelancerModStudio.Settings
 {
 	public class Template
 	{
-		public SettingsData Data = new SettingsData();
+		public TemplateData Data = new TemplateData();
 
 		public void Load(System.IO.Stream stream)
 		{
-			this.Data = (SettingsData)Serializer.Load(stream, this.Data.GetType());
+			this.Data = (TemplateData)Serializer.Load(stream, this.Data.GetType());
 		}
 
 		public void Load(string path)
 		{
-			this.Data = (SettingsData)Serializer.Load(path, this.Data.GetType());
+			this.Data = (TemplateData)Serializer.Load(path, this.Data.GetType());
 		}
 
 		public void Save(System.IO.Stream stream)
@@ -29,7 +29,7 @@ namespace FreelancerModStudio.Settings
 		}
 
 		[System.Xml.Serialization.XmlRootAttribute("FreelancerModStudio-Template-1.0")]
-		public class SettingsData
+		public class TemplateData
 		{
 			public CostumTypes CostumTypes;
 

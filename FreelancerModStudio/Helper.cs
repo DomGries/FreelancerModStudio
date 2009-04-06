@@ -8,30 +8,79 @@ namespace FreelancerModStudio
 {
     class Helper
     {
-		public struct Template
-		{
-			public static FreelancerModStudio.Settings.Template Data;
+        public struct Program
+        {
+            public static void Start()
+            {
+                //load settings
+                Settings.Load();
 
-			public static void Load()
-			{
-				string File = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.TemplatePath);
-				Data = new FreelancerModStudio.Settings.Template();
+                if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
+                {
+                    //install update
+                    AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate("", "", "", null, false, false);
+                    autoUpdate.Install();
+                }
+                else
+                {
+                    //remove installed update
+                    if (Settings.Data.Data.General.AutoUpdate.Update.Installed)
+                        AutoUpdate.AutoUpdate.RemoveUpdate();
 
-				try
-				{
-					Data.Load(File);
-				}
-				catch (Exception ex)
-				{
-					Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.LoadTemplateException, Properties.Resources.TemplatePath), ex));
+                    //download update
+                    if (Settings.Data.Data.General.AutoUpdate.Enabled && Settings.Data.Data.General.AutoUpdate.NewestVersionFile != null && Settings.Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Settings.Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
+                    {
+                        //download in thread with lowest performance
+                        System.Threading.Thread autoUpdateThread = new System.Threading.Thread(new System.Threading.ThreadStart( delegate
+                        {
+                            string proxy = "";
+                            string username = "";
+                            string password = "";
+
+                            if (Settings.Data.Data.General.AutoUpdate.Proxy.Enabled)
+                            {
+                                proxy = Settings.Data.Data.General.AutoUpdate.Proxy.Uri;
+                                username = Settings.Data.Data.General.AutoUpdate.Proxy.Username;
+                                password = Settings.Data.Data.General.AutoUpdate.Proxy.Password;
+                            }
+
+                            AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, username, password, new Uri(Settings.Data.Data.General.AutoUpdate.NewestVersionFile), true, Settings.Data.Data.General.AutoUpdate.SilentDownload);
+                            autoUpdate.Check();
+                        }));
+                        autoUpdateThread.Priority = System.Threading.ThreadPriority.Lowest;
+                        autoUpdateThread.IsBackground = true;
+                        autoUpdateThread.Start();
+                    }
+
+                    //start main form
+                    Application.Run(new frmMain());
+                }
+
+                //save settings
+                Helper.Settings.Save();
+            }
+        }
+
+        public struct Template
+        {
+            public static FreelancerModStudio.Settings.Template Data;
+
+            public static void Load()
+            {
+                string File = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.TemplatePath);
+                Data = new FreelancerModStudio.Settings.Template();
+
+                try
+                {
+                    Data.Load(File);
+                }
+                catch (Exception ex)
+                {
+                    Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.LoadTemplateException, Properties.Resources.TemplatePath), ex));
                     Environment.Exit(0);
-				}
-			}
-
-			public static void GetFilePath(string path)
-			{
-			}
-		}
+                }
+            }
+        }
 
         public struct Settings
         {
@@ -63,46 +112,6 @@ namespace FreelancerModStudio
                     catch (Exception ex)
                     {
                         Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.LoadSettingsException, Properties.Resources.SettingsPath), ex));
-                    }
-                }
-
-                if (Data.Data.General.AutoUpdate.Update.Installed)
-                {
-                    //remove installed update
-                    AutoUpdate.AutoUpdate.RemoveUpdate();
-                }
-
-                if (Data.Data.General.AutoUpdate.Update.Downloaded)
-                {
-                    //install update
-                    AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate("", "", "", null, false, false);
-                    autoUpdate.Install();
-                }
-                else
-                {
-                    //download update
-                    if (Data.Data.General.AutoUpdate.Enabled && Data.Data.General.AutoUpdate.NewestVersionFile != null && Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
-                    {
-                        //download in thread with lowest performance
-                        System.Threading.Thread autoUpdateThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate
-                        {
-                            string proxy = "";
-                            string username = "";
-                            string password = "";
-
-                            if (Data.Data.General.AutoUpdate.Proxy.Enabled)
-                            {
-                                proxy = Data.Data.General.AutoUpdate.Proxy.Uri;
-                                username = Data.Data.General.AutoUpdate.Proxy.Username;
-                                password = Data.Data.General.AutoUpdate.Proxy.Password;
-                            }
-
-                            AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, username, password, new Uri(Data.Data.General.AutoUpdate.NewestVersionFile), true, Data.Data.General.AutoUpdate.SilentDownload);
-                            autoUpdate.Check();
-                        }));
-                        autoUpdateThread.Priority = System.Threading.ThreadPriority.Lowest;
-                        autoUpdateThread.IsBackground = true;
-                        autoUpdateThread.Start();
                     }
                 }
             }

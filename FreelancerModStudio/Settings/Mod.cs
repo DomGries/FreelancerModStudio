@@ -4,16 +4,16 @@ namespace FreelancerModStudio.Settings
 {
 	public class Mod
 	{
-		public SettingsData Data = new SettingsData();
+		public ModData Data = new ModData();
 
 		public void Load(System.IO.Stream stream)
 		{
-			this.Data = (SettingsData)Serializer.Load(stream, this.Data.GetType());
+			this.Data = (ModData)Serializer.Load(stream, this.Data.GetType());
 		}
 
 		public void Load(string path)
 		{
-			this.Data = (SettingsData)Serializer.Load(path, this.Data.GetType());
+			this.Data = (ModData)Serializer.Load(path, this.Data.GetType());
 		}
 
 		public void Save(System.IO.Stream stream)
@@ -27,7 +27,7 @@ namespace FreelancerModStudio.Settings
 		}
 
 		[System.Xml.Serialization.XmlRootAttribute("FreelancerModStudio-Mod-1.0")]
-		public class SettingsData
+		public class ModData
 		{
 			public About About;
 

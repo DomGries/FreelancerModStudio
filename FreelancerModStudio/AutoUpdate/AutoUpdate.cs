@@ -252,7 +252,7 @@ namespace FreelancerModStudio.AutoUpdate
                         arguments = "/SILENT";
 
                     System.Diagnostics.Process.Start(file, arguments);
-                    Environment.Exit(0);
+                    //Environment.Exit(0);
                 }
             }
         }

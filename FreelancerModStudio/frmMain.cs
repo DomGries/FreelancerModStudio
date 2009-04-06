@@ -50,16 +50,12 @@ namespace FreelancerModStudio
 
         private void mnuNewWindow_Click(object sender, EventArgs e)
         {
-            //Settings.INIData iniData = new FreelancerModStudio.Settings.INIData(@"E:\DAT\Visual Studio 2005\Kopie von FreelancerModStudio\templates\DATA\igraph.ini");
-            //iniData.Read();
-            //mData = iniData.Data;
+            Settings.Template.File templateFile = Helper.Template.Data.Data.Files[Helper.Template.Data.Data.Files.IndexOf("system")];
+            List<Settings.TemplateINIBlock> iniContent = FreelancerModStudio.Settings.FileManager.Read(templateFile, @"E:\DAT\Downloads\1.5b15-sdk_20050627\Universe\Systems\Li01\Li01.ini");
 
-            //frmDefaultEditor defaultEditor = new frmDefaultEditor();
-            //defaultEditor.ShowData(mData);
-            //defaultEditor.Show(this.dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
-
-            //iniData.File = iniData.File + "2.ini";
-            //iniData.Write();
+            frmDefaultEditor defaultEditor = new frmDefaultEditor(iniContent);
+            defaultEditor.ShowData();
+            defaultEditor.Show(this.dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
         }
 
         private void mnuFullScreen_Click(object sender, EventArgs e)

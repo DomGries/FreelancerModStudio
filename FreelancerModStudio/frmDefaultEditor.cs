@@ -10,42 +10,80 @@ namespace FreelancerModStudio
 {
     public partial class frmDefaultEditor : WeifenLuo.WinFormsUI.Docking.DockContent
     {
-        private List<Settings.INIBlock> mData;
+        private List<Settings.TemplateINIBlock> mData;
 
-        public frmDefaultEditor()
+        public frmDefaultEditor(List<Settings.TemplateINIBlock> data)
         {
             InitializeComponent();
+            this.mData = data;
         }
 
-        public void ShowData(List<Settings.INIBlock> data)
+        public void ShowData()
         {
-            mData = data;
-
             objectListView1.Clear();
+            objectListView1.ShowGroups = true;
+
             objectListView1.Columns.Add((ColumnHeader)new OLVColumn("Name", "1"));
-            //objectListView1.Columns.Add((ColumnHeader)new OLVColumn("Group", "1"));
             objectListView1.Columns.Add((ColumnHeader)new OLVColumn("Type", "1"));
 
             List<string> uniqueGroups = new List<string>();
 
-            for (int i = 0; i < data.Count; i++)
+            for (int i = 0; i < mData.Count; i++)
             {
-                if (!uniqueGroups.Contains(data[i].Name))
+                if (mData[i].Values.Count > 0)
                 {
-                    uniqueGroups.Add(data[i].Name);
-                    objectListView1.Groups.Add(data[i].Name, data[i].Name);
-                }
+                    if (!uniqueGroups.Contains(mData[i].Name))
+                    {
+                        uniqueGroups.Add(mData[i].Name);
+                        objectListView1.Groups.Add(mData[i].Name, mData[i].Name);
+                    }
 
-                OLVListItem item = new OLVListItem(null, data[i].Values[0].Value, null);
-                //item.SubItems.Add("Default");
-                item.SubItems.Add(data[i].Name);
-                item.Tag = i;
-                item.Group = objectListView1.Groups[data[i].Name];
-                objectListView1.Items.Add((ListViewItem)item);
+                    OLVListItem item = new OLVListItem(null, mData[i].Values[0].Value.ToString(), null);
+                    item.SubItems.Add(mData[i].Name);
+                    item.Tag = i;
+                    item.Group = objectListView1.Groups[mData[i].Name];
+                    objectListView1.Items.Add((ListViewItem)item);
+                }
             }
         }
 
-        public Settings.INIBlock GetSelectedData()
+        public void ShowData(string filter)
+        {
+            objectListView1.Clear();
+            objectListView1.ShowGroups = false;
+
+            List<string> uniqueColumns = new List<string>();
+
+            for (int i = 0; i < mData.Count; i++)
+            {
+                if (mData[i].Name == filter && mData[i].Values.Count > 0)
+                {
+                    OLVListItem item = null;
+                    for (int j = 0; j < mData[i].Values.Count; j++)
+                    {
+                        if (!uniqueColumns.Contains(mData[i].Values[j].Name))
+                        {
+                            uniqueColumns.Add(mData[i].Values[j].Name);
+                            objectListView1.Columns.Add((ColumnHeader)new OLVColumn(mData[i].Values[j].Name, "1"));
+                        }
+
+                        if (j == 0)
+                            item = new OLVListItem(null, mData[i].Values[j].Value.ToString(), null);
+                        else
+                            item.SubItems.Add(mData[i].Values[j].Value.ToString());
+
+                    }
+
+                    if (item != null)
+                    {
+                        item.Tag = i;
+                        objectListView1.Items.Add((ListViewItem)item);
+                    }
+                }
+            }
+        }
+
+        public Settings.TemplateINIBlock GetSelectedData()
         {
             if (objectListView1.SelectedItem == null)
                 return null;

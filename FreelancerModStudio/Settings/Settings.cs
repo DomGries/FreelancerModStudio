@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace FreelancerModStudio.Settings
 {
@@ -26,7 +28,7 @@ namespace FreelancerModStudio.Settings
 			Serializer.Save(path, this.Data);
 		}
 
-		[System.Xml.Serialization.XmlRootAttribute("FreelancerModStudio-Settings-1.0")]
+		[XmlRootAttribute("FreelancerModStudio-Settings-1.0")]
 		public class SettingsData
 		{
 			public General General = new General();
@@ -35,7 +37,7 @@ namespace FreelancerModStudio.Settings
 
 		public class Main
 		{
-			[System.Xml.Serialization.XmlArrayItem("RecentFile")]
+			[XmlArrayItem("RecentFile")]
 			public List<string> RecentFiles;
 
 			public ushort RecentFilesCount = 4;
@@ -61,7 +63,7 @@ namespace FreelancerModStudio.Settings
 			public bool SilentDownload = false;
 			public string NewestVersionFile = "http://freelancermodstudio.googlecode.com/files/NewestVersion.txt";
 
-			public System.DateTime LastCheck;
+			public DateTime LastCheck;
 			
 			public Update Update = new Update();
 			public Proxy Proxy = new Proxy();

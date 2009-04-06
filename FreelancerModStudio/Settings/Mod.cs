@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace FreelancerModStudio.Settings
 {
@@ -26,15 +28,15 @@ namespace FreelancerModStudio.Settings
 			Serializer.Save(path, this.Data);
 		}
 
-		[System.Xml.Serialization.XmlRootAttribute("FreelancerModStudio-Mod-1.0")]
+		[XmlRootAttribute("FreelancerModStudio-Mod-1.0")]
 		public class ModData
 		{
 			public About About;
 
-			[System.Xml.Serialization.XmlArrayItem("File")]
+			[XmlArrayItem("File")]
 			public List<string> Files;
 
-			[System.Xml.Serialization.XmlArrayItem("Note")]
+			[XmlArrayItem("Note")]
 			public List<string> Notes;
 		}
 

@@ -11,7 +11,6 @@ namespace FreelancerModStudio
     public partial class frmMain : Form
     {
         private Settings.Mod mMod;
-        private List<Settings.INIGroup> mData;
 
         private bool mModChanged = false;
 
@@ -51,13 +50,13 @@ namespace FreelancerModStudio
 
         private void mnuNewWindow_Click(object sender, EventArgs e)
         {
-            Settings.INIData iniData = new FreelancerModStudio.Settings.INIData(@"E:\DAT\Visual Studio 2005\Kopie von FreelancerModStudio\templates\DATA\igraph.ini");
-            iniData.Read();
-            mData = iniData.Data;
+            //Settings.INIData iniData = new FreelancerModStudio.Settings.INIData(@"E:\DAT\Visual Studio 2005\Kopie von FreelancerModStudio\templates\DATA\igraph.ini");
+            //iniData.Read();
+            //mData = iniData.Data;
 
-            frmDefaultEditor defaultEditor = new frmDefaultEditor();
-            defaultEditor.ShowData(mData);
-            defaultEditor.Show(this.dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+            //frmDefaultEditor defaultEditor = new frmDefaultEditor();
+            //defaultEditor.ShowData(mData);
+            //defaultEditor.Show(this.dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
 
             //iniData.File = iniData.File + "2.ini";
             //iniData.Write();
@@ -150,6 +149,7 @@ namespace FreelancerModStudio
             {
                 //show fullscreen
                 ToolStripMenuItem fullScreenMenuItem = new ToolStripMenuItem(this.mnuFullScreen.Text, this.mnuFullScreen.Image, new EventHandler(this.mnuFullScreen_Click));
+                fullScreenMenuItem.Checked = true;
                 this.MainMenuStrip.Items.Add(fullScreenMenuItem);
 
                 Helper.Settings.Data.Data.Forms.Main.Location = this.Location;

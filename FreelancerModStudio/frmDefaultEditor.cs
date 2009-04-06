@@ -10,17 +10,17 @@ namespace FreelancerModStudio
 {
     public partial class frmDefaultEditor : WeifenLuo.WinFormsUI.Docking.DockContent
     {
-        private List<Settings.INIGroup> mData;
+        private List<Settings.INIBlock> mData;
 
         public frmDefaultEditor()
         {
             InitializeComponent();
         }
 
-        public void ShowData(List<Settings.INIGroup> data)
+        public void ShowData(List<Settings.INIBlock> data)
         {
             mData = data;
-            
+
             objectListView1.Clear();
             objectListView1.Columns.Add((ColumnHeader)new OLVColumn("Name", "1"));
             //objectListView1.Columns.Add((ColumnHeader)new OLVColumn("Group", "1"));
@@ -28,7 +28,7 @@ namespace FreelancerModStudio
 
             List<string> uniqueGroups = new List<string>();
 
-            for (int i = 0; i < data.Count; i++ )
+            for (int i = 0; i < data.Count; i++)
             {
                 if (!uniqueGroups.Contains(data[i].Name))
                 {
@@ -45,7 +45,7 @@ namespace FreelancerModStudio
             }
         }
 
-        public Settings.INIGroup GetSelectedData()
+        public Settings.INIBlock GetSelectedData()
         {
             if (objectListView1.SelectedItem == null)
                 return null;

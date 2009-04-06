@@ -14,6 +14,10 @@ namespace FreelancerModStudio
             {
                 //load settings
                 Settings.Load();
+                Template.Load();
+
+                FreelancerModStudio.Settings.Template.File a = Template.Data.Data.Files[Template.Data.Data.Files.IndexOf("system")];
+                List<FreelancerModStudio.Settings.TemplateINIBlock> b = FreelancerModStudio.Settings.FileManager.Read(a, @"E:\DAT\Downloads\1.5b15-sdk_20050627\Universe\Systems\Br01\Br01.ini");
 
                 if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
                 {

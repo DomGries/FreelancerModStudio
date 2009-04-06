@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FreelancerModStudio-Template-1.0 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Files>
+    <File name="universe">
+      <Path>data\universe\universe.ini</Path>
+      <Blocks>
+        <!--Single-->
+        <Block name="Time">
+          <Options>
+            <Option type="Int">seconds_per_day</Option>
+          </Options>
+        </Block>
+        <!--Multiple-->
+        <Block name="Base" multiple="true">
+        </Block>
+        <Block name="System" multiple="true">
+          <Options>
+            <Option>nickname</Option>
+            <Option>file</Option>
+            <Option type="Point">pos</Option>
+            <Option type="Int">visit</Option>
+            <Option type="Int">strid_name</Option>
+            <Option type="Int">ids_info</Option>
+            <Option type="Double">NavMapScale</Option>
+          </Options>
+        </Block>
+      </Blocks>
+      <Editors>
+        <Editor>Default</Editor>
+      </Editors>
+    </File>
+    <File name="system">
+      <Path>data\universe\system\*\*.ini</Path>
+      <Blocks>
+        <!--Single-->
+        <Block name="SystemInfo">
+          <Options>
+            <Option>name</Option>
+            <Option type="RGB">space_color</Option>
+            <Option category="other">local_faction</Option>
+          </Options>
+        </Block>
+        <Block name="Music">
+          <Options>
+            <Option>space</Option>
+            <Option>danger</Option>
+            <Option>battle</Option>
+          </Options>
+        </Block>
+        <Block name="Archetype">
+        </Block>
+        <Block name="Dust">
+          <Options>
+            <Option>spacedust</Option>
+          </Options>
+        </Block>
+        <Block name="Ambient">
+          <Options>
+            <Option type="RGB">color</Option>
+          </Options>
+        </Block>
+        <Block name="TexturePanels">
+          <Options>
+            <Option>file</Option>
+          </Options>
+        </Block>
+        <Block name="Background">
+          <Options>
+            <Option>basic_stars</Option>
+            <Option>complex_stars</Option>
+            <Option>nebulae</Option>
+          </Options>
+        </Block>
+        <!--Multiple-->
+        <Block name="Zone" multiple="true">
+        </Block>
+        <Block name="Object" multiple="true">
+        </Block>
+        <Block name="Asteroids" multiple="true">
+          <Options>
+            <Option>file</Option>
+            <Option>zone</Option>
+          </Options>
+        </Block>
+        <Block name="LightSource" multiple="true">
+        </Block>
+        <Block name="EncounterParameters" multiple="true">
+          <Options>
+            <Option>nickname</Option>
+            <Option>filename</Option>
+          </Options>
+        </Block>
+      </Blocks>
+      <Editors>
+        <Editor>Default</Editor>
+      </Editors>
+    </File>
+  </Files>
+  <CostumTypes>
+    <Enums>
+      <Enum name="Direction" type="String">
+        <Values>
+          <Value>top</Value>
+          <Value>bottom</Value>
+          <Value>right</Value>
+          <Value>left</Value>
+        </Values>
+      </Enum>
+    </Enums>
+  </CostumTypes>
+  <Languages>
+    <Language id="en">
+      <Comments>
+        <Comment file="Universe" block="System" option="nickname">the nickname of the system</Comment>
+        <Comment file="Universe" block="System" option="file">the filepath of the system</Comment>
+      </Comments>
+      <Categories>
+        <Category id="1">General</Category>
+      </Categories>
+    </Language>
+    <Language id="de">
+      <Categories>
+        <Category id="1">Allgemein</Category>
+      </Categories>
+    </Language>
+  </Languages>
+</FreelancerModStudio-Template-1.0>

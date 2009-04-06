@@ -7,36 +7,16 @@ namespace FreelancerModStudio.Settings
 {
     public class INIData
     {
-        private string mFile;
-        public List<INIGroup> Data;
-
-        public string File
+        public static List<INIBlock> Read(string file)
         {
-            get { return this.mFile; }
-            set { this.mFile = value; }
-        }
-
-        public INIData(string file)
-        {
-            this.mFile = file;
-        }
-
-        public INIData(string file, List<INIGroup> data)
-        {
-            this.mFile = file;
-            this.Data = data;
-        }
-
-        public void Read()
-        {
-            List<INIGroup> data = new List<INIGroup>();
+            List<INIBlock> data = new List<INIBlock>();
 
             StreamReader streamReader = null;
 
             try
             {
-                streamReader = new StreamReader(mFile, Encoding.Default);
-                INIGroup currentGroup = null;
+                streamReader = new StreamReader(file, Encoding.Default);
+                INIBlock currentBlock = null;
 
                 while (!streamReader.EndOfStream)
                 {
@@ -47,14 +27,14 @@ namespace FreelancerModStudio.Settings
                     if (commentIndex != -1)
                         line = line.Substring(0, commentIndex + 1).Trim();
 
-                    if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] == ']') //new group
+                    if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] == ']') //new block
                     {
-                        if (currentGroup != null)
-                            data.Add(currentGroup);
+                        if (currentBlock != null)
+                            data.Add(currentBlock);
 
-                        currentGroup = new INIGroup(line.Substring(1, line.Length - 2));
+                        currentBlock = new INIBlock(line.Substring(1, line.Length - 2));
                     }
-                    else if (currentGroup != null) //new value for group
+                    else if (currentBlock != null) //new value for block
                     {
                         //retrieve name and value from data
                         int valueIndex = line.IndexOf('=');
@@ -62,54 +42,54 @@ namespace FreelancerModStudio.Settings
                         {
                             string name = line.Substring(0, valueIndex).Trim();
                             string value = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
-                            currentGroup.Values.Add(new INIOption(name, value));
+                            currentBlock.Values.Add(new INIOption(name, value));
                         }
                     }
                 }
 
-                if (currentGroup != null)
-                    data.Add(currentGroup);
+                if (currentBlock != null)
+                    data.Add(currentBlock);
             }
             catch (Exception ex)
             {
-                Helper.Exceptions.Show(ex);
+                throw ex;
             }
 
             if (streamReader != null)
                 streamReader.Close();
 
-            Data = data;
+            return data;
         }
 
-        public void Write()
+        public static void Write(string file, List<INIBlock> data)
         {
             StreamWriter streamWriter = null;
 
             try
             {
-                streamWriter = new StreamWriter(mFile, false, Encoding.Default);
+                streamWriter = new StreamWriter(file, false, Encoding.Default);
 
-                //write each group
-                for (int i = 0; i < Data.Count; i++)
+                //write each block
+                for (int i = 0; i < data.Count; i++)
                 {
-                    if (i > 0 && i < Data.Count - 1)
+                    if (i > 0 && i < data.Count - 1)
                         streamWriter.Write(Environment.NewLine + Environment.NewLine);
 
-                    streamWriter.WriteLine("[" + Data[i].Name + "]");
+                    streamWriter.WriteLine("[" + data[i].Name + "]");
 
                     //write each option
-                    for (int j = 0; j < Data[i].Values.Count; j++)
+                    for (int j = 0; j < data[i].Values.Count; j++)
                     {
-                        streamWriter.Write(Data[i].Values[j].Name + " = " + Data[i].Values[j].Value);
+                        streamWriter.Write(data[i].Values[j].Name + " = " + data[i].Values[j].Value);
 
-                        if (j < Data[i].Values.Count - 1)
+                        if (j < data[i].Values.Count - 1)
                             streamWriter.Write(Environment.NewLine);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Helper.Exceptions.Show(ex);
+                throw ex;
             }
 
             if (streamWriter != null)
@@ -117,12 +97,12 @@ namespace FreelancerModStudio.Settings
         }
     }
 
-    public class INIGroup
+    public class INIBlock
     {
         public string Name;
         public List<INIOption> Values = new List<INIOption>();
 
-        public INIGroup(string name)
+        public INIBlock(string name)
         {
             this.Name = name;
         }

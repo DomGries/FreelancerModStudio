@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBugList));
-            this.objectListView1 = new ObjectListView();
+            this.objectListView1 = new BrightIdeasSoftware.FastObjectListView();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,6 +74,6 @@
 
         #endregion
 
-        private ObjectListView objectListView1;
+        private BrightIdeasSoftware.FastObjectListView objectListView1;
     }
 }

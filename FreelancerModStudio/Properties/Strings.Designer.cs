@@ -337,5 +337,16 @@ namespace FreelancerModStudio.Properties {
                 return ResourceManager.GetString("Version", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die General ähnelt.
+        /// </summary>
+        internal static string INIDefaultGroup
+        {
+            get
+            {
+                return ResourceManager.GetString("INIDefaultGroup", resourceCulture);
+            }
+        }
     }
 }

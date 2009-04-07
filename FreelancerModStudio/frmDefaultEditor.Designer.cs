@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.objectListView1 = new FreelancerModStudio.DataListView();
+            this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -36,7 +36,6 @@
             // 
             this.objectListView1.AlternateRowBackColor = System.Drawing.Color.Empty;
             this.objectListView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.objectListView1.DataSource = null;
             this.objectListView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectListView1.EmptyListMsg = "No entries aviable...";
             this.objectListView1.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -50,6 +49,7 @@
             this.objectListView1.UseAlternatingBackColors = true;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.SelectedIndexChanged += new System.EventHandler(this.objectListView1_SelectedIndexChanged);
             // 
             // frmDefaultEditor
             // 
@@ -70,10 +70,7 @@
 
         #endregion
 
-        private DataListView objectListView1;
-
-
-
+        private BrightIdeasSoftware.ObjectListView objectListView1;
 
     }
 }

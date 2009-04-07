@@ -215,4 +215,7 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
   <data name="UpdatesLaterButton" xml:space="preserve">
     <value>&amp;Später</value>
   </data>
+  <data name="INIDefaultGroup" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
 </root>

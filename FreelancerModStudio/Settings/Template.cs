@@ -33,6 +33,11 @@ namespace FreelancerModStudio.Settings
         {
             [XmlArrayItem("File")]
             public Files Files;
+
+            public CostumTypes CostumTypes;
+
+            [XmlArrayItem("Language")]
+            public List<Language> Languages;
 		}
 
 		public class File
@@ -54,10 +59,13 @@ namespace FreelancerModStudio.Settings
 		public class Block
 		{
 			[XmlAttribute("multiple")]
-			public bool Multiple = false;
+            public bool Multiple = false;
 
             [XmlAttribute("name")]
-			public string Name;
+            public string Name;
+
+            [XmlAttribute("identifier")]
+            public string Identifier;
 
             [XmlArrayItem("Option")]
             public Options Options;
@@ -66,7 +74,7 @@ namespace FreelancerModStudio.Settings
 		public class Option
 		{
 			[XmlAttribute("multiple")]
-			public bool Multiple = false;
+            public bool Multiple = false;
 
 			[XmlAttribute("type")]
 			public OptionType Type = OptionType.String;
@@ -74,8 +82,8 @@ namespace FreelancerModStudio.Settings
 			[XmlAttribute("enum")]
 			public string EnumName;
 
-			[XmlAttribute("category")]
-            public string Category = "general";
+            [XmlAttribute("category")]
+            public int Category = 0;
 
 			[XmlAttribute("comment")]
             public string Comment;
@@ -140,7 +148,7 @@ namespace FreelancerModStudio.Settings
 
         public enum FileType { ini, dll, exe, thn, utf, wav, db, threedb, cmp, mat, sur, txm, ale, vms, txt, hta, fl, other };
 
-		public enum OptionType { String, Int, Point, Double, Enum, RGB, StringArray, IntArray, DoubleArray };
+		public enum OptionType { String, Int, Bool, Point, Double, Enum, RGB, StringArray, IntArray, DoubleArray };
 
         public class Files : List<File>
         {

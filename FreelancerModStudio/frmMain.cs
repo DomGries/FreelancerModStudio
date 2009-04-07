@@ -46,12 +46,27 @@ namespace FreelancerModStudio
 
         private void mnuCloseAllDocuments_Click(object sender, EventArgs e)
         {
+            foreach(Form child in this.MdiChildren)
+                child.Close();
+        }
+
+        private void CloseOtherDocuments()
+        {
+             int index = 0;
+             while (index < this.dockPanel1.ActiveDocumentPane.Contents.Count)
+             {
+                 WeifenLuo.WinFormsUI.Docking.IDockContent dockContent = this.dockPanel1.ActiveDocumentPane.Contents[index];
+
+                 if (dockContent != this.dockPanel1.ActiveDocumentPane.ActiveContent)
+                     dockContent.DockHandler.Close();
+                 else
+                     index++;
+             }
         }
 
         private void mnuNewWindow_Click(object sender, EventArgs e)
         {
-            Settings.Template.File templateFile = Helper.Template.Data.Data.Files[Helper.Template.Data.Data.Files.IndexOf("system")];
-            List<Settings.TemplateINIBlock> iniContent = FreelancerModStudio.Settings.FileManager.Read(templateFile, @"E:\DAT\Downloads\1.5b15-sdk_20050627\Universe\Systems\Li01\Li01.ini");
+            Settings.TemplateINIData iniContent = FreelancerModStudio.Settings.FileManager.Read(Helper.Template.Data.Data.Files.IndexOf("system"), @"E:\DAT\Downloads\1.5b15-sdk_20050627\Universe\Systems\Li01\Li01.ini");
 
             frmDefaultEditor defaultEditor = new frmDefaultEditor(iniContent);
             defaultEditor.ShowData();

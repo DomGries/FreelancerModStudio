@@ -11,13 +11,28 @@
           </Options>
         </Block>
         <!--Multiple-->
-        <Block name="Base" multiple="true">
+        <Block name="Base" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>system</Option>
+            <Option type="Int">strid_name</Option>
+            <Option>file</Option>
+            <Option>BGCS_base_run_by</Option>
+            <Option>terrain_tiny</Option>
+            <Option>terrain_sml</Option>
+            <Option>terrain_mdm</Option>
+            <Option>terrain_lrg</Option>
+            <Option>terrain_dyna_01</Option>
+            <Option>terrain_dyna_02</Option>
+            <Option type="Bool">autosave_forbidden</Option>
+          </Options>
         </Block>
-        <Block name="System" multiple="true">
+        <Block name="System" multiple="true" identifier="nickname">
           <Options>
             <Option>nickname</Option>
             <Option>file</Option>
             <Option type="Point">pos</Option>
+            <Option>msg_id_prefix</Option>
             <Option type="Int">visit</Option>
             <Option type="Int">strid_name</Option>
             <Option type="Int">ids_info</Option>
@@ -37,7 +52,7 @@
           <Options>
             <Option>name</Option>
             <Option type="RGB">space_color</Option>
-            <Option category="other">local_faction</Option>
+            <Option category="1">local_faction</Option>
           </Options>
         </Block>
         <Block name="Music">
@@ -76,7 +91,7 @@
         </Block>
         <Block name="Object" multiple="true">
         </Block>
-        <Block name="Asteroids" multiple="true">
+        <Block name="Asteroids" multiple="true" identifier="file">
           <Options>
             <Option>file</Option>
             <Option>zone</Option>
@@ -84,7 +99,7 @@
         </Block>
         <Block name="LightSource" multiple="true">
         </Block>
-        <Block name="EncounterParameters" multiple="true">
+        <Block name="EncounterParameters" multiple="true" identifier="nickname">
           <Options>
             <Option>nickname</Option>
             <Option>filename</Option>
@@ -115,12 +130,13 @@
         <Comment file="Universe" block="System" option="file">the filepath of the system</Comment>
       </Comments>
       <Categories>
-        <Category id="1">General</Category>
+        <Category id="0">General</Category>
+        <Category id="1">Other</Category>
       </Categories>
     </Language>
     <Language id="de">
       <Categories>
-        <Category id="1">Allgemein</Category>
+        <Category id="0">Allgemein</Category>
       </Categories>
     </Language>
   </Languages>

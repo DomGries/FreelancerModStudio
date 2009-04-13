@@ -117,40 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="About" xml:space="preserve">
+  <data name="AboutText" xml:space="preserve">
     <value>About {0}</value>
   </data>
-  <data name="Version" xml:space="preserve">
+  <data name="AboutVersion" xml:space="preserve">
     <value>Version {0}</value>
   </data>
-  <data name="LoadSettingsException" xml:space="preserve">
+  <data name="SettingsLoadException" xml:space="preserve">
     <value>The settings file "{0}" could not be loaded.</value>
   </data>
-  <data name="LoadTemplateException" xml:space="preserve">
+  <data name="TemplateLoadException" xml:space="preserve">
     <value>The template file "{0}" could not be loaded.</value>
   </data>
-  <data name="SaveSettingsException" xml:space="preserve">
+  <data name="SettingsSaveException" xml:space="preserve">
     <value>The settings file "{0}" could not be saved.</value>
   </data>
-  <data name="CloseSave" xml:space="preserve">
-    <value>The current mod will be closed.
-
-Would you like to save changes to {0}?</value>
+  <data name="FileCloseSave" xml:space="preserve">
+    <value>Save "{0}"?</value>
   </data>
-  <data name="NewModName" xml:space="preserve">
+  <data name="ModNewName" xml:space="preserve">
     <value>Mod{0}</value>
   </data>
-  <data name="InvalidModNameChars" xml:space="preserve">
+  <data name="ModInvalidNameChars" xml:space="preserve">
     <value>The mod name must not contain the following chars: / ? : &amp; * " &lt; &gt; | # %
 
 Please enter a valid name.</value>
   </data>
-  <data name="InvalidModPathChars" xml:space="preserve">
+  <data name="ModInvalidPathChars" xml:space="preserve">
     <value>The mod path must not contain the following chars: / ? : &amp; * " &lt; &gt; | # %
 
 Please enter a valid name.</value>
   </data>
-  <data name="InvalidModHomepage" xml:space="preserve">
+  <data name="ModInvalidHomepage" xml:space="preserve">
     <value>The entered mod homepage is invalid.</value>
   </data>
   <data name="UpdatesCheckingHeader" xml:space="preserve">
@@ -188,7 +186,7 @@ Please enter a valid name.</value>
 
 If that problem persists, download and install the update manually.</value>
   </data>
-  <data name="DownloadSpeed" xml:space="preserve">
+  <data name="UpdatesDownloadSpeed" xml:space="preserve">
     <value>{0} of {1} MB</value>
   </data>
   <data name="UpdatesFormText" xml:space="preserve">
@@ -215,7 +213,22 @@ If that problem persists, download and install the update manually.</value>
   <data name="UpdatesLaterButton" xml:space="preserve">
     <value>&amp;Later</value>
   </data>
-  <data name="INIDefaultGroup" xml:space="preserve">
+  <data name="FileDefaultDategory" xml:space="preserve">
     <value>General</value>
+  </data>
+  <data name="FileDialogFilter" xml:space="preserve">
+    <value>INI-Files (*.ini)|*.ini</value>
+  </data>
+  <data name="FileEditorEmpty" xml:space="preserve">
+    <value>No entries aviable...</value>
+  </data>
+  <data name="ErrorListText" xml:space="preserve">
+    <value>Error List</value>
+  </data>
+  <data name="PropertiesText" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="SolutionExplorerText" xml:space="preserve">
+    <value>Solution Explorer</value>
   </data>
 </root>

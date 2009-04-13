@@ -2,15 +2,13 @@
 <FreelancerModStudio-Template-1.0 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Files>
     <File name="universe">
-      <Path>data\universe\universe.ini</Path>
+      <Path>universe\universe.ini</Path>
       <Blocks>
-        <!--Single-->
         <Block name="Time">
           <Options>
             <Option type="Int">seconds_per_day</Option>
           </Options>
         </Block>
-        <!--Multiple-->
         <Block name="Base" multiple="true" identifier="nickname">
           <Options>
             <Option>nickname</Option>
@@ -40,14 +38,10 @@
           </Options>
         </Block>
       </Blocks>
-      <Editors>
-        <Editor>Default</Editor>
-      </Editors>
     </File>
     <File name="system">
-      <Path>data\universe\system\*\*.ini</Path>
+      <Path>universe\system\*\*.ini</Path>
       <Blocks>
-        <!--Single-->
         <Block name="SystemInfo">
           <Options>
             <Option>name</Option>
@@ -63,6 +57,13 @@
           </Options>
         </Block>
         <Block name="Archetype">
+          <Options>
+            <Option>ship</Option>
+            <Option>simple</Option>
+            <Option>snd</Option>
+            <Option>solar</Option>
+            <Option>equipment</Option>
+          </Options>
         </Block>
         <Block name="Dust">
           <Options>
@@ -74,7 +75,7 @@
             <Option type="RGB">color</Option>
           </Options>
         </Block>
-        <Block name="TexturePanels">
+        <Block name="Texturepanels">
           <Options>
             <Option>file</Option>
           </Options>
@@ -86,18 +87,106 @@
             <Option>nebulae</Option>
           </Options>
         </Block>
-        <!--Multiple-->
-        <Block name="Zone" multiple="true">
+        <Block name="Zone" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>pos</Option>
+            <Option>rotate</Option>
+            <Option>shape</Option>
+            <Option>size</Option>
+            <Option>encounter</Option>
+            <Option>faction</Option>
+            <Option>faction_weight</Option>
+            <Option>density_restriction</Option>
+            <Option>usage</Option>
+            <Option>path_label</Option>
+            <Option>pop_type</Option>
+            <Option>spacedust</Option>
+            <Option>music</Option>
+            <Option>vignette_type</Option>
+            <Option>mission_type</Option>
+            <Option>comment</Option>
+            <Option>lane_id</Option>
+            <Option>attack_ids</Option>
+            <Option type="Bool">population_additive</Option>
+            <Option type="Bool">mission_eligible</Option>
+            <Option type="Int">ids_name</Option>
+            <Option type="Int">ids_info</Option>
+            <Option type="Int">toughness</Option>
+            <Option type="Int">density</Option>
+            <Option type="Int">repop_time</Option>
+            <Option type="Int">max_battle_size</Option>
+            <Option type="Int">relief_time</Option>
+            <Option type="Int">visit</Option>
+            <Option type="Int">tradelane_down</Option>
+            <Option type="Int">spacedust_maxparticles</Option>
+            <Option type="Int">property_flags</Option>
+            <Option type="Int">tradelane_attack</Option>
+            <Option type="Double">damage</Option>
+            <Option type="Double">sort</Option>
+            <Option type="Double">edge_fraction</Option>
+            <Option type="Double">interference</Option>
+            <Option type="DoubleArray">property_fog_color</Option>
+          </Options>
         </Block>
-        <Block name="Object" multiple="true">
+        <Block name="Object" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>pos</Option>
+            <Option>rotate</Option>
+            <Option>spin</Option>
+            <Option>msg_id_prefix</Option>
+            <Option>jump_effect</Option>
+            <Option>reputation</Option>
+            <Option>behavior</Option>
+            <Option>star</Option>
+            <Option>archetype</Option>
+            <Option>loadout</Option>
+            <Option>pilot</Option>
+            <Option>base</Option>
+            <Option>voice</Option>
+            <Option>comment</Option>
+            <Option>prev_ring</Option>
+            <Option>next_ring</Option>
+            <Option>dock_with</Option>
+            <Option>parent</Option>
+            <Option>faction</Option>
+            <Option>ambient</Option>
+            <Option type="Int">difficulty_level</Option>
+            <Option type="Int">atmosphere_range</Option>
+            <Option type="Int">ids_name</Option>
+            <Option type="Int">ids_info</Option>
+            <Option type="Int">visit</Option>
+            <Option type="Int">tradelane_space_name</Option>
+            <Option type="RGB">color</Option>
+            <Option type="RGB">ambient_color</Option>
+            <Option type="RGB">burn_color</Option>
+            <Option type="StringArray">goto</Option>
+            <Option type="StringArray">space_costume</Option>
+          </Options>
         </Block>
-        <Block name="Asteroids" multiple="true" identifier="file">
+        <Block name="LightSource" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>pos</Option>
+            <Option type="RGB">color</Option>
+            <Option>range</Option>
+            <Option>type</Option>
+            <Option>atten_curve</Option>
+            <Option>attenuation</Option>
+          </Options>
+        </Block>
+        <Block name="Asteroids" multiple="true" identifier="zone">
           <Options>
             <Option>file</Option>
             <Option>zone</Option>
           </Options>
         </Block>
-        <Block name="LightSource" multiple="true">
+        <Block name="Nebula" multiple="true" identifier="file">
+          <Options>
+            <Option>file</Option>
+            <Option>zone</Option>
+          </Options>
         </Block>
         <Block name="EncounterParameters" multiple="true" identifier="nickname">
           <Options>
@@ -106,14 +195,11 @@
           </Options>
         </Block>
       </Blocks>
-      <Editors>
-        <Editor>Default</Editor>
-      </Editors>
     </File>
   </Files>
   <CostumTypes>
     <Enums>
-      <Enum name="Direction" type="String">
+      <Enum name="Direction">
         <Values>
           <Value>top</Value>
           <Value>bottom</Value>

@@ -339,9 +339,7 @@ public class UICultureChanger : Component
         if (disposing)
         {
             for (int index = 0; index < this.forms.Count; index++)
-            {
 				this.RemoveForm(this.forms[index]);
-	        }
         }
 
         base.Dispose(disposing);
@@ -379,9 +377,7 @@ public class UICultureChanger : Component
     public bool RemoveForm(Form form)
     {
         if (form == null)
-        {
             return false;
-        }
         else
         {
 			form.FormClosed -= new FormClosedEventHandler(this.Form_FormClosed);
@@ -519,7 +515,8 @@ public class UICultureChanger : Component
                     if (size != null && size.GetType() == typeof(Size))
                     {
                         if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
-                        {// In case of an inheritor of Control take into account the Anchor property.
+                        {
+                            // In case of an inheritor of Control take into account the Anchor property.
                             control = (Control)changeInfos[index].Value;
                             if ((control.Anchor & (AnchorStyles.Left | AnchorStyles.Right)) == (AnchorStyles.Left | AnchorStyles.Right))
                             {
@@ -661,9 +658,7 @@ public class UICultureChanger : Component
                     {
                         text = resources.GetString(changeInfos[index].Name + ".ToolTip");
                         if (text != null)
-                        {
                             toolTip.SetToolTip((Control)changeInfos[index].Value, text);
-                        }
                     }
                 }
             }
@@ -695,24 +690,19 @@ public class UICultureChanger : Component
                     {
                         text = resources.GetString(changeInfos[index].Name + ".HelpKeyword");
                         if (text != null)
-                        {
                             helpProvider.SetHelpKeyword((Control)changeInfos[index].Value, text);
-                        }
+
                         help = resources.GetObject(changeInfos[index].Name + ".HelpNavigator");
                         if (help != null && help.GetType() == typeof(HelpNavigator))
-                        {
                             helpProvider.SetHelpNavigator((Control)changeInfos[index].Value, (HelpNavigator)help);
-                        }
+
                         text = resources.GetString(changeInfos[index].Name + ".HelpString");
                         if (text != null)
-                        {
                             helpProvider.SetHelpString((Control)changeInfos[index].Value, text);
-                        }
+
                         help = resources.GetObject(changeInfos[index].Name + ".ShowHelp");
                         if (help != null && help.GetType() == typeof(bool))
-                        {
                             helpProvider.SetShowHelp((Control)changeInfos[index].Value, (bool)help);
-                        }
                     }
                 }
             }

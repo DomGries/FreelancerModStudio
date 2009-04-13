@@ -117,40 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="About" xml:space="preserve">
+  <data name="AboutText" xml:space="preserve">
     <value>Info über {0}</value>
   </data>
-  <data name="Version" xml:space="preserve">
+  <data name="AboutVersion" xml:space="preserve">
     <value>Version {0}</value>
   </data>
-  <data name="LoadSettingsException" xml:space="preserve">
+  <data name="SettingsLoadException" xml:space="preserve">
     <value>Die Einstellungs-Datei "{0}" konnte nicht geladen werden.</value>
   </data>
-  <data name="LoadTemplateException" xml:space="preserve">
+  <data name="TemplateLoadException" xml:space="preserve">
     <value>Die Vorlagen-Datei "{0}" konnte nicht geladen werden.</value>
   </data>
-  <data name="SaveSettingsException" xml:space="preserve">
+  <data name="SettingsSaveException" xml:space="preserve">
     <value>Die Einstellungs-Datei "{0}" konnte nicht gespeichert werden.</value>
   </data>
-  <data name="CloseSave" xml:space="preserve">
-    <value>Der aktuelle Mod wird geschlossen.
-
-Möchten Sie die Änderungen in {0} speichern?</value>
+  <data name="FileCloseSave" xml:space="preserve">
+    <value>"{0}" speichern?</value>
   </data>
-  <data name="NewModName" xml:space="preserve">
+  <data name="ModNewName" xml:space="preserve">
     <value>Mod{0}</value>
   </data>
-  <data name="InvalidModNameChars" xml:space="preserve">
+  <data name="ModInvalidNameChars" xml:space="preserve">
     <value>Der Modname darf die folgenden Zeichen nicht enthalten: / ? : &amp; * " &lt; &gt; | # %
 
 Bitte geben Sie einen gültigen Namen ein.</value>
   </data>
-  <data name="InvalidModPathChars" xml:space="preserve">
+  <data name="ModInvalidPathChars" xml:space="preserve">
     <value>Der Modpfad darf die folgenden Zeichen nicht enthalten: / ? : &amp; * " &lt; &gt; | # %
 
 Bitte geben Sie einen gültigen Namen ein.</value>
   </data>
-  <data name="InvalidModHomepage" xml:space="preserve">
+  <data name="ModInvalidHomepage" xml:space="preserve">
     <value>Die angegebene Mod-Homepage ist ungültig.</value>
   </data>
   <data name="UpdatesCheckingHeader" xml:space="preserve">
@@ -188,7 +186,7 @@ Bitte geben Sie einen gültigen Namen ein.</value>
 
 Falls das Problem fortbesteht, downloaden und installieren Sie das Update händisch.</value>
   </data>
-  <data name="DownloadSpeed" xml:space="preserve">
+  <data name="UpdatesDownloadSpeed" xml:space="preserve">
     <value>{0} von {1} MB</value>
   </data>
   <data name="UpdatesFormText" xml:space="preserve">
@@ -215,7 +213,22 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
   <data name="UpdatesLaterButton" xml:space="preserve">
     <value>&amp;Später</value>
   </data>
-  <data name="INIDefaultGroup" xml:space="preserve">
+  <data name="FileDefaultCategory" xml:space="preserve">
     <value>Allgemein</value>
+  </data>
+  <data name="FileDialogFilter" xml:space="preserve">
+    <value>INI-Dateien (*.ini)|*.ini</value>
+  </data>
+  <data name="FileEditorEmpty" xml:space="preserve">
+    <value>Keine Einträge vorhanden...</value>
+  </data>
+  <data name="ErrorListText" xml:space="preserve">
+    <value>Fehlerliste</value>
+  </data>
+  <data name="PropertiesText" xml:space="preserve">
+    <value>Eigenschaften</value>
+  </data>
+  <data name="SolutionExplorerText" xml:space="preserve">
+    <value>Solution Explorer</value>
   </data>
 </root>

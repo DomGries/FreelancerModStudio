@@ -48,28 +48,20 @@
             this.toolStripPanel2 = new System.Windows.Forms.ToolStripPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuNewMod = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuNewFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOpenMod = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuOpenFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRecentFilesSeperator = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuCloseSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.mnuCloseMod = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuSaveSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.mnuSaveAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuReDo = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuUnDo = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuSelectAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuGoTo = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
@@ -115,29 +107,37 @@
             resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
-            this.mnuEdit,
             this.mnuView,
             this.mnuTools,
             this.mnuWindows,
             this.mnuHelp});
+            this.menuStrip1.MdiWindowListItem = this.mnuWindows;
             this.menuStrip1.Name = "menuStrip1";
             // 
             // mnuFile
             // 
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuNewMod,
+            this.newToolStripMenuItem,
             this.toolStripMenuItem6,
             this.mnuOpen,
-            this.toolStripMenuItem9,
-            this.mnuClose,
+            this.mnuCloseSeperator,
             this.mnuCloseMod,
-            this.toolStripMenuItem7,
-            this.mnuSave,
+            this.mnuSaveSeperator,
             this.mnuSaveAll,
             this.toolStripMenuItem8,
             this.mnuExit});
+            this.mnuFile.MergeIndex = 0;
             this.mnuFile.Name = "mnuFile";
             resources.ApplyResources(this.mnuFile, "mnuFile");
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuNewMod,
+            this.mnuNewFile});
+            this.newToolStripMenuItem.MergeIndex = 0;
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            resources.ApplyResources(this.newToolStripMenuItem, "newToolStripMenuItem");
             // 
             // mnuNewMod
             // 
@@ -146,8 +146,14 @@
             resources.ApplyResources(this.mnuNewMod, "mnuNewMod");
             this.mnuNewMod.Click += new System.EventHandler(this.mnuNewMod_Click);
             // 
+            // mnuNewFile
+            // 
+            resources.ApplyResources(this.mnuNewFile, "mnuNewFile");
+            this.mnuNewFile.Name = "mnuNewFile";
+            // 
             // toolStripMenuItem6
             // 
+            this.toolStripMenuItem6.MergeIndex = 1;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
             resources.ApplyResources(this.toolStripMenuItem6, "toolStripMenuItem6");
             // 
@@ -155,128 +161,75 @@
             // 
             this.mnuOpen.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuOpenMod,
+            this.mnuOpenFile,
             this.mnuRecentFilesSeperator});
+            this.mnuOpen.MergeIndex = 2;
             this.mnuOpen.Name = "mnuOpen";
             resources.ApplyResources(this.mnuOpen, "mnuOpen");
             // 
             // mnuOpenMod
             // 
+            resources.ApplyResources(this.mnuOpenMod, "mnuOpenMod");
             this.mnuOpenMod.Image = global::FreelancerModStudio.Properties.Resources.OpenMod;
             this.mnuOpenMod.Name = "mnuOpenMod";
-            resources.ApplyResources(this.mnuOpenMod, "mnuOpenMod");
             this.mnuOpenMod.Click += new System.EventHandler(this.mnuOpenMod_Click);
+            // 
+            // mnuOpenFile
+            // 
+            this.mnuOpenFile.Name = "mnuOpenFile";
+            resources.ApplyResources(this.mnuOpenFile, "mnuOpenFile");
+            this.mnuOpenFile.Click += new System.EventHandler(this.mnuOpenFile_Click);
             // 
             // mnuRecentFilesSeperator
             // 
             this.mnuRecentFilesSeperator.Name = "mnuRecentFilesSeperator";
             resources.ApplyResources(this.mnuRecentFilesSeperator, "mnuRecentFilesSeperator");
             // 
-            // toolStripMenuItem9
+            // mnuCloseSeperator
             // 
-            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            resources.ApplyResources(this.toolStripMenuItem9, "toolStripMenuItem9");
-            // 
-            // mnuClose
-            // 
-            this.mnuClose.Name = "mnuClose";
-            resources.ApplyResources(this.mnuClose, "mnuClose");
+            this.mnuCloseSeperator.MergeIndex = 3;
+            this.mnuCloseSeperator.Name = "mnuCloseSeperator";
+            resources.ApplyResources(this.mnuCloseSeperator, "mnuCloseSeperator");
             // 
             // mnuCloseMod
             // 
-            this.mnuCloseMod.Image = global::FreelancerModStudio.Properties.Resources.CloseMod;
-            this.mnuCloseMod.Name = "mnuCloseMod";
             resources.ApplyResources(this.mnuCloseMod, "mnuCloseMod");
+            this.mnuCloseMod.Image = global::FreelancerModStudio.Properties.Resources.CloseMod;
+            this.mnuCloseMod.MergeIndex = 5;
+            this.mnuCloseMod.Name = "mnuCloseMod";
             // 
-            // toolStripMenuItem7
+            // mnuSaveSeperator
             // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            resources.ApplyResources(this.toolStripMenuItem7, "toolStripMenuItem7");
-            // 
-            // mnuSave
-            // 
-            this.mnuSave.Image = global::FreelancerModStudio.Properties.Resources.Save;
-            this.mnuSave.Name = "mnuSave";
-            resources.ApplyResources(this.mnuSave, "mnuSave");
+            this.mnuSaveSeperator.MergeIndex = 6;
+            this.mnuSaveSeperator.Name = "mnuSaveSeperator";
+            resources.ApplyResources(this.mnuSaveSeperator, "mnuSaveSeperator");
             // 
             // mnuSaveAll
             // 
             this.mnuSaveAll.Image = global::FreelancerModStudio.Properties.Resources.SaveAll;
+            this.mnuSaveAll.MergeIndex = 9;
             this.mnuSaveAll.Name = "mnuSaveAll";
             resources.ApplyResources(this.mnuSaveAll, "mnuSaveAll");
+            this.mnuSaveAll.Click += new System.EventHandler(this.mnuSaveAll_Click);
             // 
             // toolStripMenuItem8
             // 
+            this.toolStripMenuItem8.MergeIndex = 10;
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
             resources.ApplyResources(this.toolStripMenuItem8, "toolStripMenuItem8");
             // 
             // mnuExit
             // 
+            this.mnuExit.MergeIndex = 11;
             this.mnuExit.Name = "mnuExit";
             resources.ApplyResources(this.mnuExit, "mnuExit");
             this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
-            // 
-            // mnuEdit
-            // 
-            this.mnuEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuReDo,
-            this.mnuUnDo,
-            this.toolStripMenuItem3,
-            this.mnuDelete,
-            this.toolStripMenuItem4,
-            this.mnuSelectAll,
-            this.toolStripMenuItem5,
-            this.mnuGoTo});
-            this.mnuEdit.Name = "mnuEdit";
-            resources.ApplyResources(this.mnuEdit, "mnuEdit");
-            // 
-            // mnuReDo
-            // 
-            this.mnuReDo.Image = global::FreelancerModStudio.Properties.Resources.ReDo;
-            this.mnuReDo.Name = "mnuReDo";
-            resources.ApplyResources(this.mnuReDo, "mnuReDo");
-            // 
-            // mnuUnDo
-            // 
-            this.mnuUnDo.Image = global::FreelancerModStudio.Properties.Resources.UnDo;
-            this.mnuUnDo.Name = "mnuUnDo";
-            resources.ApplyResources(this.mnuUnDo, "mnuUnDo");
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
-            // 
-            // mnuDelete
-            // 
-            this.mnuDelete.Image = global::FreelancerModStudio.Properties.Resources.Delete;
-            this.mnuDelete.Name = "mnuDelete";
-            resources.ApplyResources(this.mnuDelete, "mnuDelete");
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            resources.ApplyResources(this.toolStripMenuItem4, "toolStripMenuItem4");
-            // 
-            // mnuSelectAll
-            // 
-            this.mnuSelectAll.Name = "mnuSelectAll";
-            resources.ApplyResources(this.mnuSelectAll, "mnuSelectAll");
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            resources.ApplyResources(this.toolStripMenuItem5, "toolStripMenuItem5");
-            // 
-            // mnuGoTo
-            // 
-            this.mnuGoTo.Image = global::FreelancerModStudio.Properties.Resources.GoTo;
-            this.mnuGoTo.Name = "mnuGoTo";
-            resources.ApplyResources(this.mnuGoTo, "mnuGoTo");
             // 
             // mnuView
             // 
             this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFullScreen});
+            this.mnuView.MergeIndex = 2;
             this.mnuView.Name = "mnuView";
             resources.ApplyResources(this.mnuView, "mnuView");
             // 
@@ -291,6 +244,7 @@
             // 
             this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuOptions});
+            this.mnuTools.MergeIndex = 3;
             this.mnuTools.Name = "mnuTools";
             resources.ApplyResources(this.mnuTools, "mnuTools");
             // 
@@ -299,6 +253,7 @@
             this.mnuOptions.Image = global::FreelancerModStudio.Properties.Resources.Settings;
             this.mnuOptions.Name = "mnuOptions";
             resources.ApplyResources(this.mnuOptions, "mnuOptions");
+            this.mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
             // 
             // mnuWindows
             // 
@@ -308,14 +263,15 @@
             this.mnuCloseAllDocuments,
             this.mnuResetLayout,
             this.mnuWindowsSeperator});
+            this.mnuWindows.MergeIndex = 4;
             this.mnuWindows.Name = "mnuWindows";
             resources.ApplyResources(this.mnuWindows, "mnuWindows");
             // 
             // mnuNewWindow
             // 
+            resources.ApplyResources(this.mnuNewWindow, "mnuNewWindow");
             this.mnuNewWindow.Image = global::FreelancerModStudio.Properties.Resources.NewWindow;
             this.mnuNewWindow.Name = "mnuNewWindow";
-            resources.ApplyResources(this.mnuNewWindow, "mnuNewWindow");
             this.mnuNewWindow.Click += new System.EventHandler(this.mnuNewWindow_Click);
             // 
             // toolStripMenuItem1
@@ -332,8 +288,8 @@
             // 
             // mnuResetLayout
             // 
-            this.mnuResetLayout.Name = "mnuResetLayout";
             resources.ApplyResources(this.mnuResetLayout, "mnuResetLayout");
+            this.mnuResetLayout.Name = "mnuResetLayout";
             // 
             // mnuWindowsSeperator
             // 
@@ -349,6 +305,7 @@
             this.mnuCheckUpdate,
             this.toolStripMenuItem10,
             this.mnuAbout});
+            this.mnuHelp.MergeIndex = 5;
             this.mnuHelp.Name = "mnuHelp";
             resources.ApplyResources(this.mnuHelp, "mnuHelp");
             // 
@@ -414,7 +371,6 @@
             this.dockPanel1.DockRightPortion = 200;
             this.dockPanel1.DockTopPortion = 150;
             this.dockPanel1.Name = "dockPanel1";
-            this.dockPanel1.ShowDocumentIcon = true;
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -459,6 +415,9 @@
             dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
             dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
             this.dockPanel1.Skin = dockPanelSkin1;
+            this.dockPanel1.ContentAdded += new System.EventHandler<WeifenLuo.WinFormsUI.Docking.DockContentEventArgs>(this.dockPanel1_ContentAdded);
+            this.dockPanel1.ActiveDocumentChanged += new System.EventHandler(this.dockPanel1_ActiveDocumentChanged);
+            this.dockPanel1.ContentRemoved += new System.EventHandler<WeifenLuo.WinFormsUI.Docking.DockContentEventArgs>(this.dockPanel1_ContentRemoved);
             // 
             // uiCultureChanger1
             // 
@@ -506,7 +465,6 @@
         private System.Windows.Forms.ToolStripSeparator mnuWindowsSeperator;
         private System.Windows.Forms.ToolStripSeparator mnuRecentFilesSeperator;
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
-        private System.Windows.Forms.ToolStripMenuItem mnuNewMod;
         private System.Windows.Forms.ToolStripMenuItem mnuOpen;
         private System.Windows.Forms.ToolStripMenuItem mnuOpenMod;
         private System.Windows.Forms.ToolStripMenuItem mnuExit;
@@ -514,28 +472,21 @@
         private System.Windows.Forms.ToolStripMenuItem mnuOptions;
         private System.Windows.Forms.ToolStripMenuItem mnuView;
         private System.Windows.Forms.ToolStripMenuItem mnuFullScreen;
-        private System.Windows.Forms.ToolStripMenuItem mnuClose;
         private System.Windows.Forms.ToolStripMenuItem mnuCloseMod;
-        private System.Windows.Forms.ToolStripMenuItem mnuSave;
         private System.Windows.Forms.ToolStripMenuItem mnuSaveAll;
-        private System.Windows.Forms.ToolStripMenuItem mnuEdit;
-        private System.Windows.Forms.ToolStripMenuItem mnuReDo;
-        private System.Windows.Forms.ToolStripMenuItem mnuUnDo;
-        private System.Windows.Forms.ToolStripMenuItem mnuSelectAll;
-        private System.Windows.Forms.ToolStripMenuItem mnuGoTo;
         private System.Windows.Forms.ToolStripMenuItem mnuResetLayout;
-        private System.Windows.Forms.ToolStripMenuItem mnuDelete;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
+        private System.Windows.Forms.ToolStripSeparator mnuSaveSeperator;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem8;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem9;
+        private System.Windows.Forms.ToolStripSeparator mnuCloseSeperator;
 		private System.Windows.Forms.ToolStripMenuItem mnuCheckUpdate;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem10;
+        private System.Windows.Forms.ToolStripMenuItem mnuOpenFile;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnuNewMod;
+        private System.Windows.Forms.ToolStripMenuItem mnuNewFile;
     }
 }
 

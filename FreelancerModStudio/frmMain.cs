@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace FreelancerModStudio
 {
     public partial class frmMain : Form
     {
-        private Settings.Mod mMod;
+        private Settings.Mod mod;
 
-        private bool mModChanged = false;
+        private bool modChanged = false;
 
-        private frmProperties mFrmProperties = new frmProperties();
-        private frmSolutionExplorer mFrmSolutionExplorer = new frmSolutionExplorer();
+        private frmProperties propertiesForm = new frmProperties();
+        private frmSolutionExplorer solutionExplorerForm = new frmSolutionExplorer();
 
         public frmMain()
         {
@@ -23,9 +22,11 @@ namespace FreelancerModStudio
             this.Icon = Properties.Resources.LogoIcon;
 
             this.GetSettings();
-            
-            this.mFrmProperties.Show(dockPanel1);
-            this.mFrmSolutionExplorer.Show(dockPanel1);
+
+            this.solutionExplorerForm.Show(dockPanel1);
+            this.propertiesForm.Show(dockPanel1);
+
+            this.propertiesForm.OptionChanged += Properties_OptionsChanged;
         }
 
         private void mnuAbout_Click(object sender, EventArgs e)
@@ -46,63 +47,50 @@ namespace FreelancerModStudio
 
         private void mnuCloseAllDocuments_Click(object sender, EventArgs e)
         {
-            foreach(Form child in this.MdiChildren)
+            foreach (Form child in this.MdiChildren)
                 child.Close();
         }
 
         private void CloseOtherDocuments()
         {
-             int index = 0;
-             while (index < this.dockPanel1.ActiveDocumentPane.Contents.Count)
-             {
-                 WeifenLuo.WinFormsUI.Docking.IDockContent dockContent = this.dockPanel1.ActiveDocumentPane.Contents[index];
+            int index = 0;
+            while (index < this.dockPanel1.ActiveDocumentPane.Contents.Count)
+            {
+                IDockContent dockContent = this.dockPanel1.ActiveDocumentPane.Contents[index];
 
-                 if (dockContent != this.dockPanel1.ActiveDocumentPane.ActiveContent)
-                     dockContent.DockHandler.Close();
-                 else
-                     index++;
-             }
+                if (dockContent != this.dockPanel1.ActiveDocumentPane.ActiveContent)
+                    dockContent.DockHandler.Close();
+                else
+                    index++;
+            }
         }
 
         private void mnuNewWindow_Click(object sender, EventArgs e)
         {
-            Settings.TemplateINIData iniContent = FreelancerModStudio.Settings.FileManager.Read(Helper.Template.Data.Data.Files.IndexOf("system"), @"E:\DAT\Downloads\1.5b15-sdk_20050627\Universe\Systems\Li01\Li01.ini");
+        }
 
-            frmDefaultEditor defaultEditor = new frmDefaultEditor(iniContent);
-            defaultEditor.ShowData();
-            defaultEditor.Show(this.dockPanel1, WeifenLuo.WinFormsUI.Docking.DockState.Document);
+        private void DefaultEditor_SelectedDataChanged(Settings.TemplateINIBlock[] data, int templateIndex)
+        {
+            if (data != null)
+                propertiesForm.ShowData(data, templateIndex);
+            else
+                propertiesForm.ClearData();
+        }
+
+        private void Properties_OptionsChanged(OptionChangedValue[] options)
+        {
+            IDockContent activeDocument = this.dockPanel1.ActiveDocument;
+            if (activeDocument != null && activeDocument is frmDefaultEditor)
+            {
+                frmDefaultEditor defaultEditor = (frmDefaultEditor)activeDocument;
+                defaultEditor.SetSelectedData(options);
+            }
         }
 
         private void mnuFullScreen_Click(object sender, EventArgs e)
         {
             this.FullScreen(!Helper.Settings.Data.Data.Forms.Main.FullScreen);
         }
-
-        /*private void GetChangedLines(string[] sourceLines, string[] destinationLines)
-        {
-            List<string> NewLines;
-            List<string> DeletedLines;
-
-            foreach (string sourceLine in sourceLines)
-            {
-                string line = GetLineMatch(sourceLine, destinationLines);
-
-                if (line != null)
-                    NewLines.Add(line);
-                else
-                    DeletedLines.Add(line);
-            }
-        }
-
-        private string GetLineMatch(string sourceLine, string[] destinationLines)
-        {
-            foreach (string DestinationLine in destinationLines)
-            {
-                if (sourceLine.Trim().ToLower() == DestinationLine.Trim().ToLower())
-                    return DestinationLine;
-            }
-            return null;
-        }*/
 
         private void SetSettings()
         {
@@ -118,7 +106,7 @@ namespace FreelancerModStudio
             }
 
             //todo: save language to settings when changing language setting (not at SetSettings)
-            Helper.Settings.Data.Data.General.Language = Application.CurrentCulture.TwoLetterISOLanguageName;
+            Helper.Settings.SetShortLanguage(Application.CurrentCulture.TwoLetterISOLanguageName);
         }
 
         private void GetSettings()
@@ -140,15 +128,9 @@ namespace FreelancerModStudio
             if (Helper.Settings.Data.Data.Forms.Main.FullScreen)
                 this.FullScreen(true);
 
-            if (Helper.Settings.Data.Data.General.Language != null && (Helper.Settings.Data.Data.General.Language.ToLower() == "de" || Helper.Settings.Data.Data.General.Language.ToLower() == "en"))
-                this.uiCultureChanger1.ApplyCulture(new System.Globalization.CultureInfo(Helper.Settings.Data.Data.General.Language.ToLower()));
+            this.uiCultureChanger1.ApplyCulture(new System.Globalization.CultureInfo(Helper.Settings.GetShortLanguage()));
 
-            /*
-            if ((frmMain.mManagerSettings.Data.RecentFiles != null) && frmMain.mManagerSettings.Data.RecentFiles.Count > 0)
-                this.LoadLibrary(frmMain.mManagerSettings.Data.RecentFiles(0));
-            else
-                this.DisplayRecentFiles();
-            */
+            this.DisplayRecentFiles();
         }
 
         private void FullScreen(bool value)
@@ -185,22 +167,23 @@ namespace FreelancerModStudio
             }
         }
 
-        private void AddToRecentFiles(string file)
+        private void AddToRecentFiles(string file, int templateIndex)
         {
             //remove double files
-            for (int index = 0; index < Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count; index++)
+            for (int i = 0; i < Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count; i++)
             {
-                if (Helper.Settings.Data.Data.Forms.Main.RecentFiles[index].ToLower() == file.ToLower())
-                    Helper.Settings.Data.Data.Forms.Main.RecentFiles.RemoveAt(index);
-                else
-                    index += 1;
+                if (Helper.Settings.Data.Data.Forms.Main.RecentFiles[i].File.ToLower() == file.ToLower())
+                {
+                    Helper.Settings.Data.Data.Forms.Main.RecentFiles.RemoveAt(i);
+                    i--;
+                }
             }
 
             //insert new recentfile at first place
-            Helper.Settings.Data.Data.Forms.Main.RecentFiles.Insert(0, file);
+            Helper.Settings.Data.Data.Forms.Main.RecentFiles.Insert(0, new Settings.Settings.RecentFile(file, templateIndex));
 
             //remove last recentfile to keep ajusted amount of recentfiles
-            if (Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count > Helper.Settings.Data.Data.Forms.Main.RecentFilesCount)
+            if (Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count > Helper.Settings.Data.Data.General.RecentFilesCount)
                 Helper.Settings.Data.Data.Forms.Main.RecentFiles.RemoveAt(Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count - 1);
 
             this.DisplayRecentFiles();
@@ -208,25 +191,31 @@ namespace FreelancerModStudio
 
         private void DisplayRecentFiles()
         {
-            int lastMenuItemIndex = this.mnuOpen.DropDownItems.IndexOf(this.mnuRecentFilesSeperator);
+            int firstItemIndex = this.mnuOpen.DropDownItems.IndexOf(this.mnuRecentFilesSeperator) + 1;
 
             //remove all recent menuitems
-            for (int index = lastMenuItemIndex + 1; index <= this.mnuOpen.DropDownItems.Count - 1; index++)
+            for (int i = firstItemIndex; i < this.mnuOpen.DropDownItems.Count; i++)
+            {
                 this.mnuOpen.DropDownItems.RemoveAt(this.mnuOpen.DropDownItems.Count - 1);
+                i--;
+            }
 
-            if (Helper.Settings.Data.Data.Forms.Main.RecentFilesCount > 0 && Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count > 0)
+            if (Helper.Settings.Data.Data.General.RecentFilesCount > 0 && Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count > 0)
             {
                 //add recent menuitems
-                for (int index = 0; index <= Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count - 1; index++)
+                for (int i = 0; i < Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count; i++)
                 {
-                    ToolStripMenuItem menuItem = new ToolStripMenuItem(System.IO.Path.GetFileName(Helper.Settings.Data.Data.Forms.Main.RecentFiles[index]), null, new EventHandler(mnuLoadRecentFile_Click));
+                    if (i < Helper.Settings.Data.Data.General.RecentFilesCount)
+                    {
+                        ToolStripMenuItem menuItem = new ToolStripMenuItem(System.IO.Path.GetFileName(Helper.Settings.Data.Data.Forms.Main.RecentFiles[i].File), null, new EventHandler(mnuLoadRecentFile_Click));
 
-                    menuItem.Tag = Helper.Settings.Data.Data.Forms.Main.RecentFiles[index];
+                        menuItem.Tag = Helper.Settings.Data.Data.Forms.Main.RecentFiles[i];
 
-                    if (index == 0)
-                        menuItem.ShortcutKeys = Keys.Control & Keys.Shift & Keys.O;
+                        if (i == 0)
+                            menuItem.ShortcutKeys = Keys.Control & Keys.Shift & Keys.O;
 
-                    this.mnuOpen.DropDownItems.Add(menuItem);
+                        this.mnuOpen.DropDownItems.Add(menuItem);
+                    }
                 }
                 this.mnuRecentFilesSeperator.Visible = true;
             }
@@ -235,12 +224,36 @@ namespace FreelancerModStudio
         }
 
         private void mnuLoadRecentFile_Click(object sender, EventArgs e)
-        {/*
-            string path = (string)((ToolStripMenuItem)sender).Tag;
+        {
+            Settings.Settings.RecentFile recentFile = (Settings.Settings.RecentFile)((ToolStripMenuItem)sender).Tag;
+            OpenFile(recentFile.File, recentFile.TemplateIndex);
+        }
 
-            if (System.IO.File.Exists(path))
-                //loadfile
-        */
+        private void OpenFile(string file)
+        {
+            int templateIndex = Settings.FileManager.GetTemplateIndex(file);
+
+            if (templateIndex == -1)
+            {
+                //let the user choose the ini file type
+                frmFileType fileTypeForm = new frmFileType(file);
+                if (fileTypeForm.ShowDialog() == DialogResult.OK && fileTypeForm.FileTypeIndex >= 0)
+                    templateIndex = fileTypeForm.FileTypeIndex;
+                else
+                    return;
+            }
+
+            OpenFile(file, templateIndex);
+        }
+
+        private void OpenFile(string file, int templateIndex)
+        {
+            frmDefaultEditor defaultEditor = new frmDefaultEditor(templateIndex, file);
+            defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
+            defaultEditor.ShowData();
+            defaultEditor.Show(this.dockPanel1, DockState.Document);
+
+            AddToRecentFiles(file, templateIndex);
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -253,15 +266,16 @@ namespace FreelancerModStudio
 
         private bool CancelDocumentClose()
         {
-            if (mMod == null || mMod.Data.About == null || mMod.Data.About.Name == null || !this.mModChanged)
+            if (mod == null || mod.Data.About == null || mod.Data.About.Name == null || !this.modChanged)
                 return false;
 
-            DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.CloseSave, mMod.Data.About.Name), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, mod.Data.About.Name), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Cancel)
                 return true;
             else if (dialogResult == DialogResult.Yes)
             {
                 //TODO: save current mod
+
             }
 
             return false;
@@ -269,15 +283,15 @@ namespace FreelancerModStudio
 
         private bool ModChanged
         {
-            get { return this.mModChanged; }
+            get { return this.modChanged; }
             set
             {
-                this.mModChanged = value;
+                this.modChanged = value;
 
                 if (value)
-                    this.Text = this.mMod.Data.About.Name + "* - " + Helper.Assembly.Title;
+                    this.Text = this.mod.Data.About.Name + "* - " + Helper.Assembly.Title;
                 else
-                    this.Text = this.mMod.Data.About.Name + " - " + Helper.Assembly.Title;
+                    this.Text = this.mod.Data.About.Name + " - " + Helper.Assembly.Title;
             }
         }
 
@@ -288,22 +302,17 @@ namespace FreelancerModStudio
             //TODO:Load
         }
 
-        private void CreateSolutionExplorerTree()
-        {
-
-        }
-
         private void CreateMod(Settings.Mod.About about, string saveLocation)
         {
-            this.mMod = new Settings.Mod(about);
+            this.mod = new Settings.Mod(about);
 
             string path = System.IO.Path.Combine(saveLocation, about.Name);
 
             if (!System.IO.Directory.Exists(path))
                 System.IO.Directory.CreateDirectory(path);
 
-            this.mMod.Save(System.IO.Path.Combine(path, about.Name + Properties.Resources.ModExtension));
-            this.mFrmSolutionExplorer.ShowProject(this.mMod);
+            this.mod.Save(System.IO.Path.Combine(path, about.Name + Properties.Resources.ModExtension));
+            this.solutionExplorerForm.ShowProject(this.mod);
 
             this.ModChanged = false;
         }
@@ -325,7 +334,7 @@ namespace FreelancerModStudio
             {
                 for (int index = 1; ; index++)
                 {
-                    string modName = String.Format(Properties.Strings.NewModName, index);
+                    string modName = String.Format(Properties.Strings.ModNewName, index);
                     if (!System.IO.Directory.Exists(System.IO.Path.Combine(Helper.Settings.Data.Data.Forms.NewMod.ModSaveLocation, modName)))
                     {
                         frmNewMod.txtName.Text = modName;
@@ -334,7 +343,7 @@ namespace FreelancerModStudio
                 }
             }
             else
-                frmNewMod.txtName.Text = String.Format(Properties.Strings.NewModName, 1);
+                frmNewMod.txtName.Text = String.Format(Properties.Strings.ModNewName, 1);
 
             //show window
             if (frmNewMod.ShowDialog() == DialogResult.OK)
@@ -376,14 +385,14 @@ namespace FreelancerModStudio
 
             autoUpdate.Check();
         }
-        
+
         private void AutoUpdate_RestartingApplication(object sender, CancelEventArgs e)
         {
             if (this.CancelDocumentClose())
                 e.Cancel = true;
             else
             {
-                this.mModChanged = false;
+                this.modChanged = false;
                 this.Close();
             }
         }
@@ -391,6 +400,108 @@ namespace FreelancerModStudio
         private void mnuOpenMod_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
+        {
+            //show properties of document if active document changed
+            IDockContent activeDocument = ((DockPanel)sender).ActiveDocument;
+            if (activeDocument != null && activeDocument is frmDefaultEditor)
+            {
+                frmDefaultEditor defaultEditor = (frmDefaultEditor)activeDocument;
+                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedData(), defaultEditor.Data.TemplateIndex);
+            }
+            else
+                DefaultEditor_SelectedDataChanged(null, 0);
+        }
+
+        private void mnuClose_Click(object sender, EventArgs e)
+        {
+            if (dockPanel1.ActiveDocumentPane != null)
+                dockPanel1.ActiveDocumentPane.ActiveContent.DockHandler.Close();
+        }
+
+        private void mnuOptions_Click(object sender, EventArgs e)
+        {
+            frmOptions optionsForm = new frmOptions();
+            optionsForm.ShowDialog();
+
+            SettingsChanged();
+        }
+
+        private void mnuOpenFile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fileOpener = new OpenFileDialog();
+            fileOpener.Filter = Properties.Strings.FileDialogFilter;
+            if (fileOpener.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string file in fileOpener.FileNames)
+                    OpenFile(file);
+            }
+        }
+
+        private void mnuSaveAll_Click(object sender, EventArgs e)
+        {
+            foreach (IDockContent document in dockPanel1.Documents)
+            {
+                if (document is frmDefaultEditor)
+                    ((frmDefaultEditor)document).Save();
+            }
+        }
+
+        private void SettingsChanged()
+        {
+            List<frmDefaultEditor> editors = new List<frmDefaultEditor>();
+            foreach (IDockContent document in dockPanel1.Contents)
+            {
+                if (document is frmDefaultEditor)
+                {
+                    editors.Add((frmDefaultEditor)document);
+                    this.uiCultureChanger1.AddForm((Form)document);
+                }
+            }
+
+            this.uiCultureChanger1.ApplyCulture(new System.Globalization.CultureInfo(Helper.Settings.GetShortLanguage()));
+
+            //refresh settings after language change
+            foreach (frmDefaultEditor editor in editors)
+                editor.RefreshSettings();
+
+            if (propertiesForm != null)
+                propertiesForm.RefreshSettings();
+
+            if (solutionExplorerForm != null)
+                solutionExplorerForm.RefreshSettings();
+        }
+
+        private void SetDocumentMenus(bool value)
+        {
+            mnuSaveAll.Visible = value;
+            mnuSaveSeperator.Visible = value;
+            mnuWindowsSeperator.Visible = value;
+            mnuCloseAllDocuments.Visible = value;
+        }
+
+        private void dockPanel1_ContentAdded(object sender, DockContentEventArgs e)
+        {
+            if (e.Content is frmDefaultEditor)
+                SetDocumentMenus(true);
+        }
+
+        private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
+        {
+            if (e.Content is frmDefaultEditor)
+            {
+                foreach (IDockContent document in dockPanel1.Documents)
+                {
+                    //there is at least one editor left in documents pane
+                    if (document is frmDefaultEditor)
+                        return;
+                }
+
+                //no editors found
+                SetDocumentMenus(false);
+            }
         }
     }
 }

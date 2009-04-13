@@ -7,12 +7,17 @@ using System.Text;
 using System.Windows.Forms;
 namespace FreelancerModStudio
 {
-    public partial class frmBugList : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class frmErrorList : WeifenLuo.WinFormsUI.Docking.DockContent
     {
-        public frmBugList()
+        public frmErrorList()
         {
 			InitializeComponent();
 			this.Icon = Properties.Resources.Error;
+        }
+
+        public void RefreshSettings()
+        {
+            this.TabText = Properties.Strings.ErrorListText;
         }
     }
 }

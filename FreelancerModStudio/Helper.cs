@@ -12,9 +12,22 @@ namespace FreelancerModStudio
         {
             public static void Start()
             {
+#if DEBUG
+                System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
+                st.Start();
+#endif
                 //load settings
                 Settings.Load();
                 Template.Load();
+#if DEBUG
+                st.Stop();
+                System.Diagnostics.Debug.WriteLine("loading settings.xml and template.xml: " + st.ElapsedMilliseconds + "ms");
+#endif
+
+                //whidbey color table (gray colors of menustrip and tabstrip)
+                ProfessionalColorTable whidbeyColorTable = new ProfessionalColorTable();
+                whidbeyColorTable.UseSystemColors = true;
+                ToolStripManager.Renderer = new ToolStripProfessionalRenderer(whidbeyColorTable);
 
                 if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
                 {
@@ -64,21 +77,63 @@ namespace FreelancerModStudio
 
         public struct Template
         {
-            public static FreelancerModStudio.Settings.Template Data;
+            private static FreelancerModStudio.Settings.Template data;
+            private static int selectedLanguage = -1;
 
             public static void Load()
             {
                 string File = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.TemplatePath);
-                Data = new FreelancerModStudio.Settings.Template();
+                data = new FreelancerModStudio.Settings.Template();
 
                 try
                 {
-                    Data.Load(File);
+                    data.Load(File);
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.LoadTemplateException, Properties.Resources.TemplatePath), ex));
+                    Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.TemplateLoadException, Properties.Resources.TemplatePath), ex));
                     Environment.Exit(0);
+                }
+
+                //set selected language
+                for (int i = 0; i < data.Data.Languages.Count; i++ )
+                {
+                    if (data.Data.Languages[i].ID.ToLower() == Settings.GetShortLanguage())
+                    {
+                        selectedLanguage = i;
+                        break;
+                    }
+                }
+            }
+
+            public struct Data
+            {
+                public static FreelancerModStudio.Settings.Template.Files Files
+                {
+                    get { return data.Data.Files; }
+                    set { data.Data.Files = value; }
+                }
+
+                public static FreelancerModStudio.Settings.Template.Language Language
+                {
+                    get
+                    {
+                        if (selectedLanguage != -1)
+                            return data.Data.Languages[selectedLanguage];
+                        else
+                            return null;
+                    }
+                    set
+                    {
+                        if (selectedLanguage != -1)
+                            data.Data.Languages[selectedLanguage] = value;
+                    }
+                }
+
+                public static FreelancerModStudio.Settings.Template.CostumTypes CostumTypes
+                {
+                    get { return data.Data.CostumTypes; }
+                    set { data.Data.CostumTypes = value; }
                 }
             }
         }
@@ -95,7 +150,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.SaveSettingsException, Properties.Resources.SettingsPath), ex));
+                    Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.SettingsSaveException, Properties.Resources.SettingsPath), ex));
                 }
             }
 
@@ -112,9 +167,25 @@ namespace FreelancerModStudio
                     }
                     catch (Exception ex)
                     {
-                        Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.LoadSettingsException, Properties.Resources.SettingsPath), ex));
+                        Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.SettingsLoadException, Properties.Resources.SettingsPath), ex));
                     }
                 }
+            }
+
+            public static string GetShortLanguage()
+            {
+                if (Data.Data.General.Language == FreelancerModStudio.Settings.LanguageType.German)
+                    return "de";
+
+                return "en";
+            }
+
+            public static void SetShortLanguage(string language)
+            {
+                if (language.ToLower() == "de")
+                    Data.Data.General.Language = FreelancerModStudio.Settings.LanguageType.German;
+
+                Data.Data.General.Language = FreelancerModStudio.Settings.LanguageType.English; 
             }
         }
 

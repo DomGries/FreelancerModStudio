@@ -64,13 +64,13 @@ namespace FreelancerModStudio
                     if (this.ValidHomepage(this.txtHomepage.Text))
                         this.DialogResult = DialogResult.OK;
                     else
-                        MessageBox.Show(Properties.Strings.InvalidModHomepage, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(Properties.Strings.ModInvalidHomepage, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
-                    MessageBox.Show(Properties.Strings.InvalidModPathChars, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(Properties.Strings.ModInvalidPathChars, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
-                MessageBox.Show(Properties.Strings.InvalidModNameChars, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Properties.Strings.ModInvalidNameChars, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
         private void btnBrowse_Click(object sender, EventArgs e)

@@ -53,6 +53,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ObjectListView, Version=2.1.0.3982, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ObjectListView.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -68,15 +72,14 @@
   <ItemGroup>
     <Compile Include="AutoUpdate\AutoUpdate.cs">
     </Compile>
-    <Compile Include="Controls\ObjectListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Controls\PropertyGridExtension.cs" />
     <Compile Include="Controls\SeperatorLine.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\UICultureChanger.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DevTest.cs" />
     <Compile Include="frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -89,17 +92,23 @@
     <Compile Include="AutoUpdate\frmAutoUpdate.Designer.cs">
       <DependentUpon>frmAutoUpdate.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmBugList.cs">
+    <Compile Include="frmErrorList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmBugList.Designer.cs">
-      <DependentUpon>frmBugList.cs</DependentUpon>
+    <Compile Include="frmErrorList.Designer.cs">
+      <DependentUpon>frmErrorList.cs</DependentUpon>
     </Compile>
     <Compile Include="frmDefaultEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmDefaultEditor.Designer.cs">
       <DependentUpon>frmDefaultEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmFileType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmFileType.Designer.cs">
+      <DependentUpon>frmFileType.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -113,6 +122,12 @@
     <Compile Include="frmNewMod.Designer.cs">
       <DependentUpon>frmNewMod.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmOptions.Designer.cs">
+      <DependentUpon>frmOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,8 +135,11 @@
       <DependentUpon>frmProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
-    <Compile Include="Settings\INIData.cs" />
+    <Compile Include="Settings\BINIManager.cs" />
+    <Compile Include="Settings\FileManager.cs" />
+    <Compile Include="Settings\INIManager.cs" />
     <Compile Include="Settings\Mod.cs" />
+    <Compile Include="Settings\News.cs" />
     <Compile Include="Settings\Settings.cs">
     </Compile>
     <Compile Include="Program.cs" />
@@ -208,8 +226,9 @@
     <Content Include="Resources\UnDo.ico" />
     <Content Include="Resources\UpFolder.ico" />
     <Content Include="Resources\WebSearch.ico" />
-    <None Include="Settings\Template.xml">
-    </None>
+    <Content Include="Template.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="frmAbout.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmAbout.cs</DependentUpon>
@@ -218,17 +237,22 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmAutoUpdate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmBugList.de.resx">
+    <EmbeddedResource Include="frmErrorList.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmBugList.cs</DependentUpon>
+      <DependentUpon>frmErrorList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmBugList.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmBugList.cs</DependentUpon>
+    <EmbeddedResource Include="frmDefaultEditor.de.resx">
+      <DependentUpon>frmDefaultEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmDefaultEditor.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmDefaultEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmFileType.de.resx">
+      <DependentUpon>frmFileType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmFileType.resx">
+      <DependentUpon>frmFileType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmNewMod.de.resx">
       <SubType>Designer</SubType>
@@ -237,6 +261,12 @@
     <EmbeddedResource Include="frmNewMod.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmNewMod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmOptions.de.resx">
+      <DependentUpon>frmOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmOptions.resx">
+      <DependentUpon>frmOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProperties.resx">
       <SubType>Designer</SubType>
@@ -275,11 +305,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Target Name="GenSerializationAssembly" DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
+    <SGen BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(SGenToolPath)">
+      <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />
+    </SGen>
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <Target Name="AfterBuild" DependsOnTargets="GenSerializationAssembly" />
 </Project>

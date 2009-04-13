@@ -33,6 +33,11 @@ namespace FreelancerModStudio
             //this.BuildList();
         }
 
+        public void RefreshSettings()
+        {
+            this.TabText = Properties.Strings.SolutionExplorerText;
+        }
+
         //private void AddNode(Settings.Template.File file)
         //{
         //    //file.Path
@@ -40,7 +45,7 @@ namespace FreelancerModStudio
 
         //private void BuildList ()
         //{
-        //    foreach (Settings.Template.File file in Helper.Template.Data.Data.Files)
+        //    foreach (Settings.Template.File file in Helper.Template.Data.Files)
         //    {
         //        this.AddNode(file);
         //    }

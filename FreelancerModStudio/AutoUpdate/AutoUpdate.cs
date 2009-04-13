@@ -153,14 +153,14 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void Download_CheckFile_Completed(object sender, DownloadStringCompletedEventArgs e)
         {
-            if (e.Cancelled)
+            if (e.Cancelled || this.mSilentCheck)
                 return;
 
             if (e.Error != null)
             {
                 //exception occured while downloading
-                if (this.mUpdaterForm != null)
-                    this.Abort();
+                //if (this.mUpdaterForm != null)
+                //    this.mUpdaterForm.Close();
 
                 Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), e.Error));
             }
@@ -181,8 +181,8 @@ namespace FreelancerModStudio.AutoUpdate
             if (e.Error != null)
             {
                 //exception occured while downloading
-                if (this.mUpdaterForm != null)
-                    this.Abort();
+                //if (this.mUpdaterForm != null)
+                //    this.mUpdaterForm.Close();
 
                 Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), e.Error));
             }

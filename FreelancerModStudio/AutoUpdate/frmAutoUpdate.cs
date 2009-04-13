@@ -123,7 +123,7 @@ namespace FreelancerModStudio.AutoUpdate
             int kbTotal = Convert.ToInt32(bytesTotal / 1024);
 
             this.pgbDownload.Value = percent;
-            this.lblDownloaded.Text = String.Format(FreelancerModStudio.Properties.Strings.DownloadSpeed, (Convert.ToDouble(kbRead) / 1024).ToString("N1"), (Convert.ToDouble(kbTotal) / 1024).ToString("N1"));
+            this.lblDownloaded.Text = String.Format(FreelancerModStudio.Properties.Strings.UpdatesDownloadSpeed, (Convert.ToDouble(kbRead) / 1024).ToString("N1"), (Convert.ToDouble(kbTotal) / 1024).ToString("N1"));
 
             this.Text = String.Format(Properties.Strings.UpdatesFormDownloadText, percent);
         }

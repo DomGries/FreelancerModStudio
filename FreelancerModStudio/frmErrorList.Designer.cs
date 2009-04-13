@@ -1,6 +1,6 @@
 ﻿namespace FreelancerModStudio
 {
-    partial class frmBugList
+    partial class frmErrorList
     {
         /// <summary>
         /// Erforderliche Designervariable.
@@ -28,45 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBugList));
             this.objectListView1 = new BrightIdeasSoftware.FastObjectListView();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
             // objectListView1
             // 
-            this.objectListView1.AccessibleDescription = null;
-            this.objectListView1.AccessibleName = null;
-            resources.ApplyResources(this.objectListView1, "objectListView1");
-            this.objectListView1.AlternateRowBackColor = System.Drawing.Color.Empty;
-            this.objectListView1.BackgroundImage = null;
             this.objectListView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.objectListView1.EmptyListMsg = null;
-            this.objectListView1.Font = null;
+            this.objectListView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.objectListView1.FullRowSelect = true;
+            this.objectListView1.ItemRenderer = null;
+            this.objectListView1.Location = new System.Drawing.Point(0, 0);
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
+            this.objectListView1.Size = new System.Drawing.Size(292, 266);
+            this.objectListView1.TabIndex = 0;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.VirtualMode = true;
             // 
-            // frmBugList
+            // frmErrorList
             // 
-            this.AccessibleDescription = null;
-            this.AccessibleName = null;
             this.AutoHidePortion = 150;
-            resources.ApplyResources(this, "$this");
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = null;
+            this.ClientSize = new System.Drawing.Size(292, 266);
             this.Controls.Add(this.objectListView1);
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft)
                         | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight)
                         | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop)
                         | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
-            this.Font = null;
-            this.Icon = null;
-            this.Name = "frmBugList";
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Name = "frmErrorList";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockBottomAutoHide;
-            this.ToolTipText = null;
+            this.TabText = "";
+            this.Text = "Buglist";
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);
 

@@ -36,7 +36,7 @@ namespace FreelancerModStudio
                     foreach (INIOptions options in block.Value) //each options
                     {
                         Template.Options templateOptions = new Template.Options();
-                        foreach (KeyValuePair<string, List<string>> option in options) //each option
+                        foreach (KeyValuePair<string, List<INIOption>> option in options) //each option
                         {
                             Template.Option templateOption = new Template.Option();
                             templateOption.Multiple = option.Value.Count > 1;
@@ -45,7 +45,6 @@ namespace FreelancerModStudio
                         }
 
                         Template.Block templateBlock = new Template.Block();
-                        templateBlock.Multiple = block.Value.Count > 1;
                         templateBlock.Name = block.Key;
                         templateBlock.Options = templateOptions;
 
@@ -55,7 +54,7 @@ namespace FreelancerModStudio
                                 templateBlock.Identifier = "nickname";
                         }
 
-                        if (templateBlock.Multiple && templateBlocks.Count > 0 && templateBlocks[templateBlocks.Count - 1].Name.ToLower() == block.Key.ToLower())
+                        if (templateBlocks.Count > 0 && templateBlocks[templateBlocks.Count - 1].Name.ToLower() == block.Key.ToLower())
                         {
                             //integration options
                             foreach (Template.Option option in templateOptions)
@@ -75,8 +74,7 @@ namespace FreelancerModStudio
                             }
 
                             //change to multiple blocks if required
-                            if (templateBlock.Multiple)
-                                templateBlocks[templateBlocks.Count - 1].Multiple = true;
+                            templateBlocks[templateBlocks.Count - 1].Multiple = templateBlocks[templateBlocks.Count - 1].Options.Count > 1;
 
                             //sort options after integration
                             templateBlocks[templateBlocks.Count - 1].Options.Sort();
@@ -84,17 +82,15 @@ namespace FreelancerModStudio
                         else
                         {
                             //add new block
+                            templateBlock.Multiple = block.Value.Count > 1;
                             templateBlocks.Add(templateBlock);
                         }
                     }
                 }
 
                 Template.File file = new Template.File();
-
-                int dirSeperatorIndex = iniDataTemplate.Path.LastIndexOf(System.IO.Path.DirectorySeparatorChar);
-                file.Name = iniDataTemplate.Path.Substring(dirSeperatorIndex + 1, iniDataTemplate.Path.Length - dirSeperatorIndex - 5).ToLower();
-
-                file.Path = "data\\" + iniDataTemplate.Path.ToLower();
+                file.Name = System.IO.Path.GetFileName(iniDataTemplate.Path.ToLower());
+                file.Path = iniDataTemplate.Path.ToLower();
                 file.Blocks = templateBlocks;
                 template.Data.Files.Add(file);
             }
@@ -1345,7 +1341,7 @@ namespace FreelancerModStudio
 
         private static void CreateTemplateFromFile(string file, int dataPathIndex)
         {
-            INIBlocks newBlocks = INIManager.Read(file, true);
+            INIBlocks newBlocks = INIManager.Read(file);
 
             string dataPath = file.Substring(dataPathIndex);
             int selectedFileGroup = GetTemplateFileGroup(dataPath);
@@ -1355,21 +1351,34 @@ namespace FreelancerModStudio
                 List<string> selectedFileGroupData = new List<string>(fileGroups[selectedFileGroup]);
                 for (int i = 0; i < dataList.Count; i++)
                 {
-                    int groupFileIndex = selectedFileGroupData.IndexOf(dataList[i].Path.ToLower());
-                    if (groupFileIndex != -1)
+                    if (selectedFileGroupData.Contains(dataList[i].Path.ToLower()))
                     {
-                        //System.Diagnostics.Debug.WriteLine("group: " + selectedFileGroupData[0] + " + " + dataList[i].Path.ToLower());
-
                         //integrate data
                         foreach (KeyValuePair<string, List<INIOptions>> newBlock in newBlocks)
                         {
-                            //TODO!!
                             //int blockIndex = dataList[i].Blocks.IndexOfKey(newBlock.Key);
-                            //if (blockIndex != 
-                            foreach (INIOptions newOptions in newBlock.Value)
-                            {
-                                dataList[i].Blocks.Add(new KeyValuePair<string, INIOptions>(newBlock.Key, newOptions));
-                            }
+                            //if (blockIndex != -1)
+                            //{
+                            //    foreach (INIOptions newOptions in newBlock.Value)
+                            //    {
+                            //        foreach (KeyValuePair<string, List<string>> newOption in newOptions)
+                            //        {
+                            //            for (int j = 0; j < dataList[i].Blocks.Values[blockIndex].Count; j++)
+                            //            {
+                            //                int optionsIndex = dataList[i].Blocks.Values[blockIndex][j].IndexOfKey(newOption.Key);
+                            //                if (optionsIndex != -1)
+                            //                {
+                            //                    if (newOption.Value.Count > dataList[i].Blocks.Values[blockIndex][j].Values[optionsIndex].Count)
+                            //                        dataList[i].Blocks.Values[blockIndex][j].Values[optionsIndex].Add("");
+                            //                }
+                            //                else
+                            //                    dataList[i].Blocks.Values[blockIndex][j].Add(new KeyValuePair<string, List<string>>(newOption.Key, newOption.Value));
+                            //            }
+                            //        }
+                            //    }
+                            //}
+                            //else
+                            dataList[i].Blocks.Add(newBlock.Key, newBlock.Value);
                         }
                         return;
                     }

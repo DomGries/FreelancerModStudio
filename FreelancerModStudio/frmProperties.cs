@@ -45,13 +45,32 @@ namespace FreelancerModStudio
                 CustomPropertyCollection properties = new CustomPropertyCollection();
                 for (int i = 0; i < block.Options.Count; i++)
                 {
+
                     string category = "";
                     string comment = "";
                     int categoryIndex = Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex].Options[block.Options[i].TemplateIndex].Category;
                     if (Helper.Template.Data.Language != null && Helper.Template.Data.Language.Categories.Count > categoryIndex + 1)
                         category = Helper.Template.Data.Language.Categories[categoryIndex].Value;
 
-                    properties.Add(new CustomPropertyItem(block.Options[i].Name, block.Options[i].Value, i, category, comment, false));
+                    CustomPropertyCollection subProperties = new CustomPropertyCollection();
+                    for (int j = 0; j < block.Options[i].Values.Count; j++)
+                        subProperties.Add(new CustomPropertyItem(block.Options[i].Name, block.Options[i].Values[j], block.Options[i].Values[j], i, category, comment, false));
+
+                    if (Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex].Options[block.Options[i].TemplateIndex].Multiple)
+                    {
+                        //string parent = Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex].Options[block.Options[i].TemplateIndex].Parent;
+                        //if (parent != null)
+                        //    properties.Add(new CustomPropertyItem(parent, subProperties, subProperties, i, category, comment, false, new TypeConverterAttribute(typeof(CustomExpandableObjectConverter))));
+                        //else
+                        properties.Add(new CustomPropertyItem(block.Options[i].Name, subProperties, subProperties, i, category, comment, false, new TypeConverterAttribute(typeof(CustomExpandableObjectConverter))));
+                    }
+                    else
+                    {
+                        if (subProperties.Count > 0)
+                            properties.Add(new CustomPropertyItem(block.Options[i].Name, subProperties[0].Value, subProperties[0].Value, i, category, comment, false));
+                        else
+                            properties.Add(new CustomPropertyItem(block.Options[i].Name, "", "", i, category, comment, false));
+                    }
                 }
                 propertyObjects.Add(properties);
             }

@@ -7,7 +7,7 @@ namespace FreelancerModStudio.Settings
 {
     public class INIManager
     {
-        public static INIBlocks Read(string file, bool caseSensitive)
+        public static INIBlocks Read(string file)
         {
             INIBlocks data = new INIBlocks();
 
@@ -17,6 +17,7 @@ namespace FreelancerModStudio.Settings
             {
                 streamReader = new StreamReader(file, Encoding.Default);
                 KeyValuePair<string, INIOptions> currentBlock = new KeyValuePair<string, INIOptions>();
+                int currentOptionIndex = 0;
 
                 while (!streamReader.EndOfStream)
                 {
@@ -30,13 +31,12 @@ namespace FreelancerModStudio.Settings
                     if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] == ']') //new block
                     {
                         if (currentBlock.Key != null)
-                            data.Add(currentBlock);
+                            data.Add(currentBlock.Key, currentBlock.Value);
 
                         string blockName = line.Substring(1, line.Length - 2).Trim();
-                        //if (!caseSensitive)
-                            blockName = blockName.ToLower();
 
                         currentBlock = new KeyValuePair<string, INIOptions>(blockName, new INIOptions());
+                        currentOptionIndex = 0;
                     }
                     else if (currentBlock.Key != null) //new value for block
                     {
@@ -44,20 +44,17 @@ namespace FreelancerModStudio.Settings
                         int valueIndex = line.IndexOf('=');
                         if (valueIndex != -1)
                         {
-                            string optionName = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
-                            if (!caseSensitive)
-                                optionName = optionName.ToLower();
+                            string optionName = line.Substring(0, valueIndex).Trim();
+                            string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
 
-                            KeyValuePair<string, string> option = new KeyValuePair<string, string>(
-                                line.Substring(0, valueIndex).Trim(), optionName);
-
-                            currentBlock.Value.Add(option);
+                            currentBlock.Value.Add(optionName, new INIOption(optionValue, currentOptionIndex));
+                            currentOptionIndex++;
                         }
                     }
                 }
 
                 if (currentBlock.Key != null)
-                    data.Add(currentBlock);
+                    data.Add(currentBlock.Key, currentBlock.Value);
             }
             catch (Exception ex)
             {
@@ -114,53 +111,69 @@ namespace FreelancerModStudio.Settings
 
     public class INIBlocks : SortedList<string, List<INIOptions>>
     {
-        public void Add(KeyValuePair<string, INIOptions> keyValuePair)
-        {
-            int index = this.IndexOfKey(keyValuePair.Key);
-            if (index != -1)
-                //add options to existing block
-                this.Values[index].Add(keyValuePair.Value);
-            else
-            {
-                //add new block
-                List<INIOptions> options = new List<INIOptions>();
-                options.Add(keyValuePair.Value);
-                this.Add(keyValuePair.Key, options);
-            }
-        }
-    }
+        public INIBlocks() : base(StringComparer.OrdinalIgnoreCase) { }
 
-    public class INIOptions : SortedList<string, List<string>>
-    {
-        public void Add2(KeyValuePair<string, List<string>> keyValuePair)
+        public new void Add(string key, List<INIOptions> values)
         {
-            int index = this.IndexOfKey(keyValuePair.Key);
+            int index = this.IndexOfKey(key);
             if (index != -1)
             {
                 //add value to existing option
-                foreach(string option in keyValuePair.Value)
+                foreach (INIOptions options in values)
+                    this.Values[index].Add(options);
+            }
+            else
+            {
+                //add new option
+                base.Add(key, values);
+            }
+        }
+
+        public void Add(string key, INIOptions values)
+        {
+            List<INIOptions> options = new List<INIOptions>();
+            options.Add(values);
+            this.Add(key, options);
+        }
+    }
+
+    public class INIOptions : SortedList<string, List<INIOption>>
+    {
+        public INIOptions() : base(StringComparer.OrdinalIgnoreCase) { }
+
+        public new void Add(string key, List<INIOption> values)
+        {
+            int index = this.IndexOfKey(key);
+            if (index != -1)
+            {
+                //add value to existing option
+                foreach (INIOption option in values)
                     this.Values[index].Add(option);
             }
             else
             {
                 //add new option
-                this.Add(keyValuePair.Key, keyValuePair.Value);
+                base.Add(key, values);
             }
         }
 
-        public void Add(KeyValuePair<string, string> keyValuePair)
+        public void Add(string key, INIOption value)
         {
-            int index = this.IndexOfKey(keyValuePair.Key);
-            if (index != -1)
-                //add value to existing option
-                this.Values[index].Add(keyValuePair.Value);
-            else
-            {
-                //add new option
-                List<string> options = new List<string>();
-                options.Add(keyValuePair.Value);
-                this.Add(keyValuePair.Key, options);
-            }
+            List<INIOption> options = new List<INIOption>();
+            options.Add(value);
+            this.Add(key, options);
+        }
+    }
+
+    public class INIOption
+    {
+        public string Value;
+        public int Index;
+
+        public INIOption(string value, int index)
+        {
+            Value = value;
+            Index = index;
         }
     }
 }

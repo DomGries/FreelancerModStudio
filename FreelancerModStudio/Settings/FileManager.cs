@@ -12,8 +12,8 @@ namespace FreelancerModStudio.Settings
             st.Start();
 #endif
             INIBlocks data = null;
-            //try
-            //{
+            try
+            {
                 //read basic file structure
                 if (encoding == FileEncoding.Automatic || encoding == FileEncoding.BINI)
                 {
@@ -24,14 +24,14 @@ namespace FreelancerModStudio.Settings
                     else
                     {
                         if (encoding == FileEncoding.Automatic)
-                            data = INIManager.Read(file, false);
+                            data = INIManager.Read(file);
                         else
                             return null;
                     }
                 }
                 else
-                    data = INIManager.Read(file, false);
-            try{}
+                    data = INIManager.Read(file);
+            }
             catch (Exception ex)
             {
                 throw ex;
@@ -60,14 +60,23 @@ namespace FreelancerModStudio.Settings
                             int optionIndex = options.IndexOfKey(option.Name.ToLower());
                             if (optionIndex != -1)
                             {
-                                foreach (string optionValue in options.Values[optionIndex])
+                                if (options.Values[optionIndex].Count > 0)
                                 {
-                                    templateBlock.Options.Add(new TemplateINIOption(option.Name, ConvertToTemplate(option.Type, optionValue), j));
+                                    TemplateINIOption templateOption = new TemplateINIOption(option.Name, j);
+                                    for (int k = 0; k < options.Values[optionIndex].Count; k++)
+                                        templateOption.Values.Add(ConvertToTemplate(option.Type, options.Values[optionIndex][k].Value));
 
-                                    if (block.Identifier != null && block.Identifier.ToLower() == options.Keys[optionIndex].ToLower())
-                                        templateBlock.MainOptionIndex = templateBlock.Options.Count - 1;
+                                    templateBlock.Options.Add(templateOption);
                                 }
                             }
+                            else
+                            {
+                                TemplateINIOption templateOption = new TemplateINIOption(option.Name, j);
+                                templateBlock.Options.Add(templateOption);
+                            }
+
+                            if (block.Identifier != null && block.Identifier.ToLower() == templateBlock.Options[templateBlock.Options.Count - 1].Name.ToLower())
+                                templateBlock.MainOptionIndex = templateBlock.Options.Count - 1;
                         }
                         newData.Blocks.Add(templateBlock);
                     }
@@ -86,11 +95,16 @@ namespace FreelancerModStudio.Settings
             INIBlocks newData = new INIBlocks();
             foreach (TemplateINIBlock block in data.Blocks)
             {
-                KeyValuePair<string, INIOptions> newBlock = new KeyValuePair<string, INIOptions>(block.Name, new INIOptions());
-                foreach (TemplateINIOption option in block.Options)
-                    newBlock.Value.Add(new KeyValuePair<string, string>(option.Name, option.Value.ToString()));
+                INIOptions newBlock = new INIOptions();
+                for (int i = 0; i < block.Options.Count; i++)
+                {
+                    List<INIOption> newOption = new List<INIOption>();
+                    for (int j = 0; j < block.Options[i].Values.Count; j++)
+                        newOption.Add(new INIOption(block.Options[j].Values[i].ToString(), j));
 
-                newData.Add(newBlock);
+                    newBlock.Add(block.Options[i].Name, newOption);
+                }
+                newData.Add(block.Name, newBlock);
             }
 
             try
@@ -116,38 +130,43 @@ namespace FreelancerModStudio.Settings
 
         private static object ConvertToTemplate(Template.OptionType type, string value)
         {
-            switch (type)
+            try
             {
-                case Template.OptionType.Int:
-                    return Convert.ToInt32(value);
+                switch (type)
+                {
+                    case Template.OptionType.Int:
+                        return Convert.ToInt32(value);
 
-                case Template.OptionType.Bool:
-                    return Convert.ToBoolean(value);
+                    case Template.OptionType.Bool:
+                        return Convert.ToBoolean(value);
 
-                case Template.OptionType.Double:
-                    return Convert.ToDouble(value);
+                    case Template.OptionType.Double:
+                        return Convert.ToDouble(value);
 
-                case Template.OptionType.Enum:
-                    return Enum.Parse(typeof(string), value, true);
+                    case Template.OptionType.Enum:
+                        return Enum.Parse(typeof(string), value, true);
 
-                case Template.OptionType.StringArray:
-                    return ConvertToArray(ArrayType.String, value);
+                    case Template.OptionType.StringArray:
+                        return ConvertToArray(ArrayType.String, value);
 
-                case Template.OptionType.IntArray:
-                    return ConvertToArray(ArrayType.Int, value);
+                    case Template.OptionType.IntArray:
+                        return ConvertToArray(ArrayType.Int, value);
 
-                case Template.OptionType.DoubleArray:
-                    return ConvertToArray(ArrayType.Double, value);
+                    case Template.OptionType.DoubleArray:
+                        return ConvertToArray(ArrayType.Double, value);
 
-                case Template.OptionType.Point:
-                    return ConvertToArray(ArrayType.Point, value);
+                    case Template.OptionType.Point:
+                        return ConvertToArray(ArrayType.Point, value);
 
-                case Template.OptionType.RGB:
-                    return ConvertToArray(ArrayType.RGB, value);
+                    case Template.OptionType.RGB:
+                        return ConvertToArray(ArrayType.RGB, value);
 
-                default:
-                    return value;
+                }
             }
+            //return string if error occured at conversion
+            catch { }
+
+            return value;
         }
 
         private static object ConvertToArray(ArrayType type, string value)
@@ -218,14 +237,11 @@ namespace FreelancerModStudio.Settings
         }
     }
 
-    public class TemplateINIBlock : IComparable<TemplateINIBlock>
+    public class TemplateINIBlock
     {
         public string Name;
-
         public List<TemplateINIOption> Options = new List<TemplateINIOption>();
-
         public int TemplateIndex;
-
         public int MainOptionIndex = -1;
 
         public TemplateINIBlock(string name, int templateIndex)
@@ -233,29 +249,17 @@ namespace FreelancerModStudio.Settings
             this.Name = name;
             this.TemplateIndex = templateIndex;
         }
-
-        public int CompareTo(TemplateINIBlock other)
-        {
-            int nameComparison = this.Name.CompareTo(other.Name);
-            if (nameComparison == 0 && this.MainOptionIndex > -1 && other.MainOptionIndex > -1 && this.Options.Count >= this.MainOptionIndex + 1 && other.Options.Count >= other.MainOptionIndex + 1)
-                return this.Options[this.MainOptionIndex].Value.ToString().CompareTo(other.Options[other.MainOptionIndex].Value.ToString());
-
-            return nameComparison;
-        }
     }
 
     public class TemplateINIOption : IComparable<TemplateINIOption>
     {
         public string Name;
-
-        public object Value;
-
         public int TemplateIndex;
+        public List<object> Values = new List<object>();
 
-        public TemplateINIOption(string name, object value, int templateIndex)
+        public TemplateINIOption(string name, int templateIndex)
         {
             this.Name = name;
-            this.Value = value;
             this.TemplateIndex = templateIndex;
         }
 

@@ -28,6 +28,7 @@ namespace FreelancerModStudio
         public frmDefaultEditor(int templateIndex, string file)
         {
             InitializeComponent();
+            this.Icon = Properties.Resources.FileINIIcon;
 
             TemplateINIData iniContent = FileManager.Read(FileEncoding.Automatic, templateIndex, file);
             Data = iniContent;
@@ -48,7 +49,8 @@ namespace FreelancerModStudio
                     lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedColor;
             };
 
-            objectListView1.Refresh();
+            //if (objectListView1.Objects != null)
+            //    objectListView1.RefreshObjects((List<EditorData>)objectListView1.Objects);
         }
 
         public void ShowData()
@@ -78,7 +80,7 @@ namespace FreelancerModStudio
                     //name of block
                     string blockName = null;
                     if (Data.Blocks[i].MainOptionIndex > -1 && Data.Blocks[i].Options.Count >= Data.Blocks[i].MainOptionIndex + 1)
-                        blockName = Data.Blocks[i].Options[Data.Blocks[i].MainOptionIndex].Value.ToString();
+                        blockName = Data.Blocks[i].Options[Data.Blocks[i].MainOptionIndex].Values[0].ToString();
                     else
                     {
                         if (Helper.Template.Data.Files[Data.TemplateIndex].Blocks[Data.Blocks[i].TemplateIndex].Multiple)
@@ -105,46 +107,6 @@ namespace FreelancerModStudio
 #endif
         }
 
-        public void ShowData(string filter)
-        {
-            //GENERAL  todo
-            objectListView1.Clear();
-            objectListView1.ShowGroups = false;
-
-            List<string> uniqueColumns = new List<string>();
-
-            for (int i = 0; i < Data.Blocks.Count; i++)
-            {
-                if (Data.Blocks[i].Name == filter && Data.Blocks[i].Options.Count > 0)
-                {
-                    ListViewItem item = new ListViewItem();
-                    for (int j = 0; j < Data.Blocks[i].Options.Count; j++)
-                    {
-                        if (!uniqueColumns.Contains(Data.Blocks[i].Options[j].Name))
-                        {
-                            uniqueColumns.Add(Data.Blocks[i].Options[j].Name);
-
-                            BrightIdeasSoftware.OLVColumn col = new BrightIdeasSoftware.OLVColumn(Data.Blocks[i].Options[j].Name, Data.Blocks[i].Options[j].Name);
-                            col.FillsFreeSpace = true;
-                            objectListView1.Columns.Add(col);
-                        }
-
-                        if (j == 0)
-                            item.Text = Data.Blocks[i].Options[j].Value.ToString();
-                        else
-                            item.SubItems.Add(Data.Blocks[i].Options[j].Value.ToString());
-
-                    }
-
-                    if (item != null)
-                    {
-                        item.Tag = i;
-                        objectListView1.Items.Add((ListViewItem)item);
-                    }
-                }
-            }
-        }
-
         public TemplateINIBlock[] GetSelectedData()
         {
             if (objectListView1.SelectedObjects.Count == 0)
@@ -165,7 +127,7 @@ namespace FreelancerModStudio
             {
                 //change data
                 EditorData editorData = (EditorData)objectListView1.SelectedObjects[option.PropertyIndex];
-                Data.Blocks[editorData.BlockIndex].Options[option.OptionIndex].Value = option.NewValue;
+                Data.Blocks[editorData.BlockIndex].Options[option.OptionIndex].Values[0] = option.NewValue;
 
                 editorData.Modified = true;
 

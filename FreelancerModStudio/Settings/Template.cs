@@ -75,6 +75,9 @@ namespace FreelancerModStudio.Settings
             [XmlAttribute("multiple")]
             public bool Multiple = false;
 
+            [XmlAttribute("parent")]
+            public string Parent;
+
             [XmlAttribute("type")]
             public OptionType Type = OptionType.String;
 

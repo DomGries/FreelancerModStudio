@@ -23,10 +23,19 @@ namespace FreelancerModStudio
 
             this.GetSettings();
 
+            this.propertiesForm.OptionChanged += Properties_OptionsChanged;
+
+            //display sub forms
             this.solutionExplorerForm.Show(dockPanel1);
             this.propertiesForm.Show(dockPanel1);
 
-            this.propertiesForm.OptionChanged += Properties_OptionsChanged;
+            //open files
+            string[]arguments = Environment.GetCommandLineArgs();
+            for (int i = 1; i < arguments.Length; i++)
+            {
+                if (System.IO.File.Exists(arguments[i]))
+                    OpenFile(arguments[i]);
+            }
         }
 
         private void mnuAbout_Click(object sender, EventArgs e)
@@ -231,29 +240,39 @@ namespace FreelancerModStudio
 
         private void OpenFile(string file)
         {
-            int templateIndex = Settings.FileManager.GetTemplateIndex(file);
-
-            if (templateIndex == -1)
+            int templateIndex = -1;
+            int documentIndex = FileOpened(file);
+            if (documentIndex == -1)
             {
-                //let the user choose the ini file type
-                frmFileType fileTypeForm = new frmFileType(file);
-                if (fileTypeForm.ShowDialog() == DialogResult.OK && fileTypeForm.FileTypeIndex >= 0)
-                    templateIndex = fileTypeForm.FileTypeIndex;
-                else
-                    return;
-            }
+                templateIndex = Settings.FileManager.GetTemplateIndex(file);
+                if (templateIndex == -1)
+                {
+                    //let the user choose the ini file type
+                    frmFileType fileTypeForm = new frmFileType(file);
+                    if (fileTypeForm.ShowDialog() == DialogResult.OK && fileTypeForm.FileTypeIndex >= 0)
+                        templateIndex = fileTypeForm.FileTypeIndex;
+                    else
+                        return;
+                }
 
+            }
             OpenFile(file, templateIndex);
         }
 
         private void OpenFile(string file, int templateIndex)
         {
-            frmDefaultEditor defaultEditor = new frmDefaultEditor(templateIndex, file);
-            defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
-            defaultEditor.ShowData();
-            defaultEditor.Show(this.dockPanel1, DockState.Document);
+            int documentIndex = FileOpened(file);
+            if (documentIndex != -1)
+                dockPanel1.ActivePane.ActiveContent = dockPanel1.DocumentsToArray()[0];
+            else
+            {
+                frmDefaultEditor defaultEditor = new frmDefaultEditor(templateIndex, file);
+                defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
+                defaultEditor.ShowData();
+                defaultEditor.Show(this.dockPanel1, DockState.Document);
 
-            AddToRecentFiles(file, templateIndex);
+                AddToRecentFiles(file, templateIndex);
+            }
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -502,6 +521,40 @@ namespace FreelancerModStudio
                 //no editors found
                 SetDocumentMenus(false);
             }
+        }
+
+        private int FileOpened(string file)
+        {
+            int i = 0;
+            foreach (IDockContent document in dockPanel1.Documents)
+            {
+                if (document is frmDefaultEditor)
+                {
+                    if (((frmDefaultEditor)document).File.ToLower() == file.ToLower())
+                        return i;
+                }
+                i++;
+            }
+            return -1;
+        }
+
+        private void frmMain_DragOver(object sender, DragEventArgs e)
+        {
+        }
+
+        private void frmMain_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void frmMain_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string file in files)
+                OpenFile(file);
         }
     }
 }

@@ -3,23 +3,33 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using System.ComponentModel;
+using FreelancerModStudio.Settings;
 
 namespace FreelancerModStudio
 {
     public class CustomPropertyItem
     {
+        [Browsable(false)]
         public string Name { get; set; }
+        [Browsable(false)]
         public string Description { get; set; }
+        [Browsable(false)]
         public bool ReadOnly { get; set; }
         public object Value { get; set; }
+        [Browsable(false)]
+        public object DefaultValue { get; set; }
+        [Browsable(false)]
         public object Tag { get; set; }
+        [Browsable(false)]
         public string Category { get; set; }
+        [Browsable(false)]
         public virtual Attribute[] Attributes { get; set; }
 
-        public CustomPropertyItem(string name, object value, object tag, string category, string description, bool readOnly, params Attribute[] attributes)
+        public CustomPropertyItem(string name, object value, object defaultValue, object tag, string category, string description, bool readOnly, params Attribute[] attributes)
         {
             Name = name;
             Value = value;
+            DefaultValue = defaultValue;
             Tag = tag;
             Description = description;
             ReadOnly = readOnly;
@@ -30,58 +40,65 @@ namespace FreelancerModStudio
 
     public class CustomPropertyDescriptor : PropertyDescriptor
     {
-        private CustomPropertyItem mPropertyItem;
+        private CustomPropertyItem propertyItem;
 
-        public CustomPropertyDescriptor(CustomPropertyItem propertyItem, Attribute[] attrs)
-            : base(propertyItem.Name, attrs)
+        public CustomPropertyDescriptor(CustomPropertyItem property, Attribute[] attrs)
+            : base(property.Name, attrs)
         {
-            mPropertyItem = propertyItem;
+            propertyItem = property;
         }
 
         public override bool CanResetValue(object component)
         {
-            return false;
+            return !propertyItem.Value.Equals(propertyItem.DefaultValue);
         }
 
         public override Type ComponentType
         {
-            get { return null; }
+            get { return typeof(CustomPropertyItem); }
         }
 
         public override object GetValue(object component)
         {
-            return mPropertyItem.Value;
+            return propertyItem.Value;
         }
 
         public override bool IsReadOnly
         {
-            get { return mPropertyItem.ReadOnly; }
+            get { return propertyItem.ReadOnly; }
         }
 
         public override Type PropertyType
         {
-            get { return mPropertyItem.Value.GetType(); }
+            get
+            {
+                if (propertyItem.Value != null)
+                    return propertyItem.Value.GetType();
+                else
+                    return typeof(object);
+            }
         }
 
         public override void ResetValue(object component)
         {
+            propertyItem.Value = propertyItem.DefaultValue;
         }
 
         public override void SetValue(object component, object value)
         {
-            mPropertyItem.Value = value;
+            propertyItem.Value = value;
         }
 
         public override bool ShouldSerializeValue(object component)
         {
-            return false;
+            return CanResetValue(component);
         }
 
         public override string Description
         {
             get
             {
-                return mPropertyItem.Description;
+                return propertyItem.Description;
             }
         }
 
@@ -89,7 +106,7 @@ namespace FreelancerModStudio
         {
             get
             {
-                return mPropertyItem.Category;
+                return propertyItem.Category;
             }
         }
 
@@ -97,7 +114,7 @@ namespace FreelancerModStudio
         {
             get
             {
-                return mPropertyItem.Name;
+                return propertyItem.Name;
             }
         }
     }
@@ -211,4 +228,22 @@ namespace FreelancerModStudio
         #endregion
     }
 
+    public class CustomExpandableObjectConverter : ExpandableObjectConverter
+    {
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType)
+        {
+            return "";
+        }
+        public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
+        {
+            return false;
+        }
+        public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
+        {
+            if (value is CustomPropertyCollection)
+                return ((CustomPropertyCollection)value).GetProperties(attributes);
+            else
+                return base.GetProperties(context, value, attributes);
+        }
+    }
 }

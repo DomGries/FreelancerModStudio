@@ -41,9 +41,10 @@
             // 
             this.propertyGrid.ContextMenuStrip = this.contextMenuStrip1;
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid.HelpVisible = false;
             this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
+            this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.NoSort;
             this.propertyGrid.Size = new System.Drawing.Size(292, 266);
             this.propertyGrid.TabIndex = 0;
             this.propertyGrid.ToolbarVisible = false;
@@ -64,11 +65,13 @@
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
             this.resetToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.resetToolStripMenuItem.Text = "Reset";
+            this.resetToolStripMenuItem.Visible = false;
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(124, 6);
+            this.toolStripMenuItem1.Visible = false;
             // 
             // descriptionToolStripMenuItem
             // 
@@ -78,6 +81,7 @@
             this.descriptionToolStripMenuItem.Name = "descriptionToolStripMenuItem";
             this.descriptionToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.descriptionToolStripMenuItem.Text = "Description";
+            this.descriptionToolStripMenuItem.Visible = false;
             this.descriptionToolStripMenuItem.Click += new System.EventHandler(this.descriptionToolStripMenuItem_Click);
             // 
             // frmProperties

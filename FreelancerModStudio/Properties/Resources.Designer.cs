@@ -88,6 +88,13 @@ namespace FreelancerModStudio.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Copy {
+            get {
+                object obj = ResourceManager.GetObject("Copy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to 1.0.0.0.
         /// </summary>
@@ -100,6 +107,20 @@ namespace FreelancerModStudio.Properties {
         internal static System.Drawing.Bitmap Delete {
             get {
                 object obj = ResourceManager.GetObject("Delete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap DeleteFolder {
+            get {
+                object obj = ResourceManager.GetObject("DeleteFolder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Document {
+            get {
+                object obj = ResourceManager.GetObject("Document", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -239,6 +260,13 @@ namespace FreelancerModStudio.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap NewDocument {
+            get {
+                object obj = ResourceManager.GetObject("NewDocument", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap NewFolder {
             get {
                 object obj = ResourceManager.GetObject("NewFolder", resourceCulture);
@@ -284,6 +312,13 @@ namespace FreelancerModStudio.Properties {
         internal static System.Drawing.Bitmap OpenMod {
             get {
                 object obj = ResourceManager.GetObject("OpenMod", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Paste {
+            get {
+                object obj = ResourceManager.GetObject("Paste", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

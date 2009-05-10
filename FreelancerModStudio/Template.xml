@@ -274,7 +274,7 @@
           <Options>
             <Option multiple="true">equipment</Option>
             <Option multiple="true">ship</Option>
-            <Option multiple="true">simple</Option>
+            <Option multiple="true" parent="ship">simple</Option>
             <Option multiple="true">snd</Option>
             <Option multiple="true">solar</Option>
             <Option multiple="true">voice</Option>

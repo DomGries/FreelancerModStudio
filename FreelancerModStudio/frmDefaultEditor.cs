@@ -49,8 +49,7 @@ namespace FreelancerModStudio
                     lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedColor;
             };
 
-            //if (objectListView1.Objects != null)
-            //    objectListView1.RefreshObjects((List<EditorData>)objectListView1.Objects);
+            objectListView1.Refresh();
         }
 
         public void ShowData()
@@ -80,7 +79,7 @@ namespace FreelancerModStudio
                     //name of block
                     string blockName = null;
                     if (Data.Blocks[i].MainOptionIndex > -1 && Data.Blocks[i].Options.Count >= Data.Blocks[i].MainOptionIndex + 1)
-                        blockName = Data.Blocks[i].Options[Data.Blocks[i].MainOptionIndex].Values[0].ToString();
+                        blockName = Data.Blocks[i].Options[Data.Blocks[i].MainOptionIndex].Values[0].Value.ToString();
                     else
                     {
                         if (Helper.Template.Data.Files[Data.TemplateIndex].Blocks[Data.Blocks[i].TemplateIndex].Multiple)
@@ -121,47 +120,57 @@ namespace FreelancerModStudio
 
         public void SetSelectedData(OptionChangedValue[] options)
         {
-            bool itemTextChanged = false;
+            //bool itemTextChanged = false;
 
-            foreach (OptionChangedValue option in options)
-            {
-                //change data
-                EditorData editorData = (EditorData)objectListView1.SelectedObjects[option.PropertyIndex];
-                Data.Blocks[editorData.BlockIndex].Options[option.OptionIndex].Values[0] = option.NewValue;
+            //foreach (OptionChangedValue option in options)
+            //{
+            //    //change data
+            //    EditorData editorData = (EditorData)objectListView1.SelectedObjects[option.PropertyIndex];
+            //    List<object> values = Data.Blocks[editorData.BlockIndex].Options[option.OptionIndex].Values;
 
-                editorData.Modified = true;
+            //    if (option.NewValue.ToString().Trim() != "" && option.OptionEntryIndex > values.Count - 1)
+            //        values.Add(option.NewValue);
+            //    else if (option.NewValue.ToString().Trim() == "" && option.OptionEntryIndex < values.Count)
+            //        values.RemoveAt(option.OptionEntryIndex);
+            //    else if (option.OptionEntryIndex < values.Count)
+            //        values[option.OptionEntryIndex] = option.NewValue;
+            //    else
+            //        return;
 
-                //change data in listview
-                if (Data.Blocks[editorData.BlockIndex].MainOptionIndex == option.OptionIndex)
-                {
-                    editorData.Name = option.NewValue.ToString();
-                    itemTextChanged = true;
-                }
-            }
+            //    editorData.Modified = true;
 
-            if (itemTextChanged)
-                objectListView1.BeginUpdate();
+            //    //change data in listview
+            //    if (Data.Blocks[editorData.BlockIndex].MainOptionIndex == option.OptionIndex)
+            //    {
+            //        editorData.Name = option.NewValue.ToString();
+            //        itemTextChanged = true;
+            //    }
+            //}
 
-            //refresh because of changed modified property (different background color)
-            objectListView1.RefreshSelectedObjects();
+            //if (itemTextChanged)
+            //    objectListView1.BeginUpdate();
 
-            if (itemTextChanged)
-            {
-                objectListView1.Sort();
-                objectListView1.EndUpdate();
+            ////refresh because of changed modified property (different background color)
+            //objectListView1.RefreshSelectedObjects();
 
-                objectListView1.BeginUpdate();
-                objectListView1.EnsureVisible(objectListView1.IndexOf(((EditorData)objectListView1.SelectedObjects[options[options.Length - 1].PropertyIndex])));
-                objectListView1.EnsureVisible(objectListView1.IndexOf(((EditorData)objectListView1.SelectedObjects[options[0].PropertyIndex])));
-                objectListView1.EndUpdate();
-            }
+            //if (itemTextChanged)
+            //{
+            //    objectListView1.Sort();
+            //    objectListView1.EndUpdate();
 
-            Modified = true;
+            //    objectListView1.BeginUpdate();
+            //    objectListView1.EnsureVisible(objectListView1.IndexOf(((EditorData)objectListView1.SelectedObjects[options[options.Length - 1].PropertyIndex])));
+            //    objectListView1.EnsureVisible(objectListView1.IndexOf(((EditorData)objectListView1.SelectedObjects[options[0].PropertyIndex])));
+            //    objectListView1.EndUpdate();
+            //}
+
+            //Modified = true;
         }
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
             OnSelectedDataChanged(GetSelectedData(), Data.TemplateIndex);
+            SetMenuEnabled();
         }
 
         public void Save()
@@ -269,7 +278,11 @@ namespace FreelancerModStudio
 
         private void mnuDelete_Click(object sender, EventArgs e)
         {
+            foreach (EditorData editorData in objectListView1.SelectedObjects)
+                Data.Blocks.RemoveAt(editorData.BlockIndex);
 
+            objectListView1.RemoveObjects(objectListView1.SelectedObjects);
+            Modified = true;
         }
 
         private void mnuSelectAll_Click(object sender, EventArgs e)
@@ -277,9 +290,30 @@ namespace FreelancerModStudio
             objectListView1.SelectAll();
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void SetMenuEnabled()
         {
             bool selection = objectListView1.SelectedObjects.Count > 0;
+
+            mnuDelete.Enabled = selection;
+        }
+
+        private void SetContextMenuEnabled()
+        {
+            bool selection = objectListView1.SelectedObjects.Count > 0;
+
+            mnuAdd2.Visible = !selection;
+            mnuDelete2.Enabled = selection;
+            mnuDelete2.Visible = selection;
+        }
+
+        private void mnuAdd_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            SetContextMenuEnabled();
         }
     }
 

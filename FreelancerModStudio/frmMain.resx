@@ -258,11 +258,26 @@
   <data name="mnuFile.Text" xml:space="preserve">
     <value>&amp;File</value>
   </data>
+  <data name="mnuSolutionExplorer.Size" type="System.Drawing.Size, System.Drawing">
+    <value>164, 22</value>
+  </data>
+  <data name="mnuSolutionExplorer.Text" xml:space="preserve">
+    <value>&amp;Solution Explorer</value>
+  </data>
+  <data name="mnuProperties.Size" type="System.Drawing.Size, System.Drawing">
+    <value>164, 22</value>
+  </data>
+  <data name="mnuProperties.Text" xml:space="preserve">
+    <value>&amp;Properties Window</value>
+  </data>
+  <data name="toolStripMenuItem3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>161, 6</value>
+  </data>
   <data name="mnuFullScreen.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>F8</value>
   </data>
   <data name="mnuFullScreen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>145, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuFullScreen.Text" xml:space="preserve">
     <value>&amp;Full Screen</value>
@@ -274,7 +289,7 @@
     <value>&amp;View</value>
   </data>
   <data name="mnuOptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 22</value>
+    <value>152, 22</value>
   </data>
   <data name="mnuOptions.Text" xml:space="preserve">
     <value>&amp;Options...</value>
@@ -692,6 +707,24 @@
   </data>
   <data name="&gt;&gt;uiCultureChanger1.Type" xml:space="preserve">
     <value>UICultureChanger, FreelancerModStudio, Version=0.8.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;toolStripMenuItem3.Name" xml:space="preserve">
+    <value>toolStripMenuItem3</value>
+  </data>
+  <data name="&gt;&gt;toolStripMenuItem3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuSolutionExplorer.Name" xml:space="preserve">
+    <value>mnuSolutionExplorer</value>
+  </data>
+  <data name="&gt;&gt;mnuSolutionExplorer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuProperties.Name" xml:space="preserve">
+    <value>mnuProperties</value>
+  </data>
+  <data name="&gt;&gt;mnuProperties.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>frmMain</value>

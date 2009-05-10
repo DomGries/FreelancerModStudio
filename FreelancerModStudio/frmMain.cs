@@ -23,7 +23,7 @@ namespace FreelancerModStudio
 
             this.GetSettings();
 
-            this.propertiesForm.OptionChanged += Properties_OptionsChanged;
+            this.propertiesForm.OptionsChanged += Properties_OptionsChanged;
 
             //display sub forms
             this.solutionExplorerForm.Show(dockPanel1);
@@ -46,7 +46,7 @@ namespace FreelancerModStudio
 
         private void mnuVisitForum_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://groups.google.com/group/freelancer-mod-studio/topics?gvc=2");
+            System.Diagnostics.Process.Start("http://groups.google.com/group/freelancer-mod-studio/topics");
         }
 
         private void mnuReportIssue_Click(object sender, EventArgs e)
@@ -536,10 +536,6 @@ namespace FreelancerModStudio
                 i++;
             }
             return -1;
-        }
-
-        private void frmMain_DragOver(object sender, DragEventArgs e)
-        {
         }
 
         private void frmMain_DragEnter(object sender, DragEventArgs e)

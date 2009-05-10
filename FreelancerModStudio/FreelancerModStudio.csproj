@@ -199,7 +199,10 @@
     <Content Include="Resources\Add.ico" />
     <Content Include="Resources\BuildMod.ico" />
     <Content Include="Resources\Close.ico" />
+    <Content Include="Resources\Copy.ico" />
     <Content Include="Resources\Delete.ico" />
+    <Content Include="Resources\DeleteFolder.ico" />
+    <Content Include="Resources\Document.ico" />
     <Content Include="Resources\Error.ico" />
     <Content Include="Resources\Filter.ico" />
     <Content Include="Resources\Folder.ico" />
@@ -211,11 +214,13 @@
     <Content Include="Resources\HomePage.ico" />
     <Content Include="Resources\Link.ico" />
     <None Include="Resources\LogoIcon.ico" />
+    <Content Include="Resources\NewDocument.ico" />
     <Content Include="Resources\NewFolder.ico" />
     <Content Include="Resources\Note.ico" />
     <Content Include="Resources\Open.ico" />
     <Content Include="Resources\OpenFolder.ico" />
     <None Include="Resources\Properties.ico" />
+    <Content Include="Resources\Paste.ico" />
     <Content Include="Resources\ReDo.ico" />
     <Content Include="Resources\ReportIssue.ico" />
     <Content Include="Resources\Save.ico" />

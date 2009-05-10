@@ -64,7 +64,7 @@ namespace FreelancerModStudio.Settings
                                 {
                                     TemplateINIOption templateOption = new TemplateINIOption(option.Name, j);
                                     for (int k = 0; k < options.Values[optionIndex].Count; k++)
-                                        templateOption.Values.Add(ConvertToTemplate(option.Type, options.Values[optionIndex][k].Value));
+                                        templateOption.Values.Add(new TemplateINIEntry(options.Values[optionIndex][k].Index, ConvertToTemplate(option.Type, options.Values[optionIndex][k].Value)));
 
                                     templateBlock.Options.Add(templateOption);
                                 }
@@ -255,7 +255,7 @@ namespace FreelancerModStudio.Settings
     {
         public string Name;
         public int TemplateIndex;
-        public List<object> Values = new List<object>();
+        public List<TemplateINIEntry> Values = new List<TemplateINIEntry>();
 
         public TemplateINIOption(string name, int templateIndex)
         {
@@ -266,6 +266,18 @@ namespace FreelancerModStudio.Settings
         public int CompareTo(TemplateINIOption other)
         {
             return this.Name.CompareTo(other.Name);
+        }
+    }
+
+    public class TemplateINIEntry
+    {
+        public int ID;
+        public object Value;
+
+        public TemplateINIEntry(int id, object value)
+        {
+            ID = id;
+            Value = value;
         }
     }
 }

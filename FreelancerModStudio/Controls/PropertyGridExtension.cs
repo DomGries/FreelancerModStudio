@@ -40,17 +40,17 @@ namespace FreelancerModStudio
 
     public class CustomPropertyDescriptor : PropertyDescriptor
     {
-        private CustomPropertyItem propertyItem;
+        public CustomPropertyItem PropertyItem {get; set;}
 
         public CustomPropertyDescriptor(CustomPropertyItem property, Attribute[] attrs)
             : base(property.Name, attrs)
         {
-            propertyItem = property;
+            PropertyItem = property;
         }
 
         public override bool CanResetValue(object component)
         {
-            return !propertyItem.Value.Equals(propertyItem.DefaultValue);
+            return !PropertyItem.Value.Equals(PropertyItem.DefaultValue);
         }
 
         public override Type ComponentType
@@ -60,20 +60,20 @@ namespace FreelancerModStudio
 
         public override object GetValue(object component)
         {
-            return propertyItem.Value;
+            return PropertyItem.Value;
         }
 
         public override bool IsReadOnly
         {
-            get { return propertyItem.ReadOnly; }
+            get { return PropertyItem.ReadOnly; }
         }
 
         public override Type PropertyType
         {
             get
             {
-                if (propertyItem.Value != null)
-                    return propertyItem.Value.GetType();
+                if (PropertyItem.Value != null)
+                    return PropertyItem.Value.GetType();
                 else
                     return typeof(object);
             }
@@ -81,12 +81,12 @@ namespace FreelancerModStudio
 
         public override void ResetValue(object component)
         {
-            propertyItem.Value = propertyItem.DefaultValue;
+            PropertyItem.Value = PropertyItem.DefaultValue;
         }
 
         public override void SetValue(object component, object value)
         {
-            propertyItem.Value = value;
+            PropertyItem.Value = value;
         }
 
         public override bool ShouldSerializeValue(object component)
@@ -98,7 +98,7 @@ namespace FreelancerModStudio
         {
             get
             {
-                return propertyItem.Description;
+                return PropertyItem.Description;
             }
         }
 
@@ -106,7 +106,7 @@ namespace FreelancerModStudio
         {
             get
             {
-                return propertyItem.Category;
+                return PropertyItem.Category;
             }
         }
 
@@ -114,7 +114,7 @@ namespace FreelancerModStudio
         {
             get
             {
-                return propertyItem.Name;
+                return PropertyItem.Name;
             }
         }
     }
@@ -232,7 +232,10 @@ namespace FreelancerModStudio
     {
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType)
         {
-            return "";
+            if (value is CustomPropertyCollection)
+                return "[" + (((CustomPropertyCollection)value).Count - 1).ToString() + "]";
+            else
+                return "";
         }
         public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
         {

@@ -83,6 +83,9 @@
             this.toolStripPanel4 = new System.Windows.Forms.ToolStripPanel();
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.uiCultureChanger1 = new UICultureChanger();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuSolutionExplorer = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripPanel2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -149,6 +152,7 @@
             // mnuNewFile
             // 
             resources.ApplyResources(this.mnuNewFile, "mnuNewFile");
+            this.mnuNewFile.Image = global::FreelancerModStudio.Properties.Resources.NewDocument;
             this.mnuNewFile.Name = "mnuNewFile";
             // 
             // toolStripMenuItem6
@@ -176,6 +180,7 @@
             // 
             // mnuOpenFile
             // 
+            this.mnuOpenFile.Image = global::FreelancerModStudio.Properties.Resources.Open;
             this.mnuOpenFile.Name = "mnuOpenFile";
             resources.ApplyResources(this.mnuOpenFile, "mnuOpenFile");
             this.mnuOpenFile.Click += new System.EventHandler(this.mnuOpenFile_Click);
@@ -228,6 +233,9 @@
             // mnuView
             // 
             this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuSolutionExplorer,
+            this.mnuProperties,
+            this.toolStripMenuItem3,
             this.mnuFullScreen});
             this.mnuView.MergeIndex = 2;
             this.mnuView.Name = "mnuView";
@@ -424,6 +432,21 @@
             this.uiCultureChanger1.ApplyToolTip = true;
             this.uiCultureChanger1.AddForm(this);
             // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
+            // 
+            // mnuSolutionExplorer
+            // 
+            this.mnuSolutionExplorer.Name = "mnuSolutionExplorer";
+            resources.ApplyResources(this.mnuSolutionExplorer, "mnuSolutionExplorer");
+            // 
+            // mnuProperties
+            // 
+            this.mnuProperties.Name = "mnuProperties";
+            resources.ApplyResources(this.mnuProperties, "mnuProperties");
+            // 
             // frmMain
             // 
             this.AllowDrop = true;
@@ -490,6 +513,9 @@
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuNewMod;
         private System.Windows.Forms.ToolStripMenuItem mnuNewFile;
+        private System.Windows.Forms.ToolStripMenuItem mnuSolutionExplorer;
+        private System.Windows.Forms.ToolStripMenuItem mnuProperties;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
     }
 }
 

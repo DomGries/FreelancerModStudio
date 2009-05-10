@@ -22,17 +22,38 @@ namespace FreelancerModStudio
             this.textBox1.ScrollToCaret();
 
             //set aviable file types
-            foreach (Settings.Template.File file in Helper.Template.Data.Files)
-                fileTypeComboBox.Items.Add(file.Name);
+            for (int i = 0; i < Helper.Template.Data.Files.Count; i++)
+                fileTypeComboBox.Items.Add(new FileTypeItem(Helper.Template.Data.Files[i].Name, i));
+
+            fileTypeComboBox.Sorted = true;
 
             if (fileTypeComboBox.Items.Count > Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType)
                 fileTypeComboBox.SelectedIndex = Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType;
+            else
+                fileTypeComboBox.SelectedIndex = 0;
         }
 
         private void frmFileType_FormClosed(object sender, FormClosedEventArgs e)
         {
-            FileTypeIndex = fileTypeComboBox.SelectedIndex;
-            Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType = FileTypeIndex;
+            FileTypeIndex = ((FileTypeItem)fileTypeComboBox.SelectedItem).Index;
+            Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType = fileTypeComboBox.SelectedIndex;
+        }
+    }
+
+    public class FileTypeItem
+    {
+        public string Name;
+        public int Index;
+
+        public FileTypeItem(string name, int index)
+        {
+            Name = name;
+            Index = index;
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

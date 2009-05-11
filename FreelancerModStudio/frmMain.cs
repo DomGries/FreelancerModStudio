@@ -266,12 +266,19 @@ namespace FreelancerModStudio
                 dockPanel1.ActivePane.ActiveContent = dockPanel1.DocumentsToArray()[0];
             else
             {
-                frmDefaultEditor defaultEditor = new frmDefaultEditor(templateIndex, file);
-                defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
-                defaultEditor.ShowData();
-                defaultEditor.Show(this.dockPanel1, DockState.Document);
+                try
+                {
+                    frmDefaultEditor defaultEditor = new frmDefaultEditor(templateIndex, file);
+                    defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
+                    defaultEditor.ShowData();
+                    defaultEditor.Show(this.dockPanel1, DockState.Document);
 
-                AddToRecentFiles(file, templateIndex);
+                    AddToRecentFiles(file, templateIndex);
+                }
+                catch (Exception ex)
+                {
+                    //ERROR WHEN OPENING FILE
+                }
             }
         }
 

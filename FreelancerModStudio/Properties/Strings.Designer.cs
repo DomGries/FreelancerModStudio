@@ -88,7 +88,7 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save &quot;{0}&quot;?.
+        ///   Looks up a localized string similar to Save &apos;{0}&apos;?.
         /// </summary>
         internal static string FileCloseSave {
             get {
@@ -120,6 +120,15 @@ namespace FreelancerModStudio.Properties {
         internal static string FileEditorEmpty {
             get {
                 return ResourceManager.GetString("FileEditorEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file &apos;{0}&apos; cannot be opened. Do you want to remove it from the Recent list?.
+        /// </summary>
+        internal static string FileErrorOpenRecent {
+            get {
+                return ResourceManager.GetString("FileErrorOpenRecent", resourceCulture);
             }
         }
         
@@ -173,7 +182,7 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The settings file &quot;{0}&quot; could not be loaded..
+        ///   Looks up a localized string similar to The settings file &apos;{0}&apos; could not be loaded..
         /// </summary>
         internal static string SettingsLoadException {
             get {
@@ -182,7 +191,7 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The settings file &quot;{0}&quot; could not be saved..
+        ///   Looks up a localized string similar to The settings file &apos;{0}&apos; could not be saved..
         /// </summary>
         internal static string SettingsSaveException {
             get {
@@ -200,7 +209,7 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The template file &quot;{0}&quot; could not be loaded..
+        ///   Looks up a localized string similar to The template file &apos;{0}&apos; could not be loaded..
         /// </summary>
         internal static string TemplateLoadException {
             get {

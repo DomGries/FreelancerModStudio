@@ -147,7 +147,7 @@
     <value>None</value>
   </data>
   <data name="mnuNewMod.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+N</value>
+    <value>Ctrl+N</value>
   </data>
   <data name="mnuNewMod.Size" type="System.Drawing.Size, System.Drawing">
     <value>171, 22</value>
@@ -160,7 +160,7 @@
     <value>False</value>
   </data>
   <data name="mnuNewFile.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+Umschalttaste+N</value>
+    <value>Ctrl+Shift+N</value>
   </data>
   <data name="mnuNewFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>171, 22</value>
@@ -181,7 +181,7 @@
     <value>False</value>
   </data>
   <data name="mnuOpenMod.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+O</value>
+    <value>Ctrl+O</value>
   </data>
   <data name="mnuOpenMod.Size" type="System.Drawing.Size, System.Drawing">
     <value>172, 22</value>
@@ -190,7 +190,7 @@
     <value>&amp;Mod...</value>
   </data>
   <data name="mnuOpenFile.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+Shift+O</value>
+    <value>Ctrl+Shift+O</value>
   </data>
   <data name="mnuOpenFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>172, 22</value>
@@ -214,7 +214,7 @@
     <value>False</value>
   </data>
   <data name="mnuCloseMod.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+Shift+W</value>
+    <value>Ctrl+Shift+W</value>
   </data>
   <data name="mnuCloseMod.Size" type="System.Drawing.Size, System.Drawing">
     <value>195, 22</value>
@@ -229,7 +229,7 @@
     <value>False</value>
   </data>
   <data name="mnuSaveAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+Shift+S</value>
+    <value>Ctrl+Shift+S</value>
   </data>
   <data name="mnuSaveAll.Size" type="System.Drawing.Size, System.Drawing">
     <value>195, 22</value>

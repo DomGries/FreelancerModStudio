@@ -48,9 +48,21 @@ namespace FreelancerModStudio.Settings
             public LanguageType Language { get; set; }
 
             [XmlIgnore,
-                CategoryAttribute("General"),
-                DisplayName("Editor modified color")]
+                CategoryAttribute("Editor"),
+                DisplayName("Alternate row color")]
+            public Color EditorAlternateRowColor { get; set; }
+
+            [XmlIgnore,
+                CategoryAttribute("Editor"),
+                DisplayName("Modified row color")]
             public Color EditorModifiedColor { get; set; }
+
+            [Browsable(false)]
+            public string EditorAlternateRowColorXML
+            {
+                get { return ColorTranslator.ToHtml(EditorAlternateRowColor); }
+                set { EditorAlternateRowColor = ColorTranslator.FromHtml(value); }
+            }
 
             [Browsable(false)]
             public string EditorModifiedColorXML
@@ -63,6 +75,7 @@ namespace FreelancerModStudio.Settings
 
             public General()
             {
+                EditorAlternateRowColor = Color.FromArgb(245, 245, 245);
                 EditorModifiedColor = Color.FromArgb(128, 255, 255);
                 RecentFilesCount = 4;
                 Language = LanguageType.English;
@@ -107,8 +120,7 @@ namespace FreelancerModStudio.Settings
             public bool SilentInstall;
         }
 
-        [CategoryAttribute("Proxy"),
-            TypeConverter(typeof(SettingsConverter))]
+        [TypeConverter(typeof(SettingsConverter))]
         public class Proxy
         {
             [DisplayName("Active")]

@@ -1341,7 +1341,8 @@ namespace FreelancerModStudio
 
         private static void CreateTemplateFromFile(string file, int dataPathIndex)
         {
-            INIBlocks newBlocks = INIManager.Read(file);
+            INIManager iniManager = new INIManager(file);
+            INIBlocks newBlocks = iniManager.Read();
 
             string dataPath = file.Substring(dataPathIndex);
             int selectedFileGroup = GetTemplateFileGroup(dataPath);

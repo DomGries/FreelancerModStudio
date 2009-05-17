@@ -124,16 +124,16 @@
     <value>Version {0}</value>
   </data>
   <data name="SettingsLoadException" xml:space="preserve">
-    <value>The settings file "{0}" could not be loaded.</value>
+    <value>The settings file '{0}' could not be loaded.</value>
   </data>
   <data name="TemplateLoadException" xml:space="preserve">
-    <value>The template file "{0}" could not be loaded.</value>
+    <value>The template file '{0}' could not be loaded.</value>
   </data>
   <data name="SettingsSaveException" xml:space="preserve">
-    <value>The settings file "{0}" could not be saved.</value>
+    <value>The settings file '{0}' could not be saved.</value>
   </data>
   <data name="FileCloseSave" xml:space="preserve">
-    <value>Save "{0}"?</value>
+    <value>Save '{0}'?</value>
   </data>
   <data name="ModNewName" xml:space="preserve">
     <value>Mod{0}</value>
@@ -230,5 +230,8 @@ If that problem persists, download and install the update manually.</value>
   </data>
   <data name="SolutionExplorerText" xml:space="preserve">
     <value>Solution Explorer</value>
+  </data>
+  <data name="FileErrorOpenRecent" xml:space="preserve">
+    <value>The file '{0}' cannot be opened. Do you want to remove it from the Recent list?</value>
   </data>
 </root>

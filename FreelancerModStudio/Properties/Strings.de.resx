@@ -124,16 +124,16 @@
     <value>Version {0}</value>
   </data>
   <data name="SettingsLoadException" xml:space="preserve">
-    <value>Die Einstellungs-Datei "{0}" konnte nicht geladen werden.</value>
+    <value>Die Einstellungs-Datei '{0}' konnte nicht geladen werden.</value>
   </data>
   <data name="TemplateLoadException" xml:space="preserve">
-    <value>Die Vorlagen-Datei "{0}" konnte nicht geladen werden.</value>
+    <value>Die Vorlagen-Datei '{0}' konnte nicht geladen werden.</value>
   </data>
   <data name="SettingsSaveException" xml:space="preserve">
-    <value>Die Einstellungs-Datei "{0}" konnte nicht gespeichert werden.</value>
+    <value>Die Einstellungs-Datei '{0}' konnte nicht gespeichert werden.</value>
   </data>
   <data name="FileCloseSave" xml:space="preserve">
-    <value>"{0}" speichern?</value>
+    <value>'{0}' speichern?</value>
   </data>
   <data name="ModNewName" xml:space="preserve">
     <value>Mod{0}</value>
@@ -230,5 +230,8 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
   </data>
   <data name="SolutionExplorerText" xml:space="preserve">
     <value>Solution Explorer</value>
+  </data>
+  <data name="FileErrorOpenRecent" xml:space="preserve">
+    <value>Die Datei '{0}' kann nicht geöffnet werden. Möchten Sie die Datei von der zuletzt geöffneten Liste entfernen?</value>
   </data>
 </root>

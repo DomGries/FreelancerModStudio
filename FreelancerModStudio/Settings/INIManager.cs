@@ -7,7 +7,14 @@ namespace FreelancerModStudio.Settings
 {
     public class INIManager
     {
-        public static INIBlocks Read(string file)
+        public string File { get; set; }
+
+        public INIManager(string file)
+        {
+            File = file;
+        }
+
+        public INIBlocks Read()
         {
             INIBlocks data = new INIBlocks();
 
@@ -15,7 +22,7 @@ namespace FreelancerModStudio.Settings
 
             try
             {
-                streamReader = new StreamReader(file, Encoding.Default);
+                streamReader = new StreamReader(File, Encoding.Default);
                 KeyValuePair<string, INIOptions> currentBlock = new KeyValuePair<string, INIOptions>();
                 int currentOptionIndex = 0;
 
@@ -67,13 +74,13 @@ namespace FreelancerModStudio.Settings
             return data;
         }
 
-        public static void Write(string file, INIBlocks data)
+        public void Write(INIBlocks data)
         {
             StreamWriter streamWriter = null;
 
             try
             {
-                streamWriter = new StreamWriter(file, false, Encoding.Default);
+                streamWriter = new StreamWriter(File, false, Encoding.Default);
 
                 //write each block
                 for (int i = 0; i < data.Count; i++)

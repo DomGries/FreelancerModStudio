@@ -5,32 +5,48 @@ namespace FreelancerModStudio.Settings
 {
     public class FileManager
     {
-        public static TemplateINIData Read(FileEncoding encoding, int templateIndex, string file)
+        public string File { get; set; }
+        public bool IsBini { get; set; }
+
+        public FileManager(string file, bool isBINI)
+        {
+            IsBini = isBINI;
+            File = file;
+        }
+
+        public FileManager(string file)
+        {
+            File = file;
+        }
+
+        public EditorINIData Read(FileEncoding encoding, int templateFileIndex)
         {
 #if DEBUG
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
             st.Start();
 #endif
-            INIBlocks data = null;
+            INIBlocks iniData = null;
             try
             {
                 //read basic file structure
                 if (encoding == FileEncoding.Automatic || encoding == FileEncoding.BINI)
                 {
-                    BINIManager biniManager = new BINIManager(file);
+                    IsBini = true;
+
+                    BINIManager biniManager = new BINIManager(File);
                     biniManager.Read();
                     if (biniManager.IsBini)
-                        data = biniManager.Data;
+                        iniData = biniManager.Data;
                     else
                     {
                         if (encoding == FileEncoding.Automatic)
-                            data = INIManager.Read(file);
+                            iniData = ReadINI();
                         else
                             return null;
                     }
                 }
                 else
-                    data = INIManager.Read(file);
+                    iniData = ReadINI();
             }
             catch (Exception ex)
             {
@@ -39,46 +55,96 @@ namespace FreelancerModStudio.Settings
 #if DEBUG
             st.Stop();
             System.Diagnostics.Debug.WriteLine("load data: " + st.ElapsedMilliseconds + "ms");
+#endif
 
-            st.Reset();
+            return GetEditorData(iniData, templateFileIndex); ;
+        }
+
+        private EditorINIData GetEditorData(INIBlocks iniData, int templateFileIndex)
+        {
+#if DEBUG
+            System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
             st.Start();
 #endif
 
-            TemplateINIData newData = new TemplateINIData(templateIndex);
-            for (int i = 0; i < Helper.Template.Data.Files[templateIndex].Blocks.Count; i++)
+            EditorINIData editorData = new EditorINIData(templateFileIndex);
+
+            //loop each template block
+            for (int i = 0; i < Helper.Template.Data.Files[templateFileIndex].Blocks.Count; i++)
             {
-                Template.Block block = Helper.Template.Data.Files[templateIndex].Blocks[i];
-                int blockIndex = data.IndexOfKey(block.Name.ToLower());
-                if (blockIndex != -1)
+                Template.Block templateBlock = Helper.Template.Data.Files[templateFileIndex].Blocks[i];
+
+                int iniBlockIndex = iniData.IndexOfKey(templateBlock.Name);
+                if (iniBlockIndex != -1)
                 {
-                    foreach (INIOptions options in data.Values[blockIndex])
+                    //loop each ini block
+                    foreach (INIOptions iniBlock in iniData.Values[iniBlockIndex])
                     {
-                        TemplateINIBlock templateBlock = new TemplateINIBlock(block.Name, i);
-                        for (int j = 0; j < block.Options.Count; j++)
+                        EditorINIBlock editorBlock = new EditorINIBlock(templateBlock.Name, i);
+
+                        //loop each template option
+                        for (int j = 0; j < templateBlock.Options.Count; j++)
                         {
-                            Template.Option option = block.Options[j];
-                            int optionIndex = options.IndexOfKey(option.Name.ToLower());
+                            int childOptionIndex = -1;
+                            Template.Option childTemplateOption = null;
+                            if (j < templateBlock.Options.Count - 1 && templateBlock.Options[j + 1].Parent != null)
+                            {
+                                //next option is child of current option
+                                childTemplateOption = templateBlock.Options[j + 1];
+                                childOptionIndex = iniBlock.IndexOfKey(childTemplateOption.Name.ToLower());
+                            }
+
+                            Template.Option templateOption = templateBlock.Options[j];
+                            EditorINIOption editorOption = new EditorINIOption(templateOption.Name, j);
+
+                            int optionIndex = iniBlock.IndexOfKey(templateOption.Name.ToLower());
                             if (optionIndex != -1)
                             {
-                                if (options.Values[optionIndex].Count > 0)
-                                {
-                                    TemplateINIOption templateOption = new TemplateINIOption(option.Name, j);
-                                    for (int k = 0; k < options.Values[optionIndex].Count; k++)
-                                        templateOption.Values.Add(new TemplateINIEntry(options.Values[optionIndex][k].Index, ConvertToTemplate(option.Type, options.Values[optionIndex][k].Value)));
+                                //h is used to start again at last child option in order to provide better performance
+                                int h = 0;
 
-                                    templateBlock.Options.Add(templateOption);
+                                //loop each ini option
+                                for (int k = 0; k < iniBlock.Values[optionIndex].Count; k++)
+                                {
+                                    EditorINISubOptions editorSubOptions = null;
+                                    if (childOptionIndex != -1)
+                                    {
+                                        editorSubOptions = new EditorINISubOptions(childTemplateOption.Name, childOptionIndex);
+
+                                        //loop each ini option of child
+                                        for (; h < iniBlock.Values[childOptionIndex].Count; h++)
+                                        {
+                                            INIOption childOption = iniBlock.Values[childOptionIndex][h];
+                                            if (k < iniBlock.Values[optionIndex].Count - 1 && childOption.Index > iniBlock.Values[optionIndex][k + 1].Index)
+                                                break;
+
+                                            if (childOption.Index > iniBlock.Values[optionIndex][k].Index)
+                                                editorSubOptions.Values.Add(ConvertToTemplate(childTemplateOption.Type, childOption.Value));
+                                        }
+                                    }
+
+                                    //add entry
+                                    editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniBlock.Values[optionIndex][k].Value), editorSubOptions));
                                 }
+
+                                //add option
+                                editorBlock.Options.Add(editorOption);
                             }
                             else
-                            {
-                                TemplateINIOption templateOption = new TemplateINIOption(option.Name, j);
-                                templateBlock.Options.Add(templateOption);
-                            }
+                                //add empty option
+                                editorBlock.Options.Add(new EditorINIOption(templateOption.Name, j));
 
-                            if (block.Identifier != null && block.Identifier.ToLower() == templateBlock.Options[templateBlock.Options.Count - 1].Name.ToLower())
-                                templateBlock.MainOptionIndex = templateBlock.Options.Count - 1;
+                            //set index of main option (value displayed in table view)
+                            if (templateBlock.Identifier != null && templateBlock.Identifier.ToLower() == editorBlock.Options[editorBlock.Options.Count - 1].Name.ToLower())
+                                editorBlock.MainOptionIndex = editorBlock.Options.Count - 1;
+
+                            //ignore next option because we already added it as children to the current option
+                            if (childTemplateOption != null)
+                                j++;
                         }
-                        newData.Blocks.Add(templateBlock);
+
+                        //add block
+                        editorData.Blocks.Add(editorBlock);
                     }
                 }
             }
@@ -87,13 +153,20 @@ namespace FreelancerModStudio.Settings
             System.Diagnostics.Debug.WriteLine("typecast data: " + st.ElapsedMilliseconds + "ms");
 #endif
 
-            return newData;
+            return editorData;
         }
 
-        public static void Write(TemplateINIData data, string file)
+        private INIBlocks ReadINI()
+        {
+            IsBini = false;
+            INIManager iniManager = new INIManager(File);
+            return iniManager.Read();
+        }
+
+        public void Write(EditorINIData data)
         {
             INIBlocks newData = new INIBlocks();
-            foreach (TemplateINIBlock block in data.Blocks)
+            foreach (EditorINIBlock block in data.Blocks)
             {
                 INIOptions newBlock = new INIOptions();
                 for (int i = 0; i < block.Options.Count; i++)
@@ -109,7 +182,17 @@ namespace FreelancerModStudio.Settings
 
             try
             {
-                INIManager.Write(file, newData);
+                //if (IsBini)
+                //{
+                //    BINIManager biniManager = new BINIManager(File);
+                //    biniManager.Data = newData;
+                //    biniManager.Write();
+                //}
+                //else
+                //{
+                INIManager iniManager = new INIManager(File);
+                iniManager.Write(newData);
+                //}
             }
             catch (Exception ex)
             {
@@ -128,7 +211,7 @@ namespace FreelancerModStudio.Settings
             return -1;
         }
 
-        private static object ConvertToTemplate(Template.OptionType type, string value)
+        private object ConvertToTemplate(Template.OptionType type, string value)
         {
             try
             {
@@ -169,7 +252,7 @@ namespace FreelancerModStudio.Settings
             return value;
         }
 
-        private static object ConvertToArray(ArrayType type, string value)
+        private object ConvertToArray(ArrayType type, string value)
         {
             string[] arrayValues = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -225,59 +308,72 @@ namespace FreelancerModStudio.Settings
         INI
     }
 
-    public class TemplateINIData
+    public class EditorINIData
     {
-        public List<TemplateINIBlock> Blocks = new List<TemplateINIBlock>();
+        public List<EditorINIBlock> Blocks = new List<EditorINIBlock>();
 
         public int TemplateIndex;
 
-        public TemplateINIData(int templateIndex)
+        public EditorINIData(int templateIndex)
         {
             this.TemplateIndex = templateIndex;
         }
     }
 
-    public class TemplateINIBlock
+    public class EditorINIBlock
     {
         public string Name;
-        public List<TemplateINIOption> Options = new List<TemplateINIOption>();
+        public List<EditorINIOption> Options = new List<EditorINIOption>();
         public int TemplateIndex;
         public int MainOptionIndex = -1;
 
-        public TemplateINIBlock(string name, int templateIndex)
+        public EditorINIBlock(string name, int templateIndex)
         {
             this.Name = name;
             this.TemplateIndex = templateIndex;
         }
     }
 
-    public class TemplateINIOption : IComparable<TemplateINIOption>
+    public class EditorINIOption
     {
         public string Name;
         public int TemplateIndex;
-        public List<TemplateINIEntry> Values = new List<TemplateINIEntry>();
+        public List<EditorINIEntry> Values = new List<EditorINIEntry>();
 
-        public TemplateINIOption(string name, int templateIndex)
+        public EditorINIOption(string name, int templateIndex)
         {
             this.Name = name;
             this.TemplateIndex = templateIndex;
         }
+    }
 
-        public int CompareTo(TemplateINIOption other)
+    public class EditorINIEntry
+    {
+        public object Value;
+        public EditorINISubOptions SubOptions;
+
+        public EditorINIEntry(object value)
         {
-            return this.Name.CompareTo(other.Name);
+            Value = value;
+        }
+
+        public EditorINIEntry(object value, EditorINISubOptions subOptions)
+        {
+            Value = value;
+            SubOptions = subOptions;
         }
     }
 
-    public class TemplateINIEntry
+    public class EditorINISubOptions
     {
-        public int ID;
-        public object Value;
+        public string Name;
+        public int TemplateIndex;
+        public List<object> Values = new List<object>();
 
-        public TemplateINIEntry(int id, object value)
+        public EditorINISubOptions(string name, int templateIndex)
         {
-            ID = id;
-            Value = value;
+            this.Name = name;
+            this.TemplateIndex = templateIndex;
         }
     }
 }

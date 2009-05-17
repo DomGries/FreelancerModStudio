@@ -30,7 +30,7 @@ namespace FreelancerModStudio
             this.propertiesForm.Show(dockPanel1);
 
             //open files
-            string[]arguments = Environment.GetCommandLineArgs();
+            string[] arguments = Environment.GetCommandLineArgs();
             for (int i = 1; i < arguments.Length; i++)
             {
                 if (System.IO.File.Exists(arguments[i]))
@@ -78,7 +78,7 @@ namespace FreelancerModStudio
         {
         }
 
-        private void DefaultEditor_SelectedDataChanged(Settings.TemplateINIBlock[] data, int templateIndex)
+        private void DefaultEditor_SelectedDataChanged(Settings.EditorINIBlock[] data, int templateIndex)
         {
             if (data != null)
                 propertiesForm.ShowData(data, templateIndex);
@@ -89,9 +89,9 @@ namespace FreelancerModStudio
         private void Properties_OptionsChanged(OptionChangedValue[] options)
         {
             IDockContent activeDocument = this.dockPanel1.ActiveDocument;
-            if (activeDocument != null && activeDocument is frmDefaultEditor)
+            if (activeDocument != null && activeDocument is frmTableEditor)
             {
-                frmDefaultEditor defaultEditor = (frmDefaultEditor)activeDocument;
+                frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
                 defaultEditor.SetSelectedData(options);
             }
         }
@@ -176,6 +176,19 @@ namespace FreelancerModStudio
             }
         }
 
+        private void RemoveFromRecentFiles(string file)
+        {
+            for (int i = 0; i < Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count; i++)
+            {
+                if (Helper.Settings.Data.Data.Forms.Main.RecentFiles[i].File == file)
+                {
+                    Helper.Settings.Data.Data.Forms.Main.RecentFiles.RemoveAt(i);
+                    break;
+                }
+            }
+            this.DisplayRecentFiles();
+        }
+
         private void AddToRecentFiles(string file, int templateIndex)
         {
             //remove double files
@@ -235,7 +248,15 @@ namespace FreelancerModStudio
         private void mnuLoadRecentFile_Click(object sender, EventArgs e)
         {
             Settings.Settings.RecentFile recentFile = (Settings.Settings.RecentFile)((ToolStripMenuItem)sender).Tag;
-            OpenFile(recentFile.File, recentFile.TemplateIndex);
+            try
+            {
+                OpenFile(recentFile.File, recentFile.TemplateIndex);
+            }
+            catch
+            {
+                if (MessageBox.Show(String.Format(Properties.Strings.FileErrorOpenRecent, recentFile.File), Helper.Assembly.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    RemoveFromRecentFiles(recentFile.File);
+            }
         }
 
         private void OpenFile(string file)
@@ -266,19 +287,12 @@ namespace FreelancerModStudio
                 dockPanel1.ActivePane.ActiveContent = dockPanel1.DocumentsToArray()[0];
             else
             {
-                try
-                {
-                    frmDefaultEditor defaultEditor = new frmDefaultEditor(templateIndex, file);
-                    defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
-                    defaultEditor.ShowData();
-                    defaultEditor.Show(this.dockPanel1, DockState.Document);
+                frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
+                defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
+                defaultEditor.ShowData();
+                defaultEditor.Show(this.dockPanel1, DockState.Document);
 
-                    AddToRecentFiles(file, templateIndex);
-                }
-                catch (Exception ex)
-                {
-                    //ERROR WHEN OPENING FILE
-                }
+                AddToRecentFiles(file, templateIndex);
             }
         }
 
@@ -432,9 +446,9 @@ namespace FreelancerModStudio
         {
             //show properties of document if active document changed
             IDockContent activeDocument = ((DockPanel)sender).ActiveDocument;
-            if (activeDocument != null && activeDocument is frmDefaultEditor)
+            if (activeDocument != null && activeDocument is frmTableEditor)
             {
-                frmDefaultEditor defaultEditor = (frmDefaultEditor)activeDocument;
+                frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
                 DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedData(), defaultEditor.Data.TemplateIndex);
             }
             else
@@ -470,19 +484,19 @@ namespace FreelancerModStudio
         {
             foreach (IDockContent document in dockPanel1.Documents)
             {
-                if (document is frmDefaultEditor)
-                    ((frmDefaultEditor)document).Save();
+                if (document is frmTableEditor)
+                    ((frmTableEditor)document).Save();
             }
         }
 
         private void SettingsChanged()
         {
-            List<frmDefaultEditor> editors = new List<frmDefaultEditor>();
+            List<frmTableEditor> editors = new List<frmTableEditor>();
             foreach (IDockContent document in dockPanel1.Contents)
             {
-                if (document is frmDefaultEditor)
+                if (document is frmTableEditor)
                 {
-                    editors.Add((frmDefaultEditor)document);
+                    editors.Add((frmTableEditor)document);
                     this.uiCultureChanger1.AddForm((Form)document);
                 }
             }
@@ -490,7 +504,7 @@ namespace FreelancerModStudio
             this.uiCultureChanger1.ApplyCulture(new System.Globalization.CultureInfo(Helper.Settings.GetShortLanguage()));
 
             //refresh settings after language change
-            foreach (frmDefaultEditor editor in editors)
+            foreach (frmTableEditor editor in editors)
                 editor.RefreshSettings();
 
             if (propertiesForm != null)
@@ -510,18 +524,18 @@ namespace FreelancerModStudio
 
         private void dockPanel1_ContentAdded(object sender, DockContentEventArgs e)
         {
-            if (e.Content is frmDefaultEditor)
+            if (e.Content is frmTableEditor)
                 SetDocumentMenus(true);
         }
 
         private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
         {
-            if (e.Content is frmDefaultEditor)
+            if (e.Content is frmTableEditor)
             {
                 foreach (IDockContent document in dockPanel1.Documents)
                 {
                     //there is at least one editor left in documents pane
-                    if (document is frmDefaultEditor)
+                    if (document is frmTableEditor)
                         return;
                 }
 
@@ -535,9 +549,9 @@ namespace FreelancerModStudio
             int i = 0;
             foreach (IDockContent document in dockPanel1.Documents)
             {
-                if (document is frmDefaultEditor)
+                if (document is frmTableEditor)
                 {
-                    if (((frmDefaultEditor)document).File.ToLower() == file.ToLower())
+                    if (((frmTableEditor)document).File.ToLower() == file.ToLower())
                         return i;
                 }
                 i++;

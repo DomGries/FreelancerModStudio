@@ -95,11 +95,11 @@
     <Compile Include="frmErrorList.Designer.cs">
       <DependentUpon>frmErrorList.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmDefaultEditor.cs">
+    <Compile Include="frmTableEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmDefaultEditor.Designer.cs">
-      <DependentUpon>frmDefaultEditor.cs</DependentUpon>
+    <Compile Include="frmTableEditor.Designer.cs">
+      <DependentUpon>frmTableEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="frmFileType.cs">
       <SubType>Form</SubType>
@@ -246,12 +246,12 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmErrorList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmDefaultEditor.de.resx">
-      <DependentUpon>frmDefaultEditor.cs</DependentUpon>
+    <EmbeddedResource Include="frmTableEditor.de.resx">
+      <DependentUpon>frmTableEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmDefaultEditor.resx">
+    <EmbeddedResource Include="frmTableEditor.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmDefaultEditor.cs</DependentUpon>
+      <DependentUpon>frmTableEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmFileType.de.resx">
       <DependentUpon>frmFileType.cs</DependentUpon>

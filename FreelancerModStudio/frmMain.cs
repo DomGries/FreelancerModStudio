@@ -9,12 +9,12 @@ namespace FreelancerModStudio
 {
     public partial class frmMain : Form
     {
-        private Settings.Mod mod;
+        Settings.Mod mod;
 
-        private bool modChanged = false;
+        bool modChanged = false;
 
-        private frmProperties propertiesForm = new frmProperties();
-        private frmSolutionExplorer solutionExplorerForm = new frmSolutionExplorer();
+        frmProperties propertiesForm = new frmProperties();
+        frmSolutionExplorer solutionExplorerForm = new frmSolutionExplorer();
 
         public frmMain()
         {
@@ -572,6 +572,16 @@ namespace FreelancerModStudio
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string file in files)
                 OpenFile(file);
+        }
+
+        private void mnuSolutionExplorer_Click(object sender, EventArgs e)
+        {
+            solutionExplorerForm.Show(dockPanel1);
+        }
+
+        private void mnuProperties_Click(object sender, EventArgs e)
+        {
+            propertiesForm.Show(dockPanel1);
         }
     }
 }

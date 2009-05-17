@@ -109,7 +109,7 @@ namespace FreelancerModStudio.Settings
                                     EditorINISubOptions editorSubOptions = null;
                                     if (childOptionIndex != -1)
                                     {
-                                        editorSubOptions = new EditorINISubOptions(childTemplateOption.Name, childOptionIndex);
+                                        editorSubOptions = new EditorINISubOptions(childTemplateOption.Name, j + 1);
 
                                         //loop each ini option of child
                                         for (; h < iniBlock.Values[childOptionIndex].Count; h++)

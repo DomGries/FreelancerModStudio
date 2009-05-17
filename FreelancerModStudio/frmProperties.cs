@@ -56,6 +56,7 @@ namespace FreelancerModStudio
 
                     bool multiple = Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex].Options[block.Options[i].TemplateIndex].Multiple;
                     string name = Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex].Options[block.Options[i].TemplateIndex].Name;
+                    string childComment = "";
 
                     CustomPropertyCollection subProperties = new CustomPropertyCollection();
 
@@ -65,33 +66,33 @@ namespace FreelancerModStudio
                         CustomPropertyItem subProperty = new CustomPropertyItem(block.Options[i].Name, block.Options[i].Values[j].Value, block.Options[i].Values[j].Value, new PropertyTag(i, j), category, comment, false);
                         if (block.Options[i].Values[j].SubOptions != null)
                         {
-                            //add child properties
-                            string childComment = "";
+                            //add children
                             CustomPropertyCollection childSubProperties = new CustomPropertyCollection();
 
-                            //loop each child option
+                            //loop each child
                             for (int k = 0; k < block.Options[i].Values[j].SubOptions.Values.Count; k++)
                                 childSubProperties.Add(new CustomPropertyItem(block.Options[i].Values[j].SubOptions.Name, block.Options[i].Values[j].SubOptions.Values[k], block.Options[i].Values[j].SubOptions.Values[k], new PropertyTag(j, k), category, childComment, false));
 
                             //add empty line
                             childSubProperties.Add(new CustomPropertyItem(block.Options[i].Values[j].SubOptions.Name, "", "", new PropertyTag(j, block.Options[i].Values[j].SubOptions.Values.Count), category, childComment, false));
 
+                            //add current option
                             CustomPropertyCollection childProperties = new CustomPropertyCollection();
                             childProperties.Add(subProperty);
 
                             if (Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex].Options[block.Options[i].Values[j].SubOptions.TemplateIndex].Multiple)
                             {
-                                //add multiple children
+                                //add multiple children to current option
                                 childProperties.Add(new CustomPropertyItem(childSubProperties[0].Name, childSubProperties, childSubProperties, null, category, childComment, false,
-                                    new TypeConverterAttribute(typeof(CustomExpandableObjectConverter)),
+                                    new TypeConverterAttribute(typeof(PropertyListObjectConverter)),
                                     new EditorAttribute(typeof(System.Drawing.Design.UITypeEditor), typeof(System.Drawing.Design.UITypeEditor))));
                             }
                             else
-                                //add single child
+                                //add single child to current option
                                 childProperties.Add(childSubProperties[0]);
 
                             //add new sub property
-                            subProperties.Add(new CustomPropertyItem(childProperties[j].Name, childProperties, childProperties, null, category, comment, false,
+                            subProperties.Add(new CustomPropertyItem(name, childProperties, childProperties, null, category, comment, false,
                                 new TypeConverterAttribute(typeof(CustomExpandableObjectConverter)),
                                 new EditorAttribute(typeof(System.Drawing.Design.UITypeEditor), typeof(System.Drawing.Design.UITypeEditor))));
                         }
@@ -99,15 +100,32 @@ namespace FreelancerModStudio
                             //add new sub property
                             subProperties.Add(subProperty);
                     }
-					
+
                     CustomPropertyItem property;
                     if (multiple)
                     {
-                        //add empty line
-                        subProperties.Add(new CustomPropertyItem(block.Options[i].Name, "", "", new PropertyTag(i, subProperties.Count), category, comment, false));
+                        if (block.Options[i].Values.Count > 0 && block.Options[i].Values[0].SubOptions != null)
+                        {
+                            //add empty line with children
+                            CustomPropertyCollection emptyChildList = new CustomPropertyCollection();
+                            emptyChildList.Add(new CustomPropertyItem(block.Options[i].Values[0].SubOptions.Name, "", "", new PropertyTag(i, subProperties.Count), category, childComment, false));
+
+                            CustomPropertyCollection emptyList = new CustomPropertyCollection();
+                            emptyList.Add(new CustomPropertyItem(name, "", "", new PropertyTag(i, subProperties.Count), category, comment, false));
+                            emptyList.Add(new CustomPropertyItem(block.Options[i].Values[0].SubOptions.Name, emptyChildList, emptyChildList, new PropertyTag(subProperties.Count, block.Options[i].Values[0].SubOptions.Values.Count), category, childComment, false,
+                                new TypeConverterAttribute(typeof(CustomExpandableObjectConverter)),
+                                new EditorAttribute(typeof(System.Drawing.Design.UITypeEditor), typeof(System.Drawing.Design.UITypeEditor))));
+
+                            subProperties.Add(new CustomPropertyItem(block.Options[i].Name, emptyList, emptyList, new PropertyTag(i, subProperties.Count), category, comment, false,
+                                new TypeConverterAttribute(typeof(PropertyListObjectConverter)),
+                                new EditorAttribute(typeof(System.Drawing.Design.UITypeEditor), typeof(System.Drawing.Design.UITypeEditor))));
+                        }
+                        else
+                            //add empty line
+                            subProperties.Add(new CustomPropertyItem(block.Options[i].Name, "", "", new PropertyTag(i, subProperties.Count), category, comment, false));
 
                         property = new CustomPropertyItem(block.Options[i].Name, subProperties, subProperties, new PropertyTag(i, 0), category, comment, false,
-                            new TypeConverterAttribute(typeof(CustomExpandableObjectConverter)),
+                            new TypeConverterAttribute(typeof(PropertyListObjectConverter)),
                             new EditorAttribute(typeof(System.Drawing.Design.UITypeEditor), typeof(System.Drawing.Design.UITypeEditor)));
                     }
                     else
@@ -185,6 +203,21 @@ namespace FreelancerModStudio
             OptionIndex = optionIndex;
             OptionEntryIndex = optionEntryIndex;
             NewValue = newValue;
+        }
+    }
+
+    class PropertyListObjectConverter : CustomExpandableObjectConverter
+    {
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType)
+        {
+            if (value is CustomPropertyCollection)
+                return "[" + (((CustomPropertyCollection)value).Count - 1).ToString() + "]";
+            else
+                return "";
+        }
+        public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
+        {
+            return false;
         }
     }
 }

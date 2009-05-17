@@ -232,15 +232,13 @@ namespace FreelancerModStudio
     {
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType)
         {
-            if (value is CustomPropertyCollection)
-                return "[" + (((CustomPropertyCollection)value).Count - 1).ToString() + "]";
-            else
-                return "";
+            return "";
         }
         public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
         {
             return false;
         }
+
         public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
         {
             if (value is CustomPropertyCollection)

@@ -126,37 +126,38 @@ namespace FreelancerModStudio
 
         public void SetSelectedData(OptionChangedValue[] options)
         {
-            //bool itemTextChanged = false;
+            return;
+            bool itemTextChanged = false;
 
-            //foreach (OptionChangedValue option in options)
-            //{
-            //    //change data
-            //    EditorData editorData = (EditorData)objectListView1.SelectedObjects[option.PropertyIndex];
-            //    List<object> values = Data.Blocks[editorData.BlockIndex].Options[option.OptionIndex].Values;
+            foreach (OptionChangedValue option in options)
+            {
+                //change data
+                TableData tableData = (TableData)objectListView1.SelectedObjects[option.PropertyIndex];
+                List<EditorINIEntry> values = Data.Blocks[tableData.BlockIndex].Options[option.OptionIndex].Values;
 
-            //    if (option.NewValue.ToString().Trim() != "" && option.OptionEntryIndex > values.Count - 1)
-            //        values.Add(option.NewValue);
-            //    else if (option.NewValue.ToString().Trim() == "" && option.OptionEntryIndex < values.Count)
-            //        values.RemoveAt(option.OptionEntryIndex);
-            //    else if (option.OptionEntryIndex < values.Count)
-            //        values[option.OptionEntryIndex] = option.NewValue;
-            //    else
-            //        return;
+                if (option.NewValue.ToString().Trim() != "" && option.OptionEntryIndex > values.Count - 1)
+                    values.Add(new EditorINIEntry(option.NewValue));
+                else if (option.NewValue.ToString().Trim() == "" && option.OptionEntryIndex < values.Count)
+                    values.RemoveAt(option.OptionEntryIndex);
+                else if (option.OptionEntryIndex < values.Count)
+                    values[option.OptionEntryIndex].Value = option.NewValue;
+                else
+                    return;
 
-            //    editorData.Modified = true;
+                tableData.Modified = true;
 
-            //    //change data in listview
-            //    if (Data.Blocks[editorData.BlockIndex].MainOptionIndex == option.OptionIndex)
-            //    {
-            //        editorData.Name = option.NewValue.ToString();
-            //        itemTextChanged = true;
-            //    }
-            //}
+                //change data in listview
+                if (Data.Blocks[tableData.BlockIndex].MainOptionIndex == option.OptionIndex)
+                {
+                    tableData.Name = option.NewValue.ToString();
+                    itemTextChanged = true;
+                }
+            }
 
             //if (itemTextChanged)
             //    objectListView1.BeginUpdate();
 
-            ////refresh because of changed modified property (different background color)
+            //refresh because of changed modified property (different background color)
             //objectListView1.RefreshSelectedObjects();
 
             //if (itemTextChanged)
@@ -165,12 +166,14 @@ namespace FreelancerModStudio
             //    objectListView1.EndUpdate();
 
             //    objectListView1.BeginUpdate();
-            //    objectListView1.EnsureVisible(objectListView1.IndexOf(((EditorData)objectListView1.SelectedObjects[options[options.Length - 1].PropertyIndex])));
-            //    objectListView1.EnsureVisible(objectListView1.IndexOf(((EditorData)objectListView1.SelectedObjects[options[0].PropertyIndex])));
+            //objectListView1.SelectedItem.EnsureVisible();
+            //    objectListView1.EnsureVisible(objectListView1.IndexOf(((TableData)objectListView1.SelectedObjects[options[options.Length - 1].PropertyIndex])));
+            //    objectListView1.EnsureVisible(objectListView1.IndexOf(((TableData)objectListView1.SelectedObjects[options[0].PropertyIndex])));
             //    objectListView1.EndUpdate();
             //}
 
-            //Modified = true;
+            Modified = true;
+            OnSelectedDataChanged(GetSelectedData(), Data.TemplateIndex);
         }
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)

@@ -121,9 +121,14 @@ namespace FreelancerModStudio
 
     public class CustomPropertyCollection : CollectionBase, ICustomTypeDescriptor
     {
-        public void Add(CustomPropertyItem Property)
+        public void Add(CustomPropertyItem property)
         {
-            base.List.Add(Property);
+            base.List.Add(property);
+        }
+
+        public void Insert(int index, CustomPropertyItem property)
+        {
+            base.List.Insert(index, property);
         }
 
         public int IndexOf(string name)

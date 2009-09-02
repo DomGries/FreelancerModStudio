@@ -248,9 +248,9 @@ namespace FreelancerModStudio
         private void mnuLoadRecentFile_Click(object sender, EventArgs e)
         {
             Settings.Settings.RecentFile recentFile = (Settings.Settings.RecentFile)((ToolStripMenuItem)sender).Tag;
-            try
+
+            OpenFile(recentFile.File, recentFile.TemplateIndex); try
             {
-                OpenFile(recentFile.File, recentFile.TemplateIndex);
             }
             catch
             {

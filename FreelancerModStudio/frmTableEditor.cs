@@ -15,6 +15,7 @@ namespace FreelancerModStudio
         public EditorINIData Data;
         public string File { get; set; }
         public bool IsBINI { get; set; }
+
         private bool modified = false;
 
         public delegate void SelectedDataChangedType(EditorINIBlock[] data, int templateIndex);
@@ -126,33 +127,48 @@ namespace FreelancerModStudio
 
         public void SetSelectedData(OptionChangedValue[] options)
         {
-            return;
-            bool itemTextChanged = false;
-
             foreach (OptionChangedValue option in options)
             {
                 //change data
                 TableData tableData = (TableData)objectListView1.SelectedObjects[option.PropertyIndex];
-                List<EditorINIEntry> values = Data.Blocks[tableData.BlockIndex].Options[option.OptionIndex].Values;
+                if (option.PropertyTag.OptionEntryChildIndex == -1)
+                {
+                    //change option data
+                    List<EditorINIEntry> values = Data.Blocks[tableData.BlockIndex].Options[option.PropertyTag.OptionIndex].Values;
 
-                if (option.NewValue.ToString().Trim() != "" && option.OptionEntryIndex > values.Count - 1)
-                    values.Add(new EditorINIEntry(option.NewValue));
-                else if (option.NewValue.ToString().Trim() == "" && option.OptionEntryIndex < values.Count)
-                    values.RemoveAt(option.OptionEntryIndex);
-                else if (option.OptionEntryIndex < values.Count)
-                    values[option.OptionEntryIndex].Value = option.NewValue;
+                    if (option.ChangedType == OptionChangedType.Added)
+                        values.Add(new EditorINIEntry(option.NewValue));
+                    else if (option.ChangedType == OptionChangedType.Removed)
+                        values.RemoveAt(option.PropertyTag.OptionEntryIndex);
+                    else
+                    {
+                        if (values.Count == 0)
+                            values.Add(new EditorINIEntry(option.NewValue));
+                        else
+                            values[option.PropertyTag.OptionEntryIndex].Value = option.NewValue;
+                    }
+                }
                 else
-                    return;
+                {
+                    //change sub option data
+                    EditorINISubOptions values = Data.Blocks[tableData.BlockIndex].Options[option.PropertyTag.OptionIndex].Values[option.PropertyTag.OptionEntryIndex].SubOptions;
+
+                    if (option.ChangedType == OptionChangedType.Added)
+                        values.Values.Add(option.NewValue);
+                    else if (option.ChangedType == OptionChangedType.Removed)
+                        values.Values.RemoveAt(option.PropertyTag.OptionEntryChildIndex);
+                    else
+                        values.Values[option.PropertyTag.OptionEntryChildIndex] = option.NewValue;
+                }
 
                 tableData.Modified = true;
 
                 //change data in listview
-                if (Data.Blocks[tableData.BlockIndex].MainOptionIndex == option.OptionIndex)
-                {
+                if (Data.Blocks[tableData.BlockIndex].MainOptionIndex == option.PropertyTag.OptionIndex)
                     tableData.Name = option.NewValue.ToString();
-                    itemTextChanged = true;
-                }
             }
+
+            objectListView1.RefreshObjects(objectListView1.SelectedObjects);
 
             //if (itemTextChanged)
             //    objectListView1.BeginUpdate();

@@ -106,10 +106,12 @@ namespace FreelancerModStudio.Settings
                                 //loop each ini option
                                 for (int k = 0; k < iniBlock.Values[optionIndex].Count; k++)
                                 {
-                                    EditorINISubOptions editorSubOptions = null;
+                                    List<object> editorSubOptions = null;
                                     if (childOptionIndex != -1)
                                     {
-                                        editorSubOptions = new EditorINISubOptions(childTemplateOption.Name, j + 1);
+                                        editorOption.SubValueTemplateIndex = j + 1;
+                                        editorOption.SubValueName = childTemplateOption.Name;
+                                        editorSubOptions = new List<object>();
 
                                         //loop each ini option of child
                                         for (; h < iniBlock.Values[childOptionIndex].Count; h++)
@@ -119,7 +121,7 @@ namespace FreelancerModStudio.Settings
                                                 break;
 
                                             if (childOption.Index > iniBlock.Values[optionIndex][k].Index)
-                                                editorSubOptions.Values.Add(ConvertToTemplate(childTemplateOption.Type, childOption.Value));
+                                                editorSubOptions.Add(ConvertToTemplate(childTemplateOption.Type, childOption.Value));
                                         }
                                     }
 
@@ -171,11 +173,30 @@ namespace FreelancerModStudio.Settings
                 INIOptions newBlock = new INIOptions();
                 for (int i = 0; i < block.Options.Count; i++)
                 {
-                    List<INIOption> newOption = new List<INIOption>();
-                    for (int j = 0; j < block.Options[i].Values.Count; j++)
-                        newOption.Add(new INIOption(block.Options[j].Values[i].ToString(), j));
+                    if (block.Options[i].Values.Count > 0)
+                    {
+                        int offset = 0;
+                        List<INIOption> newOption = new List<INIOption>();
+                        List<INIOption> newSubOption = new List<INIOption>();
 
-                    newBlock.Add(block.Options[i].Name, newOption);
+                        for (int j = 0; j < block.Options[i].Values.Count; j++)
+                        {
+                            newOption.Add(new INIOption(block.Options[i].Values[j].Value.ToString(), j + offset));
+
+                            if (block.Options[i].Values[j].SubOptions != null)
+                            {
+                                for (int k = 0; k < block.Options[i].Values[j].SubOptions.Count; k++)
+                                    newSubOption.Add(new INIOption(block.Options[i].Values[j].SubOptions[k].ToString(), j + offset + k + 1));
+
+                                offset += block.Options[i].Values[j].SubOptions.Count;
+                            }
+                        }
+
+                        newBlock.Add(block.Options[i].Name, newOption);
+
+                        if (newSubOption.Count > 0)
+                            newBlock.Add(block.Options[i].SubValueName, newSubOption);
+                    }
                 }
                 newData.Add(block.Name, newBlock);
             }
@@ -337,7 +358,11 @@ namespace FreelancerModStudio.Settings
     public class EditorINIOption
     {
         public string Name;
-        public int TemplateIndex;
+        public int TemplateIndex = -1;
+
+        public string SubValueName;
+        public int SubValueTemplateIndex = -1;
+
         public List<EditorINIEntry> Values = new List<EditorINIEntry>();
 
         public EditorINIOption(string name, int templateIndex)
@@ -350,30 +375,17 @@ namespace FreelancerModStudio.Settings
     public class EditorINIEntry
     {
         public object Value;
-        public EditorINISubOptions SubOptions;
+        public List<object> SubOptions;
 
         public EditorINIEntry(object value)
         {
             Value = value;
         }
 
-        public EditorINIEntry(object value, EditorINISubOptions subOptions)
+        public EditorINIEntry(object value, List<object> subOptions)
         {
             Value = value;
             SubOptions = subOptions;
-        }
-    }
-
-    public class EditorINISubOptions
-    {
-        public string Name;
-        public int TemplateIndex;
-        public List<object> Values = new List<object>();
-
-        public EditorINISubOptions(string name, int templateIndex)
-        {
-            this.Name = name;
-            this.TemplateIndex = templateIndex;
         }
     }
 }

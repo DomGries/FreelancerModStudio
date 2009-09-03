@@ -13,7 +13,6 @@ namespace FreelancerModStudio
         public frmOptions()
         {
             InitializeComponent();
-            this.Icon = Properties.Resources.LogoIcon;
             this.propertyGrid.SelectedObject = Helper.Settings.Data.Data.General;
             this.propertyGrid.ExpandAllGridItems();
         }

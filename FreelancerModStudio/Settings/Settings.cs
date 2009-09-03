@@ -49,19 +49,19 @@ namespace FreelancerModStudio.Settings
 
             [XmlIgnore,
                 CategoryAttribute("Editor"),
-                DisplayName("Alternate row color")]
-            public Color EditorAlternateRowColor { get; set; }
-
-            [XmlIgnore,
-                CategoryAttribute("Editor"),
                 DisplayName("Modified row color")]
             public Color EditorModifiedColor { get; set; }
 
+            [XmlIgnore,
+                CategoryAttribute("Editor"),
+                DisplayName("Modified saved row color")]
+            public Color EditorModifiedSavedColor { get; set; }
+
             [Browsable(false)]
-            public string EditorAlternateRowColorXML
+            public string EditorModifiedSavedColorXML
             {
-                get { return ColorTranslator.ToHtml(EditorAlternateRowColor); }
-                set { EditorAlternateRowColor = ColorTranslator.FromHtml(value); }
+                get { return ColorTranslator.ToHtml(EditorModifiedSavedColor); }
+                set { EditorModifiedSavedColor = ColorTranslator.FromHtml(value); }
             }
 
             [Browsable(false)]
@@ -75,8 +75,8 @@ namespace FreelancerModStudio.Settings
 
             public General()
             {
-                EditorAlternateRowColor = Color.FromArgb(245, 245, 245);
-                EditorModifiedColor = Color.FromArgb(128, 255, 255);
+                EditorModifiedColor = Color.FromArgb(255, 255, 192);
+                EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
                 RecentFilesCount = 4;
                 Language = LanguageType.English;
                 AutoUpdate = new AutoUpdate();

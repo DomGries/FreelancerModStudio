@@ -122,11 +122,11 @@
   </metadata>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="mnuAdd2.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+E</value>
+    <value>Ctrl+E</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="mnuAdd2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>145, 22</value>
+    <value>142, 22</value>
   </data>
   <data name="mnuAdd2.Text" xml:space="preserve">
     <value>&amp;Add</value>
@@ -136,10 +136,10 @@
     <value>False</value>
   </data>
   <data name="mnuDelete2.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Entf</value>
+    <value>Del</value>
   </data>
   <data name="mnuDelete2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>145, 22</value>
+    <value>142, 22</value>
   </data>
   <data name="mnuDelete2.Text" xml:space="preserve">
     <value>&amp;Delete</value>
@@ -148,7 +148,7 @@
     <value>False</value>
   </data>
   <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>146, 48</value>
+    <value>143, 48</value>
   </data>
   <data name="&gt;&gt;contextMenuStrip1.Name" xml:space="preserve">
     <value>contextMenuStrip1</value>
@@ -172,7 +172,7 @@
     <value>objectListView1</value>
   </data>
   <data name="&gt;&gt;objectListView1.Type" xml:space="preserve">
-    <value>BrightIdeasSoftware.FastObjectListView, ObjectListView, Version=2.1.0.3982, Culture=neutral, PublicKeyToken=null</value>
+    <value>BrightIdeasSoftware.FastObjectListView, ObjectListView, Version=2.2.1.24649, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;objectListView1.Parent" xml:space="preserve">
     <value>$this</value>
@@ -184,28 +184,28 @@
     <value>0, 0</value>
   </metadata>
   <data name="mnuClose.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+W</value>
+    <value>Ctrl+W</value>
   </data>
   <data name="mnuClose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>195, 22</value>
   </data>
   <data name="mnuClose.Text" xml:space="preserve">
     <value>&amp;Close</value>
   </data>
   <data name="mnuSave.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+S</value>
+    <value>Ctrl+S</value>
   </data>
   <data name="mnuSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>195, 22</value>
   </data>
   <data name="mnuSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
   </data>
   <data name="mnuSaveAs.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+Alt+S</value>
+    <value>Ctrl+Alt+S</value>
   </data>
   <data name="mnuSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>195, 22</value>
   </data>
   <data name="mnuSaveAs.Text" xml:space="preserve">
     <value>&amp;Save As...</value>
@@ -220,10 +220,10 @@
     <value>False</value>
   </data>
   <data name="mnuReDo.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+Z</value>
+    <value>Ctrl+Z</value>
   </data>
   <data name="mnuReDo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 22</value>
+    <value>167, 22</value>
   </data>
   <data name="mnuReDo.Text" xml:space="preserve">
     <value>&amp;Redo</value>
@@ -232,22 +232,22 @@
     <value>False</value>
   </data>
   <data name="mnuUnDo.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+Y</value>
+    <value>Ctrl+Y</value>
   </data>
   <data name="mnuUnDo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 22</value>
+    <value>167, 22</value>
   </data>
   <data name="mnuUnDo.Text" xml:space="preserve">
     <value>&amp;Undo</value>
   </data>
   <data name="toolStripMenuItem3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 6</value>
+    <value>164, 6</value>
   </data>
   <data name="mnuAdd.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+E</value>
+    <value>Ctrl+E</value>
   </data>
   <data name="mnuAdd.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 22</value>
+    <value>167, 22</value>
   </data>
   <data name="mnuAdd.Text" xml:space="preserve">
     <value>&amp;Add</value>
@@ -256,37 +256,37 @@
     <value>False</value>
   </data>
   <data name="mnuDelete.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Entf</value>
+    <value>Del</value>
   </data>
   <data name="mnuDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 22</value>
+    <value>167, 22</value>
   </data>
   <data name="mnuDelete.Text" xml:space="preserve">
     <value>&amp;Delete</value>
   </data>
   <data name="toolStripMenuItem4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 6</value>
+    <value>164, 6</value>
   </data>
   <data name="mnuSelectAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+A</value>
+    <value>Ctrl+A</value>
   </data>
   <data name="mnuSelectAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 22</value>
+    <value>167, 22</value>
   </data>
   <data name="mnuSelectAll.Text" xml:space="preserve">
     <value>&amp;Select All</value>
   </data>
   <data name="toolStripMenuItem5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 6</value>
+    <value>164, 6</value>
   </data>
   <data name="mnuGoTo.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="mnuGoTo.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Strg+G</value>
+    <value>Ctrl+G</value>
   </data>
   <data name="mnuGoTo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 22</value>
+    <value>167, 22</value>
   </data>
   <data name="mnuGoTo.Text" xml:space="preserve">
     <value>&amp;Go To...</value>
@@ -439,6 +439,6 @@
     <value>frmTableEditor</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>WeifenLuo.WinFormsUI.Docking.DockContent, WeifenLuo.WinFormsUI.Docking, Version=2.3.1.27267, Culture=neutral, PublicKeyToken=null</value>
+    <value>WeifenLuo.WinFormsUI.Docking.DockContent, WeifenLuo.WinFormsUI.Docking, Version=2.3.1.24483, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>

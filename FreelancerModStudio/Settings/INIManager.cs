@@ -87,7 +87,7 @@ namespace FreelancerModStudio.Settings
                 {
                     for (int j = 0; j < data.Values[i].Count; j++)
                     {
-                        if (i > 0)
+                        if (i > 0 || j > 0)
                             streamWriter.Write(Environment.NewLine + Environment.NewLine);
 
                         streamWriter.WriteLine("[" + data.Keys[i] + "]");
@@ -97,7 +97,7 @@ namespace FreelancerModStudio.Settings
                         {
                             for (int h = 0; h < data.Values[i][j].Values[k].Count; h++)
                             {
-                                streamWriter.Write(data.Values[i][j].Keys[k] + " = " + data.Values[i][j].Values[k][h]);
+                                streamWriter.Write(data.Values[i][j].Keys[k] + " = " + data.Values[i][j].Values[k][h].Value);
 
                                 if (k < data.Values[i][j].Count - 1)
                                     streamWriter.Write(Environment.NewLine);

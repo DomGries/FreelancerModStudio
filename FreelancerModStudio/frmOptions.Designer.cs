@@ -34,26 +34,18 @@
             // 
             // propertyGrid
             // 
-            this.propertyGrid.AccessibleDescription = null;
-            this.propertyGrid.AccessibleName = null;
             resources.ApplyResources(this.propertyGrid, "propertyGrid");
-            this.propertyGrid.BackgroundImage = null;
-            this.propertyGrid.Font = null;
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.propertyGrid.ToolbarVisible = false;
             // 
             // frmOptions
             // 
-            this.AccessibleDescription = null;
-            this.AccessibleName = null;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = null;
             this.Controls.Add(this.propertyGrid);
-            this.Font = null;
-            this.Icon = null;
             this.Name = "frmOptions";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.ResumeLayout(false);
 

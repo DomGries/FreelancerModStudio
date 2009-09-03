@@ -26,7 +26,7 @@ namespace FreelancerModStudio
             this.propertiesForm.OptionsChanged += Properties_OptionsChanged;
 
             //display sub forms
-            this.solutionExplorerForm.Show(dockPanel1);
+            //this.solutionExplorerForm.Show(dockPanel1);
             this.propertiesForm.Show(dockPanel1);
 
             //open files
@@ -86,13 +86,13 @@ namespace FreelancerModStudio
                 propertiesForm.ClearData();
         }
 
-        private void Properties_OptionsChanged(OptionChangedValue[] options)
+        private void Properties_OptionsChanged(PropertyBlock[] blocks)
         {
             IDockContent activeDocument = this.dockPanel1.ActiveDocument;
             if (activeDocument != null && activeDocument is frmTableEditor)
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-                defaultEditor.SetSelectedData(options);
+                defaultEditor.SetSelectedData(blocks);
             }
         }
 
@@ -582,6 +582,23 @@ namespace FreelancerModStudio
         private void mnuProperties_Click(object sender, EventArgs e)
         {
             propertiesForm.Show(dockPanel1);
+        }
+
+        private void mnuNewFile_Click(object sender, EventArgs e)
+        {
+            int templateIndex = -1;
+
+            //let the user choose the ini file type
+            frmFileType fileTypeForm = new frmFileType(null);
+            if (fileTypeForm.ShowDialog() == DialogResult.OK && fileTypeForm.FileTypeIndex >= 0)
+                templateIndex = fileTypeForm.FileTypeIndex;
+            else
+                return;
+
+            frmTableEditor defaultEditor = new frmTableEditor(templateIndex, null);
+            defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
+            defaultEditor.ShowData();
+            defaultEditor.Show(this.dockPanel1, DockState.Document);
         }
     }
 }

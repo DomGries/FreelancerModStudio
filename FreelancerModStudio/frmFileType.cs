@@ -15,11 +15,19 @@ namespace FreelancerModStudio
         public frmFileType(string filePath)
         {
             InitializeComponent();
-            this.Icon = Properties.Resources.LogoIcon;
 
-            this.textBox1.Text = filePath;
-            this.textBox1.SelectionStart = this.textBox1.Text.Length - 1;
-            this.textBox1.ScrollToCaret();
+            if (filePath != null)
+            {
+                this.pathTextBox.Text = filePath;
+                this.pathTextBox.SelectionStart = this.pathTextBox.Text.Length - 1;
+                this.pathTextBox.ScrollToCaret();
+            }
+            else
+            {
+                this.pathLabel.Visible = false;
+                this.pathTextBox.Visible = false;
+                this.Height -= 26;
+            }
 
             //set aviable file types
             for (int i = 0; i < Helper.Template.Data.Files.Count; i++)

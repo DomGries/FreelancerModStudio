@@ -99,7 +99,7 @@ namespace FreelancerModStudio.Properties {
         /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
-        internal static string FileDefaultDategory {
+        internal static string FileDefaultCategory {
             get {
                 return ResourceManager.GetString("FileDefaultDategory", resourceCulture);
             }

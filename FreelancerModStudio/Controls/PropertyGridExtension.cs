@@ -7,172 +7,125 @@ using FreelancerModStudio.Settings;
 
 namespace FreelancerModStudio
 {
-    public class CustomPropertyItem
+    public class PropertyListObjectConverter : ExpandableObjectConverter
     {
-        [Browsable(false)]
-        public string Name { get; set; }
-        [Browsable(false)]
-        public string Description { get; set; }
-        [Browsable(false)]
-        public bool ReadOnly { get; set; }
-        public object Value { get; set; }
-        [Browsable(false)]
-        public object DefaultValue { get; set; }
-        [Browsable(false)]
-        public object Tag { get; set; }
-        [Browsable(false)]
-        public string Category { get; set; }
-        [Browsable(false)]
-        public virtual Attribute[] Attributes { get; set; }
-
-        public CustomPropertyItem(string name, object value, object defaultValue, object tag, string category, string description, bool readOnly, params Attribute[] attributes)
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType)
         {
-            Name = name;
-            Value = value;
-            DefaultValue = defaultValue;
-            Tag = tag;
-            Description = description;
-            ReadOnly = readOnly;
-            Category = category;
-            Attributes = attributes;
+            if (value is string)
+                return ((string)value).Replace(Environment.NewLine, "; ");
+            else
+                return value;
+        }
+
+        public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
+        {
+            return true;
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        {
+            if (value is string)
+                return ((string)value).Replace("; ", Environment.NewLine);
+            else
+                return value;
+        }
+
+        public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
+        {
+            return null;
         }
     }
 
-    public class CustomPropertyDescriptor : PropertyDescriptor
+    public class PropertyBlock : PropertyValueCollection
     {
-        public CustomPropertyItem PropertyItem {get; set;}
-
-        public CustomPropertyDescriptor(CustomPropertyItem property, Attribute[] attrs)
-            : base(property.Name, attrs)
+        public PropertyBlock(Settings.EditorINIBlock block, Settings.Template.Block templateBlock)
         {
-            PropertyItem = property;
+            foreach (Settings.EditorINIOption option in block.Options)
+                this.List.Add(new PropertyValue(option.Name, option.Values, templateBlock.Options[option.TemplateIndex]));
         }
+    }
 
-        public override bool CanResetValue(object component)
-        {
-            return !PropertyItem.Value.Equals(PropertyItem.DefaultValue);
-        }
+    public class PropertyValue
+    {
+        public string Name;
 
-        public override Type ComponentType
-        {
-            get { return typeof(CustomPropertyItem); }
-        }
+        public object Value;
 
-        public override object GetValue(object component)
-        {
-            return PropertyItem.Value;
-        }
+        [Browsable(false)]
+        public Attribute[] Attributes;
 
-        public override bool IsReadOnly
+        public PropertyValue(string name, List<Settings.EditorINIEntry> values, Settings.Template.Option templateOption)
         {
-            get { return PropertyItem.ReadOnly; }
-        }
+            this.Name = name;
 
-        public override Type PropertyType
-        {
-            get
+            if (templateOption.Multiple)
             {
-                if (PropertyItem.Value != null)
-                    return PropertyItem.Value.GetType();
+                Attributes = new Attribute[] { 
+                    new EditorAttribute(typeof(System.ComponentModel.Design.MultilineStringEditor), typeof(System.Drawing.Design.UITypeEditor)) };
+
+                StringBuilder subValues = new StringBuilder();
+                foreach (Settings.EditorINIEntry entry in values)
+                {
+                    if (subValues.Length > 0)
+                        subValues.Append(Environment.NewLine);
+
+                    subValues.Append(entry.Value.ToString());
+
+                    if (entry.SubOptions != null)
+                    {
+                        foreach (object subOption in entry.SubOptions)
+                        {
+                            if (subValues.Length > 0)
+                                subValues.Append(Environment.NewLine);
+
+                            subValues.Append("+" + subOption.ToString());
+                        }
+                    }
+                }
+
+                this.Value = subValues.ToString();
+            }
+            else
+            {
+                if (values.Count > 0)
+                    this.Value = values[0].Value;
                 else
-                    return typeof(object);
-            }
-        }
-
-        public override void ResetValue(object component)
-        {
-            PropertyItem.Value = PropertyItem.DefaultValue;
-        }
-
-        public override void SetValue(object component, object value)
-        {
-            PropertyItem.Value = value;
-        }
-
-        public override bool ShouldSerializeValue(object component)
-        {
-            return CanResetValue(component);
-        }
-
-        public override string Description
-        {
-            get
-            {
-                return PropertyItem.Description;
-            }
-        }
-
-        public override string Category
-        {
-            get
-            {
-                return PropertyItem.Category;
-            }
-        }
-
-        public override string DisplayName
-        {
-            get
-            {
-                return PropertyItem.Name;
+                    this.Value = string.Empty;
             }
         }
     }
 
-    public class CustomPropertyCollection : CollectionBase, ICustomTypeDescriptor
+    public class PropertyValueCollection : System.Collections.CollectionBase, ICustomTypeDescriptor
     {
-        public void Add(CustomPropertyItem property)
+        public void Add(PropertyValue value)
         {
-            base.List.Add(property);
+            this.List.Add(value);
         }
 
-        public void Insert(int index, CustomPropertyItem property)
+        public void Remove(PropertyValue value)
         {
-            base.List.Insert(index, property);
+            this.List.Remove(value);
         }
 
-        public int IndexOf(string name)
-        {
-            for (int i = 0; i < base.List.Count; i++)
-            {
-                if (((CustomPropertyItem)base.List[i]).Name == name)
-                    return i;
-            }
-            return -1;
-        }
-
-        public void Remove(string name)
-        {
-            int index = IndexOf(name);
-            if (index != -1)
-                base.List.Remove(base.List[index]);
-        }
-
-        public CustomPropertyItem this[int index]
+        public PropertyValue this[int index]
         {
             get
             {
-                return (CustomPropertyItem)base.List[index];
-            }
-            set
-            {
-                base.List[index] = value;
+                return (PropertyValue)this.List[index];
             }
         }
-
-        #region ICustomTypeDescriptor Members
 
         public AttributeCollection GetAttributes()
         {
             return TypeDescriptor.GetAttributes(this, true);
         }
 
-        public string GetClassName()
+        public String GetClassName()
         {
             return TypeDescriptor.GetClassName(this, true);
         }
 
-        public string GetComponentName()
+        public String GetComponentName()
         {
             return TypeDescriptor.GetComponentName(this, true);
         }
@@ -207,49 +160,93 @@ namespace FreelancerModStudio
             return TypeDescriptor.GetEvents(this, true);
         }
 
+        public object GetPropertyOwner(PropertyDescriptor pd)
+        {
+            return this;
+        }
+
         public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
-            PropertyDescriptor[] newProps = new PropertyDescriptor[this.Count];
+            PropertyDescriptor[] properties = new PropertyDescriptor[this.List.Count];
 
-            for (int i = 0; i < this.Count; i++)
+            for (int i = 0; i < this.List.Count; i++)
             {
-                CustomPropertyItem propertyItem = (CustomPropertyItem)this[i];
-                newProps[i] = new CustomPropertyDescriptor(propertyItem, propertyItem.Attributes);
+                PropertyValue propertyValue = this[i];
+                properties[i] = new PropertyValueDescriptor(propertyValue, propertyValue.Attributes);
             }
 
-            return new PropertyDescriptorCollection(newProps);
+            return new PropertyDescriptorCollection(properties);
         }
 
         public PropertyDescriptorCollection GetProperties()
         {
             return TypeDescriptor.GetProperties(this, true);
         }
-
-        public object GetPropertyOwner(PropertyDescriptor pd)
-        {
-            return this;
-        }
-
-        #endregion
     }
 
-    public class CustomExpandableObjectConverter : ExpandableObjectConverter
+    public class PropertyValueDescriptor : PropertyDescriptor
     {
-        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType)
+        private PropertyValue PropertyValue = null;
+
+        public PropertyValueDescriptor(PropertyValue propertyValue, Attribute[] attributes)
+            : base(propertyValue.Name, attributes)
         {
-            return "";
+            this.PropertyValue = propertyValue;
         }
-        public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
+
+        public override bool CanResetValue(object component)
+        {
+            return true;
+        }
+
+        public override Type ComponentType
+        {
+            get { return typeof(PropertyValue); }
+        }
+
+        public override string DisplayName
+        {
+            get { return this.PropertyValue.Name; }
+        }
+
+        public override string Description
+        {
+            get { return ""; }
+        }
+
+        public override object GetValue(object component)
+        {
+            return this.PropertyValue.Value;
+        }
+
+        public override bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        public override Type PropertyType
+        {
+            get
+            {
+                if (PropertyValue.Value != null)
+                    return this.PropertyValue.Value.GetType();
+                else
+                    return typeof(object);
+            }
+        }
+
+        public override void ResetValue(object component)
+        {
+        }
+
+        public override bool ShouldSerializeValue(object component)
         {
             return false;
         }
 
-        public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
+        public override void SetValue(object component, object value)
         {
-            if (value is CustomPropertyCollection)
-                return ((CustomPropertyCollection)value).GetProperties(attributes);
-            else
-                return base.GetProperties(context, value, attributes);
+            this.PropertyValue.Value = value;
         }
     }
 }

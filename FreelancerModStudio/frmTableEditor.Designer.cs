@@ -62,7 +62,6 @@
             this.objectListView1.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.HideSelection = false;
-            this.objectListView1.ItemRenderer = null;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
             this.objectListView1.UseCompatibleStateImageBehavior = false;

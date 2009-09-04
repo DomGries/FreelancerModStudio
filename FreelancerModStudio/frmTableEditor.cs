@@ -66,6 +66,10 @@ namespace FreelancerModStudio
                     lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
             };
 
+            //update 'New file' to new language
+            if (File == "")
+                SetFile("");
+
             objectListView1.Refresh();
         }
 
@@ -294,12 +298,16 @@ namespace FreelancerModStudio
             Data.Blocks.Add(editorBlock);
 
             TableData newTableData = GetTableData(editorBlock);
-            objectListView1.AddObject(newTableData);
-            objectListView1.SelectedObject = newTableData;
+            newTableData.Modified = TableModified.Changed;
 
-            //sort (should use TableData.Sort()) + ensure visible (get index somehow) must be changed
-            //objectListView1.Sort((BrightIdeasSoftware.OLVColumn)objectListView1.Columns[1], SortOrder.Ascending);
+            System.Collections.ArrayList objects = ((System.Collections.ArrayList)objectListView1.Objects);
+            objects.Add(newTableData);
+            objects.Sort((System.Collections.IComparer)new TableDataComparer());
+
+            objectListView1.SetObjects(objects);
+            objectListView1.SelectedObject = newTableData;
             objectListView1.EnsureVisible(objectListView1.IndexOf(newTableData));
+
             Modified = true;
         }
 
@@ -317,6 +325,8 @@ namespace FreelancerModStudio
 
         public void SetBlocks(PropertyBlock[] blocks)
         {
+            bool textChanged = false;
+
             for (int i = 0; i < blocks.Length; i++)
             {
                 TableData tableData = (TableData)objectListView1.SelectedObjects[i];
@@ -362,33 +372,31 @@ namespace FreelancerModStudio
 
                     //change data in listview
                     if (tableData.Block.MainOptionIndex == j)
+                    {
                         tableData.Name = text;
+                        textChanged = true;
+                    }
                 }
 
                 tableData.Modified = TableModified.Changed;
             }
 
-
-            //if (itemTextChanged)
-            //    objectListView1.BeginUpdate();
-
             //refresh because of changed modified property (different background color)
-            objectListView1.RefreshObjects(objectListView1.SelectedObjects);
+            if (textChanged)
+            {
+                System.Collections.ArrayList selectedObjects = (System.Collections.ArrayList)objectListView1.GetSelectedObjects();
 
-            //if (itemTextChanged)
-            //{
-            //objectListView1.Sort();
-            //    objectListView1.EndUpdate();
+                System.Collections.ArrayList objects = (System.Collections.ArrayList)objectListView1.Objects;
+                objects.Sort((System.Collections.IComparer)new TableDataComparer());
 
-            //    objectListView1.BeginUpdate();
-            //objectListView1.SelectedItem.EnsureVisible();
-            //    objectListView1.EnsureVisible(objectListView1.IndexOf(((TableData)objectListView1.SelectedObjects[options[options.Length - 1].PropertyIndex])));
-            //    objectListView1.EnsureVisible(objectListView1.IndexOf(((TableData)objectListView1.SelectedObjects[options[0].PropertyIndex])));
-            //    objectListView1.EndUpdate();
-            //}
+                objectListView1.SetObjects(objects);
+                objectListView1.SelectObjects(selectedObjects);
+                objectListView1.EnsureVisible(objectListView1.IndexOf(selectedObjects[0]));
+            }
+            else
+                objectListView1.RefreshSelectedObjects();
 
             Modified = true;
-            //OnSelectedDataChanged(GetSelectedData(), Data.TemplateIndex);
         }
 
         private void DeleteSelectedBlocks()
@@ -423,7 +431,9 @@ namespace FreelancerModStudio
 
         private void mnuDelete_Click(object sender, EventArgs e)
         {
-            DeleteSelectedBlocks();
+            //todo:allow delete somewhere else
+            if (this.IsActivated)
+                DeleteSelectedBlocks();
         }
 
         private void mnuSelectAll_Click(object sender, EventArgs e)
@@ -472,6 +482,14 @@ namespace FreelancerModStudio
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             SetContextMenuEnabled();
+        }
+
+        public class TableDataComparer : System.Collections.IComparer
+        {
+            int System.Collections.IComparer.Compare(object x, object y)
+            {
+                return ((TableData)x).CompareTo((TableData)y);
+            }
         }
     }
 

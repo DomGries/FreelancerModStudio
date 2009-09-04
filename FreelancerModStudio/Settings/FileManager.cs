@@ -172,6 +172,25 @@ namespace FreelancerModStudio.Settings
 
         public void Write(EditorINIData data)
         {
+            //sort blocks first
+            for (int i = 0; i < Helper.Template.Data.Files[data.TemplateIndex].Blocks.Count; i++)
+            {
+                Template.Block templateBlock = Helper.Template.Data.Files[data.TemplateIndex].Blocks[i];
+
+                for (int j = i; j < data.Blocks.Count; j++)
+                {
+                    if (data.Blocks[j].Name.ToLower() == templateBlock.Name.ToLower())
+                    {
+                        //swap blocks
+                        EditorINIBlock temporaryBlock = data.Blocks[i];
+                        data.Blocks[i] = data.Blocks[j];
+                        data.Blocks[j] = temporaryBlock;
+                        break;
+                    }
+                }
+            }
+
+            //save data
             INIBlocks newData = new INIBlocks();
             foreach (EditorINIBlock block in data.Blocks)
             {

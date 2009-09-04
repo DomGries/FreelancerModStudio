@@ -235,7 +235,7 @@ namespace FreelancerModStudio
             }
         }
 
-        public bool CancelClose()
+        private bool CancelClose()
         {
             if (this.modified)
             {

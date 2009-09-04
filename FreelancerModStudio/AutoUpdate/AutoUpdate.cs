@@ -106,7 +106,7 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void SetPage(frmAutoUpdate.PageType value)
         {
-            if (this.mUpdaterForm == null)
+            if (this.mUpdaterForm == null || this.mUpdaterForm.IsDisposed)
             {
                 this.mUpdaterForm = new frmAutoUpdate();
                 this.mUpdaterForm.SetCurrentPage(value);
@@ -120,9 +120,6 @@ namespace FreelancerModStudio.AutoUpdate
 
         private bool IsNewer(string fileContent)
         {
-            this.mUpdateFileUri = new Uri(@"http://traumwind.de/kunst/digital/images/beauty_l.jpg");
-            //hack:1
-            return true;
             try
             {
                 UpdateInformation updateInformation = UpdateInformationParser.Parse(fileContent);
@@ -231,7 +228,7 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            if (!this.SilentDownload && this.mUpdaterForm != null)
+            if (!this.SilentDownload && this.mUpdaterForm != null && !this.mUpdaterForm.IsDisposed)
                 this.mUpdaterForm.BeginInvoke(new ProgressChangedInvoker(this.mUpdaterForm.ChangeProgress), new object[] { e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage });
         }
 
@@ -255,10 +252,6 @@ namespace FreelancerModStudio.AutoUpdate
 
                 case frmAutoUpdate.ActionType.Install:
                     this.Install();
-                    break;
-
-                case frmAutoUpdate.ActionType.Close:
-                    this.mUpdaterForm = null;
                     break;
             }
         }

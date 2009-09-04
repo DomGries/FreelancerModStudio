@@ -65,8 +65,11 @@ namespace FreelancerModStudio
         private bool CloseAllDocuments()
         {
             foreach (Form child in this.MdiChildren)
-                if (((frmTableEditor)child).CancelClose())
+            {
+                child.Close();
+                if (!child.IsDisposed)
                     return false;
+            }
 
             return true;
         }
@@ -80,7 +83,8 @@ namespace FreelancerModStudio
 
                 if (dockContent != this.dockPanel1.ActiveDocumentPane.ActiveContent)
                 {
-                    if (((frmTableEditor)dockContent.DockHandler.Content).CancelClose())
+                    dockContent.DockHandler.Close();
+                    if (!dockContent.DockHandler.Form.IsDisposed)
                         return false;
                 }
                 else
@@ -322,9 +326,6 @@ namespace FreelancerModStudio
 
         private bool CancelModClose()
         {
-            if (!this.CloseAllDocuments())
-                return true;
-
             if (mod == null || mod.Data.About == null || mod.Data.About.Name == null || !this.modChanged)
                 return false;
 
@@ -431,12 +432,20 @@ namespace FreelancerModStudio
 
         private void AutoUpdate_RestartingApplication(object sender, CancelEventArgs e)
         {
-            if (this.CancelModClose())
+            bool canceled = false;
+
+            //close all MdiChildren and check if user canceled one
+            foreach (Form child in this.MdiChildren)
+            {
+                child.Close();
+                if (!child.IsDisposed)
+                    canceled = true;
+            }
+
+            if (canceled)
                 e.Cancel = true;
             else
             {
-                this.modChanged = false;
-
                 this.BeginInvoke((MethodInvoker)delegate
                 {
                     this.Close();

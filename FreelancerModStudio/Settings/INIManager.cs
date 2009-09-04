@@ -83,33 +83,41 @@ namespace FreelancerModStudio.Settings
                 streamWriter = new StreamWriter(File, false, Encoding.Default);
 
                 //write each block
-                for (int i = 0; i < data.Count; i++)
+                int i = 0;
+                foreach (KeyValuePair<string, List<INIOptions>> block in data)
                 {
-                    for (int j = 0; j < data.Values[i].Count; j++)
+                    for (int j = 0; j < block.Value.Count; j++)
                     {
-                        if (i > 0 || j > 0)
+                        if (i > 0)
                             streamWriter.Write(Environment.NewLine + Environment.NewLine);
 
-                        streamWriter.WriteLine("[" + data.Keys[i] + "]");
+                        streamWriter.WriteLine("[" + block.Key + "]");
 
                         //write each option
-                        for (int k = 0; k < data.Values[i][j].Count; k++)
+                        int k = 0;
+                        foreach (KeyValuePair<string, List<INIOption>> option in block.Value[j])
                         {
-                            for (int h = 0; h < data.Values[i][j].Values[k].Count; h++)
+                            for (int h = 0; h < option.Value.Count; h++)
                             {
                                 string key;
-                                if (data.Values[i][j].Values[k][h].Parent == null)
-                                    key = data.Values[i][j].Keys[k];
+                                if (option.Value[h].Parent == null)
+                                    key = option.Key;
                                 else
-                                    key = data.Values[i][j].Values[k][h].Parent;
+                                    key = option.Value[h].Parent;
 
-                                streamWriter.Write(key + " = " + data.Values[i][j].Values[k][h].Value);
+                                streamWriter.Write(key + " = " + option.Value[h].Value);
 
-                                if (k < data.Values[i][j].Count)
+                                if (h < option.Value.Count - 1)
                                     streamWriter.Write(Environment.NewLine);
                             }
+
+                            if (k < block.Value[j].Count - 1)
+                                streamWriter.Write(Environment.NewLine);
+
+                            k++;
                         }
                     }
+                    i++;
                 }
             }
             catch (Exception ex)
@@ -121,19 +129,18 @@ namespace FreelancerModStudio.Settings
                 streamWriter.Close();
         }
     }
-
-    public class INIBlocks : SortedList<string, List<INIOptions>>
+   
+    public class INIBlocks : Dictionary<string, List<INIOptions>>
     {
         public INIBlocks() : base(StringComparer.OrdinalIgnoreCase) { }
 
         public new void Add(string key, List<INIOptions> values)
         {
-            int index = this.IndexOfKey(key);
-            if (index != -1)
+            if (this.ContainsKey(key))
             {
                 //add value to existing option
                 foreach (INIOptions options in values)
-                    this.Values[index].Add(options);
+                    this[key].Add(options);
             }
             else
             {
@@ -150,18 +157,17 @@ namespace FreelancerModStudio.Settings
         }
     }
 
-    public class INIOptions : SortedList<string, List<INIOption>>
+    public class INIOptions : Dictionary<string, List<INIOption>>
     {
         public INIOptions() : base(StringComparer.OrdinalIgnoreCase) { }
 
         public new void Add(string key, List<INIOption> values)
         {
-            int index = this.IndexOfKey(key);
-            if (index != -1)
+            if (this.ContainsKey(key))
             {
                 //add value to existing option
                 foreach (INIOption option in values)
-                    this.Values[index].Add(option);
+                    this[key].Add(option);
             }
             else
             {

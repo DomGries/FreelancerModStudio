@@ -265,9 +265,11 @@
       <Type>ini</Type>
       <Path>universe\systems\*\*.ini</Path>
       <Blocks>
-        <Block name="Ambient">
+        <Block name="SystemInfo">
           <Options>
-            <Option>color</Option>
+            <Option>name</Option>
+            <Option>space_color</Option>
+            <Option>local_faction</Option>
           </Options>
         </Block>
         <Block name="Archetype">
@@ -280,17 +282,16 @@
             <Option multiple="true">voice</Option>
           </Options>
         </Block>
-        <Block name="Asteroids" multiple="true" identifier="zone">
+        <Block name="EncounterParameters" multiple="true" identifier="nickname">
           <Options>
-            <Option>file</Option>
-            <Option>zone</Option>
+            <Option>nickname</Option>
+            <Option>filename</Option>
+            <Option multiple="true">faction</Option>
           </Options>
         </Block>
-        <Block name="Background">
+        <Block name="TexturePanels">
           <Options>
-            <Option>basic_stars</Option>
-            <Option>complex_stars</Option>
-            <Option>nebulae</Option>
+            <Option>file</Option>
           </Options>
         </Block>
         <Block name="Dust">
@@ -298,11 +299,35 @@
             <Option>spacedust</Option>
           </Options>
         </Block>
-        <Block name="EncounterParameters" multiple="true" identifier="nickname">
+        <Block name="Music">
           <Options>
-            <Option multiple="true">faction</Option>
-            <Option>filename</Option>
-            <Option>nickname</Option>
+            <Option>battle</Option>
+            <Option>danger</Option>
+            <Option>space</Option>
+          </Options>
+        </Block>
+        <Block name="Asteroids" multiple="true" identifier="zone">
+          <Options>
+            <Option>file</Option>
+            <Option>zone</Option>
+          </Options>
+        </Block>
+        <Block name="Nebula" multiple="true" identifier="zone">
+          <Options>
+            <Option>file</Option>
+            <Option>zone</Option>
+          </Options>
+        </Block>
+        <Block name="Ambient">
+          <Options>
+            <Option>color</Option>
+          </Options>
+        </Block>
+        <Block name="Background">
+          <Options>
+            <Option>basic_stars</Option>
+            <Option>complex_stars</Option>
+            <Option>nebulae</Option>
           </Options>
         </Block>
         <Block name="LightSource" multiple="true" identifier="nickname">
@@ -317,19 +342,6 @@
             <Option>range</Option>
             <Option>rotate</Option>
             <Option>type</Option>
-          </Options>
-        </Block>
-        <Block name="Music">
-          <Options>
-            <Option>battle</Option>
-            <Option>danger</Option>
-            <Option>space</Option>
-          </Options>
-        </Block>
-        <Block name="Nebula" multiple="true" identifier="zone">
-          <Options>
-            <Option>file</Option>
-            <Option>zone</Option>
           </Options>
         </Block>
         <Block name="Object" multiple="true" identifier="nickname">
@@ -365,18 +377,6 @@
             <Option>tradelane_space_name</Option>
             <Option>visit</Option>
             <Option>voice</Option>
-          </Options>
-        </Block>
-        <Block name="SystemInfo">
-          <Options>
-            <Option>local_faction</Option>
-            <Option>name</Option>
-            <Option>space_color</Option>
-          </Options>
-        </Block>
-        <Block name="TexturePanels">
-          <Options>
-            <Option>file</Option>
           </Options>
         </Block>
         <Block name="Zone" multiple="true" identifier="nickname">

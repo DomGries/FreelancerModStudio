@@ -249,8 +249,9 @@ namespace FreelancerModStudio
         {
             Settings.Settings.RecentFile recentFile = (Settings.Settings.RecentFile)((ToolStripMenuItem)sender).Tag;
 
-            OpenFile(recentFile.File, recentFile.TemplateIndex); try
+            try
             {
+                OpenFile(recentFile.File, recentFile.TemplateIndex);
             }
             catch
             {

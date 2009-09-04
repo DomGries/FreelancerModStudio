@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("stfx")]
 [assembly: AssemblyProduct("Freelancer Mod Studio")]
-[assembly: AssemblyCopyright("Copyright © stfx 2007-2009")]
+[assembly: AssemblyCopyright("Copyright © stfx 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -16,14 +16,14 @@ namespace FreelancerModStudio
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-#if DEBUG
+#if !DEBUG
             //global error catch
             try
             {
 #endif
                 //initialize program
                 Helper.Program.Start();
-#if DEBUG
+#if !DEBUG
             }
             catch (Exception ex)
             {

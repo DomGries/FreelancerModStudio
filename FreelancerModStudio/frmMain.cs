@@ -36,6 +36,9 @@ namespace FreelancerModStudio
                 if (System.IO.File.Exists(arguments[i]))
                     OpenFile(arguments[i]);
             }
+
+            //register event to restart app if update was downloaded and button 'Install' pressed
+            Helper.Update.AutoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
         }
 
         private void mnuAbout_Click(object sender, EventArgs e)
@@ -56,11 +59,19 @@ namespace FreelancerModStudio
 
         private void mnuCloseAllDocuments_Click(object sender, EventArgs e)
         {
-            foreach (Form child in this.MdiChildren)
-                child.Close();
+            CloseAllDocuments();
         }
 
-        private void CloseOtherDocuments()
+        private bool CloseAllDocuments()
+        {
+            foreach (Form child in this.MdiChildren)
+                if (((frmTableEditor)child).CancelClose())
+                    return false;
+
+            return true;
+        }
+
+        private bool CloseOtherDocuments()
         {
             int index = 0;
             while (index < this.dockPanel1.ActiveDocumentPane.Contents.Count)
@@ -68,10 +79,15 @@ namespace FreelancerModStudio
                 IDockContent dockContent = this.dockPanel1.ActiveDocumentPane.Contents[index];
 
                 if (dockContent != this.dockPanel1.ActiveDocumentPane.ActiveContent)
-                    dockContent.DockHandler.Close();
+                {
+                    if (((frmTableEditor)dockContent.DockHandler.Content).CancelClose())
+                        return false;
+                }
                 else
                     index++;
             }
+
+            return true;
         }
 
         private void mnuNewWindow_Click(object sender, EventArgs e)
@@ -298,14 +314,17 @@ namespace FreelancerModStudio
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.CancelDocumentClose())
+            if (this.CancelModClose())
                 e.Cancel = true;
             else
                 this.SetSettings();
         }
 
-        private bool CancelDocumentClose()
+        private bool CancelModClose()
         {
+            if (!this.CloseAllDocuments())
+                return true;
+
             if (mod == null || mod.Data.About == null || mod.Data.About.Name == null || !this.modChanged)
                 return false;
 
@@ -386,7 +405,7 @@ namespace FreelancerModStudio
             //show window
             if (frmNewMod.ShowDialog() == DialogResult.OK)
             {
-                if (!this.CancelDocumentClose())
+                if (!this.CancelModClose())
                 {
                     //create mod
                     this.CreateMod(new Settings.Mod.About(frmNewMod.txtName.Text, frmNewMod.txtAuthor.Text, Properties.Resources.DefaultModVersion, frmNewMod.txtHomepage.Text, frmNewMod.txtDescription.Text), frmNewMod.txtSaveLocation.Text.Trim());
@@ -407,13 +426,12 @@ namespace FreelancerModStudio
 
         private void mnuCheckUpdate_Click(object sender, EventArgs e)
         {
-            Helper.Update.AutoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
             Helper.Update.Check(false, false);
         }
 
         private void AutoUpdate_RestartingApplication(object sender, CancelEventArgs e)
         {
-            if (this.CancelDocumentClose())
+            if (this.CancelModClose())
                 e.Cancel = true;
             else
             {

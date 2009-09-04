@@ -23,7 +23,9 @@ namespace FreelancerModStudio.AutoUpdate
         public delegate void ActionRequiredType(ActionType value);
         public ActionRequiredType ActionRequired;
 
-        public enum ActionType { Abort, Download, Install }
+        public enum ActionType { Abort, Download, Install, Close }
+
+        public enum PageType { Checking, Aviable, NotAviable, Downloading, DownloadFinished };
 
         private void OnAction(ActionType action)
         {
@@ -114,6 +116,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     break;
             }
+
             this.mCurrentPage = page;
         }
 
@@ -139,30 +142,27 @@ namespace FreelancerModStudio.AutoUpdate
             {
                 case PageType.Aviable:
                     this.OnAction(ActionType.Download);
-
                     break;
 
                 case PageType.Downloading:
                     //hide form
                     this.mCurrentPage = PageType.DownloadFinished;
                     this.Close();
-
                     break;
 
                 case PageType.DownloadFinished:
                     this.OnAction(ActionType.Install);
                     this.Close();
-
                     break;
             }
         }
-
-        public enum PageType { Checking, Aviable, NotAviable, Downloading, DownloadFinished };
 
         private void frmAutoUpdate_FormClosing(object sender, FormClosingEventArgs e)
         {
             if ((this.mCurrentPage == PageType.Checking || this.mCurrentPage == PageType.Downloading))
                 this.OnAction(ActionType.Abort);
+
+            this.OnAction(ActionType.Close);
         }
     }
 }

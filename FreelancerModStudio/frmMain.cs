@@ -92,7 +92,7 @@ namespace FreelancerModStudio
             if (activeDocument != null && activeDocument is frmTableEditor)
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-                defaultEditor.SetSelectedData(blocks);
+                defaultEditor.SetBlocks(blocks);
             }
         }
 
@@ -337,7 +337,6 @@ namespace FreelancerModStudio
 
         private void LoadMod(string file)
         {
-            //TODO:Load
             this.ModChanged = false;
             //TODO:Load
         }
@@ -449,7 +448,7 @@ namespace FreelancerModStudio
             if (activeDocument != null && activeDocument is frmTableEditor)
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedData(), defaultEditor.Data.TemplateIndex);
+                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
             }
             else
                 DefaultEditor_SelectedDataChanged(null, 0);

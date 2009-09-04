@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace FreelancerModStudio.AutoUpdate
 {
-    //HACK: if automatic updater is still running from already closed Freelancer Mod Studio (Main form closed but updater thread is still running) there will be some strange side effects
+    //todo: if automatic updater is still running from already closed Freelancer Mod Studio (Main form closed but updater thread is still running) there will be some strange side effects
     public class AutoUpdate
     {
         private Uri mUpdateFileUri;

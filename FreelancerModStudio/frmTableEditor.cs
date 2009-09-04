@@ -43,6 +43,7 @@ namespace FreelancerModStudio
             }
             else
             {
+                //todo: newfile function - File is emtpy and causes error
                 Data = new EditorINIData(templateIndex);
                 IsBINI = false;
             }
@@ -141,7 +142,145 @@ namespace FreelancerModStudio
 #endif
         }
 
-        public EditorINIBlock[] GetSelectedData()
+        private void objectListView1_SelectionChanged(object sender, EventArgs e)
+        {
+            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
+            SetMenuEnabled();
+        }
+
+        public void Save()
+        {
+            this.Save(File);
+        }
+
+        private void Save(string file)
+        {
+            FileManager fileManager = new FileManager(file, IsBINI);
+            fileManager.Write(Data);
+
+            Modified = false;
+            SetFile(file);
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                Helper.Exceptions.Show(ex);
+            }
+        }
+
+        private void SetFile(string file)
+        {
+            string fileName = Path.GetFileName(file);
+            this.File = file;
+
+            string tabText = fileName;
+            if (Modified)
+                tabText += "*";
+
+            this.TabText = tabText;
+            this.Text = tabText;
+            this.ToolTipText = File;
+
+            int saveTextIndex = this.mnuSave.Text.IndexOf(' ');
+            if (saveTextIndex == -1)
+                this.mnuSave.Text += " " + fileName;
+            else
+                this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + fileName;
+        }
+
+        public bool Modified
+        {
+            get
+            {
+                return modified;
+            }
+            set
+            {
+                if (modified != value)
+                {
+                    modified = value;
+                    SetFile(File);
+
+                    //set objects in listview as unmodified
+                    if (!modified)
+                    {
+                        foreach (TableData tableData in objectListView1.Objects)
+                        {
+                            if (tableData.Modified == TableModified.Changed)
+                            {
+                                tableData.Modified = TableModified.ChangedSaved;
+                                objectListView1.RefreshObject(tableData);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool CancelClose()
+        {
+            if (this.modified)
+            {
+                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, Path.GetFileName(File)), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (dialogResult == DialogResult.Cancel)
+                    return true;
+                else if (dialogResult == DialogResult.Yes)
+                    Save();
+            }
+
+            return false;
+        }
+
+        private void AddBlock(string blockName, int templateIndex)
+        {
+            Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[templateIndex];
+
+            //check if block already exists if it is a single block
+            if (!templateBlock.Multiple)
+            {
+                int i = 0;
+                foreach (TableData tableBlock in objectListView1.Objects)
+                {
+                    if (tableBlock.Block.TemplateIndex == templateIndex)
+                    {
+                        //block already exists, select it
+                        objectListView1.SelectObject(tableBlock);
+                        objectListView1.EnsureVisible(i);
+                        return;
+                    }
+                    i++;
+                }
+            }
+
+            //add options to new block
+            EditorINIBlock editorBlock = new EditorINIBlock(blockName, templateIndex);
+            for (int i = 0; i < templateBlock.Options.Count; i++)
+            {
+                Template.Option option = templateBlock.Options[i];
+                editorBlock.Options.Add(new EditorINIOption(option.Name, i));
+
+                if (templateBlock.Identifier != null && templateBlock.Identifier.ToLower() == editorBlock.Options[editorBlock.Options.Count - 1].Name.ToLower())
+                {
+                    editorBlock.MainOptionIndex = editorBlock.Options.Count - 1;
+                    editorBlock.Options[editorBlock.Options.Count - 1].Values.Add(new EditorINIEntry(blockName));
+                }
+            }
+
+            //add actual block
+            Data.Blocks.Add(editorBlock);
+
+            TableData newTableData = GetTableData(editorBlock);
+            objectListView1.AddObject(newTableData);
+            objectListView1.SelectedObject = newTableData;
+
+            //sort (should use TableData.Sort()) + ensure visible (get index somehow) must be changed
+            //objectListView1.Sort((BrightIdeasSoftware.OLVColumn)objectListView1.Columns[1], SortOrder.Ascending);
+            //objectListView1.EnsureVisible(
+            Modified = true;
+        }
+
+        public EditorINIBlock[] GetSelectedBlocks()
         {
             if (objectListView1.SelectedObjects.Count == 0)
                 return null;
@@ -153,7 +292,7 @@ namespace FreelancerModStudio
             return blocks.ToArray();
         }
 
-        public void SetSelectedData(PropertyBlock[] blocks)
+        public void SetBlocks(PropertyBlock[] blocks)
         {
             for (int i = 0; i < blocks.Length; i++)
             {
@@ -230,93 +369,13 @@ namespace FreelancerModStudio
             //OnSelectedDataChanged(GetSelectedData(), Data.TemplateIndex);
         }
 
-        private void objectListView1_SelectionChanged(object sender, EventArgs e)
+        private void DeleteSelectedBlocks()
         {
-            OnSelectedDataChanged(GetSelectedData(), Data.TemplateIndex);
-            SetMenuEnabled();
-        }
+            foreach (TableData tableData in objectListView1.SelectedObjects)
+                Data.Blocks.Remove(tableData.Block);
 
-        public void Save()
-        {
-            this.Save(File);
-        }
-
-        private void Save(string file)
-        {
-            FileManager fileManager = new FileManager(file, IsBINI);
-            fileManager.Write(Data);
-
-            Modified = false;
-            SetFile(file);
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                Helper.Exceptions.Show(ex);
-            }
-        }
-
-        private void SetFile(string file)
-        {
-            string fileName = Path.GetFileName(file);
-            this.File = file;
-
-            string tabText = fileName;
-            if (Modified)
-                tabText += "*";
-
-            this.TabText = tabText;
-            this.Text = tabText;
-            this.ToolTipText = File;
-
-            int saveTextIndex = this.mnuSave.Text.IndexOf(' ');
-            if (saveTextIndex == -1)
-                this.mnuSave.Text += " " + fileName;
-            else
-                this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + fileName;
-        }
-
-        public bool Modified
-        {
-            get
-            {
-                return modified;
-            }
-            set
-            {
-                if (modified != value)
-                {
-                    modified = value;
-                    SetFile(File);
-
-                    //set objects in listview as unmodified
-                    if (!modified)
-                    {
-                        foreach (TableData tableData in objectListView1.Objects)
-                        {
-                            if (tableData.Modified == TableModified.Changed)
-                                tableData.Modified = TableModified.ChangedSaved;
-                        }
-
-                        objectListView1.Refresh();
-                    }
-                }
-            }
-        }
-
-        private bool CancelClose()
-        {
-            if (this.modified)
-            {
-                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, Path.GetFileName(File)), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (dialogResult == DialogResult.Cancel)
-                    return true;
-                else if (dialogResult == DialogResult.Yes)
-                    Save();
-            }
-
-            return false;
+            objectListView1.RemoveObjects(objectListView1.SelectedObjects);
+            Modified = true;
         }
 
         private void frmDefaultEditor_FormClosing(object sender, FormClosingEventArgs e)
@@ -345,11 +404,7 @@ namespace FreelancerModStudio
 
         private void mnuDelete_Click(object sender, EventArgs e)
         {
-            foreach (TableData tableData in objectListView1.SelectedObjects)
-                Data.Blocks.Remove(tableData.Block);
-
-            objectListView1.RemoveObjects(objectListView1.SelectedObjects);
-            Modified = true;
+            DeleteSelectedBlocks();
         }
 
         private void mnuSelectAll_Click(object sender, EventArgs e)
@@ -392,26 +447,7 @@ namespace FreelancerModStudio
             string blockName = ((ToolStripMenuItem)sender).Text;
             int templateIndex = (int)((ToolStripMenuItem)sender).Tag;
 
-            Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[templateIndex];
-            EditorINIBlock editorBlock = new EditorINIBlock(blockName, templateIndex);
-            for (int i = 0; i < templateBlock.Options.Count; i++)
-            {
-                Template.Option option = templateBlock.Options[i];
-                editorBlock.Options.Add(new EditorINIOption(option.Name, i));
-
-                if (templateBlock.Identifier != null && templateBlock.Identifier.ToLower() == editorBlock.Options[editorBlock.Options.Count - 1].Name.ToLower())
-                {
-                    editorBlock.MainOptionIndex = editorBlock.Options.Count - 1;
-                    editorBlock.Options[editorBlock.Options.Count - 1].Values.Add(new EditorINIEntry(blockName));
-                }
-            }
-
-            Data.Blocks.Add(editorBlock);
-
-            TableData newTableData = GetTableData(editorBlock);
-            objectListView1.AddObject(newTableData);
-            objectListView1.SelectedObject = newTableData;
-            objectListView1.Sort((BrightIdeasSoftware.OLVColumn)objectListView1.Columns[1], SortOrder.Ascending);
+            AddBlock(blockName, templateIndex);
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
@@ -425,7 +461,7 @@ namespace FreelancerModStudio
         private string mName;
         private string mGroup;
         public EditorINIBlock Block;
-        public TableModified Modified;
+        public TableModified Modified = TableModified.Normal;
 
         public string Name
         {

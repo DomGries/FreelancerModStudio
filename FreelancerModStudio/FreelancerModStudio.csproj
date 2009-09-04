@@ -76,7 +76,9 @@
     <Compile Include="Controls\UICultureChanger.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DevTest.cs" />
+    <Compile Include="DevTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>

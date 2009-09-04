@@ -175,27 +175,21 @@ namespace FreelancerModStudio.Settings
                 {
                     if (block.Options[i].Values.Count > 0)
                     {
-                        int offset = 0;
                         List<INIOption> newOption = new List<INIOption>();
-                        List<INIOption> newSubOption = new List<INIOption>();
 
                         for (int j = 0; j < block.Options[i].Values.Count; j++)
                         {
-                            newOption.Add(new INIOption(block.Options[i].Values[j].Value.ToString(), j + offset));
+                            newOption.Add(new INIOption(block.Options[i].Values[j].Value.ToString()));
 
+                            //add suboptions as options with defined parent
                             if (block.Options[i].Values[j].SubOptions != null)
                             {
                                 for (int k = 0; k < block.Options[i].Values[j].SubOptions.Count; k++)
-                                    newSubOption.Add(new INIOption(block.Options[i].Values[j].SubOptions[k].ToString(), j + offset + k + 1));
-
-                                offset += block.Options[i].Values[j].SubOptions.Count;
+                                    newOption.Add(new INIOption(block.Options[i].Values[j].SubOptions[k].ToString(), block.Options[i].SubValueName));
                             }
                         }
 
                         newBlock.Add(block.Options[i].Name, newOption);
-
-                        if (newSubOption.Count > 0)
-                            newBlock.Add(block.Options[i].SubValueName, newSubOption);
                     }
                 }
                 newData.Add(block.Name, newBlock);

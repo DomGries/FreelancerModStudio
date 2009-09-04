@@ -97,9 +97,15 @@ namespace FreelancerModStudio.Settings
                         {
                             for (int h = 0; h < data.Values[i][j].Values[k].Count; h++)
                             {
-                                streamWriter.Write(data.Values[i][j].Keys[k] + " = " + data.Values[i][j].Values[k][h].Value);
+                                string key;
+                                if (data.Values[i][j].Values[k][h].Parent == null)
+                                    key = data.Values[i][j].Keys[k];
+                                else
+                                    key = data.Values[i][j].Values[k][h].Parent;
 
-                                if (k < data.Values[i][j].Count - 1)
+                                streamWriter.Write(key + " = " + data.Values[i][j].Values[k][h].Value);
+
+                                if (k < data.Values[i][j].Count)
                                     streamWriter.Write(Environment.NewLine);
                             }
                         }
@@ -175,12 +181,24 @@ namespace FreelancerModStudio.Settings
     public class INIOption
     {
         public string Value;
-        public int Index;
+        public string Parent; //used to save nested options in correct order
+        public int Index; //used to load nested options in correct order
+
+        public INIOption(string value)
+        {
+            Value = value;
+        }
 
         public INIOption(string value, int index)
         {
             Value = value;
             Index = index;
+        }
+
+        public INIOption(string value, string parent)
+        {
+            Value = value;
+            Parent = parent;
         }
     }
 }

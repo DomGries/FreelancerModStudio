@@ -114,7 +114,6 @@ namespace FreelancerModStudio
                 Helper.Settings.Data.Data.Forms.Main.Size = this.Size;
             }
 
-            //todo: save language to settings when changing language setting (not at SetSettings)
             Helper.Settings.SetShortLanguage(Application.CurrentCulture.TwoLetterISOLanguageName);
         }
 
@@ -316,7 +315,6 @@ namespace FreelancerModStudio
             else if (dialogResult == DialogResult.Yes)
             {
                 //TODO: save current mod
-
             }
 
             return false;
@@ -409,21 +407,8 @@ namespace FreelancerModStudio
 
         private void mnuCheckUpdate_Click(object sender, EventArgs e)
         {
-            string proxy = "";
-            string username = "";
-            string password = "";
-
-            if (Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Enabled)
-            {
-                proxy = Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Uri;
-                username = Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Username;
-                password = Helper.Settings.Data.Data.General.AutoUpdate.Proxy.Password;
-            }
-
-            AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(proxy, username, password, new Uri(Helper.Settings.Data.Data.General.AutoUpdate.NewestVersionFile), false, false);
-            autoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
-
-            autoUpdate.Check();
+            Helper.Update.AutoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
+            Helper.Update.Check(false, false);
         }
 
         private void AutoUpdate_RestartingApplication(object sender, CancelEventArgs e)
@@ -433,7 +418,11 @@ namespace FreelancerModStudio
             else
             {
                 this.modChanged = false;
-                this.Close();
+
+                this.BeginInvoke((MethodInvoker)delegate
+                {
+                    this.Close();
+                });
             }
         }
 

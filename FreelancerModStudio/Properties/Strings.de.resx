@@ -229,9 +229,12 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
     <value>Eigenschaften</value>
   </data>
   <data name="SolutionExplorerText" xml:space="preserve">
-    <value>Solution Explorer</value>
+    <value>Projektmappen-Explorer</value>
   </data>
   <data name="FileErrorOpenRecent" xml:space="preserve">
     <value>Die Datei '{0}' kann nicht geöffnet werden. Möchten Sie die Datei von der zuletzt geöffneten Liste entfernen?</value>
+  </data>
+  <data name="FileEditorNewFile" xml:space="preserve">
+    <value>Neue Datei</value>
   </data>
 </root>

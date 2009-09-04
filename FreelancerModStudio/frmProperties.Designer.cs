@@ -57,20 +57,20 @@
             this.toolStripMenuItem1,
             this.descriptionToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(131, 54);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 54);
             // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Enabled = false;
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Visible = false;
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(127, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(135, 6);
             this.toolStripMenuItem1.Visible = false;
             // 
             // descriptionToolStripMenuItem
@@ -79,7 +79,7 @@
             this.descriptionToolStripMenuItem.CheckOnClick = true;
             this.descriptionToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.descriptionToolStripMenuItem.Name = "descriptionToolStripMenuItem";
-            this.descriptionToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.descriptionToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.descriptionToolStripMenuItem.Text = "Description";
             this.descriptionToolStripMenuItem.Visible = false;
             this.descriptionToolStripMenuItem.Click += new System.EventHandler(this.descriptionToolStripMenuItem_Click);
@@ -91,7 +91,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 266);
             this.Controls.Add(this.propertyGrid);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.HideOnClose = true;
             this.Name = "frmProperties";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockLeft;

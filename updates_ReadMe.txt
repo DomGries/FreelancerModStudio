@@ -2,4 +2,4 @@
 
 version number of the newest version
 uri of the setup download location (only http download supported)
-flags ... 1=setup is silent compatible (/SILENT)
+flags ... 1=setup should be run silent (/SILENT)

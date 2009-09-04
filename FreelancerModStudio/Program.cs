@@ -16,8 +16,21 @@ namespace FreelancerModStudio
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //initialize program
-            Helper.Program.Start();
+#if DEBUG
+            //global error catch
+            try
+            {
+#endif
+                //initialize program
+                Helper.Program.Start();
+#if DEBUG
+            }
+            catch (Exception ex)
+            {
+                string text = "A critical error occured!" + Environment.NewLine + Environment.NewLine + "Please post an error report on the homepage (link inside Help menu).";
+                Helper.Exceptions.Show(new Exception(text, ex));
+            }
+#endif
         }
     }
 }

@@ -95,7 +95,7 @@ namespace FreelancerModStudio.Settings
             [DisplayName("Download Silent")]
             public bool SilentDownload { get; set; }
             [DisplayName("Check File")]
-            public string NewestVersionFile { get; set; }
+            public string UpdateFile { get; set; }
 
             public DateTime LastCheck;
 
@@ -107,7 +107,7 @@ namespace FreelancerModStudio.Settings
                 Enabled = true;
                 CheckInterval = 1;
                 SilentDownload = true;
-                NewestVersionFile = @"http://freelancermodstudio.googlecode.com/files/NewestVersion.txt";
+                UpdateFile = @"http://freelancermodstudio.googlecode.com/files/updates.txt";
                 Proxy = new Proxy();
             }
         }

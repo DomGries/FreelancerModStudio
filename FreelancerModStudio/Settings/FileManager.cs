@@ -99,30 +99,39 @@ namespace FreelancerModStudio.Settings
                                 //h is used to start again at last child option in order to provide better performance
                                 int h = 0;
 
-                                //loop each ini option
-                                for (int k = 0; k < iniBlock[templateOption.Name].Count; k++)
+                                if (templateOption.Multiple)
                                 {
-                                    List<object> editorSubOptions = null;
-                                    if (childTemplateOption != null && iniBlock.ContainsKey(childTemplateOption.Name))
+                                    //loop each ini option
+                                    for (int k = 0; k < iniBlock[templateOption.Name].Count; k++)
                                     {
-                                        editorOption.SubValueTemplateIndex = j + 1;
-                                        editorOption.SubValueName = childTemplateOption.Name;
-                                        editorSubOptions = new List<object>();
-
-                                        //loop each ini option of child
-                                        for (; h < iniBlock[templateOption.Name].Count; h++)
+                                        List<object> editorSubOptions = null;
+                                        if (childTemplateOption != null && iniBlock.ContainsKey(childTemplateOption.Name))
                                         {
-                                            INIOption childOption = iniBlock[childTemplateOption.Name][h];
-                                            if (k < iniBlock[templateOption.Name].Count - 1 && childOption.Index > iniBlock[templateOption.Name][k + 1].Index)
-                                                break;
+                                            editorOption.SubValueTemplateIndex = j + 1;
+                                            editorOption.SubValueName = childTemplateOption.Name;
+                                            editorSubOptions = new List<object>();
 
-                                            if (childOption.Index > iniBlock[templateOption.Name][k].Index)
-                                                editorSubOptions.Add(ConvertToTemplate(childTemplateOption.Type, childOption.Value));
+                                            //loop each ini option of child
+                                            for (; h < iniBlock[templateOption.Name].Count; h++)
+                                            {
+                                                INIOption childOption = iniBlock[childTemplateOption.Name][h];
+                                                if (k < iniBlock[templateOption.Name].Count - 1 && childOption.Index > iniBlock[templateOption.Name][k + 1].Index)
+                                                    break;
+
+                                                if (childOption.Index > iniBlock[templateOption.Name][k].Index)
+                                                    editorSubOptions.Add(ConvertToTemplate(childTemplateOption.Type, childOption.Value));
+                                            }
                                         }
-                                    }
 
-                                    //add entry
-                                    editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniBlock[templateOption.Name][k].Value), editorSubOptions));
+                                        //add entry
+                                        editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniBlock[templateOption.Name][k].Value), editorSubOptions));
+                                    }
+                                }
+                                else
+                                {
+                                    //just add the first option if aviable to prevent multiple options which should be single
+                                    if (iniBlock[templateOption.Name].Count > 0)
+                                        editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniBlock[templateOption.Name][0].Value)));
                                 }
 
                                 //add option

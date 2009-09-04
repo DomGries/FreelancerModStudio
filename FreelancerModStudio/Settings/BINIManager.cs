@@ -81,7 +81,7 @@ namespace FreelancerModStudio.Settings
                             if (valueType == 1)
                                 entryValue = binaryReader.ReadInt32().ToString("D", usCulture);
                             else if (valueType == 2)
-                                entryValue = binaryReader.ReadSingle().ToString("#.000000", usCulture);
+                                entryValue = binaryReader.ReadSingle().ToString("0.000000", usCulture);
                             else //string
                             {
                                 int valueStringPosition = binaryReader.ReadInt32();

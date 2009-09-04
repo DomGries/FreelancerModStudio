@@ -23,6 +23,8 @@ namespace FreelancerModStudio
         {
             InitializeComponent();
             this.Icon = Properties.Resources.Properties;
+
+            RefreshSettings();
         }
 
         public void RefreshSettings()

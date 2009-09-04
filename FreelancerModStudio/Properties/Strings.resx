@@ -213,7 +213,7 @@ If that problem persists, download and install the update manually.</value>
   <data name="UpdatesLaterButton" xml:space="preserve">
     <value>&amp;Later</value>
   </data>
-  <data name="FileDefaultDategory" xml:space="preserve">
+  <data name="FileDefaultCategory" xml:space="preserve">
     <value>General</value>
   </data>
   <data name="FileDialogFilter" xml:space="preserve">
@@ -233,5 +233,8 @@ If that problem persists, download and install the update manually.</value>
   </data>
   <data name="FileErrorOpenRecent" xml:space="preserve">
     <value>The file '{0}' cannot be opened. Do you want to remove it from the Recent list?</value>
+  </data>
+  <data name="FileEditorNewFile" xml:space="preserve">
+    <value>New File</value>
   </data>
 </root>

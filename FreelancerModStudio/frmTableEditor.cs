@@ -43,9 +43,10 @@ namespace FreelancerModStudio
             }
             else
             {
-                //todo: newfile function - File is emtpy and causes error
                 Data = new EditorINIData(templateIndex);
                 IsBINI = false;
+
+                SetFile("");
             }
 
             RefreshSettings();
@@ -150,7 +151,18 @@ namespace FreelancerModStudio
 
         public void Save()
         {
-            this.Save(File);
+            if (File == "")
+                this.SaveAs();
+            else
+                this.Save(File);
+        }
+
+        private void SaveAs()
+        {
+            SaveFileDialog saverDialog = new SaveFileDialog();
+            saverDialog.Filter = Properties.Strings.FileDialogFilter;
+            if (saverDialog.ShowDialog() == DialogResult.OK)
+                this.Save(saverDialog.FileName);
         }
 
         private void Save(string file)
@@ -159,9 +171,9 @@ namespace FreelancerModStudio
             fileManager.Write(Data);
 
             Modified = false;
-            SetFile(file);
             try
             {
+                SetFile(file);
             }
             catch (Exception ex)
             {
@@ -171,7 +183,12 @@ namespace FreelancerModStudio
 
         private void SetFile(string file)
         {
-            string fileName = Path.GetFileName(file);
+            string fileName;
+            if (file == "")
+                fileName = Properties.Strings.FileEditorNewFile;
+            else
+                fileName = Path.GetFileName(file);
+
             this.File = file;
 
             string tabText = fileName;
@@ -222,7 +239,13 @@ namespace FreelancerModStudio
         {
             if (this.modified)
             {
-                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, Path.GetFileName(File)), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                string fileName;
+                if (File == "")
+                    fileName = Properties.Strings.FileEditorNewFile;
+                else
+                    fileName = Path.GetFileName(File);
+
+                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, fileName), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Cancel)
                     return true;
                 else if (dialogResult == DialogResult.Yes)
@@ -276,7 +299,7 @@ namespace FreelancerModStudio
 
             //sort (should use TableData.Sort()) + ensure visible (get index somehow) must be changed
             //objectListView1.Sort((BrightIdeasSoftware.OLVColumn)objectListView1.Columns[1], SortOrder.Ascending);
-            //objectListView1.EnsureVisible(
+            objectListView1.EnsureVisible(objectListView1.IndexOf(newTableData));
             Modified = true;
         }
 
@@ -345,13 +368,12 @@ namespace FreelancerModStudio
                 tableData.Modified = TableModified.Changed;
             }
 
-            //objectListView1.RefreshObjects(objectListView1.SelectedObjects);
 
             //if (itemTextChanged)
             //    objectListView1.BeginUpdate();
 
             //refresh because of changed modified property (different background color)
-            //objectListView1.RefreshSelectedObjects();
+            objectListView1.RefreshObjects(objectListView1.SelectedObjects);
 
             //if (itemTextChanged)
             //{
@@ -391,10 +413,7 @@ namespace FreelancerModStudio
 
         private void mnuSaveAs_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saverDialog = new SaveFileDialog();
-            saverDialog.Filter = Properties.Strings.FileDialogFilter;
-            if (saverDialog.ShowDialog() == DialogResult.OK)
-                this.Save(saverDialog.FileName);
+            this.SaveAs();
         }
 
         private void mnuClose_Click(object sender, EventArgs e)

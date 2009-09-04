@@ -10,11 +10,11 @@ namespace FreelancerModStudio.AutoUpdate
     public class AutoUpdate
     {
         private Uri mUpdateFileUri;
-        private Uri mCheckFileUri;
+        public Uri CheckFileUri { get; set; }
 
         private bool mSilentSetup;
-        private bool mSilentDownload;
-        private bool mSilentCheck;
+        public bool SilentDownload { get; set; }
+        public bool SilentCheck { get; set; }
 
         private WebClient mWebClient;
 
@@ -32,49 +32,46 @@ namespace FreelancerModStudio.AutoUpdate
         private delegate void ProgressChangedInvoker(long bytes, long bytesTotal, int percent);
         private delegate void SetStatusInvoker(frmAutoUpdate.PageType status);
 
-        public AutoUpdate(string proxy, string username, string password, Uri checkFileUri, bool silentCheck, bool silentDownload)
+        public AutoUpdate()
+        {
+            this.mWebClient = new WebClient();
+        }
+
+        public AutoUpdate(string proxy, string username, string password, Uri checkFileUri)
         {
             this.mWebClient = new WebClient();
 
-            if (!string.IsNullOrEmpty(username))
-                this.mWebClient.Credentials = new NetworkCredential(username, password);
+            this.SetCredentials(username, password);
+            this.SetProxy(proxy);
 
-            if (string.IsNullOrEmpty(proxy))
-                this.mWebClient.Proxy = null;
-            else
-                this.mWebClient.Proxy = new WebProxy(proxy);
-
-            //set local viariable
-            this.mCheckFileUri = checkFileUri;
-            this.mSilentCheck = silentCheck;
-            this.mSilentDownload = silentDownload;
+            this.CheckFileUri = checkFileUri;
         }
 
         public void Check()
         {
             //display checking form
-            if (!this.mSilentCheck)
+            if (!this.SilentCheck)
                 this.SetPage(frmAutoUpdate.PageType.Checking);
 
             //set event handlers
             this.mWebClient.DownloadStringCompleted += new DownloadStringCompletedEventHandler(this.Download_CheckFile_Completed);
 
             //download the checkfile
-            this.mWebClient.DownloadStringAsync(this.mCheckFileUri);
+            this.mWebClient.DownloadStringAsync(this.CheckFileUri);
         }
 
         private void UpdateAviable(bool value)
         {
             if (value)
             {
-                if (this.mSilentDownload && this.mSilentCheck)
+                if (this.SilentDownload && this.SilentCheck)
                     this.DownloadUpdate();
                 else
                     this.SetPage(frmAutoUpdate.PageType.Aviable);
             }
             else
             {
-                if (!this.mSilentCheck)
+                if (!this.SilentCheck)
                     this.SetPage(frmAutoUpdate.PageType.NotAviable);
             }
         }
@@ -100,6 +97,9 @@ namespace FreelancerModStudio.AutoUpdate
 
         private bool IsNewer(string fileContent)
         {
+            this.mUpdateFileUri = new Uri(@"http://www.brilliantpaper.com/files/Reference01.jpg");
+            //hack:1
+            return true;
             try
             {
                 UpdateInformation updateInformation = UpdateInformationParser.Parse(fileContent);
@@ -134,7 +134,7 @@ namespace FreelancerModStudio.AutoUpdate
         private void DownloadUpdate()
         {
             //display download form
-            if (!this.mSilentDownload || !this.mSilentCheck)
+            if (!this.SilentDownload || !this.SilentCheck)
                 this.SetPage(frmAutoUpdate.PageType.Downloading);
 
             string destFile = Path.Combine(System.Windows.Forms.Application.StartupPath, Path.Combine(FreelancerModStudio.Properties.Resources.UpdateDownloadPath, Path.GetFileName(this.mUpdateFileUri.AbsolutePath)));
@@ -153,7 +153,7 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void Download_CheckFile_Completed(object sender, DownloadStringCompletedEventArgs e)
         {
-            if (e.Cancelled || this.mSilentCheck)
+            if (e.Cancelled || this.SilentCheck)
                 return;
 
             if (e.Error != null)
@@ -201,7 +201,7 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            if (!this.mSilentDownload)
+            if (!this.SilentDownload)
                 this.mUpdaterForm.Invoke(new ProgressChangedInvoker(this.mUpdaterForm.ChangeProgress), new object[] { e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage });
         }
 
@@ -228,7 +228,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        public void Install()
+        public bool Install()
         {
             if (Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName != null)
             {
@@ -241,20 +241,36 @@ namespace FreelancerModStudio.AutoUpdate
                     this.OnRestartingApplication(cancelEventArgs);
 
                     if (cancelEventArgs.Cancel)
-                        return;
+                        return false;
 
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Downloaded = false;
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = true;
+                    Helper.Settings.Save();
 
                     string arguments = "";
-
                     if (Helper.Settings.Data.Data.General.AutoUpdate.Update.SilentInstall)
                         arguments = "/SILENT";
 
                     System.Diagnostics.Process.Start(file, arguments);
-                    //Environment.Exit(0);
+                    return true;
                 }
             }
+
+            return false;
+        }
+
+        public void SetProxy(string proxy)
+        {
+            if (string.IsNullOrEmpty(proxy))
+                this.mWebClient.Proxy = null;
+            else
+                this.mWebClient.Proxy = new WebProxy(proxy);
+        }
+
+        public void SetCredentials(string username, string password)
+        {
+            if (!string.IsNullOrEmpty(username))
+                this.mWebClient.Credentials = new NetworkCredential(username, password);
         }
 
         public static void RemoveUpdate()

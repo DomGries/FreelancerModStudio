@@ -3,6 +3,7 @@
 #include "scripts\products\winversion.iss"
 #include "scripts\products\fileversion.iss"
 
+#include "scripts\products\ngen.iss"
 //#include "scripts\products\iis.iss"
 
 #include "scripts\products\kb835732.iss"
@@ -114,7 +115,7 @@ begin
 		MsgBox(FmtMessage(CustomMessage('depinstall_missing'), [CustomMessage('winxpsp2_title')]), mbError, MB_OK);
 		exit;
 	end;
-	
+    
 	//if (not iis()) then exit;
 	
 	msi20('2.0');

@@ -1,6 +1,104 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FreelancerModStudio-Template-1.0 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Files>
+    <File name="Game Configuration File">
+      <Type>ini</Type>
+      <Path>exe\freelancer.ini</Path>
+      <Blocks>
+        <Block name="Freelancer">
+          <Options>
+            <Option>data path</Option>
+            <Option>local_server</Option>
+            <Option>initial_world</Option>
+            <Option>AppGUID</Option>
+          </Options>
+        </Block>
+        <Block name="Display">
+          <Options>
+            <Option>fullscreen</Option>
+            <Option>size</Option>
+            <Option>color_bpp</Option>
+            <Option>depth_bpp</Option>
+          </Options>
+        </Block>
+        <Block name="Startup">
+          <Options>
+            <Option multiple="true">movie_file</Option>
+          </Options>
+        </Block>
+        <Block name="ListServer">
+          <Options>
+            <Option>hostname</Option>
+            <Option>port</Option>
+          </Options>
+        </Block>
+        <Block name="Server">
+          <Options>
+            <Option>death_penalty</Option>
+          </Options>
+        </Block>
+        <Block name="Initial MP DLLs">
+          <Options>
+            <Option>path</Option>
+            <Option multiple="true">DLL</Option>
+          </Options>
+        </Block>
+        <Block name="Initial SP DLLs">
+          <Options>
+            <Option>path</Option>
+            <Option multiple="true">DLL</Option>
+          </Options>
+        </Block>
+        <Block name="Resources">
+          <Options>
+            <Option multiple="true">DLL</Option>
+          </Options>
+        </Block>
+        <Block name="Data">
+          <Options>
+            <Option>solar</Option>
+            <Option>universe</Option>
+            <Option>constants</Option>
+            <Option multiple="true">fonts</Option>
+            <Option multiple="true">fonts_dir</Option>
+            <Option multiple="true">rich_fonts</Option>
+            <Option multiple="true">sounds</Option>
+            <Option multiple="true">voices</Option>
+            <Option multiple="true">explosions</Option>
+            <Option>debris</Option>
+            <Option>asteroids</Option>
+            <Option multiple="true">equipment</Option>
+            <Option multiple="true">ships</Option>
+            <Option multiple="true">goods</Option>
+            <Option multiple="true">loadouts</Option>
+            <Option>bodyparts</Option>
+            <Option>costumes</Option>
+            <Option>PetalDB</Option>
+            <Option multiple="true">effects</Option>
+            <Option>effect_shapes</Option>
+            <Option multiple="true">fuses</Option>
+            <Option>concave</Option>
+            <Option>intro</Option>
+            <Option multiple="true">gate_tunnels</Option>
+            <Option multiple="true">groups</Option>
+            <Option>HUD</Option>
+            <Option>jump_effect</Option>
+            <Option>stars</Option>
+            <Option>igraph</Option>
+            <Option>bases</Option>
+            <Option multiple="true">markets</Option>
+            <Option>NewCharDB</Option>
+            <Option>WeaponModDB</Option>
+            <Option>rtcslider</Option>
+          </Options>
+        </Block>
+        <Block name="Error">
+          <Options>
+            <Option multiple="true">log</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
     <File name="cameras">
       <Type>ini</Type>
       <Path>cameras.ini</Path>

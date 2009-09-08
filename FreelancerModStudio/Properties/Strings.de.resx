@@ -237,4 +237,10 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
   <data name="FileEditorNewFile" xml:space="preserve">
     <value>Neue Datei</value>
   </data>
+  <data name="FileEditorColumnName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="FileEditorColumnType" xml:space="preserve">
+    <value>Typ</value>
+  </data>
 </root>

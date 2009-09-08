@@ -66,6 +66,13 @@ namespace FreelancerModStudio
                     lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
             };
 
+            //refresh column texts
+            if (objectListView1.Columns.Count == 2)
+            {
+                objectListView1.Columns[0].Text = Properties.Strings.FileEditorColumnName;
+                objectListView1.Columns[1].Text = Properties.Strings.FileEditorColumnType;
+            }
+
             //update 'New file' to new language
             if (File == "")
                 SetFile("");
@@ -90,6 +97,7 @@ namespace FreelancerModStudio
                 //    blockName = blockName + i.ToString();
                 //else
                 blockName = block.Name;
+                //todo: different block name if they are all the same
             }
 
             //name of group
@@ -112,8 +120,8 @@ namespace FreelancerModStudio
 
             //add columns
             BrightIdeasSoftware.OLVColumn[] cols = {
-                new BrightIdeasSoftware.OLVColumn("Name", "Name"),
-                new BrightIdeasSoftware.OLVColumn("Type", "Group")};
+                new BrightIdeasSoftware.OLVColumn(Properties.Strings.FileEditorColumnName, "Name"),
+                new BrightIdeasSoftware.OLVColumn(Properties.Strings.FileEditorColumnType, "Group")};
 
             cols[1].Width = 150;
             cols[0].FillsFreeSpace = true;
@@ -335,46 +343,49 @@ namespace FreelancerModStudio
                 {
                     List<EditorINIEntry> options = tableData.Block.Options[j].Values;
 
-                    string text = ((string)blocks[i][j].Value).Trim();
-                    if (text != string.Empty)
+                    if (blocks[i][j].Value is PropertySubOptions)
                     {
-                        if (text.Contains(Environment.NewLine))
+                        options.Clear();
+
+                        //loop all sub values in the sub value collection
+                        foreach (PropertyOption value in (PropertySubOptions)blocks[i][j].Value)
                         {
-                            options.Clear();
-                            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                            foreach (string line in lines)
+                            string text = ((string)value.Value).Trim();
+                            if (text != string.Empty)
                             {
-                                if (line.Trim()[0] != '+')
-                                    options.Add(new EditorINIEntry(line.Trim()));
-                                else
+                                if (text.Contains(Environment.NewLine))
                                 {
-                                    if (options.Count > 0)
-                                    {
-                                        if (options[options.Count - 1].SubOptions == null)
-                                            options[options.Count - 1].SubOptions = new List<object>();
+                                    string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                    List<object> subOptions = new List<object>();
+                                    for (int k = 1; k < lines.Length; k++)
+                                        subOptions.Add(lines[k].Trim());
 
-                                        options[options.Count - 1].SubOptions.Add(line.Substring(1).Trim());
-                                    }
+                                    options.Add(new EditorINIEntry(lines[0], subOptions));
                                 }
+                                else
+                                    options.Add(new EditorINIEntry(text));
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        string text = ((string)blocks[i][j].Value).Trim();
+                        if (text != string.Empty)
                         {
                             if (options.Count > 0)
                                 options[0].Value = text;
                             else
                                 options.Add(new EditorINIEntry(text));
                         }
-                    }
-                    else
-                        options.Clear();
+                        else
+                            options.Clear();
 
-                    //change data in listview
-                    if (tableData.Block.MainOptionIndex == j)
-                    {
-                        tableData.Name = text;
-                        textChanged = true;
+                        //change data in listview
+                        if (tableData.Block.MainOptionIndex == j)
+                        {
+                            tableData.Name = text;
+                            textChanged = true;
+                        }
                     }
                 }
 
@@ -397,6 +408,8 @@ namespace FreelancerModStudio
                 objectListView1.RefreshSelectedObjects();
 
             Modified = true;
+
+            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
         }
 
         private void DeleteSelectedBlocks()

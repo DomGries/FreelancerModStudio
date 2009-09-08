@@ -1356,31 +1356,8 @@ namespace FreelancerModStudio
                     {
                         //integrate data
                         foreach (KeyValuePair<string, List<INIOptions>> newBlock in newBlocks)
-                        {
-                            //int blockIndex = dataList[i].Blocks.IndexOfKey(newBlock.Key);
-                            //if (blockIndex != -1)
-                            //{
-                            //    foreach (INIOptions newOptions in newBlock.Value)
-                            //    {
-                            //        foreach (KeyValuePair<string, List<string>> newOption in newOptions)
-                            //        {
-                            //            for (int j = 0; j < dataList[i].Blocks.Values[blockIndex].Count; j++)
-                            //            {
-                            //                int optionsIndex = dataList[i].Blocks.Values[blockIndex][j].IndexOfKey(newOption.Key);
-                            //                if (optionsIndex != -1)
-                            //                {
-                            //                    if (newOption.Value.Count > dataList[i].Blocks.Values[blockIndex][j].Values[optionsIndex].Count)
-                            //                        dataList[i].Blocks.Values[blockIndex][j].Values[optionsIndex].Add("");
-                            //                }
-                            //                else
-                            //                    dataList[i].Blocks.Values[blockIndex][j].Add(new KeyValuePair<string, List<string>>(newOption.Key, newOption.Value));
-                            //            }
-                            //        }
-                            //    }
-                            //}
-                            //else
                             dataList[i].Blocks.Add(newBlock.Key, newBlock.Value);
-                        }
+
                         return;
                     }
                 }

@@ -48,6 +48,9 @@ namespace FreelancerModStudio
 
             propertyGrid.SelectedObjects = propertyBlocks.ToArray();
             propertyGrid.ExpandAllGridItems();
+
+            //ensure visibile of selected grid item
+            propertyGrid.SelectedGridItem.Select();
         }
 
         private void descriptionToolStripMenuItem_Click(object sender, EventArgs e)

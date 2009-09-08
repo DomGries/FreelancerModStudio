@@ -169,7 +169,7 @@
     <value>mnuNewWindow</value>
   </data>
   <data name="mnuOpenFile.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+O</value>
+    <value>Strg+Shift+O</value>
   </data>
   <data name="&gt;&gt;toolStripMenuItem1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -196,7 +196,7 @@
     <value>&amp;Window</value>
   </data>
   <data name="mnuNewMod.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+N</value>
+    <value>Strg+N</value>
   </data>
   <data name="toolStripPanel1.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 351</value>
@@ -325,7 +325,7 @@
     <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="mnuOpenMod.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+O</value>
+    <value>Strg+O</value>
   </data>
   <data name="&gt;&gt;mnuFullScreen.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -487,7 +487,7 @@
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="mnuCloseMod.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+W</value>
+    <value>Strg+Shift+W</value>
   </data>
   <data name="&gt;&gt;toolStripMenuItem2.Name" xml:space="preserve">
     <value>toolStripMenuItem2</value>
@@ -571,7 +571,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="mnuSaveAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+S</value>
+    <value>Strg+Shift+S</value>
   </data>
   <data name="&gt;&gt;toolStripPanel4.Name" xml:space="preserve">
     <value>toolStripPanel4</value>
@@ -637,7 +637,7 @@
     <value>mnuSaveAll</value>
   </data>
   <data name="mnuNewFile.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+N</value>
+    <value>Strg+Shift+N</value>
   </data>
   <data name="mnuCloseMod.Text" xml:space="preserve">
     <value>&amp;Close Mod</value>

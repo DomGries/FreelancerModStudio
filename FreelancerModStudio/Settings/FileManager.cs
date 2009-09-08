@@ -74,10 +74,11 @@ namespace FreelancerModStudio.Settings
             {
                 Template.Block templateBlock = Helper.Template.Data.Files[templateFileIndex].Blocks[i];
 
-                if (iniData.ContainsKey(templateBlock.Name))
+                List <INIOptions> iniBlocks;
+                if (iniData.TryGetValue(templateBlock.Name, out iniBlocks))
                 {
                     //loop each ini block
-                    foreach (INIOptions iniBlock in iniData[templateBlock.Name])
+                    foreach (INIOptions iniBlock in iniBlocks)
                     {
                         EditorINIBlock editorBlock = new EditorINIBlock(templateBlock.Name, i);
 
@@ -94,7 +95,8 @@ namespace FreelancerModStudio.Settings
                             Template.Option templateOption = templateBlock.Options[j];
                             EditorINIOption editorOption = new EditorINIOption(templateOption.Name, j);
 
-                            if (iniBlock.ContainsKey(templateOption.Name))
+                            List<INIOption> iniOptions;
+                            if (iniBlock.TryGetValue(templateOption.Name, out iniOptions))
                             {
                                 //h is used to start again at last child option in order to provide better performance
                                 int h = 0;
@@ -102,36 +104,36 @@ namespace FreelancerModStudio.Settings
                                 if (templateOption.Multiple)
                                 {
                                     //loop each ini option
-                                    for (int k = 0; k < iniBlock[templateOption.Name].Count; k++)
+                                    for (int k = 0; k < iniOptions.Count; k++)
                                     {
                                         List<object> editorSubOptions = null;
                                         if (childTemplateOption != null && iniBlock.ContainsKey(childTemplateOption.Name))
                                         {
-                                            editorOption.SubValueTemplateIndex = j + 1;
-                                            editorOption.SubValueName = childTemplateOption.Name;
+                                            editorOption.ChildTemplateIndex = j + 1;
+                                            editorOption.ChildName = childTemplateOption.Name;
                                             editorSubOptions = new List<object>();
 
                                             //loop each ini option of child
-                                            for (; h < iniBlock[templateOption.Name].Count; h++)
+                                            for (; h < iniOptions.Count; h++)
                                             {
-                                                INIOption childOption = iniBlock[childTemplateOption.Name][h];
-                                                if (k < iniBlock[templateOption.Name].Count - 1 && childOption.Index > iniBlock[templateOption.Name][k + 1].Index)
+                                                INIOption childOption = iniOptions[h];
+                                                if (k < iniBlock[templateOption.Name].Count - 1 && childOption.Index > iniOptions[k + 1].Index)
                                                     break;
 
-                                                if (childOption.Index > iniBlock[templateOption.Name][k].Index)
+                                                if (childOption.Index > iniOptions[k].Index)
                                                     editorSubOptions.Add(ConvertToTemplate(childTemplateOption.Type, childOption.Value));
                                             }
                                         }
 
                                         //add entry
-                                        editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniBlock[templateOption.Name][k].Value), editorSubOptions));
+                                        editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniOptions[k].Value), editorSubOptions));
                                     }
                                 }
                                 else
                                 {
                                     //just add the first option if aviable to prevent multiple options which should be single
                                     if (iniBlock[templateOption.Name].Count > 0)
-                                        editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniBlock[templateOption.Name][0].Value)));
+                                        editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniOptions[0].Value)));
                                 }
 
                                 //add option
@@ -209,7 +211,7 @@ namespace FreelancerModStudio.Settings
                             if (block.Options[i].Values[j].SubOptions != null)
                             {
                                 for (int k = 0; k < block.Options[i].Values[j].SubOptions.Count; k++)
-                                    newOption.Add(new INIOption(block.Options[i].Values[j].SubOptions[k].ToString(), block.Options[i].SubValueName));
+                                    newOption.Add(new INIOption(block.Options[i].Values[j].SubOptions[k].ToString(), block.Options[i].ChildName));
                             }
                         }
 
@@ -378,8 +380,8 @@ namespace FreelancerModStudio.Settings
         public string Name;
         public int TemplateIndex = -1;
 
-        public string SubValueName;
-        public int SubValueTemplateIndex = -1;
+        public string ChildName;
+        public int ChildTemplateIndex = -1;
 
         public List<EditorINIEntry> Values = new List<EditorINIEntry>();
 

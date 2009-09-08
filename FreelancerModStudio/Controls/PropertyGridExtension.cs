@@ -4,48 +4,42 @@ using System.Text;
 using System.Collections;
 using System.ComponentModel;
 using FreelancerModStudio.Settings;
+using System.Windows.Forms.Design;
+using System.Drawing.Design;
 
 namespace FreelancerModStudio
 {
-    public class PropertyListObjectConverter : ExpandableObjectConverter
+    public class PropertyOptionCollectionConverter : ExpandableObjectConverter
     {
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType)
         {
-            if (value is string)
-                return ((string)value).Replace(Environment.NewLine, "; ");
+            if (value is PropertySubOptions)
+                return "[" + (((PropertySubOptions)value).Count - 1).ToString() + "]";
             else
-                return value;
+                return "";
         }
 
         public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
         {
-            return true;
-        }
-
-        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
-        {
-            if (value is string)
-                return ((string)value).Replace("; ", Environment.NewLine);
-            else
-                return value;
+            return false;
         }
 
         public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
         {
-            return null;
+            return base.GetProperties(context, value, attributes);
         }
     }
 
-    public class PropertyBlock : PropertyValueCollection
+    public class PropertyBlock : PropertyOptionCollection
     {
         public PropertyBlock(Settings.EditorINIBlock block, Settings.Template.Block templateBlock)
         {
             foreach (Settings.EditorINIOption option in block.Options)
-                this.List.Add(new PropertyValue(option.Name, option.Values, templateBlock.Options[option.TemplateIndex]));
+                this.List.Add(new PropertyOption(option.Values, templateBlock.Options[option.TemplateIndex], option.ChildTemplateIndex != -1));
         }
     }
 
-    public class PropertyValue
+    public class PropertyOption
     {
         public string Name;
 
@@ -54,64 +48,87 @@ namespace FreelancerModStudio
         [Browsable(false)]
         public Attribute[] Attributes;
 
-        public PropertyValue(string name, List<Settings.EditorINIEntry> values, Settings.Template.Option templateOption)
+        public PropertyOption(List<Settings.EditorINIEntry> options, Settings.Template.Option templateOption, bool children)
         {
-            this.Name = name;
+            this.Name = templateOption.Name;
 
             if (templateOption.Multiple)
             {
                 Attributes = new Attribute[] { 
-                    new EditorAttribute(typeof(System.ComponentModel.Design.MultilineStringEditor), typeof(System.Drawing.Design.UITypeEditor)) };
+                    new EditorAttribute(typeof(System.Drawing.Design.UITypeEditor), typeof(System.Drawing.Design.UITypeEditor)),
+                    new TypeConverterAttribute(typeof(PropertyOptionCollectionConverter)) };
 
-                StringBuilder subValues = new StringBuilder();
-                foreach (Settings.EditorINIEntry entry in values)
-                {
-                    if (subValues.Length > 0)
-                        subValues.Append(Environment.NewLine);
-
-                    subValues.Append(entry.Value.ToString());
-
-                    if (entry.SubOptions != null)
-                    {
-                        foreach (object subOption in entry.SubOptions)
-                        {
-                            if (subValues.Length > 0)
-                                subValues.Append(Environment.NewLine);
-
-                            subValues.Append("+" + subOption.ToString());
-                        }
-                    }
-                }
-
-                this.Value = subValues.ToString();
+                this.Value = new PropertySubOptions(templateOption.Name, options, children);
             }
             else
             {
-                if (values.Count > 0)
-                    this.Value = values[0].Value;
+                if (options.Count > 0)
+                    this.Value = options[0].Value;
                 else
                     this.Value = string.Empty;
             }
         }
+
+        public PropertyOption(string name, object option, List<object> subOptions, bool children)
+        {
+            this.Name = name;
+
+            if (children)
+            {
+                Attributes = new Attribute[] { 
+                    new EditorAttribute(typeof(System.ComponentModel.Design.MultilineStringEditor), typeof(System.Drawing.Design.UITypeEditor)) };
+
+                StringBuilder valueCollection = new StringBuilder();
+                valueCollection.Append(option);
+                if (subOptions != null)
+                {
+                    foreach (object subValue in subOptions)
+                    {
+                        if (valueCollection.Length > 0)
+                            valueCollection.Append(Environment.NewLine);
+
+                        valueCollection.Append(subValue.ToString());
+                    }
+                }
+                this.Value = valueCollection.ToString();
+            }
+            else
+                this.Value = option;
+        }
     }
 
-    public class PropertyValueCollection : System.Collections.CollectionBase, ICustomTypeDescriptor
+    public class PropertySubOptions : PropertyOptionCollection
     {
-        public void Add(PropertyValue value)
+        public PropertySubOptions(string optionName, List<Settings.EditorINIEntry> options, bool children)
+        {
+            int index = 0;
+            foreach (Settings.EditorINIEntry entry in options)
+            {
+                this.List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), entry.Value, entry.SubOptions, children));
+                index++;
+            }
+
+            this.List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), "", null, children));
+        }
+    }
+
+    public class PropertyOptionCollection : System.Collections.CollectionBase, ICustomTypeDescriptor
+    {
+        public void Add(PropertyOption value)
         {
             this.List.Add(value);
         }
 
-        public void Remove(PropertyValue value)
+        public void Remove(PropertyOption value)
         {
             this.List.Remove(value);
         }
 
-        public PropertyValue this[int index]
+        public PropertyOption this[int index]
         {
             get
             {
-                return (PropertyValue)this.List[index];
+                return (PropertyOption)this.List[index];
             }
         }
 
@@ -171,8 +188,8 @@ namespace FreelancerModStudio
 
             for (int i = 0; i < this.List.Count; i++)
             {
-                PropertyValue propertyValue = this[i];
-                properties[i] = new PropertyValueDescriptor(propertyValue, propertyValue.Attributes);
+                PropertyOption propertyValue = this[i];
+                properties[i] = new PropertyOptionDescriptor(propertyValue, propertyValue.Attributes);
             }
 
             return new PropertyDescriptorCollection(properties);
@@ -184,14 +201,14 @@ namespace FreelancerModStudio
         }
     }
 
-    public class PropertyValueDescriptor : PropertyDescriptor
+    public class PropertyOptionDescriptor : PropertyDescriptor
     {
-        private PropertyValue PropertyValue = null;
+        public PropertyOption PropertyOption = null;
 
-        public PropertyValueDescriptor(PropertyValue propertyValue, Attribute[] attributes)
+        public PropertyOptionDescriptor(PropertyOption propertyValue, Attribute[] attributes)
             : base(propertyValue.Name, attributes)
         {
-            this.PropertyValue = propertyValue;
+            this.PropertyOption = propertyValue;
         }
 
         public override bool CanResetValue(object component)
@@ -201,12 +218,12 @@ namespace FreelancerModStudio
 
         public override Type ComponentType
         {
-            get { return typeof(PropertyValue); }
+            get { return typeof(PropertyOption); }
         }
 
         public override string DisplayName
         {
-            get { return this.PropertyValue.Name; }
+            get { return this.PropertyOption.Name; }
         }
 
         public override string Description
@@ -216,7 +233,7 @@ namespace FreelancerModStudio
 
         public override object GetValue(object component)
         {
-            return this.PropertyValue.Value;
+            return this.PropertyOption.Value;
         }
 
         public override bool IsReadOnly
@@ -228,8 +245,8 @@ namespace FreelancerModStudio
         {
             get
             {
-                if (PropertyValue.Value != null)
-                    return this.PropertyValue.Value.GetType();
+                if (PropertyOption.Value != null)
+                    return this.PropertyOption.Value.GetType();
                 else
                     return typeof(object);
             }
@@ -246,7 +263,7 @@ namespace FreelancerModStudio
 
         public override void SetValue(object component, object value)
         {
-            this.PropertyValue.Value = value;
+            this.PropertyOption.Value = value;
         }
     }
 }

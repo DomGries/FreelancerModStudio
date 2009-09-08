@@ -33,10 +33,19 @@ namespace FreelancerModStudio.Settings
                     //remove comments from data
                     int commentIndex = line.IndexOf(';');
                     if (commentIndex != -1)
-                        line = line.Substring(0, commentIndex + 1).Trim();
+                        line = line.Substring(0, commentIndex).Trim();
 
-                    if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] == ']') //new block
+                    if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] != ']')
                     {
+                        //reset current block if block was commented out
+                        if (currentBlock.Key != null)
+                            data.Add(currentBlock.Key, currentBlock.Value);
+
+                        currentBlock = new KeyValuePair<string, INIOptions>();
+                    }
+                    else if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] == ']')
+                    {
+                        //new block
                         if (currentBlock.Key != null)
                             data.Add(currentBlock.Key, currentBlock.Value);
 
@@ -45,12 +54,13 @@ namespace FreelancerModStudio.Settings
                         currentBlock = new KeyValuePair<string, INIOptions>(blockName, new INIOptions());
                         currentOptionIndex = 0;
                     }
-                    else if (currentBlock.Key != null) //new value for block
+                    else if (currentBlock.Key != null)
                     {
-                        //retrieve name and value from data
+                        //new value for block
                         int valueIndex = line.IndexOf('=');
                         if (valueIndex != -1)
                         {
+                            //retrieve name and value from data
                             string optionName = line.Substring(0, valueIndex).Trim();
                             string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
 
@@ -151,9 +161,7 @@ namespace FreelancerModStudio.Settings
 
         public void Add(string key, INIOptions values)
         {
-            List<INIOptions> options = new List<INIOptions>();
-            options.Add(values);
-            this.Add(key, options);
+            this.Add(key, new List<INIOptions>() {values});
         }
     }
 

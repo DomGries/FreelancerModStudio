@@ -41,16 +41,16 @@ winxpsp2_title=Windows XP Service Pack 2
 
 [Setup]
 AppName=Freelancer Mod Studio
-AppVersion=0.8
-AppVerName=Freelancer Mod Studio 0.8
+AppVersion=0.8.1
+AppVerName=Freelancer Mod Studio 0.8.1
 AppCopyright=Copyright © stfx 2009
-VersionInfoVersion=0.8
+VersionInfoVersion=0.8.1
 VersionInfoCompany=stfx
 AppPublisher=stfx
 AppPublisherURL=http://code.google.com/p/freelancermodstudio
 AppSupportURL=http://groups.google.com/group/freelancer-mod-studio/topics
 AppUpdatesURL=http://code.google.com/p/freelancermodstudio/downloads/list
-OutputBaseFilename=FreelancerModStudio-0.8
+OutputBaseFilename=FreelancerModStudio-0.8.1
 DefaultGroupName=Freelancer Mod Studio
 DefaultDirName={pf}\Freelancer Mod Studio
 UninstallDisplayIcon={app}\FreelancerModStudio.exe
@@ -88,8 +88,8 @@ Source: "..\FreelancerModStudio\bin\Release\ObjectListView.dll"; DestDir: "{app}
 Source: "..\FreelancerModStudio\bin\Release\WeifenLuo.WinFormsUI.Docking.dll"; DestDir: "{app}"
 Source: "..\FreelancerModStudio\bin\Release\de\FreelancerModStudio.resources.dll"; DestDir: "{app}\de"
 Source: "..\FreelancerModStudio\bin\Release\Template.xml"; DestDir: "{app}"
-Source: "src\Settings_en.xml"; DestName: "FreelancerModStudio.xml"; DestDir: "{app}"; Languages: en
-Source: "src\Settings_de.xml"; DestName: "FreelancerModStudio.xml"; DestDir: "{app}"; Languages: de
+Source: "src\Settings_en.xml"; DestName: "FreelancerModStudio.xml"; DestDir: "{app}"; Languages: en; Flags: onlyifdoesntexist
+Source: "src\Settings_de.xml"; DestName: "FreelancerModStudio.xml"; DestDir: "{app}"; Languages: de; Flags: onlyifdoesntexist
 
 [Icons]
 Name: "{group}\Freelancer Mod Studio"; Filename: "{app}\FreelancerModStudio"

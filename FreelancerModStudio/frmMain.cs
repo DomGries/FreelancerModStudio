@@ -49,7 +49,7 @@ namespace FreelancerModStudio
 
         private void mnuVisitForum_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://groups.google.com/group/freelancer-mod-studio/topics");
+            System.Diagnostics.Process.Start("http://www.reactorforge.com/index.php/forums/showthread.php?t=72747");
         }
 
         private void mnuReportIssue_Click(object sender, EventArgs e)

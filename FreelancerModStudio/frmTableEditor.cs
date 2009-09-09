@@ -333,7 +333,7 @@ namespace FreelancerModStudio
 
         public void SetBlocks(PropertyBlock[] blocks)
         {
-            bool textChanged = false;
+            bool sortRequired = false;
 
             for (int i = 0; i < blocks.Length; i++)
             {
@@ -369,11 +369,19 @@ namespace FreelancerModStudio
                     }
                     else
                     {
+                        bool changedValue = true;
+
                         string text = ((string)blocks[i][j].Value).Trim();
                         if (text != string.Empty)
                         {
                             if (options.Count > 0)
-                                options[0].Value = text;
+                            {
+                                //check if value is different
+                                if (options[0].Value.ToString() != text)
+                                    options[0].Value = text;
+                                else
+                                    changedValue = false;
+                            }
                             else
                                 options.Add(new EditorINIEntry(text));
                         }
@@ -381,10 +389,10 @@ namespace FreelancerModStudio
                             options.Clear();
 
                         //change data in listview
-                        if (tableData.Block.MainOptionIndex == j)
+                        if (tableData.Block.MainOptionIndex == j && changedValue)
                         {
                             tableData.Name = text;
-                            textChanged = true;
+                            sortRequired = true;
                         }
                     }
                 }
@@ -393,7 +401,7 @@ namespace FreelancerModStudio
             }
 
             //refresh because of changed modified property (different background color)
-            if (textChanged)
+            if (sortRequired)
             {
                 System.Collections.ArrayList selectedObjects = (System.Collections.ArrayList)objectListView1.GetSelectedObjects();
 
@@ -405,7 +413,8 @@ namespace FreelancerModStudio
                 objectListView1.EnsureVisible(objectListView1.IndexOf(selectedObjects[0]));
             }
             else
-                objectListView1.RefreshSelectedObjects();
+                //objectListView1.RefreshSelectedObjects doesnt work if it is just on entry left in the list
+                objectListView1.RefreshObjects(objectListView1.SelectedObjects);
 
             Modified = true;
 

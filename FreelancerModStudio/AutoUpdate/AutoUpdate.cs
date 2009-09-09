@@ -186,10 +186,11 @@ namespace FreelancerModStudio.AutoUpdate
                 }
                 else
                 {
+                    //exception occured while downloading
                     this.mStatus = StatusType.Waiting;
 
-                    //exception occured while downloading
-                    Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), e.Error));
+                    if (!this.SilentCheck)
+                        Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), e.Error));
                 }
             }
             else
@@ -216,10 +217,11 @@ namespace FreelancerModStudio.AutoUpdate
                 }
                 else
                 {
+                    //exception occured while downloading
                     this.mStatus = StatusType.UpdateAviable;
 
-                    //exception occured while downloading
-                    Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), e.Error));
+                    if (!this.SilentCheck)
+                        Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), e.Error));
                 }
             }
             else

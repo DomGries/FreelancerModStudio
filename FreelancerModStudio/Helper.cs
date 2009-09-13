@@ -12,6 +12,13 @@ namespace FreelancerModStudio
         {
             public static void Start()
             {
+                //bool checkUpdate = true;
+                //if (checkUpdate)
+                //{
+                //    Update.Check(false, false);
+                //    return;
+                //}
+
 #if DEBUG
                 System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
                 st.Start();
@@ -64,7 +71,7 @@ namespace FreelancerModStudio
                 {
                     Check(true, Settings.Data.Data.General.AutoUpdate.SilentDownload);
                 }));
-                autoUpdateThread.Priority = System.Threading.ThreadPriority.Highest;
+                autoUpdateThread.Priority = System.Threading.ThreadPriority.Lowest;
                 autoUpdateThread.IsBackground = true;
                 autoUpdateThread.Start();
             }

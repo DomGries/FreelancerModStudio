@@ -10,7 +10,6 @@ namespace FreelancerModStudio
     public partial class frmMain : Form
     {
         Settings.Mod mod;
-
         bool modChanged = false;
 
         frmProperties propertiesForm = new frmProperties();
@@ -24,6 +23,7 @@ namespace FreelancerModStudio
             this.GetSettings();
 
             this.propertiesForm.OptionsChanged += Properties_OptionsChanged;
+            this.propertiesForm.DisplayChanged += Content_DisplayChanged;
 
             //display sub forms
             //this.solutionExplorerForm.Show(dockPanel1);
@@ -98,12 +98,15 @@ namespace FreelancerModStudio
         {
         }
 
-        private void DefaultEditor_SelectedDataChanged(Settings.EditorINIBlock[] data, int templateIndex)
+        private void DefaultEditor_SelectedDataChanged(Settings.EditorINIBlock[] data, int templateIndex, ContentInterface content)
         {
             if (data != null)
                 propertiesForm.ShowData(data, templateIndex);
             else
                 propertiesForm.ClearData();
+
+            if (content != null)
+                Content_DisplayChanged(content);
         }
 
         private void Properties_OptionsChanged(PropertyBlock[] blocks)
@@ -340,23 +343,9 @@ namespace FreelancerModStudio
             return false;
         }
 
-        private bool ModChanged
-        {
-            get { return this.modChanged; }
-            set
-            {
-                this.modChanged = value;
-
-                if (value)
-                    this.Text = this.mod.Data.About.Name + "* - " + Helper.Assembly.Title;
-                else
-                    this.Text = this.mod.Data.About.Name + " - " + Helper.Assembly.Title;
-            }
-        }
-
         private void LoadMod(string file)
         {
-            this.ModChanged = false;
+            this.modChanged = false;
             //TODO:Load
         }
 
@@ -372,7 +361,7 @@ namespace FreelancerModStudio
             this.mod.Save(System.IO.Path.Combine(path, about.Name + Properties.Resources.ModExtension));
             this.solutionExplorerForm.ShowProject(this.mod);
 
-            this.ModChanged = false;
+            this.modChanged = false;
         }
 
         private void mnuNewMod_Click(object sender, EventArgs e)
@@ -465,16 +454,10 @@ namespace FreelancerModStudio
             if (activeDocument != null && activeDocument is frmTableEditor)
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
+                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex, null);
             }
             else
-                DefaultEditor_SelectedDataChanged(null, 0);
-        }
-
-        private void mnuClose_Click(object sender, EventArgs e)
-        {
-            if (dockPanel1.ActiveDocumentPane != null)
-                dockPanel1.ActiveDocumentPane.ActiveContent.DockHandler.Close();
+                DefaultEditor_SelectedDataChanged(null, 0, null);
         }
 
         private void mnuOptions_Click(object sender, EventArgs e)
@@ -532,32 +515,19 @@ namespace FreelancerModStudio
 
         private void SetDocumentMenus(bool value)
         {
+            mnuSave.Visible = value;
+            mnuSaveAs.Visible = value;
             mnuSaveAll.Visible = value;
             mnuSaveSeperator.Visible = value;
             mnuWindowsSeperator.Visible = value;
+            mnuClose.Visible = value;
             mnuCloseAllDocuments.Visible = value;
-        }
 
-        private void dockPanel1_ContentAdded(object sender, DockContentEventArgs e)
-        {
-            if (e.Content is frmTableEditor)
-                SetDocumentMenus(true);
-        }
-
-        private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
-        {
-            if (e.Content is frmTableEditor)
-            {
-                foreach (IDockContent document in dockPanel1.Documents)
-                {
-                    //there is at least one editor left in documents pane
-                    if (document is frmTableEditor)
-                        return;
-                }
-
-                //no editors found
-                SetDocumentMenus(false);
-            }
+            mnuSave.Enabled = value;
+            mnuSaveAs.Enabled = value;
+            mnuSaveAll.Enabled = value;
+            mnuClose.Enabled = value;
+            mnuCloseAllDocuments.Enabled = value;
         }
 
         private int FileOpened(string file)
@@ -615,6 +585,85 @@ namespace FreelancerModStudio
             defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
             defaultEditor.ShowData();
             defaultEditor.Show(this.dockPanel1, DockState.Document);
+        }
+
+        private void mnuSave_Click(object sender, EventArgs e)
+        {
+            ((frmTableEditor)this.dockPanel1.ActiveDocument).Save();
+        }
+
+        private void mnuSaveAs_Click(object sender, EventArgs e)
+        {
+            ((frmTableEditor)this.dockPanel1.ActiveDocument).SaveAs();
+        }
+
+        private void mnuUndo_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void mnuRedo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mnuClose_Click(object sender, EventArgs e)
+        {
+            this.dockPanel1.ActiveContent.DockHandler.Close();
+        }
+
+        private void mnuAdd_Click(object sender, EventArgs e)
+        {
+            ((ContentInterface)this.dockPanel1.ActiveContent).Add();
+        }
+
+        private void mnuDelete_Click(object sender, EventArgs e)
+        {
+            ((ContentInterface)this.dockPanel1.ActiveContent).Delete();
+        }
+
+        private void mnuSelectAll_Click(object sender, EventArgs e)
+        {
+            ((ContentInterface)this.dockPanel1.ActiveContent).SelectAll();
+        }
+
+        private void mnuGoTo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dockPanel1_ContentAdded(object sender, DockContentEventArgs e)
+        {
+            if (e.Content is frmTableEditor)
+                SetDocumentMenus(true);
+        }
+
+        private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
+        {
+            if (e.Content is frmTableEditor)
+            {
+                foreach (IDockContent document in dockPanel1.Documents)
+                {
+                    //there is at least one editor left in documents pane
+                    if (document is frmTableEditor)
+                        return;
+                }
+
+                //no editors found
+                SetDocumentMenus(false);
+            }
+        }
+
+        private void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
+        {
+            if (this.dockPanel1.ActiveContent != null)
+                Content_DisplayChanged((ContentInterface)this.dockPanel1.ActiveContent);
+        }
+
+        private void Content_DisplayChanged(ContentInterface content)
+        {
+            this.mnuAdd.Enabled = content.CanAdd();
+            this.mnuDelete.Enabled = content.CanDelete();
+            this.mnuSelectAll.Enabled = content.CanSelectAll();
         }
     }
 }

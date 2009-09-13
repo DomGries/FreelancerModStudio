@@ -118,6 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 48</value>
+  </data>
   <data name="mnuAdd2.Size" type="System.Drawing.Size, System.Drawing">
     <value>177, 22</value>
   </data>
@@ -130,8 +133,11 @@
   <data name="mnuDelete2.Text" xml:space="preserve">
     <value>&amp;Löschen</value>
   </data>
-  <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 48</value>
+  <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Datei</value>
   </data>
   <data name="mnuClose.Size" type="System.Drawing.Size, System.Drawing">
     <value>232, 22</value>
@@ -151,11 +157,11 @@
   <data name="mnuSaveAs.Text" xml:space="preserve">
     <value>&amp;Speichern unter...</value>
   </data>
-  <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
   </data>
-  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Datei</value>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Bearbeiten</value>
   </data>
   <data name="mnuReDo.Size" type="System.Drawing.Size, System.Drawing">
     <value>191, 22</value>
@@ -201,11 +207,5 @@
   </data>
   <data name="mnuGoTo.Text" xml:space="preserve">
     <value>&amp;Gehe zu...</value>
-  </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Bearbeiten</value>
   </data>
 </root>

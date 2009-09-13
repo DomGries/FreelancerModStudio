@@ -10,7 +10,7 @@ using FreelancerModStudio.Settings;
 
 namespace FreelancerModStudio
 {
-    public partial class frmTableEditor : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class frmTableEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface
     {
         public EditorINIData Data;
         public string File { get; set; }
@@ -18,13 +18,13 @@ namespace FreelancerModStudio
 
         private bool modified = false;
 
-        public delegate void SelectedDataChangedType(EditorINIBlock[] data, int templateIndex);
+        public delegate void SelectedDataChangedType(EditorINIBlock[] data, int templateIndex, ContentInterface content);
         public SelectedDataChangedType SelectedDataChanged;
 
-        private void OnSelectedDataChanged(EditorINIBlock[] data, int templateIndex)
+        private void OnSelectedDataChanged(EditorINIBlock[] data, int templateIndex, ContentInterface content)
         {
             if (this.SelectedDataChanged != null)
-                this.SelectedDataChanged(data, templateIndex);
+                this.SelectedDataChanged(data, templateIndex, content);
         }
 
         public frmTableEditor(int templateIndex, string file)
@@ -50,6 +50,13 @@ namespace FreelancerModStudio
             }
 
             RefreshSettings();
+
+            //todo:
+            //UndoRedoManager.CommandDone += delegate
+            //{
+            //    mnuUnDo.Enabled = UndoRedoManager.CanUndo;
+            //    mnuReDo.Enabled = UndoRedoManager.CanRedo;
+            //};
         }
 
         public void RefreshSettings()
@@ -139,16 +146,16 @@ namespace FreelancerModStudio
             tableData.Sort();
             objectListView1.SetObjects(tableData);
 
-            //add block types to add menu
+            //todo: add block types to add menu
             for (int i = 0; i < Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Count; i++)
             {
                 ToolStripMenuItem addItem = new ToolStripMenuItem();
                 addItem.Text = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[i].Name;
                 addItem.Tag = i;
                 addItem.Click += mnuAddItem_Click;
-                this.mnuAdd.DropDownItems.Add(addItem);
+                this.mnuAdd2.DropDownItems.Add(addItem);
             }
-            this.mnuAdd2.DropDown = this.mnuAdd.DropDown;
+            //this.mnuAdd2.DropDown = this.mnuAdd.DropDown;
 #if DEBUG
             st.Stop();
             System.Diagnostics.Debug.WriteLine("display " + objectListView1.Items.Count + " data: " + st.ElapsedMilliseconds + "ms");
@@ -157,24 +164,7 @@ namespace FreelancerModStudio
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
-            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
-            SetMenuEnabled();
-        }
-
-        public void Save()
-        {
-            if (File == "")
-                this.SaveAs();
-            else
-                this.Save(File);
-        }
-
-        private void SaveAs()
-        {
-            SaveFileDialog saverDialog = new SaveFileDialog();
-            saverDialog.Filter = Properties.Strings.FileDialogFilter;
-            if (saverDialog.ShowDialog() == DialogResult.OK)
-                this.Save(saverDialog.FileName);
+            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex, (ContentInterface)this);
         }
 
         private void Save(string file)
@@ -211,11 +201,12 @@ namespace FreelancerModStudio
             this.Text = tabText;
             this.ToolTipText = File;
 
-            int saveTextIndex = this.mnuSave.Text.IndexOf(' ');
-            if (saveTextIndex == -1)
-                this.mnuSave.Text += " " + fileName;
-            else
-                this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + fileName;
+            //todo:
+            //int saveTextIndex = this.mnuSave.Text.IndexOf(' ');
+            //if (saveTextIndex == -1)
+            //    this.mnuSave.Text += " " + fileName;
+            //else
+            //    this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + fileName;
         }
 
         public bool Modified
@@ -418,7 +409,7 @@ namespace FreelancerModStudio
 
             Modified = true;
 
-            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
+            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex, null);
         }
 
         private void DeleteSelectedBlocks()
@@ -435,15 +426,9 @@ namespace FreelancerModStudio
             e.Cancel = CancelClose();
         }
 
-
-        private void mnuSave_Click(object sender, EventArgs e)
+        public void SelectAll()
         {
-            this.Save();
-        }
-
-        private void mnuSaveAs_Click(object sender, EventArgs e)
-        {
-            this.SaveAs();
+            objectListView1.SelectAll();
         }
 
         private void mnuClose_Click(object sender, EventArgs e)
@@ -463,19 +448,11 @@ namespace FreelancerModStudio
             objectListView1.SelectAll();
         }
 
-        private void SetMenuEnabled()
-        {
-            bool selection = objectListView1.SelectedObjects.Count > 0;
-
-            mnuDelete.Enabled = selection;
-        }
-
         private void SetContextMenuEnabled()
         {
             bool selection = objectListView1.SelectedObjects.Count > 0;
 
             mnuAdd2.Visible = !selection;
-            mnuDelete2.Enabled = selection;
             mnuDelete2.Visible = selection;
         }
 
@@ -512,6 +489,66 @@ namespace FreelancerModStudio
             {
                 return ((TableData)x).CompareTo((TableData)y);
             }
+        }
+
+        private void mnuReDo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mnuUnDo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        public bool CanSave()
+        {
+            return true;
+        }
+
+        public bool CanSaveAs()
+        {
+            return true;
+        }
+
+        public bool CanAdd()
+        {
+            return true;
+        }
+
+        public bool CanDelete()
+        {
+            return this.objectListView1.SelectedObjects.Count > 0;
+        }
+
+        public bool CanSelectAll()
+        {
+            return true;
+        }
+
+        public void Save()
+        {
+            if (File == "")
+                this.SaveAs();
+            else
+                this.Save(File);
+        }
+
+        public void SaveAs()
+        {
+            SaveFileDialog saverDialog = new SaveFileDialog();
+            saverDialog.Filter = Properties.Strings.FileDialogFilter;
+            if (saverDialog.ShowDialog() == DialogResult.OK)
+                this.Save(saverDialog.FileName);
+        }
+
+        public void Add()
+        {
+        }
+
+        public void Delete()
+        {
+            DeleteSelectedBlocks();
         }
     }
 

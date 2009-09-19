@@ -73,14 +73,10 @@ namespace FreelancerModStudio
                 OnOptionsChanged((PropertyBlock[])propertyGrid.SelectedObjects);
         }
 
-        public bool CanSave()
+        private void propertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
         {
-            return false;
-        }
-
-        public bool CanSaveAs()
-        {
-            return false;
+            if (this.DockHandler.IsActivated)
+                this.OnDisplayChanged((ContentInterface)this);
         }
 
         public bool CanAdd()
@@ -93,7 +89,7 @@ namespace FreelancerModStudio
 
         public bool CanDelete()
         {
-            return propertyGrid.SelectedGridItem != null;
+            return false;
         }
 
         public bool CanSelectAll()
@@ -101,17 +97,7 @@ namespace FreelancerModStudio
             return false;
         }
 
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SaveAs()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add()
+        public void Add(int index)
         {
             if (propertyGrid.SelectedGridItem.Value is PropertySubOptions)
                 propertyGrid.SelectedGridItem.GridItems[propertyGrid.SelectedGridItem.GridItems.Count - 1].Select();
@@ -128,14 +114,29 @@ namespace FreelancerModStudio
             propertyGrid_PropertyValueChanged(propertyGrid, new PropertyValueChangedEventArgs(propertyGrid.SelectedGridItem, oldValue));
         }
 
+        public bool CanAddMultiple()
+        {
+            return false;
+        }
+
+        public bool CanSave()
+        {
+            return false;
+        }
+
         public void SelectAll()
         {
             throw new NotImplementedException();
         }
 
-        private void propertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
+        public ToolStripDropDown MultipleAddDropDown()
         {
-            this.OnDisplayChanged((ContentInterface)this);
+            throw new NotImplementedException();
+        }
+
+        public string GetTitle()
+        {
+            throw new NotImplementedException();
         }
     }
 }

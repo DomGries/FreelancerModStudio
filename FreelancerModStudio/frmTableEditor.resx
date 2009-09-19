@@ -118,37 +118,40 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <metadata name="contextMenuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>109, 0</value>
+    <value>17, 17</value>
   </metadata>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="mnuAdd2.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+E</value>
+  <data name="mnuAdd.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>Strg+E</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="mnuAdd2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>142, 22</value>
+  <data name="mnuAdd.Size" type="System.Drawing.Size, System.Drawing">
+    <value>152, 22</value>
   </data>
-  <data name="mnuAdd2.Text" xml:space="preserve">
+  <data name="mnuAdd.Text" xml:space="preserve">
     <value>&amp;Add</value>
   </data>
+  <data name="mnuDeleteSeperator.Size" type="System.Drawing.Size, System.Drawing">
+    <value>149, 6</value>
+  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="mnuDelete2.Enabled" type="System.Boolean, mscorlib">
+  <data name="mnuDelete.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="mnuDelete2.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Del</value>
+  <data name="mnuDelete.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
+    <value>Entf</value>
   </data>
-  <data name="mnuDelete2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>142, 22</value>
+  <data name="mnuDelete.Size" type="System.Drawing.Size, System.Drawing">
+    <value>152, 22</value>
   </data>
-  <data name="mnuDelete2.Text" xml:space="preserve">
+  <data name="mnuDelete.Text" xml:space="preserve">
     <value>&amp;Delete</value>
   </data>
-  <data name="mnuDelete2.Visible" type="System.Boolean, mscorlib">
+  <data name="mnuDelete.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>143, 48</value>
+    <value>153, 76</value>
   </data>
   <data name="&gt;&gt;contextMenuStrip1.Name" xml:space="preserve">
     <value>contextMenuStrip1</value>
@@ -195,16 +198,22 @@
   <data name="$this.Text" xml:space="preserve">
     <value>Default Editor</value>
   </data>
-  <data name="&gt;&gt;mnuAdd2.Name" xml:space="preserve">
-    <value>mnuAdd2</value>
+  <data name="&gt;&gt;mnuAdd.Name" xml:space="preserve">
+    <value>mnuAdd</value>
   </data>
-  <data name="&gt;&gt;mnuAdd2.Type" xml:space="preserve">
+  <data name="&gt;&gt;mnuAdd.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;mnuDelete2.Name" xml:space="preserve">
-    <value>mnuDelete2</value>
+  <data name="&gt;&gt;mnuDeleteSeperator.Name" xml:space="preserve">
+    <value>mnuDeleteSeperator</value>
   </data>
-  <data name="&gt;&gt;mnuDelete2.Type" xml:space="preserve">
+  <data name="&gt;&gt;mnuDeleteSeperator.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mnuDelete.Name" xml:space="preserve">
+    <value>mnuDelete</value>
+  </data>
+  <data name="&gt;&gt;mnuDelete.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

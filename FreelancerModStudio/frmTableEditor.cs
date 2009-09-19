@@ -18,13 +18,22 @@ namespace FreelancerModStudio
 
         private bool modified = false;
 
-        public delegate void SelectedDataChangedType(EditorINIBlock[] data, int templateIndex, ContentInterface content);
+        public delegate void SelectedDataChangedType(EditorINIBlock[] data, int templateIndex);
         public SelectedDataChangedType SelectedDataChanged;
 
-        private void OnSelectedDataChanged(EditorINIBlock[] data, int templateIndex, ContentInterface content)
+        public delegate void DisplayChangedType(ContentInterface content);
+        public DisplayChangedType DisplayChanged;
+
+        private void OnSelectedDataChanged(EditorINIBlock[] data, int templateIndex)
         {
             if (this.SelectedDataChanged != null)
-                this.SelectedDataChanged(data, templateIndex, content);
+                this.SelectedDataChanged(data, templateIndex);
+        }
+
+        private void OnDisplayChanged(ContentInterface content)
+        {
+            if (this.DisplayChanged != null)
+                this.DisplayChanged(content);
         }
 
         public frmTableEditor(int templateIndex, string file)
@@ -153,9 +162,8 @@ namespace FreelancerModStudio
                 addItem.Text = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[i].Name;
                 addItem.Tag = i;
                 addItem.Click += mnuAddItem_Click;
-                this.mnuAdd2.DropDownItems.Add(addItem);
+                this.mnuAdd.DropDownItems.Add(addItem);
             }
-            //this.mnuAdd2.DropDown = this.mnuAdd.DropDown;
 #if DEBUG
             st.Stop();
             System.Diagnostics.Debug.WriteLine("display " + objectListView1.Items.Count + " data: " + st.ElapsedMilliseconds + "ms");
@@ -164,7 +172,10 @@ namespace FreelancerModStudio
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
-            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex, (ContentInterface)this);
+            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
+
+            if (this.DockHandler.IsActivated)
+                OnDisplayChanged((ContentInterface)this);
         }
 
         private void Save(string file)
@@ -201,12 +212,7 @@ namespace FreelancerModStudio
             this.Text = tabText;
             this.ToolTipText = File;
 
-            //todo:
-            //int saveTextIndex = this.mnuSave.Text.IndexOf(' ');
-            //if (saveTextIndex == -1)
-            //    this.mnuSave.Text += " " + fileName;
-            //else
-            //    this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + fileName;
+            OnDisplayChanged((ContentInterface)this);
         }
 
         public bool Modified
@@ -409,7 +415,7 @@ namespace FreelancerModStudio
 
             Modified = true;
 
-            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex, null);
+            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
         }
 
         private void DeleteSelectedBlocks()
@@ -438,9 +444,7 @@ namespace FreelancerModStudio
 
         private void mnuDelete_Click(object sender, EventArgs e)
         {
-            //todo:allow delete somewhere else
-            if (this.IsActivated)
-                DeleteSelectedBlocks();
+            DeleteSelectedBlocks();
         }
 
         private void mnuSelectAll_Click(object sender, EventArgs e)
@@ -448,12 +452,18 @@ namespace FreelancerModStudio
             objectListView1.SelectAll();
         }
 
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            SetContextMenuEnabled();
+        }
+
         private void SetContextMenuEnabled()
         {
             bool selection = objectListView1.SelectedObjects.Count > 0;
 
-            mnuAdd2.Visible = !selection;
-            mnuDelete2.Visible = selection;
+            mnuDeleteSeperator.Visible = selection;
+            mnuDelete.Visible = selection;
+            mnuDelete.Enabled = selection;
         }
 
         private void mnuAdd_Click(object sender, EventArgs e)
@@ -476,11 +486,6 @@ namespace FreelancerModStudio
             int templateIndex = (int)((ToolStripMenuItem)sender).Tag;
 
             AddBlock(blockName, templateIndex);
-        }
-
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
-        {
-            SetContextMenuEnabled();
         }
 
         public class TableDataComparer : System.Collections.IComparer
@@ -506,11 +511,6 @@ namespace FreelancerModStudio
             return true;
         }
 
-        public bool CanSaveAs()
-        {
-            return true;
-        }
-
         public bool CanAdd()
         {
             return true;
@@ -522,6 +522,11 @@ namespace FreelancerModStudio
         }
 
         public bool CanSelectAll()
+        {
+            return true;
+        }
+
+        public bool CanAddMultiple()
         {
             return true;
         }
@@ -542,13 +547,27 @@ namespace FreelancerModStudio
                 this.Save(saverDialog.FileName);
         }
 
-        public void Add()
+        public void Add(int index)
         {
+            this.AddBlock(this.mnuAdd.DropDownItems[index].Text, (int)this.mnuAdd.DropDownItems[index].Tag);
         }
 
         public void Delete()
         {
             DeleteSelectedBlocks();
+        }
+
+        public ToolStripDropDown MultipleAddDropDown()
+        {
+            return this.mnuAdd.DropDown;
+        }
+
+        public string GetTitle()
+        {
+            if (this.File == "")
+                return Properties.Strings.FileEditorNewFile;
+            else
+                return Path.GetFileName(this.File);
         }
     }
 

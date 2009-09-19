@@ -41,16 +41,15 @@ winxpsp2_title=Windows XP Service Pack 2
 
 [Setup]
 AppName=Freelancer Mod Studio
-AppVersion=0.8.1
-AppVerName=Freelancer Mod Studio 0.8.1
+AppVersion=0.8.2
+AppVerName=Freelancer Mod Studio 0.8.2
 AppCopyright=Copyright © stfx 2009
-VersionInfoVersion=0.8.1
+VersionInfoVersion=0.8.2
 VersionInfoCompany=stfx
 AppPublisher=stfx
 AppPublisherURL=http://code.google.com/p/freelancermodstudio
-AppSupportURL=http://groups.google.com/group/freelancer-mod-studio/topics
 AppUpdatesURL=http://code.google.com/p/freelancermodstudio/downloads/list
-OutputBaseFilename=FreelancerModStudio-0.8.1
+OutputBaseFilename=FreelancerModStudio-0.8.2
 DefaultGroupName=Freelancer Mod Studio
 DefaultDirName={pf}\Freelancer Mod Studio
 UninstallDisplayIcon={app}\FreelancerModStudio.exe

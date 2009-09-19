@@ -143,72 +143,168 @@
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
   </metadata>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>toolStripPanel2</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="toolStripPanel2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="toolStripPanel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="toolStripPanel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>595, 24</value>
+  </data>
+  <data name="&gt;&gt;toolStripPanel2.Name" xml:space="preserve">
+    <value>toolStripPanel2</value>
+  </data>
+  <data name="&gt;&gt;toolStripPanel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripPanel2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;toolStripPanel2.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
+  </metadata>
   <data name="menuStrip1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>None</value>
   </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;File</value>
+  </data>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 20</value>
+  </data>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Edit</value>
+  </data>
+  <data name="mnuView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 20</value>
+  </data>
+  <data name="mnuView.Text" xml:space="preserve">
+    <value>&amp;View</value>
+  </data>
+  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="mnuTools.Text" xml:space="preserve">
+    <value>&amp;Tools</value>
+  </data>
+  <data name="mnuWindows.Size" type="System.Drawing.Size, System.Drawing">
+    <value>57, 20</value>
+  </data>
+  <data name="mnuWindows.Text" xml:space="preserve">
+    <value>&amp;Window</value>
+  </data>
+  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 20</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Help</value>
+  </data>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>595, 24</value>
+  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>toolStripPanel2</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="newToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>255, 22</value>
+  </data>
+  <data name="newToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;New</value>
+  </data>
   <data name="mnuNewMod.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="mnuNewMod.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+N</value>
+    <value>Strg+N</value>
   </data>
   <data name="mnuNewMod.Size" type="System.Drawing.Size, System.Drawing">
-    <value>182, 22</value>
+    <value>231, 22</value>
   </data>
   <data name="mnuNewMod.Text" xml:space="preserve">
     <value>&amp;Mod...</value>
   </data>
   <data name="mnuNewFile.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+N</value>
+    <value>Strg+Umschalttaste+N</value>
   </data>
   <data name="mnuNewFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>182, 22</value>
+    <value>231, 22</value>
   </data>
   <data name="mnuNewFile.Text" xml:space="preserve">
     <value>&amp;File...</value>
   </data>
-  <data name="newToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 22</value>
-  </data>
-  <data name="newToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;New</value>
-  </data>
   <data name="toolStripMenuItem6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 6</value>
+    <value>252, 6</value>
+  </data>
+  <data name="mnuOpen.Size" type="System.Drawing.Size, System.Drawing">
+    <value>255, 22</value>
+  </data>
+  <data name="mnuOpen.Text" xml:space="preserve">
+    <value>&amp;Open</value>
   </data>
   <data name="mnuOpenMod.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="mnuOpenMod.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+O</value>
+    <value>Strg+O</value>
   </data>
   <data name="mnuOpenMod.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
+    <value>232, 22</value>
   </data>
   <data name="mnuOpenMod.Text" xml:space="preserve">
     <value>&amp;Mod...</value>
   </data>
   <data name="mnuOpenFile.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+O</value>
+    <value>Strg+Umschalttaste+O</value>
   </data>
   <data name="mnuOpenFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
+    <value>232, 22</value>
   </data>
   <data name="mnuOpenFile.Text" xml:space="preserve">
     <value>&amp;File...</value>
   </data>
   <data name="mnuRecentFilesSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 6</value>
-  </data>
-  <data name="mnuOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 22</value>
-  </data>
-  <data name="mnuOpen.Text" xml:space="preserve">
-    <value>&amp;Open</value>
+    <value>229, 6</value>
   </data>
   <data name="mnuCloseSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 6</value>
+    <value>252, 6</value>
   </data>
   <data name="mnuCloseSeperator.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -217,10 +313,10 @@
     <value>False</value>
   </data>
   <data name="mnuClose.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+W</value>
+    <value>Strg+W</value>
   </data>
   <data name="mnuClose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 22</value>
+    <value>255, 22</value>
   </data>
   <data name="mnuClose.Text" xml:space="preserve">
     <value>&amp;Close</value>
@@ -232,10 +328,10 @@
     <value>False</value>
   </data>
   <data name="mnuCloseMod.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+W</value>
+    <value>Strg+Umschalttaste+W</value>
   </data>
   <data name="mnuCloseMod.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 22</value>
+    <value>255, 22</value>
   </data>
   <data name="mnuCloseMod.Text" xml:space="preserve">
     <value>&amp;Close Mod</value>
@@ -244,7 +340,7 @@
     <value>False</value>
   </data>
   <data name="mnuSaveSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 6</value>
+    <value>252, 6</value>
   </data>
   <data name="mnuSaveSeperator.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -253,10 +349,10 @@
     <value>False</value>
   </data>
   <data name="mnuSave.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+S</value>
+    <value>Strg+S</value>
   </data>
   <data name="mnuSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 22</value>
+    <value>255, 22</value>
   </data>
   <data name="mnuSave.Text" xml:space="preserve">
     <value>&amp;Save</value>
@@ -268,10 +364,10 @@
     <value>False</value>
   </data>
   <data name="mnuSaveAs.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Alt+S</value>
+    <value>Strg+Alt+S</value>
   </data>
   <data name="mnuSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 22</value>
+    <value>255, 22</value>
   </data>
   <data name="mnuSaveAs.Text" xml:space="preserve">
     <value>&amp;Save As...</value>
@@ -283,10 +379,10 @@
     <value>False</value>
   </data>
   <data name="mnuSaveAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Shift+S</value>
+    <value>Strg+Umschalttaste+S</value>
   </data>
   <data name="mnuSaveAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 22</value>
+    <value>255, 22</value>
   </data>
   <data name="mnuSaveAll.Text" xml:space="preserve">
     <value>&amp;Save All</value>
@@ -295,31 +391,25 @@
     <value>False</value>
   </data>
   <data name="toolStripMenuItem8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>203, 6</value>
+    <value>252, 6</value>
   </data>
   <data name="mnuExit.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Alt+F4</value>
   </data>
   <data name="mnuExit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 22</value>
+    <value>255, 22</value>
   </data>
   <data name="mnuExit.Text" xml:space="preserve">
     <value>&amp;Exit</value>
-  </data>
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>35, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;File</value>
   </data>
   <data name="mnuUndo.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="mnuUndo.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Z</value>
+    <value>Strg+Z</value>
   </data>
   <data name="mnuUndo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 22</value>
+    <value>170, 22</value>
   </data>
   <data name="mnuUndo.Text" xml:space="preserve">
     <value>&amp;Undo</value>
@@ -328,25 +418,25 @@
     <value>False</value>
   </data>
   <data name="mnuRedo.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+Y</value>
+    <value>Strg+Y</value>
   </data>
   <data name="mnuRedo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 22</value>
+    <value>170, 22</value>
   </data>
   <data name="mnuRedo.Text" xml:space="preserve">
     <value>&amp;Redo</value>
   </data>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>164, 6</value>
+    <value>167, 6</value>
   </data>
   <data name="mnuAdd.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="mnuAdd.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+E</value>
+    <value>Strg+E</value>
   </data>
   <data name="mnuAdd.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 22</value>
+    <value>170, 22</value>
   </data>
   <data name="mnuAdd.Text" xml:space="preserve">
     <value>&amp;Add</value>
@@ -355,49 +445,43 @@
     <value>False</value>
   </data>
   <data name="mnuDelete.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Del</value>
+    <value>Entf</value>
   </data>
   <data name="mnuDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 22</value>
+    <value>170, 22</value>
   </data>
   <data name="mnuDelete.Text" xml:space="preserve">
     <value>&amp;Delete</value>
   </data>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>164, 6</value>
+    <value>167, 6</value>
   </data>
   <data name="mnuSelectAll.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="mnuSelectAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+A</value>
+    <value>Strg+A</value>
   </data>
   <data name="mnuSelectAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 22</value>
+    <value>170, 22</value>
   </data>
   <data name="mnuSelectAll.Text" xml:space="preserve">
     <value>&amp;Select All</value>
   </data>
   <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>164, 6</value>
+    <value>167, 6</value>
   </data>
   <data name="mnuGoTo.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="mnuGoTo.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+G</value>
+    <value>Strg+G</value>
   </data>
   <data name="mnuGoTo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 22</value>
+    <value>170, 22</value>
   </data>
   <data name="mnuGoTo.Text" xml:space="preserve">
     <value>&amp;Go To...</value>
-  </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Edit</value>
   </data>
   <data name="mnuSolutionExplorer.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -426,23 +510,11 @@
   <data name="mnuFullScreen.Text" xml:space="preserve">
     <value>&amp;Full Screen</value>
   </data>
-  <data name="mnuView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>41, 20</value>
-  </data>
-  <data name="mnuView.Text" xml:space="preserve">
-    <value>&amp;View</value>
-  </data>
   <data name="mnuOptions.Size" type="System.Drawing.Size, System.Drawing">
     <value>134, 22</value>
   </data>
   <data name="mnuOptions.Text" xml:space="preserve">
     <value>&amp;Options...</value>
-  </data>
-  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
-  </data>
-  <data name="mnuTools.Text" xml:space="preserve">
-    <value>&amp;Tools</value>
   </data>
   <data name="mnuNewWindow.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -480,12 +552,6 @@
   <data name="mnuWindowsSeperator.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="mnuWindows.Size" type="System.Drawing.Size, System.Drawing">
-    <value>57, 20</value>
-  </data>
-  <data name="mnuWindows.Text" xml:space="preserve">
-    <value>&amp;Window</value>
-  </data>
   <data name="mnuReportIssue.Size" type="System.Drawing.Size, System.Drawing">
     <value>186, 22</value>
   </data>
@@ -518,57 +584,6 @@
   </data>
   <data name="mnuAbout.Text" xml:space="preserve">
     <value>&amp;About...</value>
-  </data>
-  <data name="mnuHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 20</value>
-  </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Help</value>
-  </data>
-  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>595, 24</value>
-  </data>
-  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="menuStrip1.Text" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
-    <value>toolStripPanel2</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="toolStripPanel2.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="toolStripPanel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="toolStripPanel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>595, 24</value>
-  </data>
-  <data name="&gt;&gt;toolStripPanel2.Name" xml:space="preserve">
-    <value>toolStripPanel2</value>
-  </data>
-  <data name="&gt;&gt;toolStripPanel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStripPanel2.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;toolStripPanel2.ZOrder" xml:space="preserve">
-    <value>3</value>
   </data>
   <data name="toolStripPanel3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Right</value>

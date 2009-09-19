@@ -566,6 +566,7 @@
             this.Controls.Add(this.toolStripPanel3);
             this.Controls.Add(this.toolStripPanel1);
             this.IsMdiContainer = true;
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmMain";
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.frmMain_DragDrop);

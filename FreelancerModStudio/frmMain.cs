@@ -98,15 +98,12 @@ namespace FreelancerModStudio
         {
         }
 
-        private void DefaultEditor_SelectedDataChanged(Settings.EditorINIBlock[] data, int templateIndex, ContentInterface content)
+        private void DefaultEditor_SelectedDataChanged(Settings.EditorINIBlock[] data, int templateIndex)
         {
             if (data != null)
                 propertiesForm.ShowData(data, templateIndex);
             else
                 propertiesForm.ClearData();
-
-            if (content != null)
-                Content_DisplayChanged(content);
         }
 
         private void Properties_OptionsChanged(PropertyBlock[] blocks)
@@ -310,13 +307,18 @@ namespace FreelancerModStudio
                 dockPanel1.ActivePane.ActiveContent = dockPanel1.DocumentsToArray()[0];
             else
             {
-                frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
-                defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
-                defaultEditor.ShowData();
-                defaultEditor.Show(this.dockPanel1, DockState.Document);
-
+                DisplayFile(file, templateIndex);
                 AddToRecentFiles(file, templateIndex);
             }
+        }
+
+        private void DisplayFile(string file, int templateIndex)
+        {
+            frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
+            defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
+            defaultEditor.DisplayChanged += Content_DisplayChanged;
+            defaultEditor.ShowData();
+            defaultEditor.Show(this.dockPanel1, DockState.Document);
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -454,10 +456,10 @@ namespace FreelancerModStudio
             if (activeDocument != null && activeDocument is frmTableEditor)
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex, null);
+                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
             }
             else
-                DefaultEditor_SelectedDataChanged(null, 0, null);
+                DefaultEditor_SelectedDataChanged(null, 0);
         }
 
         private void mnuOptions_Click(object sender, EventArgs e)
@@ -581,10 +583,7 @@ namespace FreelancerModStudio
             else
                 return;
 
-            frmTableEditor defaultEditor = new frmTableEditor(templateIndex, null);
-            defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
-            defaultEditor.ShowData();
-            defaultEditor.Show(this.dockPanel1, DockState.Document);
+            DisplayFile(null, templateIndex);
         }
 
         private void mnuSave_Click(object sender, EventArgs e)
@@ -613,7 +612,11 @@ namespace FreelancerModStudio
 
         private void mnuAdd_Click(object sender, EventArgs e)
         {
-            ((ContentInterface)this.dockPanel1.ActiveContent).Add();
+            int index = 0;
+            if (((ToolStripMenuItem)sender).Tag != null)
+                index = (int)((ToolStripMenuItem)sender).Tag;
+
+            ((ContentInterface)this.dockPanel1.ActiveContent).Add(index);
         }
 
         private void mnuDelete_Click(object sender, EventArgs e)
@@ -661,9 +664,28 @@ namespace FreelancerModStudio
 
         private void Content_DisplayChanged(ContentInterface content)
         {
+            if (content.CanSave())
+            {
+                int saveTextIndex = this.mnuSave.Text.IndexOf(' ');
+                if (saveTextIndex == -1)
+                    this.mnuSave.Text += " " + content.GetTitle();
+                else
+                    this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + content.GetTitle();
+            }
+
             this.mnuAdd.Enabled = content.CanAdd();
             this.mnuDelete.Enabled = content.CanDelete();
             this.mnuSelectAll.Enabled = content.CanSelectAll();
+
+            this.mnuAdd.Click -= this.mnuAdd_Click;
+
+            if (content.CanAddMultiple())
+                this.mnuAdd.DropDown = content.MultipleAddDropDown();
+            else
+            {
+                this.mnuAdd.Click += this.mnuAdd_Click;
+                this.mnuAdd.DropDown = new ToolStripDropDown();
+            }
         }
     }
 }

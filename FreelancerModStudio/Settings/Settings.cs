@@ -54,7 +54,7 @@ namespace FreelancerModStudio.Settings
 
             [XmlIgnore,
                 CategoryAttribute("Editor"),
-                DisplayName("Modified saved row color")]
+                DisplayName("Saved row color")]
             public Color EditorModifiedSavedColor { get; set; }
 
             [Browsable(false)]

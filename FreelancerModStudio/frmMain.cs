@@ -596,6 +596,21 @@ namespace FreelancerModStudio
             ((frmTableEditor)this.dockPanel1.ActiveDocument).SaveAs();
         }
 
+        private void mnuCut_Click(object sender, EventArgs e)
+        {
+            ((ContentInterface)this.dockPanel1.ActiveContent).Cut();
+        }
+
+        private void mnuCopy_Click(object sender, EventArgs e)
+        {
+            ((ContentInterface)this.dockPanel1.ActiveContent).Copy();
+        }
+
+        private void mnuPaste_Click(object sender, EventArgs e)
+        {
+            ((ContentInterface)this.dockPanel1.ActiveContent).Paste();
+        }
+
         private void mnuUndo_Click(object sender, EventArgs e)
         {
         }
@@ -673,6 +688,9 @@ namespace FreelancerModStudio
                     this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + content.GetTitle();
             }
 
+            this.mnuCopy.Enabled = content.CanCopy();
+            this.mnuCut.Enabled = content.CanCut();
+            this.mnuPaste.Enabled = content.CanPaste();
             this.mnuAdd.Enabled = content.CanAdd();
             this.mnuDelete.Enabled = content.CanDelete();
             this.mnuSelectAll.Enabled = content.CanSelectAll();

@@ -87,6 +87,21 @@ namespace FreelancerModStudio
                 return false;
         }
 
+        public bool CanCopy()
+        {
+            return false;
+        }
+
+        public bool CanCut()
+        {
+            return false;
+        }
+
+        public bool CanPaste()
+        {
+            return false;
+        }
+
         public bool CanDelete()
         {
             return false;
@@ -135,6 +150,21 @@ namespace FreelancerModStudio
         }
 
         public string GetTitle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Copy()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Paste()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Cut()
         {
             throw new NotImplementedException();
         }

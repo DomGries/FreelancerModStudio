@@ -69,6 +69,10 @@
             this.mnuUndo = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRedo = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuCut = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuCopy = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuPaste = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -265,6 +269,10 @@
             this.mnuUndo,
             this.mnuRedo,
             this.toolStripSeparator2,
+            this.mnuCut,
+            this.mnuCopy,
+            this.mnuPaste,
+            this.toolStripMenuItem4,
             this.mnuAdd,
             this.mnuDelete,
             this.toolStripSeparator3,
@@ -292,6 +300,32 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
+            // 
+            // mnuCut
+            // 
+            resources.ApplyResources(this.mnuCut, "mnuCut");
+            this.mnuCut.Image = global::FreelancerModStudio.Properties.Resources.Cut;
+            this.mnuCut.Name = "mnuCut";
+            this.mnuCut.Click += new System.EventHandler(this.mnuCut_Click);
+            // 
+            // mnuCopy
+            // 
+            resources.ApplyResources(this.mnuCopy, "mnuCopy");
+            this.mnuCopy.Image = global::FreelancerModStudio.Properties.Resources.Copy;
+            this.mnuCopy.Name = "mnuCopy";
+            this.mnuCopy.Click += new System.EventHandler(this.mnuCopy_Click);
+            // 
+            // mnuPaste
+            // 
+            resources.ApplyResources(this.mnuPaste, "mnuPaste");
+            this.mnuPaste.Image = global::FreelancerModStudio.Properties.Resources.Paste;
+            this.mnuPaste.Name = "mnuPaste";
+            this.mnuPaste.Click += new System.EventHandler(this.mnuPaste_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            resources.ApplyResources(this.toolStripMenuItem4, "toolStripMenuItem4");
             // 
             // mnuAdd
             // 
@@ -639,6 +673,10 @@
         private System.Windows.Forms.ToolStripMenuItem mnuSave;
         private System.Windows.Forms.ToolStripMenuItem mnuSaveAs;
         private System.Windows.Forms.ToolStripPanel toolStripPanel4;
+        private System.Windows.Forms.ToolStripMenuItem mnuCut;
+        private System.Windows.Forms.ToolStripMenuItem mnuCopy;
+        private System.Windows.Forms.ToolStripMenuItem mnuPaste;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
     }
 }
 

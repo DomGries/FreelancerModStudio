@@ -362,6 +362,7 @@ namespace FreelancerModStudio.Settings
         }
     }
 
+    [Serializable]
     public class EditorINIBlock
     {
         public string Name;
@@ -376,6 +377,7 @@ namespace FreelancerModStudio.Settings
         }
     }
 
+    [Serializable]
     public class EditorINIOption
     {
         public string Name;
@@ -393,6 +395,7 @@ namespace FreelancerModStudio.Settings
         }
     }
 
+    [Serializable]
     public class EditorINIEntry
     {
         public object Value;

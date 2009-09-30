@@ -350,10 +350,10 @@ namespace FreelancerModStudio.Settings
         INI
     }
 
+    [Serializable]
     public class EditorINIData
     {
         public List<EditorINIBlock> Blocks = new List<EditorINIBlock>();
-
         public int TemplateIndex;
 
         public EditorINIData(int templateIndex)

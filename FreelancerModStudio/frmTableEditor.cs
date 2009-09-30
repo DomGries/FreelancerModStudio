@@ -266,46 +266,49 @@ namespace FreelancerModStudio
 
         private void AddBlocks(EditorINIBlock[] blocks)
         {
-            List<TableData> tableData = new List<TableData>();
+            System.Collections.ArrayList objects = ((System.Collections.ArrayList)objectListView1.Objects);
+
+            List<TableData> selectedData = new List<TableData>();
             for (int i = 0; i < blocks.Length; i++)
             {
                 Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[blocks[i].TemplateIndex];
+                TableData newTableData = GetTableData(blocks[i]);
+                newTableData.Modified = TableModified.Changed;
+
+                bool existSingle = false;
 
                 //check if block already exists if it is a single block
                 if (!templateBlock.Multiple)
                 {
                     int j = 0;
-                    foreach (TableData tableBlock in objectListView1.Objects)
+                    foreach (TableData tableBlock in objects)
                     {
                         if (tableBlock.Block.TemplateIndex == blocks[i].TemplateIndex)
                         {
                             //block already exists, select it
-                            if (i == blocks.Length - 1)
-                            {
-                                objectListView1.SelectObject(tableBlock);
-                                objectListView1.EnsureVisible(j);
-                                return;
-                            }
+                            objects[j] = newTableData;
+
+                            existSingle = true;
                             break;
                         }
                         j++;
                     }
                 }
 
-                Data.Blocks.Add(blocks[i]);
+                if (!existSingle)
+                {
+                    Data.Blocks.Add(blocks[i]);
+                    objects.Add(newTableData);
+                }
 
-                TableData newTableData = GetTableData(blocks[i]);
-                newTableData.Modified = TableModified.Changed;
-                tableData.Add(newTableData);
+                selectedData.Add(newTableData);
             }
-
-            System.Collections.ArrayList objects = ((System.Collections.ArrayList)objectListView1.Objects);
-            objects.AddRange(tableData);
+            
             objects.Sort((System.Collections.IComparer)new TableDataComparer());
-
             objectListView1.SetObjects(objects);
-            objectListView1.SelectedObjects = tableData;
-            objectListView1.EnsureVisible(objectListView1.IndexOf(tableData[0]));
+
+            objectListView1.SelectedObjects = selectedData;
+            objectListView1.EnsureVisible(objectListView1.IndexOf(selectedData[0]));
 
             Modified = true;
         }
@@ -539,7 +542,7 @@ namespace FreelancerModStudio
 
         public bool CanPaste()
         {
-            return Helper.Clipboard.CanPaste(typeof(EditorINIBlock[]));
+            return Helper.Clipboard.CanPaste(typeof(EditorINIData));
         }
 
         public bool CanAdd()
@@ -603,11 +606,11 @@ namespace FreelancerModStudio
 
         public void Copy()
         {
-            List<EditorINIBlock> blocks = new List<EditorINIBlock>();
+            EditorINIData data = new EditorINIData(Data.TemplateIndex);
             foreach (TableData tableData in this.objectListView1.SelectedObjects)
-                blocks.Add(tableData.Block);
+                data.Blocks.Add(tableData.Block);
 
-            Helper.Clipboard.Copy(blocks.ToArray());
+            Helper.Clipboard.Copy(data);
 
             if (this.DockHandler.IsActivated)
                 OnDisplayChanged((ContentInterface)this);
@@ -621,8 +624,9 @@ namespace FreelancerModStudio
 
         public void Paste()
         {
-            EditorINIBlock[] blocks = (EditorINIBlock[])Helper.Clipboard.Paste(typeof(EditorINIBlock[]));
-            AddBlocks(blocks);
+            EditorINIData data = (EditorINIData)Helper.Clipboard.Paste(typeof(EditorINIData));
+            if (data.TemplateIndex == Data.TemplateIndex)
+                AddBlocks(data.Blocks.ToArray());
         }
     }
 
@@ -654,9 +658,16 @@ namespace FreelancerModStudio
 
         public int CompareTo(TableData other)
         {
-            int groupComparison = this.mGroup.CompareTo(other.Group);
+            //sort by group, name, modified
+            int groupComparison = this.Group.CompareTo(other.Group);
             if (groupComparison == 0)
-                return this.mName.CompareTo(other.Name);
+            {
+                int nameComparison = this.Name.CompareTo(other.Name);
+                if (nameComparison == 0)
+                    return this.Modified.CompareTo(other.Modified);
+
+                return nameComparison;
+            }
 
             return groupComparison;
         }

@@ -37,6 +37,12 @@ namespace FreelancerModStudio
                     OpenFile(arguments[i]);
             }
 
+            UndoRedoManager.CommandDone += delegate
+            {
+                mnuUndo.Enabled = UndoRedoManager.CanUndo;
+                mnuRedo.Enabled = UndoRedoManager.CanRedo;
+            };
+
             //register event to restart app if update was downloaded and button 'Install' pressed
             Helper.Update.AutoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
         }
@@ -268,9 +274,9 @@ namespace FreelancerModStudio
         {
             Settings.Settings.RecentFile recentFile = (Settings.Settings.RecentFile)((ToolStripMenuItem)sender).Tag;
 
+            OpenFile(recentFile.File, recentFile.TemplateIndex);
             try
             {
-                OpenFile(recentFile.File, recentFile.TemplateIndex);
             }
             catch
             {
@@ -317,7 +323,6 @@ namespace FreelancerModStudio
             frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
             defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
             defaultEditor.DisplayChanged += Content_DisplayChanged;
-            defaultEditor.ShowData();
             defaultEditor.Show(this.dockPanel1, DockState.Document);
         }
 
@@ -593,7 +598,10 @@ namespace FreelancerModStudio
 
         private void mnuSaveAs_Click(object sender, EventArgs e)
         {
-            ((frmTableEditor)this.dockPanel1.ActiveDocument).SaveAs();
+            frmTableEditor tableEditor = ((frmTableEditor)this.dockPanel1.ActiveDocument);
+            tableEditor.SaveAs();
+
+            AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
         }
 
         private void mnuCut_Click(object sender, EventArgs e)
@@ -613,11 +621,12 @@ namespace FreelancerModStudio
 
         private void mnuUndo_Click(object sender, EventArgs e)
         {
+            UndoRedoManager.Undo();
         }
 
         private void mnuRedo_Click(object sender, EventArgs e)
         {
-
+            UndoRedoManager.Redo();
         }
 
         private void mnuClose_Click(object sender, EventArgs e)

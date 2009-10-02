@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Diagnostics;
 
-namespace FreelancerModStudio.Collections.Generic
+namespace FreelancerModStudio
 {
     public class UndoRedoList<T> : IUndoRedoMember, IList<T>, ICollection<T>, IEnumerable<T>, IList, ICollection, IEnumerable
     {
@@ -1163,7 +1163,7 @@ namespace FreelancerModStudio.Collections.Generic
 
         void ICollection.CopyTo(Array array, int index)
         {
-            ((ICollection)list).CopyTo((T[])array, index);
+            ((ICollection)list).CopyTo(array, index);
         }
 
         int ICollection.Count

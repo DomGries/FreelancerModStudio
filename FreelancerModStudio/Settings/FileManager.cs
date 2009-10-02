@@ -74,7 +74,7 @@ namespace FreelancerModStudio.Settings
             {
                 Template.Block templateBlock = Helper.Template.Data.Files[templateFileIndex].Blocks[i];
 
-                List <INIOptions> iniBlocks;
+                List<INIOptions> iniBlocks;
                 if (iniData.TryGetValue(templateBlock.Name, out iniBlocks))
                 {
                     //loop each ini block

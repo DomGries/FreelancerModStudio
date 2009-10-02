@@ -98,7 +98,7 @@ namespace FreelancerModStudio.Settings
                 {
                     for (int j = 0; j < block.Value.Count; j++)
                     {
-                        if (i > 0)
+                        if (i + j > 0)
                             streamWriter.Write(Environment.NewLine + Environment.NewLine);
 
                         streamWriter.WriteLine("[" + block.Key + "]");

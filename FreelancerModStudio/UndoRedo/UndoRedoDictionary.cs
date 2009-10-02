@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace FreelancerModStudio.Collections.Generic
+namespace FreelancerModStudio
 {
     public class UndoRedoDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IUndoRedoMember
     {

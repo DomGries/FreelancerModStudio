@@ -25,9 +25,29 @@ namespace FreelancerModStudio
             this.propertiesForm.OptionsChanged += Properties_OptionsChanged;
             this.propertiesForm.ContentChanged += Content_DisplayChanged;
 
-            //display sub forms
-            //this.solutionExplorerForm.Show(dockPanel1);
-            this.propertiesForm.Show(dockPanel1);
+            //register event to restart app if update was downloaded and button 'Install' pressed
+            Helper.Update.AutoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            //load layout
+            bool layoutLoaded = false;
+            if (System.IO.File.Exists(Properties.Resources.LayoutPath))
+            {
+                try
+                {
+                    dockPanel1.LoadFromXml(Properties.Resources.LayoutPath, new DeserializeDockContent(GetContentFromPersistString));
+                    layoutLoaded = true;
+                }
+                catch { }
+            }
+
+            if (!layoutLoaded)
+            {
+                //this.solutionExplorerForm.Show(dockPanel1);
+                this.propertiesForm.Show(dockPanel1);
+            }
 
             //open files
             string[] arguments = Environment.GetCommandLineArgs();
@@ -36,9 +56,25 @@ namespace FreelancerModStudio
                 if (System.IO.File.Exists(arguments[i]))
                     OpenFile(arguments[i]);
             }
+        }
 
-            //register event to restart app if update was downloaded and button 'Install' pressed
-            Helper.Update.AutoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
+        private IDockContent GetContentFromPersistString(string persistString)
+        {
+            if (persistString == typeof(frmProperties).ToString())
+                return propertiesForm;
+            else if (persistString == typeof(frmSolutionExplorer).ToString())
+                return propertiesForm;
+            else
+            {
+                string[] parsedStrings = persistString.Split(new char[] { ',' });
+                if (parsedStrings.Length != 3)
+                    return null;
+
+                if (parsedStrings[0] != typeof(frmTableEditor).ToString() || parsedStrings[1] == string.Empty || parsedStrings[2] == string.Empty)
+                    return null;
+
+                return DisplayFile(parsedStrings[1], Convert.ToInt32(parsedStrings[2]));
+            }
         }
 
         private void mnuAbout_Click(object sender, EventArgs e)
@@ -123,6 +159,13 @@ namespace FreelancerModStudio
 
         private void SetSettings()
         {
+            //save layout
+            try
+            {
+                dockPanel1.SaveAsXml(Properties.Resources.LayoutPath);
+            }
+            catch { }
+
             if (!Helper.Settings.Data.Data.Forms.Main.FullScreen)
             {
                 Helper.Settings.Data.Data.Forms.Main.Maximized = (this.WindowState == FormWindowState.Maximized);
@@ -267,15 +310,19 @@ namespace FreelancerModStudio
         private void mnuLoadRecentFile_Click(object sender, EventArgs e)
         {
             Settings.Settings.RecentFile recentFile = (Settings.Settings.RecentFile)((ToolStripMenuItem)sender).Tag;
+            OpenRecentFile(recentFile.File, recentFile.TemplateIndex);
+        }
 
-            OpenFile(recentFile.File, recentFile.TemplateIndex);
+        private void OpenRecentFile(string file, int templateIndex)
+        {
             try
             {
+                OpenFile(file, templateIndex);
             }
             catch
             {
-                if (MessageBox.Show(String.Format(Properties.Strings.FileErrorOpenRecent, recentFile.File), Helper.Assembly.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    RemoveFromRecentFiles(recentFile.File);
+                if (MessageBox.Show(String.Format(Properties.Strings.FileErrorOpenRecent, file), Helper.Assembly.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    RemoveFromRecentFiles(file);
             }
         }
 
@@ -312,13 +359,14 @@ namespace FreelancerModStudio
             }
         }
 
-        private void DisplayFile(string file, int templateIndex)
+        private frmTableEditor DisplayFile(string file, int templateIndex)
         {
             frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
             defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
             defaultEditor.ContentChanged += Content_DisplayChanged;
             defaultEditor.DocumentChanged += Document_DisplayChanged;
             defaultEditor.Show(this.dockPanel1, DockState.Document);
+            return defaultEditor;
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -457,6 +505,7 @@ namespace FreelancerModStudio
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
                 DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
+                Document_DisplayChanged((DocumentInterface)activeDocument);
             }
             else
                 DefaultEditor_SelectedDataChanged(null, 0);
@@ -588,7 +637,7 @@ namespace FreelancerModStudio
 
         private void mnuSave_Click(object sender, EventArgs e)
         {
-            ((frmTableEditor)this.dockPanel1.ActiveDocument).Save();
+            ((DocumentInterface)this.dockPanel1.ActiveDocument).Save();
         }
 
         private void mnuSaveAs_Click(object sender, EventArgs e)
@@ -685,11 +734,8 @@ namespace FreelancerModStudio
         {
             if (document.CanSave())
             {
-                int saveTextIndex = this.mnuSave.Text.IndexOf(' ');
-                if (saveTextIndex == -1)
-                    this.mnuSave.Text += " " + document.GetTitle();
-                else
-                    this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + document.GetTitle();
+                this.mnuSave.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSave, document.GetTitle());
+                this.mnuSaveAs.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSaveAs, document.GetTitle());
             }
 
             this.mnuUndo.Enabled = document.CanUndo();

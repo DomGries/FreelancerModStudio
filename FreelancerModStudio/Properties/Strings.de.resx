@@ -243,4 +243,10 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
   <data name="FileEditorColumnType" xml:space="preserve">
     <value>Typ</value>
   </data>
+  <data name="FileEditorSave" xml:space="preserve">
+    <value>{0} &amp;speichern</value>
+  </data>
+  <data name="FileEditorSaveAs" xml:space="preserve">
+    <value>{0} speichern &amp;unter...</value>
+  </data>
 </root>

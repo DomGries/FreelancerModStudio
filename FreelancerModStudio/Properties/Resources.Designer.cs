@@ -237,6 +237,15 @@ namespace FreelancerModStudio.Properties {
             }
         }
         
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Layout.xml ähnelt.
+        /// </summary>
+        internal static string LayoutPath {
+            get {
+                return ResourceManager.GetString("LayoutPath", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap LogoAbout {
             get {
                 object obj = ResourceManager.GetObject("LogoAbout", resourceCulture);

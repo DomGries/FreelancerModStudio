@@ -234,13 +234,14 @@ namespace FreelancerModStudio
             return false;
         }
 
-        private void AddBlocks(TableBlock[] blocks, bool overwrite)
+        private void AddBlocks(TableBlock[] blocks)
         {
             List<TableBlock> selectedData = new List<TableBlock>();
             for (int i = 0; i < blocks.Length; i++)
             {
                 Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[blocks[i].Block.TemplateIndex];
-                TableBlock tableBlock = null;
+                TableBlock tableBlock = blocks[i];
+                tableBlock.Modified = TableModified.Changed;
 
                 bool existSingle = false;
 
@@ -252,14 +253,7 @@ namespace FreelancerModStudio
                         if (Data.Blocks[j].Block.TemplateIndex == blocks[i].Block.TemplateIndex)
                         {
                             //block already exists, select it
-                            if (overwrite)
-                            {
-                                tableBlock = blocks[i];
-                                tableBlock.Modified = TableModified.Changed;
-                                Data.Blocks[j] = tableBlock;
-                            }
-                            else
-                                tableBlock = Data.Blocks[j];
+                            Data.Blocks[j] = tableBlock;
 
                             existSingle = true;
                             break;
@@ -268,12 +262,7 @@ namespace FreelancerModStudio
                 }
 
                 if (!existSingle)
-                {
                     Data.Blocks.Add(blocks[i]);
-
-                    tableBlock = blocks[i];
-                    tableBlock.Modified = TableModified.Changed;
-                }
 
                 selectedData.Add(tableBlock);
             }
@@ -612,13 +601,19 @@ namespace FreelancerModStudio
         private void UndoManager_DataChanged(TableBlock[] newBlocks, TableBlock[] oldBlocks, UndoManager.ChangedType type)
         {
             if (type == UndoManager.ChangedType.Add)
-                AddBlocks(newBlocks, true);
+                AddBlocks(newBlocks);
             else if (type == UndoManager.ChangedType.Delete)
                 DeleteBlocks(newBlocks);
             else if (type == UndoManager.ChangedType.Edit)
                 ChangeBlocks(newBlocks, oldBlocks);
 
             OnDocumentChanged((DocumentInterface)this);
+        }
+
+        //overwrite to add extra information to layout.xml
+        protected override string GetPersistString()
+        {
+            return GetType().ToString() + "," + File + "," + Data.TemplateIndex;
         }
     }
 

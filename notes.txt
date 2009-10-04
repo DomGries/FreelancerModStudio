@@ -1,29 +1,16 @@
+
+changelog:
+#Implemented global shortcuts depending on active content
+#Fixed editing for nested options (like faction under encounter)
+#Fixed error notification at silent auto update on startup
+#Fixed bug where modified color of block would not be changed if it was the last in the file
+
+	
 credits:
-#ini templates decoded from original freelancer with Ini Mass Convert by Darkshines
 #original ObjectListView code by Phillip Piper
-#original Diff code by the pearl diff tool programmers
 #original DockingPanelSuite code by Weifen Luo
 
-
-
-include freelancer inis to Freelancer Mod Studio because then it can:
-# show the original files (changed and unchanged indicator)
-# create diffs based on inis
-# save diffs in only one file (diffs.xml)
-# also create function to import stupid multifile mods (made without Freelancer Mod Studio)
-
-
-function for options inside mod (choosable script)
-# manageable with groups
-
-
-todo:
-
-setup
-#create settings based on choosen language so that Freelancer Mod Sutdio is german at startup if setup was started in german
-
-
-flmm script:
+flmod script:
 
 <data file="data\equipment\market_ships.ini" method="sectionreplace">
 <!--section sind immer die ersten zwei zeilen der Sections-->
@@ -43,48 +30,20 @@ marketgood = or_dreadnaught_package, 0, -1, 1, 1, 0, 1, 1
 
 presentation:
 
-Hello dear freelancer modding community, I am stfx.
-At the end of October I announced that I thought about starting to program a System Editor. Well I did not receive very many mails and thought about canceling the project.
+Hello dear freelancer modding community,
+I proudly present Freelancer Mod Studio.
 
-But when I spoke with Strail (creator of the Void mod) he told me that this is not very queer because most people need some concrete details and will jump onto that project if it is more continued in progress.
+[url=http://code.google.com/p/freelancermodstudio/downloads/list?can=3]Download the latest version here[/url]
+[url=http://code.google.com/p/freelancermodstudio/wiki/Changelog]View the changelog[/url]
 
-That wasn't exactly my plan but so I began to program without much support (at this point I would like to thank Urza - head modder of the Just4Fun server who answered my questions about fl modding).
+So what can it do?
+It is intended to be (at the very end) an all-in-one modding solution for Freelancer. Freelancer Mod Studio is written in C# and will be open source, therefor can be continued by anyone.
 
+Help?
+I need every help I can get from you but especially from programmers otherwise I wont have enought time and the program will never be finished.
 
-And here starts the interesting part of this text. The program is called Freelancer Mod Studio and will be (at the very end) an all-in-one modding solution for Freelancer mods. Kinda like an IDE. I will also publish the code if there are interested programmers so that this project doesn't die when I am no more (no I won't die - hopefully - but it is very likely that some day I stop to put my time into this stupid program)
-
-It will have the following features in version 1:
-#ability to edit all ini files in a visual editor where you can't enter any wrong information anymore
-#ability to create flmm files with xml-script (including options)
-#ability to create notes (how-to's, reported bugs or things you just want to write down before you forget them)
-#ability to show changes between the vanilla freelancer inis and the ones of the mod
-#ability to save only the changes (xml) into the .flmm file in order to minimize the file size
-#ability to auto update itself (already implemented)
-#ability for multilanguage (already implemented - will be german and english at the beginning because I don't speak any other languages at this time)
-#and much more
+[url=http://www.reactorforge.com/index.php/forums/showthread.php?t=72747]Read more at the official thread...[/url]
 
 
-Features for version 2:
-#ability to edit universe and systems in a System Editor (maybe will include an 2D front, top and side view for exact 3D placement)
-#ability to generate files (for example the system paths - systems_shortest_path.ini)
-#and of course much more
-
-Prototype pictures: http://groups.google.com/group/freelancer-mod-studio/web/prototype 
-They were taken from an early prototype, which only goal is to show how it will look (kinda) like. It will be even better.
-
-
-Well I would be very happy if I get more help, especially by some programmers (and you too because then you will get Freelancer Mod Studio much earlier).
-
-Requirements for programmers:
-#at least two years of programming experience
-#Microsoft c# syntax knowledge
-#Microsoft .NET technology knowledge
-#must speak English
-#must have msn
-
-
-I also would like to hear what >you< think about the project in general.
-
-Official Homepage (downloads, code and issue report): http://code.google.com/p/freelancermodstudio/
-Official Forum (feedback, ideas and anything else): http://groups.google.com/group/freelancer-mod-studio/topics
-Contact: ????@hotmail.de
+[img]http://freelancermodstudio.googlecode.com/files/prototype_2.jpg[/img]
+[img]http://freelancermodstudio.googlecode.com/files/prototype_3.jpg[/img]

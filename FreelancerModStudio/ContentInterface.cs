@@ -6,7 +6,6 @@ namespace FreelancerModStudio
 {
     public interface ContentInterface
     {
-        bool CanSave();
         bool CanCopy();
         bool CanCut();
         bool CanPaste();
@@ -16,7 +15,6 @@ namespace FreelancerModStudio
         bool CanSelectAll();
 
         System.Windows.Forms.ToolStripDropDown MultipleAddDropDown();
-        string GetTitle();
 
         void Add(int index);
         void Copy();
@@ -24,5 +22,19 @@ namespace FreelancerModStudio
         void Paste();
         void Delete();
         void SelectAll();
+    }
+
+    public interface DocumentInterface
+    {
+        bool CanSave();
+        bool CanUndo();
+        bool CanRedo();
+
+        string GetTitle();
+
+        void Save();
+        void SaveAs();
+        void Undo();
+        void Redo();
     }
 }

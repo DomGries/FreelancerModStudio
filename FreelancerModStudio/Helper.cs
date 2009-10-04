@@ -213,32 +213,6 @@ namespace FreelancerModStudio
             }
         }
 
-        public struct Clipboard
-        {
-            public static void Copy(object o)
-            {
-                DataFormats.Format format =
-                     DataFormats.GetFormat(o.GetType().FullName);
-
-                IDataObject dataObj = new DataObject();
-                dataObj.SetData(format.Name, false, o);
-                System.Windows.Forms.Clipboard.SetDataObject(dataObj, false);
-            }
-
-            public static bool CanPaste(Type type)
-            {
-                return System.Windows.Forms.Clipboard.GetDataObject().GetDataPresent(type.FullName);
-            }
-
-            public static object Paste(Type type)
-            {
-                if (CanPaste(type))
-                    return System.Windows.Forms.Clipboard.GetDataObject().GetData(type.FullName);
-
-                return null;
-            }
-        }
-
         public struct Thread
         {
             public static void Start(ref System.Threading.Thread thread, System.Threading.ThreadStart threadDelegate, System.Threading.ThreadPriority priority, bool isBackground)
@@ -309,18 +283,15 @@ namespace FreelancerModStudio
             {
                 get
                 {
-                    // Alle Title-Attribute in dieser Assembly abrufen
                     object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyTitleAttribute), false);
-                    // Wenn mindestens ein Title-Attribut vorhanden ist
                     if (attributes.Length > 0)
                     {
-                        // Erstes auswählen
                         System.Reflection.AssemblyTitleAttribute titleAttribute = (System.Reflection.AssemblyTitleAttribute)attributes[0];
-                        // Zurückgeben, wenn es keine leere Zeichenfolge ist
+
                         if (titleAttribute.Title != "")
                             return titleAttribute.Title;
                     }
-                    // Wenn kein Title-Attribut vorhanden oder das Title-Attribut eine leere Zeichenfolge war, den EXE-Namen zurückgeben
+
                     return System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
                 }
             }
@@ -337,12 +308,10 @@ namespace FreelancerModStudio
             {
                 get
                 {
-                    // Alle Description-Attribute in dieser Assembly abrufen
                     object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyDescriptionAttribute), false);
-                    // Eine leere Zeichenfolge zurückgeben, wenn keine Description-Attribute vorhanden sind
                     if (attributes.Length == 0)
                         return "";
-                    // Den Wert des Description-Attributs zurückgeben, wenn eines vorhanden ist
+
                     return ((System.Reflection.AssemblyDescriptionAttribute)attributes[0]).Description;
                 }
             }
@@ -351,12 +320,10 @@ namespace FreelancerModStudio
             {
                 get
                 {
-                    // Alle Product-Attribute in dieser Assembly abrufen
                     object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyProductAttribute), false);
-                    // Eine leere Zeichenfolge zurückgeben, wenn keine Product-Attribute vorhanden sind
                     if (attributes.Length == 0)
                         return "";
-                    // Den Wert des Product-Attributs zurückgeben, wenn eines vorhanden ist
+
                     return ((System.Reflection.AssemblyProductAttribute)attributes[0]).Product;
                 }
             }
@@ -365,12 +332,10 @@ namespace FreelancerModStudio
             {
                 get
                 {
-                    // Alle Copyright-Attribute in dieser Assembly abrufen
                     object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyCopyrightAttribute), false);
-                    // Eine leere Zeichenfolge zurückgeben, wenn keine Copyright-Attribute vorhanden sind
                     if (attributes.Length == 0)
                         return "";
-                    // Den Wert des Copyright-Attributs zurückgeben, wenn eines vorhanden ist
+
                     return ((System.Reflection.AssemblyCopyrightAttribute)attributes[0]).Copyright;
                 }
             }
@@ -379,12 +344,10 @@ namespace FreelancerModStudio
             {
                 get
                 {
-                    // Alle Company-Attribute in dieser Assembly abrufen
                     object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyCompanyAttribute), false);
-                    // Eine leere Zeichenfolge zurückgeben, wenn keine Company-Attribute vorhanden sind
                     if (attributes.Length == 0)
                         return "";
-                    // Den Wert des Company-Attributs zurückgeben, wenn eines vorhanden ist
+
                     return ((System.Reflection.AssemblyCompanyAttribute)attributes[0]).Company;
                 }
             }

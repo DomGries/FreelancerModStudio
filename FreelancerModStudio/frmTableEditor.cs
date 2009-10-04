@@ -10,20 +10,23 @@ using FreelancerModStudio.Settings;
 
 namespace FreelancerModStudio
 {
-    public partial class frmTableEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface
+    public partial class frmTableEditor : WeifenLuo.WinFormsUI.Docking.DockContent, DocumentInterface, ContentInterface
     {
         public TableData Data;
         public string File { get; set; }
         public bool IsBINI { get; set; }
 
-        private UndoRedo<System.Collections.IList> selectedObjects = new UndoRedo<System.Collections.IList>();
-        private bool modified = false;
+        bool modified = false;
+        UndoManager undoManager = new UndoManager();
 
         public delegate void SelectedDataChangedType(EditorINIBlock[] data, int templateIndex);
         public SelectedDataChangedType SelectedDataChanged;
 
-        public delegate void DisplayChangedType(ContentInterface content);
-        public DisplayChangedType DisplayChanged;
+        public delegate void ContentChangedType(ContentInterface content);
+        public ContentChangedType ContentChanged;
+
+        public delegate void DocumentChangedType(DocumentInterface document);
+        public DocumentChangedType DocumentChanged;
 
         private void OnSelectedDataChanged(EditorINIBlock[] data, int templateIndex)
         {
@@ -31,18 +34,24 @@ namespace FreelancerModStudio
                 this.SelectedDataChanged(data, templateIndex);
         }
 
-        private void OnDisplayChanged(ContentInterface content)
+        private void OnContentChanged(ContentInterface content)
         {
-            if (this.DisplayChanged != null)
-                this.DisplayChanged(content);
+            if (this.ContentChanged != null)
+                this.ContentChanged(content);
+        }
+
+        private void OnDocumentChanged(DocumentInterface document)
+        {
+            if (this.DocumentChanged != null)
+                this.DocumentChanged(document);
         }
 
         public frmTableEditor(int templateIndex, string file)
         {
             InitializeComponent();
-            this.Icon = Properties.Resources.FileINIIcon;
 
-            UndoRedoManager.Start("");
+            Icon = Properties.Resources.FileINIIcon;
+            undoManager.DataChanged += UndoManager_DataChanged;
 
             if (file != null)
             {
@@ -64,12 +73,6 @@ namespace FreelancerModStudio
 
             RefreshSettings();
             ShowData();
-
-            UndoRedoManager.ClearHistory();
-            UndoRedoManager.CommandDone += delegate
-            {
-                this.ReloadDisplay();
-            };
         }
 
         public void RefreshSettings()
@@ -119,7 +122,7 @@ namespace FreelancerModStudio
 
             //sort by type and name
             Data.Blocks.Sort();
-            ReloadDisplay();
+            objectListView1.SetObjects(Data.Blocks);
 
             //add block types to add menu
             for (int i = 0; i < Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Count; i++)
@@ -141,7 +144,7 @@ namespace FreelancerModStudio
             OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
 
             if (this.DockHandler.IsActivated)
-                OnDisplayChanged((ContentInterface)this);
+                OnContentChanged((ContentInterface)this);
         }
 
         private void Save(string file)
@@ -179,7 +182,7 @@ namespace FreelancerModStudio
             this.Text = tabText;
             this.ToolTipText = File;
 
-            OnDisplayChanged((ContentInterface)this);
+            OnDocumentChanged((DocumentInterface)this);
         }
 
         public bool Modified
@@ -231,16 +234,13 @@ namespace FreelancerModStudio
             return false;
         }
 
-        private void AddBlocks(TableBlock[] blocks)
+        private void AddBlocks(TableBlock[] blocks, bool overwrite)
         {
-            UndoRedoManager.Start("");
-
             List<TableBlock> selectedData = new List<TableBlock>();
             for (int i = 0; i < blocks.Length; i++)
             {
                 Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[blocks[i].Block.TemplateIndex];
-                TableBlock tableBlock = blocks[i];
-                tableBlock.Modified = TableModified.Changed;
+                TableBlock tableBlock = null;
 
                 bool existSingle = false;
 
@@ -252,7 +252,14 @@ namespace FreelancerModStudio
                         if (Data.Blocks[j].Block.TemplateIndex == blocks[i].Block.TemplateIndex)
                         {
                             //block already exists, select it
-                            Data.Blocks[j] = tableBlock;
+                            if (overwrite)
+                            {
+                                tableBlock = blocks[i];
+                                tableBlock.Modified = TableModified.Changed;
+                                Data.Blocks[j] = tableBlock;
+                            }
+                            else
+                                tableBlock = Data.Blocks[j];
 
                             existSingle = true;
                             break;
@@ -261,16 +268,21 @@ namespace FreelancerModStudio
                 }
 
                 if (!existSingle)
+                {
                     Data.Blocks.Add(blocks[i]);
+
+                    tableBlock = blocks[i];
+                    tableBlock.Modified = TableModified.Changed;
+                }
 
                 selectedData.Add(tableBlock);
             }
 
             Data.Blocks.Sort();
-            UndoRedoManager.Commit();
 
+            objectListView1.SetObjects(Data.Blocks);
             objectListView1.SelectedObjects = selectedData;
-            objectListView1.EnsureVisible(objectListView1.IndexOf(selectedData[0]));
+            EnsureSelectionVisible();
 
             Modified = true;
         }
@@ -294,7 +306,7 @@ namespace FreelancerModStudio
             }
 
             //add actual block
-            AddBlocks(new TableBlock[] { new TableBlock(editorBlock, Data.TemplateIndex) });
+            undoManager.Execute(new TableBlock[] { new TableBlock(editorBlock, Data.TemplateIndex) }, null, UndoManager.ChangedType.Add);
         }
 
         public EditorINIBlock[] GetSelectedBlocks()
@@ -311,16 +323,17 @@ namespace FreelancerModStudio
 
         public void SetBlocks(PropertyBlock[] blocks)
         {
-            UndoRedoManager.Start("");
-            bool sortRequired = false;
+            List<TableBlock> newBlocks = new List<TableBlock>();
+            List<TableBlock> oldBlocks = new List<TableBlock>();
 
             for (int i = 0; i < blocks.Length; i++)
             {
-                TableBlock tableData = (TableBlock)objectListView1.SelectedObjects[i];
+                oldBlocks.Add((TableBlock)objectListView1.SelectedObjects[i]);
+                newBlocks.Add(ObjectClone.Clone<TableBlock>(oldBlocks[i]));
 
                 for (int j = 0; j < blocks[i].Count; j++)
                 {
-                    List<EditorINIEntry> options = tableData.Block.Options[j].Values;
+                    List<EditorINIEntry> options = newBlocks[i].Block.Options[j].Values;
 
                     if (blocks[i][j].Value is PropertySubOptions)
                     {
@@ -348,8 +361,6 @@ namespace FreelancerModStudio
                     }
                     else
                     {
-                        bool changedValue = true;
-
                         string text = ((string)blocks[i][j].Value).Trim();
                         if (text != string.Empty)
                         {
@@ -358,8 +369,6 @@ namespace FreelancerModStudio
                                 //check if value is different
                                 if (options[0].Value.ToString() != text)
                                     options[0].Value = text;
-                                else
-                                    changedValue = false;
                             }
                             else
                                 options.Add(new EditorINIEntry(text));
@@ -368,51 +377,58 @@ namespace FreelancerModStudio
                             options.Clear();
 
                         //change data in listview
-                        if (tableData.Block.MainOptionIndex == j && changedValue)
-                        {
-                            tableData.Name = text;
-                            sortRequired = true;
-                        }
+                        if (newBlocks[i].Block.MainOptionIndex == j)
+                            newBlocks[i].Name = text;
                     }
                 }
 
-                tableData.Modified = TableModified.Changed;
+                newBlocks[i].Modified = TableModified.Changed;
             }
 
-            //refresh because of changed modified property (different background color)
-            if (sortRequired)
-            {
-                Data.Blocks.Sort();
-                UndoRedoManager.Commit();
-            }
-            else
-                UndoRedoManager.Commit();
-
-            Modified = true;
-
+            undoManager.Execute(newBlocks.ToArray(), oldBlocks.ToArray(), UndoManager.ChangedType.Edit);
             OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
         }
 
-        private void ReloadDisplay()
+        private void ChangeBlocks(TableBlock[] newBlocks, TableBlock[] oldBlocks)
         {
-            System.Collections.ArrayList selection = (System.Collections.ArrayList)objectListView1.SelectedObjects;
+            for (int i = 0; i < oldBlocks.Length; i++)
+            {
+                int index = Data.Blocks.IndexOf(oldBlocks[i]);
+                Data.Blocks[index] = newBlocks[i];
+            }
+
+            Data.Blocks.Sort();
 
             objectListView1.SetObjects(Data.Blocks);
-            objectListView1.SelectObjects(selection);
+            objectListView1.SelectObjects(newBlocks);
+            EnsureSelectionVisible();
 
-            if (objectListView1.SelectedObjects.Count > 0)
-                objectListView1.EnsureVisible(objectListView1.IndexOf(objectListView1.SelectedObjects[0]));
+            Modified = true;
+        }
+
+        private void DeleteBlocks(TableBlock[] blocks)
+        {
+            foreach (TableBlock tableBlock in blocks)
+                Data.Blocks.Remove(tableBlock);
+
+            objectListView1.RemoveObjects(blocks);
+            Modified = true;
         }
 
         private void DeleteSelectedBlocks()
         {
-            UndoRedoManager.Start("");
+            List<TableBlock> blocks = new List<TableBlock>();
 
-            foreach (TableBlock tableBlock in objectListView1.SelectedObjects)
-                Data.Blocks.Remove(tableBlock);
+            foreach (TableBlock block in objectListView1.SelectedObjects)
+                blocks.Add(block);
 
-            UndoRedoManager.Commit();
-            Modified = true;
+            undoManager.Execute(blocks.ToArray(), null, UndoManager.ChangedType.Delete);
+        }
+
+        private void EnsureSelectionVisible()
+        {
+            objectListView1.EnsureVisible(objectListView1.IndexOf(objectListView1.SelectedObjects[objectListView1.SelectedObjects.Count - 1]));
+            objectListView1.EnsureVisible(objectListView1.IndexOf(objectListView1.SelectedObjects[0]));
         }
 
         private void frmDefaultEditor_FormClosing(object sender, FormClosingEventArgs e)
@@ -454,44 +470,12 @@ namespace FreelancerModStudio
             mnuDelete.Enabled = selection;
         }
 
-        private void mnuAdd_Click(object sender, EventArgs e)
-        {
-            //ContextMenuStrip addMenu = new ContextMenuStrip();
-
-            //foreach (Template.Block block in Helper.Template.Data.Files[Data.TemplateIndex].Blocks)
-            //{
-            //    ToolStripMenuItem addItem = new ToolStripMenuItem(block.Name);
-            //    addItem.Click += mnuAddItem_Click;
-            //    addMenu.Items.Add(addItem);
-            //}
-
-            //addMenu.Show(this.objectListView1, new Point(0,0));
-        }
-
         private void mnuAddItem_Click(object sender, EventArgs e)
         {
             string blockName = ((ToolStripMenuItem)sender).Text;
             int templateIndex = (int)((ToolStripMenuItem)sender).Tag;
 
             AddBlock(blockName, templateIndex);
-        }
-
-        public class TableDataComparer : System.Collections.IComparer
-        {
-            int System.Collections.IComparer.Compare(object x, object y)
-            {
-                return ((TableBlock)x).CompareTo((TableBlock)y);
-            }
-        }
-
-        private void mnuReDo_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void mnuUnDo_Click(object sender, EventArgs e)
-        {
-
         }
 
         public bool CanSave()
@@ -511,7 +495,7 @@ namespace FreelancerModStudio
 
         public bool CanPaste()
         {
-            return Helper.Clipboard.CanPaste(typeof(EditorINIData));
+            return Clipboard.CanPaste(typeof(EditorINIData));
         }
 
         public bool CanAdd()
@@ -579,10 +563,10 @@ namespace FreelancerModStudio
             foreach (TableBlock tableData in this.objectListView1.SelectedObjects)
                 data.Blocks.Add(tableData.Block);
 
-            Helper.Clipboard.Copy(data);
+            Clipboard.Copy(data);
 
             if (this.DockHandler.IsActivated)
-                OnDisplayChanged((ContentInterface)this);
+                OnContentChanged((ContentInterface)this);
         }
 
         public void Cut()
@@ -593,32 +577,64 @@ namespace FreelancerModStudio
 
         public void Paste()
         {
-            EditorINIData editorData = (EditorINIData)Helper.Clipboard.Paste(typeof(EditorINIData));
+            EditorINIData editorData = (EditorINIData)Clipboard.Paste(typeof(EditorINIData));
 
             if (editorData.TemplateIndex == Data.TemplateIndex)
             {
                 TableBlock[] blocks = new TableBlock[editorData.Blocks.Count];
-                for (int i = 0; i < editorData.Blocks.Count; i++ )
+                for (int i = 0; i < editorData.Blocks.Count; i++)
                     blocks[i] = new TableBlock(editorData.Blocks[i], Data.TemplateIndex);
 
-                AddBlocks(blocks);
+                undoManager.Execute(blocks, null, UndoManager.ChangedType.Add);
             }
+        }
+
+        public bool CanUndo()
+        {
+            return undoManager.CanUndo();
+        }
+
+        public bool CanRedo()
+        {
+            return undoManager.CanRedo();
+        }
+
+        public void Undo()
+        {
+            undoManager.Undo(1);
+        }
+
+        public void Redo()
+        {
+            undoManager.Redo(1);
+        }
+
+        private void UndoManager_DataChanged(TableBlock[] newBlocks, TableBlock[] oldBlocks, UndoManager.ChangedType type)
+        {
+            if (type == UndoManager.ChangedType.Add)
+                AddBlocks(newBlocks, true);
+            else if (type == UndoManager.ChangedType.Delete)
+                DeleteBlocks(newBlocks);
+            else if (type == UndoManager.ChangedType.Edit)
+                ChangeBlocks(newBlocks, oldBlocks);
+
+            OnDocumentChanged((DocumentInterface)this);
         }
     }
 
     public class TableData
     {
-        public UndoRedoList<TableBlock> Blocks { get; set; }
+        public List<TableBlock> Blocks { get; set; }
         public int TemplateIndex { get; set; }
 
         public TableData()
         {
-            Blocks = new UndoRedoList<TableBlock>();
+            Blocks = new List<TableBlock>();
         }
 
         public TableData(EditorINIData data)
         {
-            Blocks = new UndoRedoList<TableBlock>();
+            Blocks = new List<TableBlock>();
             TemplateIndex = data.TemplateIndex;
 
             foreach (EditorINIBlock block in data.Blocks)
@@ -636,12 +652,15 @@ namespace FreelancerModStudio
         }
     }
 
+    [Serializable]
     public class TableBlock : IComparable<TableBlock>
     {
         public string Name { get; set; }
         public string Group { get; set; }
         public EditorINIBlock Block;
         public TableModified Modified = TableModified.Normal;
+
+        public TableBlock() { }
 
         public TableBlock(EditorINIBlock block, int templateIndex)
         {

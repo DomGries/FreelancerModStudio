@@ -23,7 +23,7 @@ namespace FreelancerModStudio
             this.GetSettings();
 
             this.propertiesForm.OptionsChanged += Properties_OptionsChanged;
-            this.propertiesForm.DisplayChanged += Content_DisplayChanged;
+            this.propertiesForm.ContentChanged += Content_DisplayChanged;
 
             //display sub forms
             //this.solutionExplorerForm.Show(dockPanel1);
@@ -36,12 +36,6 @@ namespace FreelancerModStudio
                 if (System.IO.File.Exists(arguments[i]))
                     OpenFile(arguments[i]);
             }
-
-            UndoRedoManager.CommandDone += delegate
-            {
-                mnuUndo.Enabled = UndoRedoManager.CanUndo;
-                mnuRedo.Enabled = UndoRedoManager.CanRedo;
-            };
 
             //register event to restart app if update was downloaded and button 'Install' pressed
             Helper.Update.AutoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
@@ -322,7 +316,8 @@ namespace FreelancerModStudio
         {
             frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
             defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
-            defaultEditor.DisplayChanged += Content_DisplayChanged;
+            defaultEditor.ContentChanged += Content_DisplayChanged;
+            defaultEditor.DocumentChanged += Document_DisplayChanged;
             defaultEditor.Show(this.dockPanel1, DockState.Document);
         }
 
@@ -621,12 +616,12 @@ namespace FreelancerModStudio
 
         private void mnuUndo_Click(object sender, EventArgs e)
         {
-            UndoRedoManager.Undo();
+            ((DocumentInterface)this.dockPanel1.ActiveDocument).Undo();
         }
 
         private void mnuRedo_Click(object sender, EventArgs e)
         {
-            UndoRedoManager.Redo();
+            ((DocumentInterface)this.dockPanel1.ActiveDocument).Redo();
         }
 
         private void mnuClose_Click(object sender, EventArgs e)
@@ -686,17 +681,23 @@ namespace FreelancerModStudio
                 Content_DisplayChanged((ContentInterface)this.dockPanel1.ActiveContent);
         }
 
-        private void Content_DisplayChanged(ContentInterface content)
+        private void Document_DisplayChanged(DocumentInterface document)
         {
-            if (content.CanSave())
+            if (document.CanSave())
             {
                 int saveTextIndex = this.mnuSave.Text.IndexOf(' ');
                 if (saveTextIndex == -1)
-                    this.mnuSave.Text += " " + content.GetTitle();
+                    this.mnuSave.Text += " " + document.GetTitle();
                 else
-                    this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + content.GetTitle();
+                    this.mnuSave.Text = this.mnuSave.Text.Substring(0, saveTextIndex) + " " + document.GetTitle();
             }
 
+            this.mnuUndo.Enabled = document.CanUndo();
+            this.mnuRedo.Enabled = document.CanRedo();
+        }
+
+        private void Content_DisplayChanged(ContentInterface content)
+        {
             this.mnuCopy.Enabled = content.CanCopy();
             this.mnuCut.Enabled = content.CanCut();
             this.mnuPaste.Enabled = content.CanPaste();

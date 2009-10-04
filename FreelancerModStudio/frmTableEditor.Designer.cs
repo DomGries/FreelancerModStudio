@@ -69,7 +69,6 @@
             this.mnuAdd.Image = global::FreelancerModStudio.Properties.Resources.Add;
             this.mnuAdd.Name = "mnuAdd";
             resources.ApplyResources(this.mnuAdd, "mnuAdd");
-            this.mnuAdd.Click += new System.EventHandler(this.mnuAdd_Click);
             // 
             // mnuDeleteSeperator
             // 

@@ -13,8 +13,8 @@ namespace FreelancerModStudio
         public delegate void OptionsChangedType(PropertyBlock[] blocks);
         public OptionsChangedType OptionsChanged;
 
-        public delegate void DisplayChangedType(ContentInterface content);
-        public DisplayChangedType DisplayChanged;
+        public delegate void ContentChangedType(ContentInterface content);
+        public ContentChangedType ContentChanged;
 
         private void OnOptionsChanged(PropertyBlock[] blocks)
         {
@@ -22,10 +22,10 @@ namespace FreelancerModStudio
                 this.OptionsChanged(blocks);
         }
 
-        private void OnDisplayChanged(ContentInterface content)
+        private void OnContentChanged(ContentInterface content)
         {
-            if (this.DisplayChanged != null)
-                this.DisplayChanged(content);
+            if (this.ContentChanged != null)
+                this.ContentChanged(content);
         }
 
         public frmProperties()
@@ -76,13 +76,13 @@ namespace FreelancerModStudio
         private void propertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
         {
             if (this.DockHandler.IsActivated)
-                this.OnDisplayChanged((ContentInterface)this);
+                this.OnContentChanged((ContentInterface)this);
         }
 
         public bool CanAdd()
         {
             if (propertyGrid.SelectedGridItem != null)
-                return propertyGrid.SelectedGridItem.Value is PropertySubOptions || propertyGrid.SelectedGridItem.Parent.Value is PropertySubOptions;
+                return propertyGrid.SelectedGridItem.Value is PropertySubOptions || (propertyGrid.SelectedGridItem.Parent != null && propertyGrid.SelectedGridItem.Parent.Value is PropertySubOptions);
             else
                 return false;
         }
@@ -134,22 +134,12 @@ namespace FreelancerModStudio
             return false;
         }
 
-        public bool CanSave()
-        {
-            return false;
-        }
-
         public void SelectAll()
         {
             throw new NotImplementedException();
         }
 
         public ToolStripDropDown MultipleAddDropDown()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetTitle()
         {
             throw new NotImplementedException();
         }

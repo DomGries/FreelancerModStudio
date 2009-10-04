@@ -72,6 +72,8 @@
   <ItemGroup>
     <Compile Include="AutoUpdate\AutoUpdate.cs">
     </Compile>
+    <Compile Include="Clipboard.cs" />
+    <Compile Include="Clone.cs" />
     <Compile Include="ContentInterface.cs" />
     <Compile Include="Controls\PropertyGridExtension.cs" />
     <Compile Include="Controls\SeperatorLine.cs">
@@ -196,14 +198,7 @@
     </Compile>
     <Compile Include="Settings\Template.cs">
     </Compile>
-    <Compile Include="UndoRedo\Change.cs" />
-    <Compile Include="UndoRedo\Command.cs" />
-    <Compile Include="UndoRedo\IUndoRedoMember.cs" />
-    <Compile Include="UndoRedo\UndoRedoArea.cs" />
-    <Compile Include="UndoRedo\UndoRedoDictionary.cs" />
-    <Compile Include="UndoRedo\UndoRedoList.cs" />
-    <Compile Include="UndoRedo\UndoRedoManager.cs" />
-    <Compile Include="UndoRedo\UndoRedoProperty.cs" />
+    <Compile Include="Settings\UndoManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\About.ico" />

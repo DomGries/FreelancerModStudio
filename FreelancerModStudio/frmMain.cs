@@ -33,11 +33,12 @@ namespace FreelancerModStudio
         {
             //load layout
             bool layoutLoaded = false;
-            if (System.IO.File.Exists(Properties.Resources.LayoutPath))
+            string layoutFile = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.LayoutPath);
+            if (System.IO.File.Exists(layoutFile))
             {
                 try
                 {
-                    dockPanel1.LoadFromXml(Properties.Resources.LayoutPath, new DeserializeDockContent(GetContentFromPersistString));
+                    dockPanel1.LoadFromXml(layoutFile, new DeserializeDockContent(GetContentFromPersistString));
                     layoutLoaded = true;
                 }
                 catch { }
@@ -160,9 +161,10 @@ namespace FreelancerModStudio
         private void SetSettings()
         {
             //save layout
+            string layoutFile = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.LayoutPath);
             try
             {
-                dockPanel1.SaveAsXml(Properties.Resources.LayoutPath);
+                dockPanel1.SaveAsXml(layoutFile);
             }
             catch { }
 
@@ -500,7 +502,7 @@ namespace FreelancerModStudio
         private void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
         {
             //show properties of document if active document changed
-            IDockContent activeDocument = ((DockPanel)sender).ActiveDocument;
+            IDockContent activeDocument = dockPanel1.ActiveDocument;
             if (activeDocument != null && activeDocument is frmTableEditor)
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
@@ -562,6 +564,10 @@ namespace FreelancerModStudio
 
             if (solutionExplorerForm != null)
                 solutionExplorerForm.RefreshSettings();
+
+            IDockContent activeDocument = dockPanel1.ActiveDocument;
+            if (activeDocument != null)
+                Document_DisplayChanged((DocumentInterface)activeDocument);
         }
 
         private void SetDocumentMenus(bool value)
@@ -572,7 +578,6 @@ namespace FreelancerModStudio
             mnuSaveSeperator.Visible = value;
             mnuWindowsSeperator.Visible = value;
             mnuClose.Visible = value;
-            mnuCloseAllDocuments.Visible = value;
 
             mnuSave.Enabled = value;
             mnuSaveAs.Enabled = value;

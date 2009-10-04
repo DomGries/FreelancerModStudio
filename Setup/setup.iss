@@ -90,6 +90,9 @@ Source: "..\FreelancerModStudio\bin\Release\Template.xml"; DestDir: "{app}"
 Source: "src\Settings_en.xml"; DestName: "FreelancerModStudio.xml"; DestDir: "{app}"; Languages: en; Flags: onlyifdoesntexist
 Source: "src\Settings_de.xml"; DestName: "FreelancerModStudio.xml"; DestDir: "{app}"; Languages: de; Flags: onlyifdoesntexist
 
+[UninstallDelete]
+Name: "{app}\FreelancerModStudio.Layout.xml"; Type: files
+
 [Icons]
 Name: "{group}\Freelancer Mod Studio"; Filename: "{app}\FreelancerModStudio"
 Name: "{group}\{cm:UninstallProgram,Freelancer Mod Studio}"; Filename: "{uninstallexe}"

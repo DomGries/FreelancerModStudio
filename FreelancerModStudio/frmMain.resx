@@ -504,14 +504,14 @@
   <data name="toolStripMenuItem1.Visible" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
+  <data name="mnuCloseAllDocuments.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="mnuCloseAllDocuments.Size" type="System.Drawing.Size, System.Drawing">
     <value>190, 22</value>
   </data>
   <data name="mnuCloseAllDocuments.Text" xml:space="preserve">
     <value>&amp;Close All Documents</value>
-  </data>
-  <data name="mnuCloseAllDocuments.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
   </data>
   <data name="mnuResetLayout.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -658,7 +658,7 @@
     <value>dockPanel1</value>
   </data>
   <data name="&gt;&gt;dockPanel1.Type" xml:space="preserve">
-    <value>WeifenLuo.WinFormsUI.Docking.DockPanel, WeifenLuo.WinFormsUI.Docking, Version=2.3.3564.39007, Culture=neutral, PublicKeyToken=null</value>
+    <value>WeifenLuo.WinFormsUI.Docking.DockPanel, WeifenLuo.WinFormsUI.Docking, Version=2.3.3564.39049, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;dockPanel1.Parent" xml:space="preserve">
     <value>$this</value>
@@ -1024,7 +1024,7 @@
     <value>uiCultureChanger1</value>
   </data>
   <data name="&gt;&gt;uiCultureChanger1.Type" xml:space="preserve">
-    <value>UICultureChanger, FreelancerModStudio, Version=0.8.3564.39007, Culture=neutral, PublicKeyToken=null</value>
+    <value>UICultureChanger, FreelancerModStudio, Version=0.8.3564.39764, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;toolStripMenuItem5.Name" xml:space="preserve">
     <value>toolStripMenuItem5</value>

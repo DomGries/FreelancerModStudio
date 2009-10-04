@@ -238,7 +238,7 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Layout.xml ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die FreelancerModStudio.Layout.xml ähnelt.
         /// </summary>
         internal static string LayoutPath {
             get {

@@ -440,9 +440,9 @@
             // 
             // mnuCloseAllDocuments
             // 
+            resources.ApplyResources(this.mnuCloseAllDocuments, "mnuCloseAllDocuments");
             this.mnuCloseAllDocuments.Image = global::FreelancerModStudio.Properties.Resources.Close;
             this.mnuCloseAllDocuments.Name = "mnuCloseAllDocuments";
-            resources.ApplyResources(this.mnuCloseAllDocuments, "mnuCloseAllDocuments");
             this.mnuCloseAllDocuments.Click += new System.EventHandler(this.mnuCloseAllDocuments_Click);
             // 
             // mnuResetLayout

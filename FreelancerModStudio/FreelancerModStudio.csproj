@@ -75,6 +75,9 @@
     <Compile Include="Controls\SeperatorLine.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\SimpleTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\UICultureChanger.cs">
       <SubType>Component</SubType>
     </Compile>

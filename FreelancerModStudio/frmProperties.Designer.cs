@@ -39,9 +39,11 @@
             // 
             // propertyGrid
             // 
+            this.propertyGrid.CategoryForeColor = System.Drawing.SystemColors.ControlDark;
             this.propertyGrid.ContextMenuStrip = this.contextMenuStrip1;
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid.HelpVisible = false;
+            this.propertyGrid.LineColor = System.Drawing.SystemColors.Control;
             this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.NoSort;

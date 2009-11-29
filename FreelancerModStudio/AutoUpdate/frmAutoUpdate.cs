@@ -15,7 +15,6 @@ namespace FreelancerModStudio.AutoUpdate
         {
             this.InitializeComponent();
             this.Icon = Properties.Resources.LogoIcon;
-            this.pictureBox1.Image = Properties.Resources.WebSearch_Large;
         }
 
         private PageType mCurrentPage = PageType.Checking;
@@ -23,17 +22,13 @@ namespace FreelancerModStudio.AutoUpdate
         public delegate void ActionRequiredType(ActionType value);
         public ActionRequiredType ActionRequired;
 
-        public enum ActionType { Abort, Download, Install }
-
-        public enum PageType { Checking, Aviable, NotAviable, Downloading, DownloadFinished };
-
         private void OnAction(ActionType action)
         {
             if (this.ActionRequired != null)
                 this.ActionRequired(action);
         }
 
-        public void SetCurrentPage(PageType page)
+        public void SetPage(PageType page)
         {
             switch (page)
             {
@@ -56,6 +51,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                 case PageType.Aviable:
                     this.pnlDownload.Visible = false;
+                    this.lblDownloaded.Visible = false;
                     this.btnNext.Visible = true;
                     this.btnAbort.Visible = true;
 
@@ -71,6 +67,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                 case PageType.NotAviable:
                     this.pnlDownload.Visible = false;
+                    this.lblDownloaded.Visible = false;
                     this.btnNext.Visible = false;
                     this.btnAbort.Visible = true;
 
@@ -103,6 +100,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                 case PageType.DownloadFinished:
                     this.pnlDownload.Visible = false;
+                    this.lblDownloaded.Visible = true;
                     this.btnNext.Visible = true;
                     this.btnAbort.Visible = true;
 
@@ -163,4 +161,8 @@ namespace FreelancerModStudio.AutoUpdate
                 this.OnAction(ActionType.Abort);
         }
     }
+
+    public enum ActionType { Abort, Download, Install }
+
+    public enum PageType { Checking, Aviable, NotAviable, Downloading, DownloadFinished };
 }

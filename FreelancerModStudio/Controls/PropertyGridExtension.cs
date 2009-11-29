@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 using System.ComponentModel;
-using FreelancerModStudio.Settings;
 using System.Windows.Forms.Design;
 using System.Drawing.Design;
+using FreelancerModStudio.Data;
+using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio
 {
@@ -32,9 +33,9 @@ namespace FreelancerModStudio
 
     public class PropertyBlock : PropertyOptionCollection
     {
-        public PropertyBlock(Settings.EditorINIBlock block, Settings.Template.Block templateBlock)
+        public PropertyBlock(EditorINIBlock block, Template.Block templateBlock)
         {
-            foreach (Settings.EditorINIOption option in block.Options)
+            foreach (EditorINIOption option in block.Options)
                 this.List.Add(new PropertyOption(option.Values, templateBlock.Options[option.TemplateIndex], option.ChildTemplateIndex != -1));
         }
     }
@@ -48,7 +49,7 @@ namespace FreelancerModStudio
         [Browsable(false)]
         public Attribute[] Attributes;
 
-        public PropertyOption(List<Settings.EditorINIEntry> options, Settings.Template.Option templateOption, bool children)
+        public PropertyOption(List<EditorINIEntry> options, Template.Option templateOption, bool children)
         {
             this.Name = templateOption.Name;
 
@@ -99,10 +100,10 @@ namespace FreelancerModStudio
 
     public class PropertySubOptions : PropertyOptionCollection
     {
-        public PropertySubOptions(string optionName, List<Settings.EditorINIEntry> options, bool children)
+        public PropertySubOptions(string optionName, List<EditorINIEntry> options, bool children)
         {
             int index = 0;
-            foreach (Settings.EditorINIEntry entry in options)
+            foreach (EditorINIEntry entry in options)
             {
                 this.List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), entry.Value, entry.SubOptions, children));
                 index++;

@@ -12,13 +12,6 @@ namespace FreelancerModStudio
         {
             public static void Start()
             {
-                //bool checkUpdate = true;
-                //if (checkUpdate)
-                //{
-                //    Update.Check(false, false);
-                //    return;
-                //}
-
 #if DEBUG
                 System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
                 st.Start();
@@ -101,13 +94,13 @@ namespace FreelancerModStudio
 
         public struct Template
         {
-            private static FreelancerModStudio.Settings.Template data;
+            private static FreelancerModStudio.Data.Template data;
             private static int selectedLanguage = -1;
 
             public static void Load()
             {
                 string File = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.TemplatePath);
-                data = new FreelancerModStudio.Settings.Template();
+                data = new FreelancerModStudio.Data.Template();
 
                 try
                 {
@@ -132,13 +125,13 @@ namespace FreelancerModStudio
 
             public struct Data
             {
-                public static FreelancerModStudio.Settings.Template.Files Files
+                public static FreelancerModStudio.Data.Template.Files Files
                 {
                     get { return data.Data.Files; }
                     set { data.Data.Files = value; }
                 }
 
-                public static FreelancerModStudio.Settings.Template.Language Language
+                public static FreelancerModStudio.Data.Template.Language Language
                 {
                     get
                     {
@@ -154,7 +147,7 @@ namespace FreelancerModStudio
                     }
                 }
 
-                public static FreelancerModStudio.Settings.Template.CostumTypes CostumTypes
+                public static FreelancerModStudio.Data.Template.CostumTypes CostumTypes
                 {
                     get { return data.Data.CostumTypes; }
                     set { data.Data.CostumTypes = value; }
@@ -164,7 +157,7 @@ namespace FreelancerModStudio
 
         public struct Settings
         {
-            public static FreelancerModStudio.Settings.Settings Data;
+            public static FreelancerModStudio.Data.Settings Data;
 
             public static void Save()
             {
@@ -181,7 +174,7 @@ namespace FreelancerModStudio
             public static void Load()
             {
                 string File = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.SettingsPath);
-                Data = new FreelancerModStudio.Settings.Settings();
+                Data = new FreelancerModStudio.Data.Settings();
 
                 if (System.IO.File.Exists(File))
                 {
@@ -198,7 +191,7 @@ namespace FreelancerModStudio
 
             public static string GetShortLanguage()
             {
-                if (Data.Data.General.Language == FreelancerModStudio.Settings.LanguageType.German)
+                if (Data.Data.General.Language == FreelancerModStudio.Data.LanguageType.German)
                     return "de";
 
                 return "en";
@@ -207,9 +200,9 @@ namespace FreelancerModStudio
             public static void SetShortLanguage(string language)
             {
                 if (language.ToLower() == "de")
-                    Data.Data.General.Language = FreelancerModStudio.Settings.LanguageType.German;
+                    Data.Data.General.Language = FreelancerModStudio.Data.LanguageType.German;
                 else
-                    Data.Data.General.Language = FreelancerModStudio.Settings.LanguageType.English;
+                    Data.Data.General.Language = FreelancerModStudio.Data.LanguageType.English;
             }
         }
 

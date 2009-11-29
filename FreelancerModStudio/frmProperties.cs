@@ -5,6 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using FreelancerModStudio.Data;
+using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio
 {
@@ -47,12 +49,12 @@ namespace FreelancerModStudio
                 propertyGrid.SelectedObject = null;
         }
 
-        public void ShowData(Settings.EditorINIBlock[] blocks, int templateIndex)
+        public void ShowData(EditorINIBlock[] blocks, int templateIndex)
         {
             List<PropertyBlock> propertyBlocks = new List<PropertyBlock>();
 
             //loop each selected block
-            foreach (Settings.EditorINIBlock block in blocks)
+            foreach (EditorINIBlock block in blocks)
                 propertyBlocks.Add(new PropertyBlock(block, Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex]));
 
             propertyGrid.SelectedObjects = propertyBlocks.ToArray();

@@ -1,11 +1,11 @@
+fix:
+#add single block and block already exists block will be overwritten -> after undo block will be deleted
 
 changelog:
-#Implemented global shortcuts depending on active content
-#Fixed editing for nested options (like faction under encounter)
-#Fixed error notification at silent auto update on startup
-#Fixed bug where modified color of block would not be changed if it was the last in the file
+#Fixed minor display bugs
+#Fixed silent update display bug
 
-	
+
 credits:
 #original ObjectListView code by Phillip Piper
 #original DockingPanelSuite code by Weifen Luo

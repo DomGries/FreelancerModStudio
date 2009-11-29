@@ -29,7 +29,7 @@ namespace FreelancerModStudio.AutoUpdate
         }
 
         private delegate void ProgressChangedInvoker(long bytes, long bytesTotal, int percent);
-        private delegate void SetStatusInvoker(frmAutoUpdate.PageType status);
+        private delegate void SetStatusInvoker(PageType status);
 
         public AutoUpdate()
         {
@@ -54,7 +54,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                 //display checking form
                 if (!this.SilentCheck)
-                    this.SetPage(frmAutoUpdate.PageType.Checking);
+                    this.SetPage(PageType.Checking, false);
 
                 //set event handlers
                 this.mWebClient.DownloadStringCompleted += new DownloadStringCompletedEventHandler(this.Download_CheckFile_Completed);
@@ -67,19 +67,19 @@ namespace FreelancerModStudio.AutoUpdate
                 if (!this.SilentCheck)
                 {
                     if (this.mStatus == StatusType.Checking)
-                        this.SetPage(frmAutoUpdate.PageType.Checking);
+                        this.SetPage(PageType.Checking, false);
 
                     else if (this.mStatus == StatusType.UpdateAviable)
-                        this.SetPage(frmAutoUpdate.PageType.Aviable);
+                        this.SetPage(PageType.Aviable, false);
 
                     else if (this.mStatus == StatusType.UpdateNotAviable)
-                        this.SetPage(frmAutoUpdate.PageType.NotAviable);
+                        this.SetPage(PageType.NotAviable, false);
 
                     else if (this.mStatus == StatusType.Downloading)
-                        this.SetPage(frmAutoUpdate.PageType.Downloading);
+                        this.SetPage(PageType.Downloading, false);
 
                     else if (this.mStatus == StatusType.DownloadFinished)
-                        this.SetPage(frmAutoUpdate.PageType.DownloadFinished);
+                        this.SetPage(PageType.DownloadFinished, false);
                 }
             }
         }
@@ -93,29 +93,32 @@ namespace FreelancerModStudio.AutoUpdate
                 else
                 {
                     this.mStatus = StatusType.UpdateAviable;
-                    this.SetPage(frmAutoUpdate.PageType.Aviable);
+                    this.SetPage(PageType.Aviable, false);
                 }
             }
             else
             {
                 this.mStatus = StatusType.UpdateNotAviable;
                 if (!this.SilentCheck)
-                    this.SetPage(frmAutoUpdate.PageType.NotAviable);
+                    this.SetPage(PageType.NotAviable, false);
             }
         }
 
-        private void SetPage(frmAutoUpdate.PageType value)
+        private void SetPage(PageType value, bool wait)
         {
-            if (this.mUpdaterForm == null || this.mUpdaterForm.IsDisposed)
+            if (this.mUpdaterForm == null || this.mUpdaterForm.IsDisposed || !this.mUpdaterForm.IsHandleCreated)
             {
                 this.mUpdaterForm = new frmAutoUpdate();
-                this.mUpdaterForm.SetCurrentPage(value);
                 this.mUpdaterForm.ActionRequired += this.AutoUpdateForm_ActionRequired;
+                this.mUpdaterForm.SetPage(value);
 
-                this.mUpdaterForm.Show();
+                if (wait)
+                    this.mUpdaterForm.ShowDialog();
+                else
+                    this.mUpdaterForm.Show();
             }
             else
-                this.mUpdaterForm.Invoke(new SetStatusInvoker(this.mUpdaterForm.SetCurrentPage), value);
+                this.mUpdaterForm.Invoke(new SetStatusInvoker(this.mUpdaterForm.SetPage), value);
         }
 
         private bool IsNewer(string fileContent)
@@ -145,7 +148,8 @@ namespace FreelancerModStudio.AutoUpdate
             }
             catch (Exception ex)
             {
-                Helper.Exceptions.Show(ex);
+                if (!this.SilentCheck)
+                    Helper.Exceptions.Show(ex);
             }
 
             return false;
@@ -157,7 +161,7 @@ namespace FreelancerModStudio.AutoUpdate
 
             //display download form
             if (!this.SilentDownload || !this.SilentCheck)
-                this.SetPage(frmAutoUpdate.PageType.Downloading);
+                this.SetPage(PageType.Downloading, false);
 
             string destFile = Path.Combine(System.Windows.Forms.Application.StartupPath, Path.Combine(FreelancerModStudio.Properties.Resources.UpdateDownloadPath, Path.GetFileName(this.mUpdateFileUri.AbsolutePath)));
 
@@ -175,6 +179,9 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void Download_CheckFile_Completed(object sender, DownloadStringCompletedEventArgs e)
         {
+            //delete event handlers
+            this.mWebClient.DownloadStringCompleted -= new DownloadStringCompletedEventHandler(this.Download_CheckFile_Completed);
+
             if (!e.Cancelled)
             {
                 Helper.Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
@@ -199,16 +206,17 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void Download_Update_Completed(object sender, AsyncCompletedEventArgs e)
         {
-            this.mStatus = StatusType.Waiting;
+            //delete event handlers
+            this.mWebClient.DownloadProgressChanged -= new DownloadProgressChangedEventHandler(this.Download_Update_ProgressChanged);
+            this.mWebClient.DownloadFileCompleted -= new AsyncCompletedEventHandler(this.Download_Update_Completed);
 
             if (!e.Cancelled)
             {
                 if (e.Error == null)
                 {
-                    this.mStatus = StatusType.DownloadFinished;
-
                     //download update completed
-                    this.SetPage(frmAutoUpdate.PageType.DownloadFinished);
+                    this.mStatus = StatusType.DownloadFinished;
+                    this.SetPage(PageType.DownloadFinished, this.SilentCheck);
 
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName = Path.GetFileName(this.mUpdateFileUri.AbsolutePath);
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = false;
@@ -230,7 +238,7 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            if (!this.SilentDownload && this.mUpdaterForm != null && !this.mUpdaterForm.IsDisposed)
+            if (!this.SilentDownload && this.mUpdaterForm != null && !this.mUpdaterForm.IsDisposed && this.mUpdaterForm.IsHandleCreated)
                 this.mUpdaterForm.BeginInvoke(new ProgressChangedInvoker(this.mUpdaterForm.ChangeProgress), new object[] { e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage });
         }
 
@@ -239,20 +247,19 @@ namespace FreelancerModStudio.AutoUpdate
             this.mWebClient.CancelAsync();
         }
 
-        private void AutoUpdateForm_ActionRequired(frmAutoUpdate.ActionType action)
+        private void AutoUpdateForm_ActionRequired(ActionType action)
         {
             switch (action)
             {
-                case frmAutoUpdate.ActionType.Abort:
-                    this.mUpdaterForm = null;
+                case ActionType.Abort:
                     this.Abort();
                     break;
 
-                case frmAutoUpdate.ActionType.Download:
+                case ActionType.Download:
                     this.DownloadUpdate();
                     break;
 
-                case frmAutoUpdate.ActionType.Install:
+                case ActionType.Install:
                     this.Install();
                     break;
             }

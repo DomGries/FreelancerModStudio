@@ -435,12 +435,5 @@ namespace FreelancerModStudio.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        internal static System.Drawing.Bitmap WebSearch_Large {
-            get {
-                object obj = ResourceManager.GetObject("WebSearch_Large", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }

@@ -4,12 +4,14 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using FreelancerModStudio.Data;
+using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio
 {
     public partial class frmMain : Form
     {
-        Settings.Mod mod;
+        Mod mod;
         bool modChanged = false;
 
         frmProperties propertiesForm = new frmProperties();
@@ -135,7 +137,7 @@ namespace FreelancerModStudio
         {
         }
 
-        private void DefaultEditor_SelectedDataChanged(Settings.EditorINIBlock[] data, int templateIndex)
+        private void DefaultEditor_SelectedDataChanged(EditorINIBlock[] data, int templateIndex)
         {
             if (data != null)
                 propertiesForm.ShowData(data, templateIndex);
@@ -266,7 +268,7 @@ namespace FreelancerModStudio
             }
 
             //insert new recentfile at first place
-            Helper.Settings.Data.Data.Forms.Main.RecentFiles.Insert(0, new Settings.Settings.RecentFile(file, templateIndex));
+            Helper.Settings.Data.Data.Forms.Main.RecentFiles.Insert(0, new Settings.RecentFile(file, templateIndex));
 
             //remove last recentfile to keep ajusted amount of recentfiles
             if (Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count > Helper.Settings.Data.Data.General.RecentFilesCount)
@@ -311,7 +313,7 @@ namespace FreelancerModStudio
 
         private void mnuLoadRecentFile_Click(object sender, EventArgs e)
         {
-            Settings.Settings.RecentFile recentFile = (Settings.Settings.RecentFile)((ToolStripMenuItem)sender).Tag;
+            Settings.RecentFile recentFile = (Settings.RecentFile)((ToolStripMenuItem)sender).Tag;
             OpenRecentFile(recentFile.File, recentFile.TemplateIndex);
         }
 
@@ -334,7 +336,7 @@ namespace FreelancerModStudio
             int documentIndex = FileOpened(file);
             if (documentIndex == -1)
             {
-                templateIndex = Settings.FileManager.GetTemplateIndex(file);
+                templateIndex = FileManager.GetTemplateIndex(file);
                 if (templateIndex == -1)
                 {
                     //let the user choose the ini file type
@@ -353,7 +355,7 @@ namespace FreelancerModStudio
         {
             int documentIndex = FileOpened(file);
             if (documentIndex != -1)
-                dockPanel1.ActivePane.ActiveContent = dockPanel1.DocumentsToArray()[0];
+                dockPanel1.ActiveDocumentPane.ActiveContent = dockPanel1.DocumentsToArray()[documentIndex];
             else
             {
                 DisplayFile(file, templateIndex);
@@ -401,9 +403,9 @@ namespace FreelancerModStudio
             //TODO:Load
         }
 
-        private void CreateMod(Settings.Mod.About about, string saveLocation)
+        private void CreateMod(Mod.About about, string saveLocation)
         {
-            this.mod = new Settings.Mod(about);
+            this.mod = new Mod(about);
 
             string path = System.IO.Path.Combine(saveLocation, about.Name);
 
@@ -450,7 +452,7 @@ namespace FreelancerModStudio
                 if (!this.CancelModClose())
                 {
                     //create mod
-                    this.CreateMod(new Settings.Mod.About(frmNewMod.txtName.Text, frmNewMod.txtAuthor.Text, Properties.Resources.DefaultModVersion, frmNewMod.txtHomepage.Text, frmNewMod.txtDescription.Text), frmNewMod.txtSaveLocation.Text.Trim());
+                    this.CreateMod(new Mod.About(frmNewMod.txtName.Text, frmNewMod.txtAuthor.Text, Properties.Resources.DefaultModVersion, frmNewMod.txtHomepage.Text, frmNewMod.txtDescription.Text), frmNewMod.txtSaveLocation.Text.Trim());
 
                     //set mod save location
                     Helper.Settings.Data.Data.Forms.NewMod.ModSaveLocation = frmNewMod.txtSaveLocation.Text.Trim();

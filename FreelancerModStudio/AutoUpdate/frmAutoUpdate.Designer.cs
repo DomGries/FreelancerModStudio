@@ -30,9 +30,7 @@
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAutoUpdate));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
             this.lblHeader = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnAbort = new System.Windows.Forms.Button();
@@ -44,8 +42,6 @@
             this.seperatorLine1 = new SeperatorLine();
             this.seperatorLine2 = new SeperatorLine();
             this.panel1.SuspendLayout();
-            this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.pnlDownload.SuspendLayout();
@@ -54,28 +50,15 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Window;
-            this.panel1.Controls.Add(this.panel4);
-            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Controls.Add(this.lblHeader);
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.lblHeader);
-            resources.ApplyResources(this.panel4, "panel4");
-            this.panel4.Name = "panel4";
             // 
             // lblHeader
             // 
             resources.ApplyResources(this.lblHeader, "lblHeader");
             this.lblHeader.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.lblHeader.Name = "lblHeader";
-            // 
-            // pictureBox1
-            // 
-            resources.ApplyResources(this.pictureBox1, "pictureBox1");
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.TabStop = false;
             // 
             // panel2
             // 
@@ -156,8 +139,6 @@
             this.Name = "frmAutoUpdate";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmAutoUpdate_FormClosing);
             this.panel1.ResumeLayout(false);
-            this.panel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.pnlDownload.ResumeLayout(false);
@@ -178,8 +159,6 @@
 		private System.Windows.Forms.Label lblHeader;
 		private System.Windows.Forms.Label lblDescription;
 		private System.Windows.Forms.Panel pnlDownload;
-		private System.Windows.Forms.Label lblDownloaded;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label lblDownloaded;
 	}
 }

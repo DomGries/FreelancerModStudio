@@ -139,12 +139,13 @@
       <DependentUpon>frmProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
-    <Compile Include="Settings\BINIManager.cs" />
-    <Compile Include="Settings\FileManager.cs" />
-    <Compile Include="Settings\INIManager.cs" />
-    <Compile Include="Settings\Mod.cs" />
-    <Compile Include="Settings\News.cs" />
-    <Compile Include="Settings\Settings.cs">
+    <Compile Include="Data\IO\BINIManager.cs" />
+    <Compile Include="Data\IO\FileManager.cs" />
+    <Compile Include="Data\IO\INIManager.cs" />
+    <Compile Include="Data\UndoManager.cs" />
+    <Compile Include="Data\Mod.cs" />
+    <Compile Include="Data\News.cs" />
+    <Compile Include="Data\Settings.cs">
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -182,7 +183,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.de.resx</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Serializer.cs" />
+    <Compile Include="Data\Serializer.cs" />
     <Compile Include="ShellUtilities.cs" />
     <Compile Include="Properties\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -195,9 +196,9 @@
     <Compile Include="frmSolutionExplorer.Designer.cs">
       <DependentUpon>frmSolutionExplorer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Template.cs">
+    <Compile Include="Data\Template.cs">
     </Compile>
-    <Compile Include="Settings\UndoManager.cs" />
+    <Compile Include="Data\ChangedData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\About.ico" />

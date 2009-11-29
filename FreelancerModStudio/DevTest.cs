@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using FreelancerModStudio.Settings;
+using FreelancerModStudio.Data;
+using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio
 {

@@ -6,7 +6,8 @@ using System.IO;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using FreelancerModStudio.Settings;
+using FreelancerModStudio.Data;
+using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio
 {
@@ -17,7 +18,7 @@ namespace FreelancerModStudio
         public bool IsBINI { get; set; }
 
         bool modified = false;
-        UndoManager undoManager = new UndoManager();
+        UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
 
         public delegate void SelectedDataChangedType(EditorINIBlock[] data, int templateIndex);
         public SelectedDataChangedType SelectedDataChanged;
@@ -252,7 +253,7 @@ namespace FreelancerModStudio
                     {
                         if (Data.Blocks[j].Block.TemplateIndex == blocks[i].Block.TemplateIndex)
                         {
-                            //block already exists, select it
+                            //block already exists, overwrite it
                             Data.Blocks[j] = tableBlock;
 
                             existSingle = true;
@@ -295,7 +296,7 @@ namespace FreelancerModStudio
             }
 
             //add actual block
-            undoManager.Execute(new TableBlock[] { new TableBlock(editorBlock, Data.TemplateIndex) }, null, UndoManager.ChangedType.Add);
+            undoManager.Execute(new ChangedData() { NewBlocks = new TableBlock[] { new TableBlock(editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
         }
 
         public EditorINIBlock[] GetSelectedBlocks()
@@ -374,7 +375,7 @@ namespace FreelancerModStudio
                 newBlocks[i].Modified = TableModified.Changed;
             }
 
-            undoManager.Execute(newBlocks.ToArray(), oldBlocks.ToArray(), UndoManager.ChangedType.Edit);
+            undoManager.Execute(new ChangedData() { NewBlocks = newBlocks.ToArray(), OldBlocks = oldBlocks.ToArray(), Type = ChangedType.Edit });
             OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
         }
 
@@ -397,10 +398,17 @@ namespace FreelancerModStudio
 
         private void DeleteBlocks(TableBlock[] blocks)
         {
+            System.Collections.IList selection = objectListView1.SelectedObjects;
+
             foreach (TableBlock tableBlock in blocks)
                 Data.Blocks.Remove(tableBlock);
 
             objectListView1.RemoveObjects(blocks);
+
+            //select objects which were selected before
+            objectListView1.SelectObjects(selection);
+            EnsureSelectionVisible();
+
             Modified = true;
         }
 
@@ -411,13 +419,16 @@ namespace FreelancerModStudio
             foreach (TableBlock block in objectListView1.SelectedObjects)
                 blocks.Add(block);
 
-            undoManager.Execute(blocks.ToArray(), null, UndoManager.ChangedType.Delete);
+            undoManager.Execute(new ChangedData() { NewBlocks = blocks.ToArray(), Type = ChangedType.Delete });
         }
 
         private void EnsureSelectionVisible()
         {
-            objectListView1.EnsureVisible(objectListView1.IndexOf(objectListView1.SelectedObjects[objectListView1.SelectedObjects.Count - 1]));
-            objectListView1.EnsureVisible(objectListView1.IndexOf(objectListView1.SelectedObjects[0]));
+            if (objectListView1.SelectedObjects.Count > 0)
+            {
+                objectListView1.EnsureVisible(objectListView1.IndexOf(objectListView1.SelectedObjects[objectListView1.SelectedObjects.Count - 1]));
+                objectListView1.EnsureVisible(objectListView1.IndexOf(objectListView1.SelectedObjects[0]));
+            }
         }
 
         private void frmDefaultEditor_FormClosing(object sender, FormClosingEventArgs e)
@@ -574,7 +585,7 @@ namespace FreelancerModStudio
                 for (int i = 0; i < editorData.Blocks.Count; i++)
                     blocks[i] = new TableBlock(editorData.Blocks[i], Data.TemplateIndex);
 
-                undoManager.Execute(blocks, null, UndoManager.ChangedType.Add);
+                undoManager.Execute(new ChangedData() { NewBlocks = blocks, Type = ChangedType.Add });
             }
         }
 
@@ -598,14 +609,25 @@ namespace FreelancerModStudio
             undoManager.Redo(1);
         }
 
-        private void UndoManager_DataChanged(TableBlock[] newBlocks, TableBlock[] oldBlocks, UndoManager.ChangedType type)
+        private void UndoManager_DataChanged(ChangedData data, bool undo)
         {
-            if (type == UndoManager.ChangedType.Add)
-                AddBlocks(newBlocks);
-            else if (type == UndoManager.ChangedType.Delete)
-                DeleteBlocks(newBlocks);
-            else if (type == UndoManager.ChangedType.Edit)
-                ChangeBlocks(newBlocks, oldBlocks);
+            ChangedType type = data.Type;
+            if (type == ChangedType.Add && undo)
+                type = ChangedType.Delete;
+            else if (type == ChangedType.Delete && undo)
+                type = ChangedType.Add;
+
+            if (type == ChangedType.Add)
+                AddBlocks(data.NewBlocks);
+            else if (type == ChangedType.Delete)
+                DeleteBlocks(data.NewBlocks);
+            else if (type == ChangedType.Edit)
+            {
+                if (undo)
+                    ChangeBlocks(data.OldBlocks, data.NewBlocks);
+                else
+                    ChangeBlocks(data.NewBlocks, data.OldBlocks);
+            }
 
             OnDocumentChanged((DocumentInterface)this);
         }

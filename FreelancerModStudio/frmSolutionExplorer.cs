@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio
 {
@@ -51,7 +52,7 @@ namespace FreelancerModStudio
         //    }
         //}
 
-        public void ShowProject(Settings.Mod mod)
+        public void ShowProject(Mod mod)
         {
             TreeNode treeNode = new TreeNode(mod.Data.About.Name);
             treeNode.Name = "mod";

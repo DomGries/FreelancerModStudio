@@ -535,8 +535,8 @@
             tabGradient2.StartColor = System.Drawing.SystemColors.ControlLightLight;
             tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
             dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
-            dockPanelGradient2.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient2.StartColor = System.Drawing.SystemColors.Control;
+            dockPanelGradient2.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient2.StartColor = System.Drawing.SystemColors.ControlLight;
             dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
             tabGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
             tabGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
@@ -555,9 +555,9 @@
             dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
             dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            tabGradient6.EndColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient6.EndColor = System.Drawing.SystemColors.InactiveBorder;
             tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient6.StartColor = System.Drawing.SystemColors.InactiveBorder;
             tabGradient6.TextColor = System.Drawing.SystemColors.ControlText;
             dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
             tabGradient7.EndColor = System.Drawing.Color.Transparent;

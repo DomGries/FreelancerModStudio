@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreelancerModStudio", "Free
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DockPanelSuite", "DockPanelSuite\DockPanelSuite.csproj", "{BB650B0C-AB45-44B0-900E-6187EC208C95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelixEngine", "HelixEngine\HelixEngine.csproj", "{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{BB650B0C-AB45-44B0-900E-6187EC208C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB650B0C-AB45-44B0-900E-6187EC208C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB650B0C-AB45-44B0-900E-6187EC208C95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

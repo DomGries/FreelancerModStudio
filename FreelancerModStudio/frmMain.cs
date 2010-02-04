@@ -16,6 +16,7 @@ namespace FreelancerModStudio
 
         frmProperties propertiesForm = new frmProperties();
         frmSolutionExplorer solutionExplorerForm = new frmSolutionExplorer();
+        frmSystemEditor systemEditor = null;
 
         public frmMain()
         {
@@ -88,7 +89,29 @@ namespace FreelancerModStudio
 
         private void mnuVisitForum_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.reactorforge.com/index.php/forums/showthread.php?t=72747");
+            TableData data = null;
+            if (dockPanel1.ActiveContent != null && dockPanel1.ActiveContent is frmTableEditor)
+            {
+                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveContent.DockHandler.Content;
+                data = editor.Data;
+            }
+
+            if (systemEditor == null)
+            {
+                systemEditor = new frmSystemEditor();
+                systemEditor.LoadArchtypes();
+
+                systemEditor.Show(this.dockPanel1, DockState.Document);
+            }
+            else
+                systemEditor.Show();
+
+            if (data != null)
+            {
+                systemEditor.Clear();
+                systemEditor.ShowData(data);
+            }
+            //System.Diagnostics.Process.Start("http://www.reactorforge.com/index.php/forums/showthread.php?t=72747");
         }
 
         private void mnuReportIssue_Click(object sender, EventArgs e)
@@ -140,7 +163,11 @@ namespace FreelancerModStudio
         private void DefaultEditor_SelectedDataChanged(EditorINIBlock[] data, int templateIndex)
         {
             if (data != null)
+            {
                 propertiesForm.ShowData(data, templateIndex);
+                if (systemEditor != null)
+                    systemEditor.Select(data[0]);
+            }
             else
                 propertiesForm.ClearData();
         }
@@ -370,6 +397,7 @@ namespace FreelancerModStudio
             defaultEditor.ContentChanged += Content_DisplayChanged;
             defaultEditor.DocumentChanged += Document_DisplayChanged;
             defaultEditor.Show(this.dockPanel1, DockState.Document);
+
             return defaultEditor;
         }
 
@@ -717,7 +745,13 @@ namespace FreelancerModStudio
 
         private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
         {
-            if (e.Content is frmTableEditor)
+            if (e.Content is frmSystemEditor)
+            {
+                //dispose system editor
+                systemEditor.Dispose();
+                systemEditor = null;
+            }
+            else if (e.Content is frmTableEditor)
             {
                 foreach (IDockContent document in dockPanel1.Documents)
                 {

@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HelixEngine</RootNamespace>
+    <AssemblyName>HelixEngine</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controller\CameraController.cs" />
+    <Compile Include="Controller\HelixView3D.cs" />
+    <Compile Include="Controller\ManipulatorControl.cs" />
+    <Compile Include="Controller\Viewport3DController.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\SelfProvider.cs" />
+    <Compile Include="Geometry\Ray3D.cs" />
+    <Compile Include="Helpers\BrushHelper.cs" />
+    <Compile Include="Helpers\CameraHelper.cs" />
+    <Compile Include="Helpers\CameraInfo.cs" />
+    <Compile Include="Helpers\LineRange.cs" />
+    <Compile Include="Helpers\MaterialHelper.cs" />
+    <Compile Include="Helpers\MeshGeometry3DExtensions.cs" />
+    <Compile Include="Helpers\MeshGeometryHelper.cs" />
+    <Compile Include="Helpers\TargetSymbolAdorner.cs" />
+    <Compile Include="Helpers\Vector3DExtensions.cs" />
+    <Compile Include="Helpers\Viewport3DHelper.cs" />
+    <Compile Include="Helpers\ViewportInfo.cs" />
+    <Compile Include="Helpers\VisualInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Visuals\Composite\ViewCubeVisual3D.cs" />
+    <Compile Include="Visuals\Meshes\ArrowVisual3D.cs" />
+    <Compile Include="Visuals\Meshes\BoxMesh.cs" />
+    <Compile Include="Visuals\Meshes\CylinderMesh.cs" />
+    <Compile Include="Visuals\Meshes\CylindricalMeshBase.cs" />
+    <Compile Include="Visuals\Meshes\FlatSurfaceMeshBase.cs" />
+    <Compile Include="Visuals\Meshes\HollowCylinderMesh.cs" />
+    <Compile Include="Visuals\Meshes\MeshElement3D.cs" />
+    <Compile Include="Visuals\Meshes\MeshGeneratorBase.cs" />
+    <Compile Include="Visuals\Meshes\MyModelUIElement3D.cs" />
+    <Compile Include="Visuals\Meshes\PieSliceVisual3D.cs" />
+    <Compile Include="Visuals\Meshes\Polyhedra\PolyhedronMeshBase.cs" />
+    <Compile Include="Visuals\Meshes\Polyhedra\TetrahedronMesh.cs" />
+    <Compile Include="Visuals\Meshes\SphereMesh.cs" />
+    <Compile Include="Visuals\Meshes\TorusMesh.cs" />
+    <Compile Include="Visuals\Paths\BezierSegment3D.cs" />
+    <Compile Include="Visuals\Paths\LineSegment3D.cs" />
+    <Compile Include="Visuals\Paths\PathFigure3D.cs" />
+    <Compile Include="Visuals\Paths\PathFigure3DCollection.cs" />
+    <Compile Include="Visuals\Paths\PathGeometry3D.cs" />
+    <Compile Include="Visuals\Paths\PathSegment3D.cs" />
+    <Compile Include="Visuals\Paths\PathSegment3DCollection.cs" />
+    <Compile Include="Visuals\Paths\PolyBezierSegment3D.cs" />
+    <Compile Include="Visuals\Paths\PolyLineSegment3D.cs" />
+    <Compile Include="Visuals\Wires\ArrowEnds.cs" />
+    <Compile Include="Visuals\Wires\WireBase.cs" />
+    <Compile Include="Visuals\Wires\WireBaseAndUltimateParent.cs" />
+    <Compile Include="Visuals\Wires\WireFrame.cs" />
+    <Compile Include="Visuals\Wires\WireLine.cs" />
+    <Compile Include="Visuals\Wires\WireLines.cs" />
+    <Compile Include="Visuals\Wires\WirePath.cs" />
+    <Compile Include="Visuals\Wires\WirePolyline.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

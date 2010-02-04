@@ -141,9 +141,9 @@ public class UICultureChanger : Component
     #endregion
 
     #region instance fields
-	/// <summary>
-	/// Stores a collection of <see cref="Form"/> objects whose UI culture will be changed.
-	/// </summary>
+    /// <summary>
+    /// Stores a collection of <see cref="Form"/> objects whose UI culture will be changed.
+    /// </summary>
     private List<Form> forms;
 
     /// <summary>
@@ -167,7 +167,7 @@ public class UICultureChanger : Component
     /// Gets or sets a value indicating whether localized Size values are applied when changing the UI culture.
     /// </summary>
     [Browsable(true), DefaultValue(false)]
-    [Description("Indicates whether localized Size values are applied when changing the UI culture."), 
+    [Description("Indicates whether localized Size values are applied when changing the UI culture."),
      Category("Behavior")]
     public bool ApplySize
     {
@@ -184,7 +184,7 @@ public class UICultureChanger : Component
     /// Gets or sets a value indicating whether localized Location values are applied when changing the UI culture.
     /// </summary>
     [Browsable(true), DefaultValue(false)]
-    [Description("Indicates whether localized Location values are applied when changing the UI culture."), 
+    [Description("Indicates whether localized Location values are applied when changing the UI culture."),
      Category("Behavior")]
     public bool ApplyLocation
     {
@@ -235,7 +235,7 @@ public class UICultureChanger : Component
     /// Gets or sets a value indicating whether localized ToolTip values are applied when changing the UI culture.
     /// </summary>
     [Browsable(true), DefaultValue(false)]
-    [Description("Indicates whether localized tooltips are applied when changing the UI culture."), 
+    [Description("Indicates whether localized tooltips are applied when changing the UI culture."),
      Category("Behavior")]
     public bool ApplyToolTip
     {
@@ -313,7 +313,7 @@ public class UICultureChanger : Component
     public UICultureChanger()
     {
         // Create List with size 1, so it can take the container form of the component without resizing.
-		this.forms = new List<Form>(1);
+        this.forms = new List<Form>(1);
 
         this.applyText = true;
         this.applySize = false;
@@ -339,7 +339,7 @@ public class UICultureChanger : Component
         if (disposing)
         {
             for (int index = 0; index < this.forms.Count; index++)
-				this.RemoveForm(this.forms[index]);
+                this.RemoveForm(this.forms[index]);
         }
 
         base.Dispose(disposing);
@@ -360,7 +360,7 @@ public class UICultureChanger : Component
         if (form != null)
         {
             this.forms.Add(form);
-			form.FormClosed += new FormClosedEventHandler(this.Form_FormClosed);
+            form.FormClosed += new FormClosedEventHandler(this.Form_FormClosed);
         }
     }
 
@@ -380,12 +380,12 @@ public class UICultureChanger : Component
             return false;
         else
         {
-			form.FormClosed -= new FormClosedEventHandler(this.Form_FormClosed);
+            form.FormClosed -= new FormClosedEventHandler(this.Form_FormClosed);
             return this.forms.Remove(form);
         }
     }
 
-	/// <summary>
+    /// <summary>
     /// Removes the specified sender object from the collection of forms whose UI cultures will be changed, if it is a 
     ///   <see cref="Form"/> object
     /// </summary>
@@ -412,7 +412,7 @@ public class UICultureChanger : Component
 
         for (int index = 0; index < this.forms.Count; index++)
         {
-			this.ApplyCultureToForm(this.forms[index]);
+            this.ApplyCultureToForm(this.forms[index]);
         }
     }
 
@@ -432,7 +432,9 @@ public class UICultureChanger : Component
         changeInfos.Add(new ChangeInfo("$this", form, form.GetType()));
         for (int index = 0; index < fields.Length; index++)
         {
-            changeInfos.Add(new ChangeInfo(fields[index].Name, fields[index].GetValue(form), fields[index].FieldType));
+            object value = fields[index].GetValue(form);
+            if (value != null)
+                changeInfos.Add(new ChangeInfo(fields[index].Name, value, fields[index].FieldType));
         }
 		changeInfos.TrimExcess();
         

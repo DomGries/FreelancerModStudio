@@ -38,7 +38,7 @@ namespace FreelancerModStudio.SystemPresenter
 
     public static class SharedMaterials
     {
-        public static Material LightSource = MaterialHelper.CreateMaterial(Colors.Yellow, 0.3);
+        public static Material LightSource = MaterialHelper.CreateMaterial(Brushes.LightYellow);
         public static Material Sun = MaterialHelper.CreateMaterial(Brushes.Orange);
         public static Material Planet = MaterialHelper.CreateMaterial(Brushes.DeepSkyBlue);
         public static Material Station = MaterialHelper.CreateMaterial(Brushes.Blue);
@@ -84,23 +84,21 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static MeshGeometry3D TradeLane = GetMesh(new BoxMesh()
         {
-            Height = 1.6,
             Width = 1,
-            Depth = 0.4,
+            Depth = 1.6,
+            Height = 0.4,
         });
 
         public static MeshGeometry3D JumpHole = GetMesh(new CylinderMesh()
         {
             Length = 0.25,
-            Radius = 1,
         });
 
         public static MeshGeometry3D JumpGate = GetMesh(new TetrahedronMesh());
 
         public static MeshGeometry3D DockingRing = GetMesh(new TorusMesh()
         {
-            TubeRadius = 0.3,
-            Radius = 1,
+            TubeRadius = 0.4,
             Slices = 9,
             Stacks = 18
         });
@@ -136,6 +134,31 @@ namespace FreelancerModStudio.SystemPresenter
             geometry.Freeze();
             return geometry;
         }
+
+        //private static MeshGeometry3D GetMesh(MeshGeneratorBase mesh, bool replaceYZ)
+        //{
+        //    MeshGeometry3D geometry = mesh.Geometry;
+
+        //    //replace Y with Z points
+        //    Point3DCollection points = new Point3DCollection();
+        //    foreach (Point3D point in mesh.Geometry.Positions)
+        //    {
+        //        Point3D newPoint = new Point3D() { X = point.X };
+        //        double tempY = point.Y;
+        //        newPoint.Y = point.Z;
+
+        //        points.Add(point);
+        //    }
+
+        //    Point3DCollection normals = new Point3DCollection();
+        //    foreach (Vector3D normal in mesh.Geometry.Normals)
+        //    {
+        //        normals.Add(normal);
+        //    }
+
+        //    geometry.Freeze();
+        //    return geometry;
+        //}
     }
 
     public static class SharedGeometries

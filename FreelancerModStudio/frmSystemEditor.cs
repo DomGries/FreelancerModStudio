@@ -17,7 +17,7 @@ namespace FreelancerModStudio
 {
     public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface, DocumentInterface
     {
-        public SystemPresenter.SystemPresenter SystemPresenter = null;
+        SystemPresenter.SystemPresenter systemPresenter = null;
 
         public frmSystemEditor()
         {
@@ -27,7 +27,7 @@ namespace FreelancerModStudio
             HelixView3D view = new HelixView3D();
             view.Background = System.Windows.Media.Brushes.Black;
             view.TextBrush = System.Windows.Media.Brushes.White;
-            view.ShowCoordinateSystem = false;
+            view.ShowViewCube = true;
             view.Camera.NearPlaneDistance = 0.001;
 
             ElementHost host = new ElementHost();
@@ -35,57 +35,56 @@ namespace FreelancerModStudio
             host.Dock = DockStyle.Fill;
             this.Controls.Add(host);
 
-            SystemPresenter = new SystemPresenter.SystemPresenter(view);
-            SystemPresenter.Lightning = new DefaultLightsVisual3D();
+            systemPresenter = new SystemPresenter.SystemPresenter(view);
+            systemPresenter.Lightning = new DefaultLightsVisual3D();
         }
 
         public new void Dispose()
         {
             base.Dispose();
 
-            SystemPresenter.ClearDisplay(true);
-            SystemPresenter.Objects.Clear();
-        }
-
-        public void LoadArchtypes()
-        {
-            string solarArchFile = @"D:\DAT\DWN\1.5b15-sdk_20050627\Solar\SolarArch.ini";
-            SystemPresenter.LoadArchtypes(solarArchFile, Helper.Template.Data.Files.IndexOf("Solar Arch"));
+            systemPresenter.ClearDisplay(true);
+            systemPresenter.Objects.Clear();
         }
 
         public void ShowData(TableData data)
         {
-            SystemPresenter.Show(data);
+            systemPresenter.Show(data);
         }
 
         public void Clear()
         {
-            SystemPresenter.ClearDisplay(false);
-            SystemPresenter.Objects.Clear();
+            systemPresenter.ClearDisplay(false);
+            systemPresenter.Objects.Clear();
         }
 
         public void Select(EditorINIBlock block)
         {
-            foreach (ContentBase content in SystemPresenter.Objects)
+            foreach (ContentBase content in systemPresenter.Objects)
             {
                 if (content.Block == block)
-                    SystemPresenter.SelectedContent = content;
+                    systemPresenter.SelectedContent = content;
             }
         }
 
-        //public void TestData()
+        public void SetVisibility(EditorINIBlock[] blocks, bool value)
+        {
+            foreach (EditorINIBlock block in blocks)
+            {
+                foreach (ContentBase content in systemPresenter.Objects)
+                {
+                    if (content.Block == block)
+                        systemPresenter.SetVisibility(content, value);
+                }
+            }
+        }
+
+        //void PositionUpdater_Tick(object sender, EventArgs e)
         //{
-        //    Random rand = new Random();
-        //    for (int i = 0; i < 200; i++)
-        //    {
-        //        ContentType type = (ContentType)rand.Next(0, 9);
+        //    Vector3D position = (systemPresenter.Viewport.Camera.Position.ToVector3D() * 1000);
+        //    string status = Math.Floor(position.X).ToString() + ", " + Math.Floor(position.Y).ToString() + ", " + Math.Floor(position.Z).ToString();
 
-        //        SystemContent content = GetContentFromType(type);
-
-        //        content.Position = new Vector3D(rand.Next(-20, 20), rand.Next(-20, 20), rand.Next(-20, 20));
-        //        SystemPresenter.Objects.Add(content);
-        //    }
-        //    SystemPresenter.Show();
+        //    systemPresenter.Viewport.Status = status;
         //}
 
         public bool CanSave()

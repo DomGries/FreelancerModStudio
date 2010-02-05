@@ -246,22 +246,11 @@ namespace HelixEngine
             set { SetValue(ShowCoordinateSystemProperty, value); }
         }
 
-        public bool ShowCurrentPosition
-        {
-            get { return (bool)GetValue(ShowCurrentPositionProperty); }
-            set { SetValue(ShowCurrentPositionProperty, value); }
-        }
-
         public static readonly DependencyProperty ShowViewCubeProperty =
-            DependencyProperty.Register("ShowViewCube", typeof(bool), typeof(HelixView3D), new UIPropertyMetadata(true));
-
+            DependencyProperty.Register("ShowViewCube", typeof(bool), typeof(HelixView3D), new UIPropertyMetadata(false));
 
         public static readonly DependencyProperty ShowCoordinateSystemProperty =
             DependencyProperty.Register("ShowCoordinateSystem", typeof(bool), typeof(HelixView3D),
-                                        new UIPropertyMetadata(true));
-
-        public static readonly DependencyProperty ShowCurrentPositionProperty =
-            DependencyProperty.Register("ShowCurrentPosition", typeof(bool), typeof(HelixView3D),
                                         new UIPropertyMetadata(false));
 
         #endregion
@@ -372,18 +361,15 @@ namespace HelixEngine
                 CameraHelper.CopyDirectionOnly(Camera, _viewCubeView.Camera as PerspectiveCamera, 20);
 
             // update the headlight and coordinate system light
-            if (Camera != null)
+            if (_headLight != null)
             {
-                if (_headLight != null)
-                {
-                    _headLight.Direction = Camera.LookDirection;
-                }
-                if (_coordinateSystemLights != null)
-                {
-                    var cshl = _coordinateSystemLights.Children[0] as DirectionalLight;
-                    if (cshl != null)
-                        cshl.Direction = Camera.LookDirection;
-                }
+                _headLight.Direction = Camera.LookDirection;
+            }
+            if (_coordinateSystemLights != null)
+            {
+                var cshl = _coordinateSystemLights.Children[0] as DirectionalLight;
+                if (cshl != null)
+                    cshl.Direction = Camera.LookDirection;
             }
         }
 

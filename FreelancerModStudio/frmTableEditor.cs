@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
+using BrightIdeasSoftware;
 
 namespace FreelancerModStudio
 {
@@ -16,12 +17,16 @@ namespace FreelancerModStudio
         public TableData Data;
         public string File { get; set; }
         public bool IsBINI { get; set; }
+        public ArchtypeManager Archtype { get; set; }
 
         bool modified = false;
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
 
         public delegate void SelectedDataChangedType(EditorINIBlock[] data, int templateIndex);
         public SelectedDataChangedType SelectedDataChanged;
+
+        public delegate void DataVisibilityChangedType(EditorINIBlock[] data, bool visibility);
+        public DataVisibilityChangedType DataVisibilityChanged;
 
         public delegate void ContentChangedType(ContentInterface content);
         public ContentChangedType ContentChanged;
@@ -33,6 +38,12 @@ namespace FreelancerModStudio
         {
             if (this.SelectedDataChanged != null)
                 this.SelectedDataChanged(data, templateIndex);
+        }
+
+        private void OnDataVisibilityChanged(EditorINIBlock[] data, bool visibility)
+        {
+            if (this.DataVisibilityChanged != null)
+                this.DataVisibilityChanged(data, visibility);
         }
 
         private void OnContentChanged(ContentInterface content)
@@ -72,8 +83,31 @@ namespace FreelancerModStudio
                 SetFile("");
             }
 
+            LoadIcons();
             RefreshSettings();
-            ShowData();
+        }
+
+        private void LoadIcons()
+        {
+            ImageList imageList = new ImageList() { ColorDepth = ColorDepth.Depth32Bit };
+            imageList.Images.AddRange(new Image[]
+            {
+                Properties.Resources.LightSource,
+                Properties.Resources.Sun,
+                Properties.Resources.Planet,
+                Properties.Resources.Station,
+                Properties.Resources.Satellite,
+                Properties.Resources.Construct,
+                Properties.Resources.Depot,
+                Properties.Resources.Ship,
+                Properties.Resources.WeaponsPlatform,
+                Properties.Resources.JumpGate,
+                Properties.Resources.JumpGate,
+                Properties.Resources.JumpGate,
+                Properties.Resources.TradeLane,
+                Properties.Resources.Zone,
+            });
+            objectListView1.SmallImageList = imageList;
         }
 
         public void RefreshSettings()
@@ -81,17 +115,20 @@ namespace FreelancerModStudio
             objectListView1.EmptyListMsg = Properties.Strings.FileEditorEmpty;
 
             //display modified rows in different color
-            objectListView1.RowFormatter = delegate(BrightIdeasSoftware.OLVListItem lvi)
+            objectListView1.RowFormatter = delegate(OLVListItem lvi)
             {
-                TableBlock tableData = (TableBlock)lvi.RowObject;
-                if (tableData.Modified == TableModified.Changed)
+                TableBlock block = (TableBlock)lvi.RowObject;
+                if (block.Modified == TableModified.Changed)
                     lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedColor;
-                else if (tableData.Modified == TableModified.ChangedSaved)
+                else if (block.Modified == TableModified.ChangedSaved)
                     lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
+
+                if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None && !block.Visibility)
+                    lvi.ForeColor = Helper.Settings.Data.Data.General.EditorHiddenColor;
             };
 
-            //refresh column texts
-            if (objectListView1.Columns.Count == 2)
+            //refresh column text
+            if (objectListView1.Columns.Count > 0)
             {
                 objectListView1.Columns[0].Text = Properties.Strings.FileEditorColumnName;
                 objectListView1.Columns[1].Text = Properties.Strings.FileEditorColumnType;
@@ -104,22 +141,50 @@ namespace FreelancerModStudio
             objectListView1.Refresh();
         }
 
+        public void LoadArchtypes(string file, int templateIndex)
+        {
+            Archtype = new ArchtypeManager(file, templateIndex);
+            foreach (TableBlock block in Data.Blocks)
+                SetArchtype(block, Archtype);
+        }
+
+        private void SetArchtype(TableBlock block, ArchtypeManager archtypeManager)
+        {
+            BlockType blockType = (BlockType)block.Block.TemplateIndex;
+            if (blockType == BlockType.LightSource)
+                block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.LightSource;
+            else if (blockType == BlockType.Zone)
+                block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.Zone;
+            else
+            {
+                //get type of object based on archtype
+                foreach (EditorINIOption option in block.Block.Options)
+                {
+                    if ((ObjectOptionType)option.TemplateIndex == ObjectOptionType.Archtype)
+                    {
+                        if (option.Values.Count > 0)
+                        {
+                            block.Archtype = archtypeManager.TypeOf(option.Values[0].Value.ToString());
+                            if (block.Archtype != null)
+                                block.ObjectType = block.Archtype.Type;
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
+                block.Visibility = true;
+        }
+
         public void ShowData()
         {
 #if DEBUG
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
             st.Start();
 #endif
-            objectListView1.Clear();
-
-            //add columns
-            BrightIdeasSoftware.OLVColumn[] cols = {
-                new BrightIdeasSoftware.OLVColumn(Properties.Strings.FileEditorColumnName, "Name"),
-                new BrightIdeasSoftware.OLVColumn(Properties.Strings.FileEditorColumnType, "Group")};
-
-            cols[1].Width = 150;
-            cols[0].FillsFreeSpace = true;
-            objectListView1.Columns.AddRange(cols);
+            AddColumns();
 
             //sort by type and name
             Data.Blocks.Sort();
@@ -138,6 +203,78 @@ namespace FreelancerModStudio
             st.Stop();
             System.Diagnostics.Debug.WriteLine("display " + objectListView1.Items.Count + " data: " + st.ElapsedMilliseconds + "ms");
 #endif
+        }
+
+        private void AddColumns()
+        {
+            //clear all items and columns
+            objectListView1.Clear();
+
+            bool isSystem = Data.TemplateIndex == Helper.Template.Data.Files.IndexOf("System");
+            objectListView1.CheckBoxes = isSystem;
+
+            OLVColumn[] cols =
+            {
+                    new OLVColumn(Properties.Strings.FileEditorColumnName, "Name"),
+                    new OLVColumn(Properties.Strings.FileEditorColumnType, "Group")
+            };
+
+            cols[0].Width = 150;
+            cols[1].MinimumWidth = 120;
+            cols[1].FillsFreeSpace = true;
+
+            if (isSystem)
+            {
+                //legend icons in system editor
+                cols[0].AspectGetter = delegate(object x)
+                {
+                    return ((TableBlock)x).Name;
+                };
+                cols[0].ImageGetter = delegate(object rowObject)
+                {
+                    TableBlock block = (TableBlock)rowObject;
+                    if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
+                        return (int)block.ObjectType;
+
+                    return -1;
+                };
+
+                //checkboxes for hidden shown objects
+                objectListView1.BooleanCheckStateGetter = delegate(object x)
+                {
+                    return ((TableBlock)x).Visibility;
+                };
+                objectListView1.BooleanCheckStatePutter = delegate(object x, bool newValue)
+                {
+                    TableBlock block = (TableBlock)x;
+                    if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
+                    {
+                        block.Visibility = newValue;
+
+                        OnDataVisibilityChanged(new EditorINIBlock[] { block.Block }, newValue);
+                        return newValue;
+                    }
+
+                    return block.Visibility;
+                };
+
+                //show content type if possible otherwise group
+                cols[1].AspectGetter = delegate(object x)
+                {
+                    TableBlock block = (TableBlock)x;
+                    if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
+                        return block.ObjectType.ToString();
+
+                    return block.Group;
+                };
+            }
+            else
+            {
+                objectListView1.BooleanCheckStateGetter = null;
+                objectListView1.BooleanCheckStatePutter = null;
+            }
+
+            objectListView1.Columns.AddRange(cols);
         }
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
@@ -243,6 +380,10 @@ namespace FreelancerModStudio
                 Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[blocks[i].Block.TemplateIndex];
                 TableBlock tableBlock = blocks[i];
                 tableBlock.Modified = TableModified.Changed;
+
+                //set archtype of block
+                if (tableBlock.Archtype == null)
+                    SetArchtype(tableBlock, Archtype);
 
                 bool existSingle = false;
 
@@ -637,97 +778,23 @@ namespace FreelancerModStudio
         {
             return GetType().ToString() + "," + File + "," + Data.TemplateIndex;
         }
-    }
 
-    public class TableData
-    {
-        public List<TableBlock> Blocks { get; set; }
-        public int TemplateIndex { get; set; }
-
-        public TableData()
+        private void HideShowSelected()
         {
-            Blocks = new List<TableBlock>();
-        }
-
-        public TableData(EditorINIData data)
-        {
-            Blocks = new List<TableBlock>();
-            TemplateIndex = data.TemplateIndex;
-
-            foreach (EditorINIBlock block in data.Blocks)
-                this.Blocks.Add(new TableBlock(block, TemplateIndex));
-        }
-
-        public EditorINIData GetEditorData()
-        {
-            EditorINIData data = new EditorINIData(TemplateIndex);
-
-            foreach (TableBlock block in Blocks)
-                data.Blocks.Add(block.Block);
-
-            return data;
-        }
-    }
-
-    [Serializable]
-    public class TableBlock : IComparable<TableBlock>
-    {
-        public string Name { get; set; }
-        public string Group { get; set; }
-        public EditorINIBlock Block;
-        public TableModified Modified = TableModified.Normal;
-
-        public TableBlock() { }
-
-        public TableBlock(EditorINIBlock block, int templateIndex)
-        {
-            //name of block
-            if (block.MainOptionIndex > -1 && block.Options.Count >= block.MainOptionIndex + 1)
+            if (objectListView1.SelectedObjects.Count > 0)
             {
-                if (block.Options[block.MainOptionIndex].Values.Count > 0)
-                    Name = block.Options[block.MainOptionIndex].Values[0].Value.ToString();
-                else
-                    Name = block.Name;
-            }
-            else
-            {
-                //if (Helper.Template.Data.Files[Data.TemplateIndex].Blocks[block.TemplateIndex].Multiple)
-                //    blockName = blockName + i.ToString();
-                //else
-                Name = block.Name;
-                //todo: different block name if they are all the same
-            }
+                bool visibility = !((TableBlock)objectListView1.SelectedObjects[0]).Visibility;
 
-            //name of group
-            if (Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex].Multiple)
-                Group = block.Name;
-            else
-                Group = Properties.Strings.FileDefaultCategory;
+                List<EditorINIBlock> blocks = new List<EditorINIBlock>();
+                foreach (TableBlock block in objectListView1.SelectedObjects)
+                {
+                    block.Visibility = visibility;
+                    blocks.Add(block.Block);
+                }
 
-            Block = block;
+                objectListView1.RefreshObjects(objectListView1.SelectedObjects);
+                OnDataVisibilityChanged(blocks.ToArray(), visibility);
+            }
         }
-
-        public int CompareTo(TableBlock other)
-        {
-            //sort by group, name, modified
-            int groupComparison = this.Group.CompareTo(other.Group);
-            if (groupComparison == 0)
-            {
-                int nameComparison = this.Name.CompareTo(other.Name);
-                if (nameComparison == 0)
-                    return this.Modified.CompareTo(other.Modified);
-
-                return nameComparison;
-            }
-
-            return groupComparison;
-        }
-    }
-
-    public enum TableModified
-    {
-        Normal,
-        Changed,
-        ChangedSaved
     }
 }

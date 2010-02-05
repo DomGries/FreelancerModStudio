@@ -142,7 +142,5 @@ namespace HelixEngine
             mesh.TriangleIndices.Add(i0 + 3);
             mesh.TriangleIndices.Add(i0 + 2);
         }
-
-
     }
 }

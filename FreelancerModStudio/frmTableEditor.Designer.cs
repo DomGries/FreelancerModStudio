@@ -46,9 +46,12 @@
             resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.objectListView1.FullRowSelect = true;
+            this.objectListView1.GridLines = true;
+            this.objectListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.objectListView1.HideSelection = false;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
+            this.objectListView1.ShowImagesOnSubItems = true;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.VirtualMode = true;

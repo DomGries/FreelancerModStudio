@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using FreelancerModStudio.Data.IO;
 using System.Globalization;
+using FreelancerModStudio.SystemPresenter;
 
-namespace FreelancerModStudio.SystemPresenter
+namespace FreelancerModStudio.Data
 {
     public class ArchtypeManager
     {
@@ -125,5 +126,39 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return Type.ToString() + ", " + Radius.ToString();
         }
+    }
+
+    enum BlockType
+    {
+        LightSource = 10,
+        Object = 11,
+        Zone = 12,
+        Other
+    }
+
+    enum LightSourceOptionType
+    {
+        Color = 2,
+        Position = 6,
+        Rotation = 8,
+        Other
+    }
+
+    enum ObjectOptionType
+    {
+        Archtype = 2,
+        Position = 20,
+        Rotation = 24,
+        Other
+    }
+
+    enum ZoneOptionType
+    {
+        Position = 22,
+        Rotation = 28,
+        Shape = 29,
+        Size = 30,
+        Spin = 34,
+        Other
     }
 }

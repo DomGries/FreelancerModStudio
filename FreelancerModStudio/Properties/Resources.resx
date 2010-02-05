@@ -274,4 +274,40 @@
   <data name="LayoutPath" xml:space="preserve">
     <value>FreelancerModStudio.Layout.xml</value>
   </data>
+  <data name="Construct" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\Construct.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Depot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\Depot.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JumpGate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\JumpGate.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LightSource" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\LightSource.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Planet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\Planet.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Satellite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\Satellite.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Ship" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\Ship.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Station" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\Station.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Sun" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\Sun.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TradeLane" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\TradeLane.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WeaponsPlatform" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\WeaponsPlatform.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Zone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\Zone.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

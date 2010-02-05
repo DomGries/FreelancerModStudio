@@ -19,7 +19,6 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public List<ContentBase> Objects { get; set; }
         public HelixView3D Viewport { get; set; }
-        public ArchtypeManager Archtype { get; set; }
 
         private ModelVisual3D lightning;
         public ModelVisual3D Lightning
@@ -39,7 +38,7 @@ namespace FreelancerModStudio.SystemPresenter
                         Viewport.Children.RemoveAt(index);
                 }
                 else
-                    Viewport.Add(value);
+                    Viewport.Children.Insert(0, value);
 
                 lightning = value;
             }
@@ -97,8 +96,16 @@ namespace FreelancerModStudio.SystemPresenter
                 WireLines lines = GetWireBox(SelectedContent.GetMesh().Bounds);
 
                 ContentAnimator.AddTransformation(lines, new TranslateTransform3D(value.Position));
-                ContentAnimator.AddTransformation(lines, new RotateTransform3D(value.Rotation, value.Position.ToPoint3D()));
-                ContentAnimator.AddTransformation(lines, new ScaleTransform3D(value.Scale, value.Position.ToPoint3D()));
+                if (value is Zone && ((Zone)value).Shape != ZoneShape.Sphere)
+                {
+                    ContentAnimator.AddTransformation(lines, new ScaleTransform3D(value.Scale, value.Position.ToPoint3D()));
+                    ContentAnimator.AddTransformation(lines, new RotateTransform3D(value.Rotation, value.Position.ToPoint3D()));
+                }
+                else
+                {
+                    ContentAnimator.AddTransformation(lines, new RotateTransform3D(value.Rotation, value.Position.ToPoint3D()));
+                    ContentAnimator.AddTransformation(lines, new ScaleTransform3D(value.Scale, value.Position.ToPoint3D()));
+                }
 
                 Selection = lines;
                 Viewport.Title = GetTitle(value.Block);
@@ -179,6 +186,35 @@ namespace FreelancerModStudio.SystemPresenter
             ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
+        public void SetVisibility(ContentBase content, bool visibility)
+        {
+            if (content.Visibility != visibility)
+            {
+                content.Visibility = visibility;
+
+                if (visibility)
+                {
+                    //display model
+                    if (content is Zone)
+                    {
+                        //zone should be behind all
+                        Viewport.Add(content.Model);
+                    }
+                    else
+                    {
+                        //new visible content should be in front of all after selection
+                        if (Selection == null)
+                            Viewport.Children.Insert(0, content.Model);
+                        else
+                            Viewport.Children.Insert(1, content.Model);
+                    }
+                }
+                else
+                    //hide model
+                    Viewport.Remove(content.Model);
+            }
+        }
+
         public void ClearDisplay(bool light)
         {
             for (int i = Viewport.Children.Count - 1; i >= 0; i--)
@@ -189,22 +225,21 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public void LoadArchtypes(string file, int templateIndex)
-        {
-            Archtype = new ArchtypeManager(file, templateIndex);
-        }
-
         private void LoadObjects(TableData data)
         {
+            //Zone zone = new Zone() { Shape = ZoneShape.Cylinder };
+            //zone.LoadModel();
+            //Objects.Add(zone);
+            //return;
             foreach (TableBlock block in data.Blocks)
             {
                 ContentBase content = null;
                 if ((BlockType)block.Block.TemplateIndex == BlockType.Object)
-                    content = GetContent(block.Block, BlockType.Object);
+                    content = GetContent(block);
                 else if ((BlockType)block.Block.TemplateIndex == BlockType.LightSource)
-                    content = GetContent(block.Block, BlockType.LightSource);
+                    content = GetContent(block);
                 else if ((BlockType)block.Block.TemplateIndex == BlockType.Zone)
-                    content = GetContent(block.Block, BlockType.Zone);
+                    content = GetContent(block);
 
                 if (content != null)
                     Objects.Add(content);
@@ -245,14 +280,15 @@ namespace FreelancerModStudio.SystemPresenter
             return null;
         }
 
-        private ContentBase GetContent(EditorINIBlock block, BlockType blockType)
+        private ContentBase GetContent(TableBlock block)
         {
+            BlockType blockType = (BlockType)block.Block.TemplateIndex;
+
             int positionIndex = -1;
             int rotationIndex = -1;
             int scaleIndex = -1;
 
-            //get type of content
-            ContentType type = ContentType.None;
+            ContentType type;
             if (blockType == BlockType.LightSource)
             {
                 type = ContentType.LightSource;
@@ -270,9 +306,15 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
+                type = block.Archtype.Type;
+
                 positionIndex = (int)ObjectOptionType.Position;
                 rotationIndex = (int)ObjectOptionType.Rotation;
             }
+
+            ContentBase content = GetContentFromType(type);
+            if (content == null)
+                return null;
 
             Vector3D position = new Vector3D(0, 0, 0);
             Rotation3D rotation = null;
@@ -280,7 +322,7 @@ namespace FreelancerModStudio.SystemPresenter
             ZoneShape shape = ZoneShape.Box;
 
             //get transformation of content
-            foreach (EditorINIOption option in block.Options)
+            foreach (EditorINIOption option in block.Block.Options)
             {
                 if (option.Values.Count > 0)
                 {
@@ -290,44 +332,19 @@ namespace FreelancerModStudio.SystemPresenter
                         position = new Vector3D(tempPosition.X, -tempPosition.Z, tempPosition.Y);
                     }
                     else if (option.TemplateIndex == rotationIndex)
-                    {
-                        Vector3D tempRotation = ParseVector3D(option.Values[0].Value.ToString());
-                        double max = tempRotation.Max();
-                        if (max != 0)
-                            rotation = new AxisAngleRotation3D(new Vector3D(tempRotation.X, tempRotation.Z, tempRotation.Y) / max, max);
-                    }
+                        rotation = ParseRotation(option.Values[0].Value.ToString());
+                    else if (blockType == BlockType.Zone && option.TemplateIndex == (int)ZoneOptionType.Shape)
+                        shape = ParseShape(option.Values[0].Value.ToString());
                     else if (option.TemplateIndex == scaleIndex)
                         scale = ParseSize(option.Values[0].Value.ToString());
-                    else if (option.TemplateIndex == (int)ZoneOptionType.Shape)
-                        shape = ParseShape(option.Values[0].Value.ToString());
-                }
-
-                //get type of object based on archtype
-                if (blockType == BlockType.Object)
-                {
-                    if ((ObjectOptionType)option.TemplateIndex == ObjectOptionType.Archtype)
-                    {
-                        if (option.Values.Count > 0)
-                        {
-                            ArchtypeInfo info = Archtype.TypeOf(option.Values[0].Value.ToString());
-                            if (info != null)
-                            {
-                                type = info.Type;
-                                scale = new Vector3D(info.Radius, info.Radius, info.Radius) / 1000;
-                            }
-                        }
-                    }
                 }
             }
 
             //set content
-            ContentBase content = GetContentFromType(type);
-
-            if (content == null)
-                return null;
-
             if (type == ContentType.Zone)
                 ((Zone)content).Shape = shape;
+            else if (type != ContentType.LightSource)
+                scale = new Vector3D(block.Archtype.Radius, block.Archtype.Radius, block.Archtype.Radius) / 1000;
 
             if (position != content.Position)
                 content.Position = position;
@@ -338,7 +355,7 @@ namespace FreelancerModStudio.SystemPresenter
             if (scale != content.Scale)
                 content.Scale = scale;
 
-            content.Block = block;
+            content.Block = block.Block;
             return content;
         }
 
@@ -368,7 +385,7 @@ namespace FreelancerModStudio.SystemPresenter
             else if (occurances == 1)
             {
                 Vector tempScale = ParseVector(scale) / 1000;
-                return new Vector3D(tempScale.X, tempScale.Y, tempScale.Y);
+                return new Vector3D(tempScale.X, tempScale.Y, 1);
             }
             else if (occurances == 2)
             {
@@ -377,6 +394,67 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             return new Vector3D(1, 1, 1);
+        }
+
+        private Vector3D ParseSize2(string scale, ZoneShape shape)
+        {
+            //check for correct shape! after PERFORMANCE Table Data
+            CultureInfo usCulture = new CultureInfo("en-US", false);
+            string[] values = scale.Split(new char[] { ',' });
+
+            if (shape == ZoneShape.Box && values.Length > 0)
+            {
+                double tempScale = double.Parse(values[0], usCulture);
+                return new Vector3D(tempScale, tempScale, tempScale) / 1000;
+            }
+            else if (shape == ZoneShape.Cylinder && values.Length > 1)
+            {
+                double tempScale1 = double.Parse(values[0], usCulture);
+                double tempScale2 = double.Parse(values[1], usCulture);
+                return new Vector3D(tempScale1, tempScale2, tempScale1) / 1000;
+            }
+            else if (values.Length > 2)
+            {
+                double tempScale1 = double.Parse(values[0], usCulture);
+                double tempScale2 = double.Parse(values[1], usCulture);
+                double tempScale3 = double.Parse(values[2], usCulture);
+                return new Vector3D(tempScale1, tempScale3, tempScale2) / 1000;
+            }
+
+            return new Vector3D(1, 1, 1);
+        }
+
+        private Rotation3D ParseRotation(string vector)
+        {
+            Vector3D tempRotation = ParseVector3D(vector);
+            Vector3D factor = new Vector3D(GetFactor(tempRotation.X), GetFactor(tempRotation.Y), GetFactor(tempRotation.Z));
+
+            tempRotation.X = GetPositive(tempRotation.X);
+            tempRotation.Y = GetPositive(tempRotation.Y);
+            tempRotation.Z = GetPositive(tempRotation.Z);
+
+            double max = Math.Max(Math.Max(tempRotation.X, tempRotation.Y), tempRotation.Z);
+            if (max != 0)
+            {
+                tempRotation = tempRotation / max;
+                return new AxisAngleRotation3D(new Vector3D(tempRotation.X * factor.X, tempRotation.Z * factor.Z, tempRotation.Y * factor.Y), max);
+            }
+
+            return null;
+        }
+
+        private double GetFactor(double number)
+        {
+            if (number < 0)
+                return -1;
+            return 1;
+        }
+
+        private double GetPositive(double number)
+        {
+            if (number < 0)
+                return number * -1;
+            return number;
         }
 
         private ZoneShape ParseShape(string shape)
@@ -401,39 +479,5 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return Vector.Parse(vector);
         }
-    }
-
-    enum BlockType
-    {
-        LightSource = 10,
-        Object = 11,
-        Zone = 12,
-        Other
-    }
-
-    enum LightSourceOptionType
-    {
-        Color = 2,
-        Position = 6,
-        Rotation = 8,
-        Other
-    }
-
-    enum ObjectOptionType
-    {
-        Archtype = 2,
-        Position = 20,
-        Rotation = 24,
-        Other
-    }
-
-    enum ZoneOptionType
-    {
-        Position = 22,
-        Rotation = 28,
-        Shape = 29,
-        Size = 30,
-        Spin = 34,
-        Other
     }
 }

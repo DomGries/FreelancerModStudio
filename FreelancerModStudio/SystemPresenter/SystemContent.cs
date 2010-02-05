@@ -10,12 +10,13 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public abstract class ContentBase
     {
-        Vector3D DefaultPosition = new Vector3D(0, 0, 0);
-        AxisAngleRotation3D DefaultRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 0), 0);
-        Vector3D DefaultScale = new Vector3D(1, 1, 1);
+        static Vector3D DefaultPosition = new Vector3D(0, 0, 0);
+        static Rotation3D DefaultRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 0), 0);
+        static Vector3D DefaultScale = new Vector3D(1, 1, 1);
 
         public EditorINIBlock Block { get; set; }
         public ModelVisual3D Model { get; set; }
+        public bool Visibility { get; set; }
 
         private Vector3D position;
         public Vector3D Position
@@ -79,6 +80,8 @@ namespace FreelancerModStudio.SystemPresenter
             position = DefaultPosition;
             rotation = DefaultRotation;
             scale = DefaultScale;
+
+            Visibility = true;
         }
 
         protected abstract GeometryModel3D GetGeometry();
@@ -90,15 +93,21 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (Position != DefaultPosition)
                 ContentAnimator.AddTransformation(Model, new TranslateTransform3D(Position));
-                //ContentAnimator.AnimatePosition(Model, DefaultPosition, Position);
 
-            if (Rotation != DefaultRotation)
-                ContentAnimator.AddTransformation(Model, new RotateTransform3D(Rotation, Position.ToPoint3D()));
-                //ContentAnimator.AnimateRotation(Model, DefaultRotation, Rotation, Position);
-
-            if (Scale != DefaultScale)
-                ContentAnimator.AddTransformation(Model, new ScaleTransform3D(scale, Position.ToPoint3D()));
-                //ContentAnimator.AnimateScale(Model, DefaultScale, Scale, Position);
+            if (this is Zone && ((Zone)this).Shape != ZoneShape.Sphere)
+            {
+                if (Scale != DefaultScale)
+                    ContentAnimator.AddTransformation(Model, new ScaleTransform3D(Scale, Position.ToPoint3D()));
+                if (Rotation != DefaultRotation)
+                    ContentAnimator.AddTransformation(Model, new RotateTransform3D(Rotation, Position.ToPoint3D()));
+            }
+            else
+            {
+                if (Rotation != DefaultRotation)
+                    ContentAnimator.AddTransformation(Model, new RotateTransform3D(Rotation, Position.ToPoint3D()));
+                if (Scale != DefaultScale)
+                    ContentAnimator.AddTransformation(Model, new ScaleTransform3D(Scale, Position.ToPoint3D()));
+            }
         }
     }
 

@@ -57,6 +57,11 @@ namespace FreelancerModStudio.Data
                 DisplayName("Saved row color")]
             public Color EditorModifiedSavedColor { get; set; }
 
+            [XmlIgnore,
+                CategoryAttribute("Editor"),
+                DisplayName("Hidden row color")]
+            public Color EditorHiddenColor { get; set; }
+
             [Browsable(false)]
             public string EditorModifiedSavedColorXML
             {
@@ -71,12 +76,20 @@ namespace FreelancerModStudio.Data
                 set { EditorModifiedColor = ColorTranslator.FromHtml(value); }
             }
 
+            [Browsable(false)]
+            public string EditorHiddenColorXML
+            {
+                get { return ColorTranslator.ToHtml(EditorHiddenColor); }
+                set { EditorHiddenColor = ColorTranslator.FromHtml(value); }
+            }
+
             public AutoUpdate AutoUpdate { get; set; }
 
             public General()
             {
                 EditorModifiedColor = Color.FromArgb(255, 255, 192);
                 EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
+                EditorHiddenColor = Color.FromArgb(128, 128, 128);
                 RecentFilesCount = 4;
                 Language = LanguageType.English;
                 AutoUpdate = new AutoUpdate();

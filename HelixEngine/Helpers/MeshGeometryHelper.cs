@@ -461,5 +461,31 @@ namespace HelixEngine
             mesh.AddCubeFace(center, new Vector3D(0, 0, 1), new Vector3D(0, -1, 0), height, length, width);
             mesh.AddCubeFace(center, new Vector3D(0, 0, -1), new Vector3D(0, 1, 0), height, length, width);
         }
+
+        public static Point3D ProjectTo3D(Point3D point, double theta, double phi)
+        {
+            theta *= 0.01745;
+            phi *= 0.01745;
+            double projX = point.X * Math.Cos(theta) * Math.Sin(phi) +
+                           point.Y * Math.Sin(theta) * Math.Sin(phi) +
+                           point.Z * Math.Cos(phi);
+
+            double projY = -point.X * Math.Sin(theta) + point.Y * Math.Cos(theta);
+            double projZ = -point.X * Math.Cos(theta) * Math.Cos(phi) -
+                           point.Y * Math.Sin(theta) * Math.Cos(phi) +
+                           point.Z * Math.Sin(phi);
+
+            return new Point3D(projX, projY, projZ);
+        }
+
+        public static Point3DCollection RotatePoints(Point3DCollection points, double theta, double phi)
+        {
+			for (int i = 0; i < points.Count; i++)
+			{
+				Point3D point = ProjectTo3D(points[i], theta, phi);
+				points[i] = point;
+			}
+            return points;
+        }
     }
 }

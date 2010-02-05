@@ -99,8 +99,6 @@ namespace FreelancerModStudio
             if (systemEditor == null)
             {
                 systemEditor = new frmSystemEditor();
-                systemEditor.LoadArchtypes();
-
                 systemEditor.Show(this.dockPanel1, DockState.Document);
             }
             else
@@ -172,12 +170,18 @@ namespace FreelancerModStudio
                 propertiesForm.ClearData();
         }
 
+        private void DefaultEditor_DataVisibilityChanged(EditorINIBlock[] data, bool visible)
+        {
+            if (systemEditor != null)
+                systemEditor.SetVisibility(data, visible);
+        }
+
         private void Properties_OptionsChanged(PropertyBlock[] blocks)
         {
-            IDockContent activeDocument = this.dockPanel1.ActiveDocument;
-            if (activeDocument != null && activeDocument is frmTableEditor)
+            IDockContent activeContent = this.dockPanel1.ActiveContent;
+            if (activeContent != null && activeContent is frmTableEditor)
             {
-                frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
+                frmTableEditor defaultEditor = (frmTableEditor)activeContent;
                 defaultEditor.SetBlocks(blocks);
             }
         }
@@ -346,9 +350,9 @@ namespace FreelancerModStudio
 
         private void OpenRecentFile(string file, int templateIndex)
         {
+            OpenFile(file, templateIndex);
             try
             {
-                OpenFile(file, templateIndex);
             }
             catch
             {
@@ -392,8 +396,15 @@ namespace FreelancerModStudio
 
         private frmTableEditor DisplayFile(string file, int templateIndex)
         {
+            string archtypeFile = @"D:\DAT\DWN\1.5b15-sdk_20050627\Solar\SolarArch.ini";
+            int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Arch");
+
             frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
+            defaultEditor.LoadArchtypes(archtypeFile, archtypeTemplate);
+            defaultEditor.ShowData();
+
             defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
+            defaultEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
             defaultEditor.ContentChanged += Content_DisplayChanged;
             defaultEditor.DocumentChanged += Document_DisplayChanged;
             defaultEditor.Show(this.dockPanel1, DockState.Document);
@@ -672,12 +683,12 @@ namespace FreelancerModStudio
 
         private void mnuSave_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)this.dockPanel1.ActiveDocument).Save();
+            ((DocumentInterface)this.dockPanel1.ActiveContent).Save();
         }
 
         private void mnuSaveAs_Click(object sender, EventArgs e)
         {
-            frmTableEditor tableEditor = ((frmTableEditor)this.dockPanel1.ActiveDocument);
+            frmTableEditor tableEditor = ((frmTableEditor)this.dockPanel1.ActiveContent);
             tableEditor.SaveAs();
 
             AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
@@ -700,12 +711,12 @@ namespace FreelancerModStudio
 
         private void mnuUndo_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)this.dockPanel1.ActiveDocument).Undo();
+            ((DocumentInterface)this.dockPanel1.ActiveContent).Undo();
         }
 
         private void mnuRedo_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)this.dockPanel1.ActiveDocument).Redo();
+            ((DocumentInterface)this.dockPanel1.ActiveContent).Redo();
         }
 
         private void mnuClose_Click(object sender, EventArgs e)

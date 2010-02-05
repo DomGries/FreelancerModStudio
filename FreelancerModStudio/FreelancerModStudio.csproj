@@ -12,7 +12,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <ApplicationIcon>Resources\LogoIcon.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
     <StartupObject>FreelancerModStudio.Program</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -104,6 +105,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Data\Table.cs" />
+    <Compile Include="Data\TableData.cs" />
     <Compile Include="DevTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -191,17 +193,6 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Resources\CloseMod.ico" />
-    <None Include="Resources\File.ico" />
-    <None Include="Resources\Filedll.ico" />
-    <None Include="Resources\Fileini.ico" />
-    <None Include="Resources\Filetxt.ico" />
-    <None Include="Resources\Filewav.ico" />
-    <None Include="Resources\LogoAbout.png" />
-    <None Include="Resources\Mod.ico" />
-    <None Include="Resources\NewMod.ico" />
-    <None Include="Resources\NewWindow.ico" />
-    <None Include="Resources\OpenMod.ico" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -228,7 +219,8 @@
     <Compile Include="Data\Template.cs">
     </Compile>
     <Compile Include="Data\ChangedData.cs" />
-    <Compile Include="SystemPresenter\ArchtypeManager.cs" />
+    <Compile Include="Data\ArchtypeManager.cs" />
+    <Compile Include="StringLogicalComparer.cs" />
     <Compile Include="SystemPresenter\ContentAnimator.cs" />
     <Compile Include="SystemPresenter\DefaultLightsVisual3D.cs" />
     <Compile Include="SystemPresenter\SharedObjects.cs" />
@@ -236,45 +228,6 @@
     <Compile Include="SystemPresenter\SystemPresenter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\About.ico" />
-    <Content Include="Resources\Add.ico" />
-    <Content Include="Resources\BuildMod.ico" />
-    <Content Include="Resources\Close.ico" />
-    <Content Include="Resources\CodeView.ico" />
-    <Content Include="Resources\Copy.ico" />
-    <Content Include="Resources\Cut.ico" />
-    <Content Include="Resources\Delete.ico" />
-    <Content Include="Resources\DeleteFolder.ico" />
-    <Content Include="Resources\Document.ico" />
-    <Content Include="Resources\Error.ico" />
-    <Content Include="Resources\Filter.ico" />
-    <Content Include="Resources\Folder.ico" />
-    <Content Include="Resources\FullScreen.ico" />
-    <Content Include="Resources\GoTo.ico" />
-    <Content Include="Resources\HiddenFile.ico" />
-    <Content Include="Resources\HiddenFolder.ico" />
-    <Content Include="Resources\HiddenFolderOpen.ico" />
-    <Content Include="Resources\HomePage.ico" />
-    <Content Include="Resources\Link.ico" />
-    <None Include="Resources\LogoIcon.ico" />
-    <Content Include="Resources\NewDocument.ico" />
-    <Content Include="Resources\NewFolder.ico" />
-    <Content Include="Resources\Note.ico" />
-    <Content Include="Resources\Open.ico" />
-    <Content Include="Resources\OpenFolder.ico" />
-    <None Include="Resources\Properties.ico" />
-    <Content Include="Resources\Paste.ico" />
-    <Content Include="Resources\ReDo.ico" />
-    <Content Include="Resources\ReportIssue.ico" />
-    <Content Include="Resources\Save.ico" />
-    <Content Include="Resources\SaveAll.ico" />
-    <Content Include="Resources\Settings.ico" />
-    <Content Include="Resources\SolutionExplorer.ico" />
-    <Content Include="Resources\TableView.ico" />
-    <Content Include="Resources\ToDo.ico" />
-    <Content Include="Resources\UnDo.ico" />
-    <Content Include="Resources\UpFolder.ico" />
-    <Content Include="Resources\WebSearch.ico" />
     <Content Include="Template.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -37,16 +37,5 @@ namespace HelixEngine
         {
             return new Point3D(n.X, n.Y, n.Z);
         }
-
-        /// <summary>
-        /// Returns the highest number.
-        /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        public static double Max(this Vector3D n)
-        {
-            return Math.Max(Math.Max(n.X, n.Y), n.Z);
-        }
-
     }
 }

@@ -90,6 +90,20 @@ namespace HelixEngine
         private const string PartCameraController = "PART_CameraController";
         #endregion
 
+        public delegate void SelectionChangedType(DependencyObject visual);
+        public SelectionChangedType SelectionChanged;
+
+        private void OnSelectionChanged(DependencyObject visual)
+        {
+            if (this.SelectionChanged != null)
+                this.SelectionChanged(visual);
+        }
+
+        private void cameraController_SelectionChanged(DependencyObject visual)
+        {
+            OnSelectionChanged(visual);
+        }
+
         public override void OnApplyTemplate()
         {
             if (_adornerLayer == null)
@@ -104,7 +118,10 @@ namespace HelixEngine
             {
                 _cameraController = Template.FindName(PartCameraController, this) as CameraController;
                 if (_cameraController != null)
+                {
                     _cameraController.Viewport = Viewport;
+                    _cameraController.SelectionChanged += cameraController_SelectionChanged;
+                }
             }
             Debug.Assert(_cameraController != null, String.Format("{0} is missing from the template.", PartCameraController));
 

@@ -28,13 +28,24 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static void SetRotation(ModelVisual3D model, Rotation3D oldRotation, Rotation3D newRotation, Vector3D center, bool always)
         {
-            if (always || newRotation != oldRotation)
+            if (always || !RotationEquals(newRotation, oldRotation))
             {
                 if (AnimationDuration.TimeSpan == TimeSpan.Zero)
                     ContentAnimator.AddTransformation(model, new RotateTransform3D(newRotation));
                 else
                     AnimateRotation(model, oldRotation, newRotation, center);
             }
+        }
+
+        private static bool RotationEquals(Rotation3D rotationX, Rotation3D rotationY)
+        {
+            AxisAngleRotation3D x = (AxisAngleRotation3D)rotationX;
+            AxisAngleRotation3D y = (AxisAngleRotation3D)rotationY;
+            bool angleEqual = x.Angle == y.Angle;
+            if (angleEqual)
+                return x.Axis == y.Axis;
+
+            return angleEqual;
         }
 
         public static void SetScale(ModelVisual3D model, Vector3D oldScale, Vector3D newScale, Vector3D center, bool always)

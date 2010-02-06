@@ -13,21 +13,17 @@ namespace HelixEngine
         public static PerspectiveCamera CreateDefaultCamera()
         {
             PerspectiveCamera cam = new PerspectiveCamera();
-            Reset(cam, false);
+            Reset(cam);
             return cam;
         }
 
-        public static void Reset(PerspectiveCamera camera, bool onlyDirection)
+        public static void Reset(PerspectiveCamera camera)
         {
             if (camera == null)
                 return;
 
-            Point3D position = new Point3D(0, 0, 40);
-            if (!onlyDirection)
-            {
-                camera.UpDirection = new Vector3D(0, 1, 0);
-                camera.Position = position;
-            }
+            camera.UpDirection = new Vector3D(0, 1, 0);
+            camera.Position = new Point3D(0, 0, 40);
 
             var target = new Point3D(0, 0, 0);
             camera.LookDirection = target - camera.Position;

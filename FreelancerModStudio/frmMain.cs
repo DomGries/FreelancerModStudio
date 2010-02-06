@@ -89,27 +89,7 @@ namespace FreelancerModStudio
 
         private void mnuVisitForum_Click(object sender, EventArgs e)
         {
-            TableData data = null;
-            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
-            {
-                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument.DockHandler.Content;
-                data = editor.Data;
-            }
-
-            if (systemEditor == null)
-            {
-                systemEditor = new frmSystemEditor();
-                systemEditor.Show(this.dockPanel1);
-            }
-            else
-                systemEditor.Show();
-
-            if (data != null)
-            {
-                systemEditor.Clear();
-                systemEditor.ShowData(data);
-            }
-            //System.Diagnostics.Process.Start("http://www.reactorforge.com/index.php/forums/showthread.php?t=72747");
+            System.Diagnostics.Process.Start("http://the-starport.net/freelancer/forum/viewtopic.php?topic_id=2174");
         }
 
         private void mnuReportIssue_Click(object sender, EventArgs e)
@@ -166,6 +146,14 @@ namespace FreelancerModStudio
                 if (systemEditor != null)
                     systemEditor.SetValues(data);
             }
+        }
+
+        private void DefaultEditor_DataChanged(ChangedData data)
+        {
+            //if (systemEditor != null)
+            //{
+            //    systemEditor.ChangeData!
+            //}
         }
 
         private void DefaultEditor_SelectionChanged(TableBlock[] data, int templateIndex)
@@ -418,8 +406,9 @@ namespace FreelancerModStudio
             defaultEditor.LoadArchtypes(archtypeFile, archtypeTemplate);
             defaultEditor.ShowData();
 
+            defaultEditor.DataChanged += DefaultEditor_DataChanged;
             defaultEditor.SelectionChanged += DefaultEditor_SelectionChanged;
-            defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
+            //defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
             defaultEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
             defaultEditor.ContentChanged += Content_DisplayChanged;
             defaultEditor.DocumentChanged += Document_DisplayChanged;
@@ -563,8 +552,6 @@ namespace FreelancerModStudio
             if (activeDocument != null && activeDocument is frmTableEditor)
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
-                Document_DisplayChanged((DocumentInterface)activeDocument);
 
                 if (systemEditor != null)
                 {
@@ -575,6 +562,9 @@ namespace FreelancerModStudio
                     if (blocks != null)
                         systemEditor.Select(blocks[0].ID);
                 }
+
+                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
+                Document_DisplayChanged((DocumentInterface)activeDocument);
             }
             else
                 DefaultEditor_SelectedDataChanged(null, 0);
@@ -838,6 +828,37 @@ namespace FreelancerModStudio
                 this.mnuAdd.Click += this.mnuAdd_Click;
                 this.mnuAdd.DropDown = new ToolStripDropDown();
             }
+        }
+
+        private void mnu3dEditor_Click(object sender, EventArgs e)
+        {
+            TableData data = null;
+            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
+            {
+                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument.DockHandler.Content;
+                data = editor.Data;
+            }
+
+            if (systemEditor == null)
+            {
+                systemEditor = new frmSystemEditor();
+                systemEditor.SelectionChanged += systemEditor_SelectionChanged;
+                systemEditor.Show(this.dockPanel1);
+            }
+            else
+                systemEditor.Show();
+
+            if (data != null)
+            {
+                systemEditor.Clear();
+                systemEditor.ShowData(data);
+            }
+        }
+
+        private void systemEditor_SelectionChanged(TableBlock block)
+        {
+            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
+                ((frmTableEditor)dockPanel1.ActiveDocument.DockHandler.Content).Select(block);
         }
     }
 }

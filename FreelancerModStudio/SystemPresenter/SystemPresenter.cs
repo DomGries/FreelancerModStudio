@@ -77,6 +77,9 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
+                if (selectedContent == value)
+                    return;
+
                 selectedContent = value;
 
                 if (value != null)
@@ -93,6 +96,57 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     Selection = null;
                     Viewport.Title = string.Empty;
+                }
+            }
+        }
+
+        public delegate void SelectionChangedType(ContentBase content);
+        public SelectionChangedType SelectionChanged;
+
+        private void OnSelectionChanged(ContentBase content)
+        {
+            if (this.SelectionChanged != null)
+                this.SelectionChanged(content);
+        }
+
+        public SystemPresenter(HelixView3D viewport)
+        {
+            Objects = new Table<int, ContentBase>();
+            Viewport = viewport;
+            Viewport.SelectionChanged += camera_SelectionChanged;
+        }
+
+        public void Show(TableData data)
+        {
+            LoadObjects(data);
+            ContentAnimator.AnimationDuration = new Duration(TimeSpan.Zero);
+
+            ClearDisplay(false);
+
+            List<ContentBase> objects = Objects.Values.ToList<ContentBase>();
+            objects.Sort();
+
+            foreach (ContentBase content in objects)
+            {
+                content.LoadModel();
+
+                if (content.Visibility)
+                    Viewport.Add(content.Model);
+            }
+
+            ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
+        }
+
+        private void camera_SelectionChanged(DependencyObject visual)
+        {
+            ModelVisual3D model = (ModelVisual3D)visual;
+            foreach (ContentBase content in Objects)
+            {
+                if (content.Model == model)
+                {
+                    SelectedContent = content;
+                    OnSelectionChanged(content);
+                    return;
                 }
             }
         }
@@ -155,33 +209,6 @@ namespace FreelancerModStudio.SystemPresenter
                     return block.Options[block.MainOptionIndex].Values[0].Value.ToString();
             }
             return block.Name;
-        }
-
-        public SystemPresenter(HelixView3D viewport)
-        {
-            Objects = new Table<int, ContentBase>();
-            Viewport = viewport;
-        }
-
-        public void Show(TableData data)
-        {
-            LoadObjects(data);
-            ContentAnimator.AnimationDuration = new Duration(TimeSpan.Zero);
-
-            ClearDisplay(false);
-
-            List<ContentBase> objects = Objects.Values.ToList<ContentBase>();
-            objects.Sort();
-
-            foreach (ContentBase content in objects)
-            {
-                content.LoadModel();
-
-                if (content.Visibility)
-                    Viewport.Add(content.Model);
-            }
-
-            ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
         public void SetVisibility(ContentBase content, bool visibility)
@@ -357,7 +384,7 @@ namespace FreelancerModStudio.SystemPresenter
         private Vector3D ParseSize(string scale)
         {
             CultureInfo usCulture = new CultureInfo("en-US", false);
-            string[] values = scale.Split(new char[] {','});
+            string[] values = scale.Split(new char[] { ',' });
 
             if (values.Length == 1)
             {

@@ -1,13 +1,3 @@
-changelog:
-#Fixed minor display bugs
-#Fixed silent update display bug
-#Fixed undo/redo bug where block will not be shown again after redo
-#Added 3D system editor
-#Added system icons to table editor
-#Added possibility to hide/show objects in the system editor using the table editor
-#Improved Table Editor
-
-
 credits:
 #original ObjectListView code by Phillip Piper
 #original DockingPanelSuite code by Weifen Luo

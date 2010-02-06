@@ -27,8 +27,8 @@ namespace FreelancerModStudio
         public delegate void SelectionChangedType(TableBlock[] data, int templateIndex);
         public SelectionChangedType SelectionChanged;
 
-        public delegate void SelectedDataChangedType(TableBlock[] data, int templateIndex);
-        public SelectedDataChangedType SelectedDataChanged;
+        //public delegate void SelectedDataChangedType(TableBlock[] data, int templateIndex);
+        //public SelectedDataChangedType SelectedDataChanged;
 
         public delegate void DataVisibilityChangedType(TableBlock block, bool visibility);
         public DataVisibilityChangedType DataVisibilityChanged;
@@ -51,11 +51,11 @@ namespace FreelancerModStudio
                 this.SelectionChanged(data, templateIndex);
         }
 
-        private void OnSelectedDataChanged(TableBlock[] data, int templateIndex)
-        {
-            if (this.SelectedDataChanged != null)
-                this.SelectedDataChanged(data, templateIndex);
-        }
+        //private void OnSelectedDataChanged(TableBlock[] data, int templateIndex)
+        //{
+        //    if (this.SelectedDataChanged != null)
+        //        this.SelectedDataChanged(data, templateIndex);
+        //}
 
         private void OnDataVisibilityChanged(TableBlock block, bool visibility)
         {
@@ -564,7 +564,7 @@ namespace FreelancerModStudio
             }
 
             undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Edit });
-            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
+            //OnDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
         }
 
         private void ChangeBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
@@ -825,6 +825,12 @@ namespace FreelancerModStudio
                 else
                     ExecuteDataChanged(change);
             }
+        }
+
+        public void Select(TableBlock block)
+        {
+            objectListView1.SelectedObject = block;
+            EnsureSelectionVisible();
         }
 
         //overwrite to add extra information to layout.xml

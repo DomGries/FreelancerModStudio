@@ -34,7 +34,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
-                            <AdornerDecorator x:Name="PART_AdornerLayer" DataContext="{TemplateBinding DataContext}">
+                            <AdornerDecorator x:Name="PART_AdornerLayer" DataContext="{TemplateBinding DataContext}" Focusable="True">
                                 <!-- the main viewport3D is inserted here -->
                             </AdornerDecorator>
 
@@ -45,21 +45,14 @@
                                 <local:ArrowVisual3D Point2="10 0 0" Fill="Red"/>
                                 <local:ArrowVisual3D Point2="0 10 0" Fill="Green"/>
                                 <local:ArrowVisual3D Point2="0 0 10" Fill="Blue"/>
-<!--
-                                <local:PieSliceVisual3D Normal="1,0,0" UpVector="0,0,1" InnerRadius="3" OuterRadius="6"  Fill="#80ff0000"/>
-                                <local:PieSliceVisual3D Normal="0,1,0" UpVector="1,0,0" InnerRadius="3" OuterRadius="6"  Fill="#8000ff00"/>
-                                <local:PieSliceVisual3D Normal="0,0,1" UpVector="0,1,0" InnerRadius="3" OuterRadius="6"  Fill="#800000ff"/>
--->
                             </Viewport3D>
                             
-                           
                             <local:CameraController x:Name="PART_CameraController" 
                                                  CameraRotationMode="{TemplateBinding CameraRotationMode}"
                                                  CameraMode="{TemplateBinding CameraMode}"
-                                                 InfiniteSpin="{TemplateBinding InfiniteSpin}"
-                                                 />
+                                                 InfiniteSpin="{TemplateBinding InfiniteSpin}"/>
                             
-                            <Border VerticalAlignment="Top" Background="{TemplateBinding TitleBackground}">
+                            <Border VerticalAlignment="Top" Background="{TemplateBinding TitleBackground}" IsHitTestVisible="False">
                                 <Grid>                                    
                                     <!-- Titles -->
                                     <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
@@ -87,9 +80,6 @@
                                 HorizontalAlignment="Right" VerticalAlignment="Bottom" ClipToBounds="False"
                                 Visibility="{TemplateBinding ShowViewCube, Converter={local:BoolToVisibilityConverter}}">
                                 <local:ViewCubeVisual3D x:Name="PART_ViewCube"/>
-                                <!--<local:ArrowVisual3D Point2="10 0 0" Fill="Red"/>
-                                <local:ArrowVisual3D Point2="0 10 0" Fill="Green"/>
-                                <local:ArrowVisual3D Point2="0 0 10" Fill="Blue"/>-->
                             </Viewport3D>
                         </Grid>
                     </Border>

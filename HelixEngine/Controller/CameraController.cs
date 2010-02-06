@@ -18,7 +18,8 @@ namespace HelixEngine
         Rotate,
         ShowContextMenu,
         ResetCamera,
-        ChangeLookAt
+        ChangeLookAt,
+        Select
     }
 
     // http://en.wikipedia.org/wiki/Virtual_camera_system
@@ -91,6 +92,7 @@ namespace HelixEngine
             RightButtonAction = MouseAction.Rotate;
             MiddleDoubleClickAction = MouseAction.ResetCamera;
             RightDoubleClickAction = MouseAction.ChangeLookAt;
+            LeftButtonAction = MouseAction.Select;
 
             Background = Brushes.Transparent;
             EventSurface = this;
@@ -170,6 +172,7 @@ namespace HelixEngine
 
         // Using a DependencyProperty as the backing store for Camera.  This enables animation, styling, binding, etc...
 
+        public MouseAction LeftDoubleClickAction { get; set; }
         public MouseAction MiddleDoubleClickAction { get; set; }
         public MouseAction RightDoubleClickAction { get; set; }
 
@@ -188,6 +191,15 @@ namespace HelixEngine
         public double ZoomSensitivity { get; set; }
         public double RotateSensitivity { get; set; }
         public double PanSensitivity { get; set; }
+
+        public delegate void SelectionChangedType(DependencyObject visual);
+        public SelectionChangedType SelectionChanged;
+
+        private void OnSelectionChanged(DependencyObject visual)
+        {
+            if (this.SelectionChanged != null)
+                this.SelectionChanged(visual);
+        }
 
         #region Camera properties
 
@@ -290,7 +302,7 @@ namespace HelixEngine
             EventSurface.MouseDown += MouseDownHandler;
             EventSurface.MouseUp += MouseUpHandler;
             EventSurface.MouseWheel += OnMouseWheel;
-            //    EventSurface.KeyDown += OnKeyDown;
+            EventSurface.KeyDown += OnKeyDown;
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
@@ -301,7 +313,7 @@ namespace HelixEngine
             EventSurface.MouseDown -= MouseDownHandler;
             EventSurface.MouseUp -= MouseUpHandler;
             EventSurface.MouseWheel -= OnMouseWheel;
-            //            EventSurface.KeyDown -= OnKeyDown;
+            EventSurface.KeyDown -= OnKeyDown;
             CompositionTarget.Rendering -= CompositionTarget_Rendering;
         }
 
@@ -356,6 +368,7 @@ namespace HelixEngine
         // todo
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
+            base.OnKeyDown(e);
             switch (e.Key)
             {
                 case Key.Left:
@@ -387,20 +400,26 @@ namespace HelixEngine
             _mouseDownPosition = e.GetPosition(this);
             _fixRelative = new Vector3D();
 
-            bool doubleClick = e.ClickCount == 2;
-            bool control = (Keyboard.IsKeyDown(Key.LeftCtrl));
-            bool shift = (Keyboard.IsKeyDown(Key.LeftShift));
+            // reset camera
+            if (CheckButton(e, MouseAction.ResetCamera))
+                ResetCamera();
 
-            // MiddleButton double click - reset camera
-            if (MiddleDoubleClickAction == MouseAction.ResetCamera && doubleClick && e.MiddleButton == MouseButtonState.Pressed)
-                ResetCamera(shift);
+            Point3D point;
+            Vector3D normal;
+            DependencyObject visual;
+            if (Viewport3DHelper.FindNearest(Viewport, _mouseDownPosition, out point, out normal, out visual))
+                _mouseDownPoint3D = point;
+            else
+                _mouseDownPoint3D = null;
 
-            _mouseDownPoint3D = Viewport3DHelper.FindNearestPoint(Viewport, _mouseDownPosition);
             _lastPoint3D = UnProject(_mouseDownPosition, CameraTarget(), Camera.LookDirection);
 
-            // Double click - change the 'lookat' point
-            if (RightDoubleClickAction == MouseAction.ChangeLookAt && e.RightButton == MouseButtonState.Pressed
-                && doubleClick && _mouseDownPoint3D != null)
+            // select object
+            if (CheckButton(e, MouseAction.Select) && visual != null)
+                OnSelectionChanged(visual);
+
+            // change the 'lookat' point
+            if (_mouseDownPoint3D != null && CheckButton(e, MouseAction.ChangeLookAt))
                 LookAt(_mouseDownPoint3D.Value, 0);
 
             _zooming = CheckButton(e, MouseAction.Zoom);
@@ -448,10 +467,11 @@ namespace HelixEngine
             _isSpinning = false;
         }
 
-        private bool CheckButton(MouseEventArgs e, MouseAction a)
+        private bool CheckButton(MouseButtonEventArgs e, MouseAction a)
         {
             bool control = (Keyboard.IsKeyDown(Key.LeftCtrl));
             bool shift = (Keyboard.IsKeyDown(Key.LeftShift));
+            bool doubleClick = e.ClickCount == 2;
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -459,6 +479,8 @@ namespace HelixEngine
                     return a == ControlLeftButtonAction;
                 if (shift)
                     return a == ShiftLeftButtonAction;
+                if (doubleClick)
+                    return a == LeftDoubleClickAction;
                 return a == LeftButtonAction;
             }
 
@@ -468,6 +490,8 @@ namespace HelixEngine
                     return a == ControlMiddleButtonAction;
                 if (shift)
                     return a == ShiftMiddleButtonAction;
+                if (doubleClick)
+                    return a == MiddleDoubleClickAction;
                 return a == MiddleButtonAction;
             }
 
@@ -477,6 +501,8 @@ namespace HelixEngine
                     return a == ControlRightButtonAction;
                 if (shift)
                     return a == ShiftRightButtonAction;
+                if (doubleClick)
+                    return a == RightDoubleClickAction;
                 return a == RightButtonAction;
             }
 
@@ -602,9 +628,9 @@ namespace HelixEngine
 
         #region Camera operations
 
-        public void ResetCamera(bool onlyDirection)
+        public void ResetCamera()
         {
-            CameraHelper.Reset(Camera, onlyDirection);
+            CameraHelper.Reset(Camera);
         }
 
         public void Zoom(double delta)
@@ -838,6 +864,19 @@ namespace HelixEngine
             return Viewport3DHelper.Point3DtoPoint2D(Viewport, p);
         }
 
+        public void Select(Point target, double animationTime)
+        {
+            PerspectiveCamera camera = Camera;
+            if (camera == null) return;
+
+            //Point ptMouse = args.GetPosition(viewport);
+            HitTestResult result = VisualTreeHelper.HitTest(Viewport, target);
+
+            //// We're only interested in 3D hits.
+            //RayMeshGeometry3DHitTestResult result3d =
+            //                    result as RayMeshGeometry3DHitTestResult;
+        }
+
         /// <summary>
         /// Set the camera target point
         /// </summary>
@@ -848,6 +887,7 @@ namespace HelixEngine
         {
             PerspectiveCamera camera = Camera;
             if (camera == null) return;
+
             LookAt(target, camera.LookDirection, animationTime);
         }
 

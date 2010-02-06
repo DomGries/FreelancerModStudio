@@ -19,6 +19,15 @@ namespace FreelancerModStudio
     {
         SystemPresenter.SystemPresenter systemPresenter = null;
 
+        public delegate void SelectionChangedType(TableBlock block);
+        public SelectionChangedType SelectionChanged;
+
+        private void OnSelectionChanged(TableBlock block)
+        {
+            if (this.SelectionChanged != null)
+                this.SelectionChanged(block);
+        }
+
         public frmSystemEditor()
         {
             InitializeComponent();
@@ -37,6 +46,12 @@ namespace FreelancerModStudio
 
             systemPresenter = new SystemPresenter.SystemPresenter(view);
             systemPresenter.Lightning = new DefaultLightsVisual3D();
+            systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
+        }
+
+        private void systemPresenter_SelectionChanged(ContentBase content)
+        {
+            OnSelectionChanged(content.Block);
         }
 
         public new void Dispose()

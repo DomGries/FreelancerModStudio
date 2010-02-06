@@ -82,6 +82,7 @@
             this.mnuView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSolutionExplorer = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnu3dEditor = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFullScreen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
@@ -369,6 +370,7 @@
             this.mnuView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuSolutionExplorer,
             this.mnuProperties,
+            this.mnu3dEditor,
             this.toolStripMenuItem3,
             this.mnuFullScreen});
             this.mnuView.MergeIndex = 2;
@@ -386,6 +388,12 @@
             this.mnuProperties.Name = "mnuProperties";
             resources.ApplyResources(this.mnuProperties, "mnuProperties");
             this.mnuProperties.Click += new System.EventHandler(this.mnuProperties_Click);
+            // 
+            // mnu3dEditor
+            // 
+            this.mnu3dEditor.Name = "mnu3dEditor";
+            resources.ApplyResources(this.mnu3dEditor, "mnu3dEditor");
+            this.mnu3dEditor.Click += new System.EventHandler(this.mnu3dEditor_Click);
             // 
             // toolStripMenuItem3
             // 
@@ -678,6 +686,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuCopy;
         private System.Windows.Forms.ToolStripMenuItem mnuPaste;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem mnu3dEditor;
     }
 }
 

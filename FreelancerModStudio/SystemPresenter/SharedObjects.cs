@@ -5,17 +5,6 @@ using HelixEngine.Meshes;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    //LightSource: LightYellow sphere 0.1
-    //Sun: Orange sphere 1.5
-    //Planet: DeepSkyBlue sphere 1.0
-    //Station: Gray box 0.6, 0.6, 0.6
-    //Ship: Green tetrahedron
-    //TradeLine: Brown box 0.3, 0.5, 0.05
-    //Wormhole: Blue torus 
-    //Jumpgate: DarkBlue tetrahedron
-    //DockingRing: LightGray box 0.3, 0.2, 0.05
-    //Path: WhiteSmoke wirepath
-
     public enum ContentType
     {
         LightSource,
@@ -50,7 +39,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material TradeLane = MaterialHelper.CreateMaterial(Brushes.Cyan);
         public static Material JumpHole = MaterialHelper.CreateMaterial(Brushes.Coral);
         public static Material JumpGate = MaterialHelper.CreateMaterial(Brushes.OrangeRed);
-        public static Material DockingRing = MaterialHelper.CreateMaterial(Brushes.Bisque);
+        public static Material DockingRing = MaterialHelper.CreateMaterial(Brushes.DarkGreen);
         public static Material Zone = MaterialHelper.CreateMaterial(Colors.WhiteSmoke, 0.3);
         public static Material Path = MaterialHelper.CreateMaterial(Brushes.WhiteSmoke);
     }

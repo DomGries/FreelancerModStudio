@@ -9,7 +9,7 @@ using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public abstract class ContentBase : ITableRow<int>
+    public abstract class ContentBase : IComparable<ContentBase>, ITableRow<int>
     {
         public int ID { get; set; }
         public TableBlock Block { get; set; }
@@ -27,25 +27,24 @@ namespace FreelancerModStudio.SystemPresenter
 
         private void SetDisplay(Vector3D position, Rotation3D rotation, Vector3D scale, bool always)
         {
-            if (Model == null)
+            if (Model != null)
             {
-                Position = position;
-                Rotation = rotation;
-                Scale = scale;
-                return;
+                //if (this is Zone && ((Zone)this).Shape != ZoneShape.Sphere)
+                //{
+                    ContentAnimator.SetScale(Model, Scale, scale, position, always);
+                    ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);
+                //}
+                //else
+                //{
+                //    ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);
+                //    ContentAnimator.SetScale(Model, Scale, scale, position, always);
+                //}
+                ContentAnimator.SetPosition(Model, Position, position, always);
             }
 
-            ContentAnimator.SetPosition(Model, Position, position, always);
-            if (this is Zone && ((Zone)this).Shape != ZoneShape.Sphere)
-            {
-                ContentAnimator.SetScale(Model, Scale, scale, position, always);
-                ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);
-            }
-            else
-            {
-                ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);
-                ContentAnimator.SetScale(Model, Scale, scale, position, always);
-            }
+            Position = position;
+            Rotation = rotation;
+            Scale = scale;
         }
 
         public ContentBase()
@@ -65,6 +64,17 @@ namespace FreelancerModStudio.SystemPresenter
             Model = new ModelVisual3D() { Content = GetGeometry() };
 
             SetDisplay(Position, Rotation, Scale, true);
+        }
+
+        public int CompareTo(ContentBase other)
+        {
+            //sort by object type, scale
+            //int objectTypeComparison = this.Block.ObjectType.CompareTo(other.Block.ObjectType);
+            //if (objectTypeComparison == 0)
+            //    return this.Scale.CompareTo(other.Scale);
+
+            //sort by scale
+            return this.Scale.CompareTo(other.Scale);
         }
     }
 

@@ -139,6 +139,13 @@ namespace FreelancerModStudio.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap DockingRing {
+            get {
+                object obj = ResourceManager.GetObject("DockingRing", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Document {
             get {
                 object obj = ResourceManager.GetObject("Document", resourceCulture);
@@ -254,6 +261,13 @@ namespace FreelancerModStudio.Properties {
         internal static System.Drawing.Bitmap JumpGate {
             get {
                 object obj = ResourceManager.GetObject("JumpGate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap JumpHole {
+            get {
+                object obj = ResourceManager.GetObject("JumpHole", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

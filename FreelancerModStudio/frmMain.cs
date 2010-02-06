@@ -164,6 +164,16 @@ namespace FreelancerModStudio
             {
                 propertiesForm.ShowData(data, templateIndex);
                 if (systemEditor != null)
+                    systemEditor.SetValues(data);
+            }
+        }
+
+        private void DefaultEditor_SelectionChanged(TableBlock[] data, int templateIndex)
+        {
+            if (data != null)
+            {
+                propertiesForm.ShowData(data, templateIndex);
+                if (systemEditor != null)
                     systemEditor.Select(data[0].ID);
             }
             else
@@ -408,6 +418,7 @@ namespace FreelancerModStudio
             defaultEditor.LoadArchtypes(archtypeFile, archtypeTemplate);
             defaultEditor.ShowData();
 
+            defaultEditor.SelectionChanged += DefaultEditor_SelectionChanged;
             defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
             defaultEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
             defaultEditor.ContentChanged += Content_DisplayChanged;

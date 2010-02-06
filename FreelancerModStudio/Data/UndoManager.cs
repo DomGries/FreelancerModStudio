@@ -6,21 +6,36 @@ namespace FreelancerModStudio.Data
 {
     public class UndoManager<T>
     {
-        public delegate void DataChangedType(T o, bool undo);
+        public delegate void DataChangedType(List<T> o, bool undo);
         public DataChangedType DataChanged;
 
-        public List<T[]> Changes { get; set; }
-        public int Current { get; set; }
+        private List<List<T>> Changes { get; set; }
+        private int Current { get; set; }
 
         public UndoManager()
         {
-            Changes = new List<T[]>();
+            Changes = new List<List<T>>();
         }
 
-        private void OnDataChanged(T o, bool undo)
+        private void OnDataChanged(List<T> o, bool undo)
         {
             if (this.DataChanged != null)
                 this.DataChanged(o, undo);
+        }
+
+        public List<T> CurrentData
+        {
+            get
+            {
+                if (Current > Changes.Count)
+                    return null;
+
+                return Changes[Current - 1];
+            }
+            set
+            {
+                Changes[Current - 1] = value;
+            }
         }
 
         public void Undo(int levels)
@@ -29,9 +44,10 @@ namespace FreelancerModStudio.Data
             {
                 if (Current > 0)
                 {
-                    T[] data = Changes[--Current];
-                    foreach (T entry in data)
-                        OnDataChanged(entry, true);
+                    Current--;
+                    List<T> data = Changes[Current];
+
+                    OnDataChanged(data, true);
                 }
             }
         }
@@ -42,20 +58,27 @@ namespace FreelancerModStudio.Data
             {
                 if (Current < Changes.Count)
                 {
-                    T[] data = Changes[Current++];
-                    foreach (T entry in data)
-                        OnDataChanged(entry, false);
+                    List<T> data = Changes[Current];
+                    Current++;
+
+                    OnDataChanged(data, false);
                 }
             }
         }
 
         public void Execute(T o)
         {
+            List<T> newData = new List<T> { o };
+
+            //remove every data which comes after the current
             Changes.RemoveRange(Current, Changes.Count - Current);
-            Changes.Add(new T[] { o });
+
+            //add the data
+            Changes.Add(newData);
             Current++;
 
-            OnDataChanged(o, false);
+            //raise event that the data was changed
+            OnDataChanged(newData, false);
         }
 
         public bool CanUndo()

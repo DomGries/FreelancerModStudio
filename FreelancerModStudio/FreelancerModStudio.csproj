@@ -228,6 +228,69 @@
     <Compile Include="SystemPresenter\SystemPresenter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\About.ico" />
+    <Content Include="Resources\Add.ico" />
+    <Content Include="Resources\BuildMod.ico" />
+    <Content Include="Resources\Close.ico" />
+    <Content Include="Resources\CloseMod.ico" />
+    <Content Include="Resources\CodeView.ico" />
+    <Content Include="Resources\Copy.ico" />
+    <Content Include="Resources\Cut.ico" />
+    <Content Include="Resources\Delete.ico" />
+    <Content Include="Resources\DeleteFolder.ico" />
+    <Content Include="Resources\Document.ico" />
+    <Content Include="Resources\Error.ico" />
+    <Content Include="Resources\File.ico" />
+    <Content Include="Resources\Filedll.ico" />
+    <Content Include="Resources\Fileini.ico" />
+    <Content Include="Resources\Filetxt.ico" />
+    <Content Include="Resources\Filewav.ico" />
+    <Content Include="Resources\Filter.ico" />
+    <Content Include="Resources\Folder.ico" />
+    <Content Include="Resources\FullScreen.ico" />
+    <Content Include="Resources\GoTo.ico" />
+    <Content Include="Resources\HiddenFile.ico" />
+    <Content Include="Resources\HiddenFolder.ico" />
+    <Content Include="Resources\HiddenFolderOpen.ico" />
+    <Content Include="Resources\HomePage.ico" />
+    <Content Include="Resources\Link.ico" />
+    <Content Include="Resources\LogoAbout.png" />
+    <Content Include="Resources\LogoIcon.ico" />
+    <Content Include="Resources\Mod.ico" />
+    <Content Include="Resources\NewDocument.ico" />
+    <Content Include="Resources\NewFolder.ico" />
+    <Content Include="Resources\NewMod.ico" />
+    <Content Include="Resources\NewWindow.ico" />
+    <Content Include="Resources\Note.ico" />
+    <Content Include="Resources\Open.ico" />
+    <Content Include="Resources\OpenFolder.ico" />
+    <Content Include="Resources\OpenMod.ico" />
+    <Content Include="Resources\Paste.ico" />
+    <Content Include="Resources\Properties.ico" />
+    <Content Include="Resources\ReDo.ico" />
+    <Content Include="Resources\ReportIssue.ico" />
+    <Content Include="Resources\Save.ico" />
+    <Content Include="Resources\SaveAll.ico" />
+    <Content Include="Resources\Settings.ico" />
+    <Content Include="Resources\SolutionExplorer.ico" />
+    <Content Include="Resources\SystemLegend\Construct.ico" />
+    <Content Include="Resources\SystemLegend\Depot.ico" />
+    <Content Include="Resources\SystemLegend\JumpGate.ico" />
+    <Content Include="Resources\SystemLegend\LightSource.ico" />
+    <Content Include="Resources\SystemLegend\Planet.ico" />
+    <Content Include="Resources\SystemLegend\Satellite.ico" />
+    <Content Include="Resources\SystemLegend\Ship.ico" />
+    <Content Include="Resources\SystemLegend\Station.ico" />
+    <Content Include="Resources\SystemLegend\Sun.ico" />
+    <Content Include="Resources\SystemLegend\TradeLane.ico" />
+    <Content Include="Resources\SystemLegend\WeaponsPlatform.ico" />
+    <Content Include="Resources\SystemLegend\Zone.ico" />
+    <Content Include="Resources\TableView.ico" />
+    <Content Include="Resources\ToDo.ico" />
+    <Content Include="Resources\UnDo.ico" />
+    <Content Include="Resources\UpFolder.ico" />
+    <Content Include="Resources\WebSearch.ico" />
+    <Content Include="Resources\WebSearch_Large.ico" />
     <Content Include="Template.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -318,6 +381,10 @@
       <Project>{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}</Project>
       <Name>HelixEngine</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SystemLegend\DockingRing.ico" />
+    <None Include="Resources\SystemLegend\JumpHole.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="GenSerializationAssembly" DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">

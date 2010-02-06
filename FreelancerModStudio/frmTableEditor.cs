@@ -17,10 +17,15 @@ namespace FreelancerModStudio
         public TableData Data;
         public string File { get; set; }
         public bool IsBINI { get; set; }
-        public ArchtypeManager Archtype { get; set; }
 
         bool modified = false;
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
+
+        public delegate void DataChangedType(ChangedData data);
+        public DataChangedType DataChanged;
+
+        public delegate void SelectionChangedType(TableBlock[] data, int templateIndex);
+        public SelectionChangedType SelectionChanged;
 
         public delegate void SelectedDataChangedType(TableBlock[] data, int templateIndex);
         public SelectedDataChangedType SelectedDataChanged;
@@ -33,6 +38,18 @@ namespace FreelancerModStudio
 
         public delegate void DocumentChangedType(DocumentInterface document);
         public DocumentChangedType DocumentChanged;
+
+        private void OnDataChanged(ChangedData data)
+        {
+            if (this.DataChanged != null)
+                this.DataChanged(data);
+        }
+
+        private void OnSelectionChanged(TableBlock[] data, int templateIndex)
+        {
+            if (this.SelectionChanged != null)
+                this.SelectionChanged(data, templateIndex);
+        }
 
         private void OnSelectedDataChanged(TableBlock[] data, int templateIndex)
         {
@@ -101,8 +118,8 @@ namespace FreelancerModStudio
                 Properties.Resources.Depot,
                 Properties.Resources.Ship,
                 Properties.Resources.WeaponsPlatform,
-                Properties.Resources.JumpGate,
-                Properties.Resources.JumpGate,
+                Properties.Resources.DockingRing,
+                Properties.Resources.JumpHole,
                 Properties.Resources.JumpGate,
                 Properties.Resources.TradeLane,
                 Properties.Resources.Zone,
@@ -143,9 +160,11 @@ namespace FreelancerModStudio
 
         public void LoadArchtypes(string file, int templateIndex)
         {
-            Archtype = new ArchtypeManager(file, templateIndex);
+            if (Helper.Archtype.ArchtypeManager == null)
+                Helper.Archtype.LoadArchtypes(file, templateIndex);
+
             foreach (TableBlock block in Data.Blocks)
-                SetArchtype(block, Archtype);
+                SetArchtype(block, Helper.Archtype.ArchtypeManager);
         }
 
         private void SetArchtype(TableBlock block, ArchtypeManager archtypeManager)
@@ -279,7 +298,7 @@ namespace FreelancerModStudio
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
-            OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
+            OnSelectionChanged(GetSelectedBlocks(), Data.TemplateIndex);
 
             if (this.DockHandler.IsActivated)
                 OnContentChanged((ContentInterface)this);
@@ -372,10 +391,12 @@ namespace FreelancerModStudio
             return false;
         }
 
-        private void AddBlocks(TableBlock[] blocks)
+        private void AddBlocks(List<TableBlock> blocks)
         {
+            List<ChangedData> overwrittenData = new List<ChangedData>();
+
             List<TableBlock> selectedData = new List<TableBlock>();
-            for (int i = 0; i < blocks.Length; i++)
+            for (int i = 0; i < blocks.Count; i++)
             {
                 Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[blocks[i].Block.TemplateIndex];
                 TableBlock tableBlock = blocks[i];
@@ -383,7 +404,7 @@ namespace FreelancerModStudio
 
                 //set archtype of block
                 if (tableBlock.Archtype == null)
-                    SetArchtype(tableBlock, Archtype);
+                    SetArchtype(tableBlock, Helper.Archtype.ArchtypeManager);
 
                 bool existSingle = false;
 
@@ -394,20 +415,42 @@ namespace FreelancerModStudio
                     {
                         if (Data.Blocks[j].Block.TemplateIndex == blocks[i].Block.TemplateIndex)
                         {
-                            //block already exists, overwrite it
-                            Data.Blocks[j] = tableBlock;
+                            //block already exists
+                            //undoManager.CurrentData[0].NewBlocks.RemoveAt(i - overwrittenData.Count);
 
+                            overwrittenData.Add(new ChangedData()
+                            {
+                                Type = ChangedType.Edit,
+                                OldBlocks = new List<TableBlock>() { Data.Blocks[j] },
+                                NewBlocks = new List<TableBlock>() { tableBlock },
+                            });
+
+                            //overwrite block
+                            Data.Blocks[j] = tableBlock;
                             existSingle = true;
+
                             break;
                         }
                     }
                 }
 
                 if (!existSingle)
+                {
                     Data.Blocks.Add(blocks[i]);
+
+                    overwrittenData.Add(new ChangedData()
+                    {
+                        Type = ChangedType.Add,
+                        NewBlocks = new List<TableBlock>() { tableBlock }
+                    });
+                }
 
                 selectedData.Add(tableBlock);
             }
+
+            //overwrite data if we add blocks which are single then they are overwritten which means they have to be changed to edit in the undo history
+            //undoManager.CurrentData.AddRange(overwrittenData);
+            undoManager.CurrentData = overwrittenData;
 
             Data.Blocks.Sort();
 
@@ -441,7 +484,7 @@ namespace FreelancerModStudio
                 id = Data.Blocks[Data.Blocks.Count - 1].ID + 1;
 
             //add actual block
-            undoManager.Execute(new ChangedData() { NewBlocks = new TableBlock[] { new TableBlock(id, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
+            undoManager.Execute(new ChangedData() { NewBlocks = new List<TableBlock> { new TableBlock(id, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
         }
 
         public TableBlock[] GetSelectedBlocks()
@@ -520,13 +563,13 @@ namespace FreelancerModStudio
                 newBlocks[i].Modified = TableModified.Changed;
             }
 
-            undoManager.Execute(new ChangedData() { NewBlocks = newBlocks.ToArray(), OldBlocks = oldBlocks.ToArray(), Type = ChangedType.Edit });
+            undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Edit });
             OnSelectedDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
         }
 
-        private void ChangeBlocks(TableBlock[] newBlocks, TableBlock[] oldBlocks)
+        private void ChangeBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
         {
-            for (int i = 0; i < oldBlocks.Length; i++)
+            for (int i = 0; i < oldBlocks.Count; i++)
             {
                 int index = Data.Blocks.IndexOf(oldBlocks[i]);
                 Data.Blocks[index] = newBlocks[i];
@@ -541,7 +584,7 @@ namespace FreelancerModStudio
             Modified = true;
         }
 
-        private void DeleteBlocks(TableBlock[] blocks)
+        private void DeleteBlocks(List<TableBlock> blocks)
         {
             System.Collections.IList selection = objectListView1.SelectedObjects;
 
@@ -564,7 +607,7 @@ namespace FreelancerModStudio
             foreach (TableBlock block in objectListView1.SelectedObjects)
                 blocks.Add(block);
 
-            undoManager.Execute(new ChangedData() { NewBlocks = blocks.ToArray(), Type = ChangedType.Delete });
+            undoManager.Execute(new ChangedData() { NewBlocks = blocks, Type = ChangedType.Delete });
         }
 
         private void EnsureSelectionVisible()
@@ -726,14 +769,14 @@ namespace FreelancerModStudio
 
             if (editorData.TemplateIndex == Data.TemplateIndex)
             {
-                TableBlock[] blocks = new TableBlock[editorData.Blocks.Count];
+                List<TableBlock> blocks = new List<TableBlock>();
                 for (int i = 0; i < editorData.Blocks.Count; i++)
                 {
                     int id = 0;
                     if (Data.Blocks.Count > 0)
                         id = Data.Blocks[Data.Blocks.Count - 1].ID + 1;
 
-                    blocks[i] = new TableBlock(id, editorData.Blocks[i], Data.TemplateIndex);
+                    blocks.Add(new TableBlock(id, editorData.Blocks[i], Data.TemplateIndex));
                 }
 
                 undoManager.Execute(new ChangedData() { NewBlocks = blocks, Type = ChangedType.Add });
@@ -760,27 +803,28 @@ namespace FreelancerModStudio
             undoManager.Redo(1);
         }
 
-        private void UndoManager_DataChanged(ChangedData data, bool undo)
+        private void ExecuteDataChanged(ChangedData data)
         {
-            ChangedType type = data.Type;
-            if (type == ChangedType.Add && undo)
-                type = ChangedType.Delete;
-            else if (type == ChangedType.Delete && undo)
-                type = ChangedType.Add;
-
-            if (type == ChangedType.Add)
+            if (data.Type == ChangedType.Add)
                 AddBlocks(data.NewBlocks);
-            else if (type == ChangedType.Delete)
+            else if (data.Type == ChangedType.Delete)
                 DeleteBlocks(data.NewBlocks);
-            else if (type == ChangedType.Edit)
-            {
-                if (undo)
-                    ChangeBlocks(data.OldBlocks, data.NewBlocks);
-                else
-                    ChangeBlocks(data.NewBlocks, data.OldBlocks);
-            }
+            else if (data.Type == ChangedType.Edit)
+                ChangeBlocks(data.NewBlocks, data.OldBlocks);
 
             OnDocumentChanged((DocumentInterface)this);
+            OnDataChanged(data);
+        }
+
+        private void UndoManager_DataChanged(List<ChangedData> data, bool undo)
+        {
+            foreach (ChangedData change in data)
+            {
+                if (undo)
+                    ExecuteDataChanged(change.GetUndoData());
+                else
+                    ExecuteDataChanged(change);
+            }
         }
 
         //overwrite to add extra information to layout.xml

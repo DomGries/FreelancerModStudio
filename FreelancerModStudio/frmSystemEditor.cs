@@ -84,7 +84,7 @@ namespace FreelancerModStudio
             {
                 ContentBase content;
                 if (systemPresenter.Objects.TryGetValue(block.ID, out content))
-                    systemPresenter.UpdateValues(content, block);
+                    systemPresenter.SetValues(content, block);
             }
         }
 

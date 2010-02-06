@@ -90,7 +90,10 @@ namespace FreelancerModStudio.SystemPresenter
                     Viewport.Title = GetTitle(value.Block.Block);
                 }
                 else
+                {
+                    Selection = null;
                     Viewport.Title = string.Empty;
+                }
             }
         }
 
@@ -167,7 +170,10 @@ namespace FreelancerModStudio.SystemPresenter
 
             ClearDisplay(false);
 
-            foreach (ContentBase content in Objects)
+            List<ContentBase> objects = Objects.Values.ToList<ContentBase>();
+            objects.Sort();
+
+            foreach (ContentBase content in objects)
             {
                 content.LoadModel();
 
@@ -217,13 +223,13 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public void UpdateValues(ContentBase content, TableBlock tableBlock)
-        {
-            SetValues(content, tableBlock);
-            content.SetDisplay(content.Position, content.Rotation, content.Scale);
-        }
+        //public void UpdateValues(ContentBase content, TableBlock tableBlock)
+        //{
+        //    SetValues(content, tableBlock);
+        //    //content.SetDisplay(content.Position, content.Rotation, content.Scale);
+        //}
 
-        private void SetValues(ContentBase content, TableBlock block)
+        public void SetValues(ContentBase content, TableBlock block)
         {
             int positionIndex = -1;
             int rotationIndex = -1;
@@ -348,38 +354,28 @@ namespace FreelancerModStudio.SystemPresenter
             return content;
         }
 
-        private int OccuranceCount(string text, string value)
-        {
-            int count = 0;
-            int index;
-            while ((index = text.IndexOf(value)) != -1)
-            {
-                text = text.Substring(index + 1);
-                count++;
-            }
-
-            return count;
-        }
-
         private Vector3D ParseSize(string scale)
         {
             CultureInfo usCulture = new CultureInfo("en-US", false);
-            int occurances = OccuranceCount(scale, ",");
+            string[] values = scale.Split(new char[] {','});
 
-            if (occurances == 0)
+            if (values.Length == 1)
             {
-                double tempScale = double.Parse(scale, usCulture);
+                double tempScale = double.Parse(values[0], usCulture);
                 return new Vector3D(tempScale, tempScale, tempScale) / 1000;
             }
-            else if (occurances == 1)
+            else if (values.Length == 2)
             {
-                Vector tempScale = ParseVector(scale) / 1000;
-                return new Vector3D(tempScale.X, 1, tempScale.Y);
+                double tempScale1 = double.Parse(values[0], usCulture);
+                double tempScale2 = double.Parse(values[1], usCulture);
+                return new Vector3D(tempScale1, tempScale2, tempScale1) / 1000;
             }
-            else if (occurances == 2)
+            else if (values.Length == 3)
             {
-                Vector3D tempScale = ParseVector3D(scale) / 1000;
-                return new Vector3D(tempScale.X, tempScale.Z, tempScale.Y);
+                double tempScale1 = double.Parse(values[0], usCulture);
+                double tempScale2 = double.Parse(values[1], usCulture);
+                double tempScale3 = double.Parse(values[2], usCulture);
+                return new Vector3D(tempScale1, tempScale3, tempScale2) / 1000;
             }
 
             return new Vector3D(1, 1, 1);

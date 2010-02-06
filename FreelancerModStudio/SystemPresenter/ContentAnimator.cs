@@ -31,7 +31,7 @@ namespace FreelancerModStudio.SystemPresenter
             if (always || newRotation != oldRotation)
             {
                 if (AnimationDuration.TimeSpan == TimeSpan.Zero)
-                    ContentAnimator.AddTransformation(model, new RotateTransform3D(newRotation, center.ToPoint3D()));
+                    ContentAnimator.AddTransformation(model, new RotateTransform3D(newRotation));
                 else
                     AnimateRotation(model, oldRotation, newRotation, center);
             }
@@ -42,7 +42,7 @@ namespace FreelancerModStudio.SystemPresenter
             if (always || newScale != oldScale)
             {
                 if (AnimationDuration.TimeSpan == TimeSpan.Zero)
-                    ContentAnimator.AddTransformation(model, new ScaleTransform3D(newScale, center.ToPoint3D()));
+                    ContentAnimator.AddTransformation(model, new ScaleTransform3D(newScale));
                 else
                     AnimateScale(model, oldScale, newScale, center);
             }

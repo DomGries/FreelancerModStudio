@@ -310,4 +310,10 @@
   <data name="Zone" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SystemLegend\Zone.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DockingRing" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\DockingRing.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="JumpHole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SystemLegend\JumpHole.ico;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

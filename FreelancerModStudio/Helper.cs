@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio
 {
@@ -152,6 +153,16 @@ namespace FreelancerModStudio
                     get { return data.Data.CostumTypes; }
                     set { data.Data.CostumTypes = value; }
                 }
+            }
+        }
+
+        public struct Archtype
+        {
+            public static ArchtypeManager ArchtypeManager { get; set; }
+
+            public static void LoadArchtypes(string file, int templateIndex)
+            {
+                ArchtypeManager = new ArchtypeManager(file, templateIndex);
             }
         }
 

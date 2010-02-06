@@ -37,5 +37,13 @@ namespace HelixEngine
         {
             return new Point3D(n.X, n.Y, n.Z);
         }
+
+        public static int CompareTo(this Vector3D n, Vector3D other)
+        {
+            double areaX = n.X * n.Y * n.Z;
+            double areaY = other.X * other.Y * other.Z;
+
+            return areaX.CompareTo(areaY);
+        }
     }
 }

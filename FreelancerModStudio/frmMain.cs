@@ -90,16 +90,16 @@ namespace FreelancerModStudio
         private void mnuVisitForum_Click(object sender, EventArgs e)
         {
             TableData data = null;
-            if (dockPanel1.ActiveContent != null && dockPanel1.ActiveContent is frmTableEditor)
+            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
             {
-                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveContent.DockHandler.Content;
+                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument.DockHandler.Content;
                 data = editor.Data;
             }
 
             if (systemEditor == null)
             {
                 systemEditor = new frmSystemEditor();
-                systemEditor.Show(this.dockPanel1, DockState.Document);
+                systemEditor.Show(this.dockPanel1);
             }
             else
                 systemEditor.Show();
@@ -158,30 +158,35 @@ namespace FreelancerModStudio
         {
         }
 
-        private void DefaultEditor_SelectedDataChanged(EditorINIBlock[] data, int templateIndex)
+        private void DefaultEditor_SelectedDataChanged(TableBlock[] data, int templateIndex)
         {
             if (data != null)
             {
                 propertiesForm.ShowData(data, templateIndex);
                 if (systemEditor != null)
-                    systemEditor.Select(data[0]);
+                    systemEditor.Select(data[0].ID);
             }
             else
+            {
                 propertiesForm.ClearData();
+
+                if (systemEditor != null)
+                    systemEditor.Deselect();
+            }
         }
 
-        private void DefaultEditor_DataVisibilityChanged(EditorINIBlock[] data, bool visible)
+        private void DefaultEditor_DataVisibilityChanged(TableBlock block, bool visible)
         {
             if (systemEditor != null)
-                systemEditor.SetVisibility(data, visible);
+                systemEditor.SetVisibility(block.ID, visible);
         }
 
         private void Properties_OptionsChanged(PropertyBlock[] blocks)
         {
-            IDockContent activeContent = this.dockPanel1.ActiveContent;
-            if (activeContent != null && activeContent is frmTableEditor)
+            IDockContent activeDocument = this.dockPanel1.ActiveDocument;
+            if (activeDocument != null && activeDocument is frmTableEditor)
             {
-                frmTableEditor defaultEditor = (frmTableEditor)activeContent;
+                frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
                 defaultEditor.SetBlocks(blocks);
             }
         }
@@ -549,6 +554,16 @@ namespace FreelancerModStudio
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
                 DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
                 Document_DisplayChanged((DocumentInterface)activeDocument);
+
+                if (systemEditor != null)
+                {
+                    systemEditor.ShowData(defaultEditor.Data);
+
+                    //select initially
+                    TableBlock[] blocks = defaultEditor.GetSelectedBlocks();
+                    if (blocks != null)
+                        systemEditor.Select(blocks[0].ID);
+                }
             }
             else
                 DefaultEditor_SelectedDataChanged(null, 0);
@@ -683,12 +698,12 @@ namespace FreelancerModStudio
 
         private void mnuSave_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)this.dockPanel1.ActiveContent).Save();
+            ((DocumentInterface)this.dockPanel1.ActiveDocument).Save();
         }
 
         private void mnuSaveAs_Click(object sender, EventArgs e)
         {
-            frmTableEditor tableEditor = ((frmTableEditor)this.dockPanel1.ActiveContent);
+            frmTableEditor tableEditor = ((frmTableEditor)this.dockPanel1.ActiveDocument);
             tableEditor.SaveAs();
 
             AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
@@ -711,12 +726,12 @@ namespace FreelancerModStudio
 
         private void mnuUndo_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)this.dockPanel1.ActiveContent).Undo();
+            ((DocumentInterface)this.dockPanel1.ActiveDocument).Undo();
         }
 
         private void mnuRedo_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)this.dockPanel1.ActiveContent).Redo();
+            ((DocumentInterface)this.dockPanel1.ActiveDocument).Redo();
         }
 
         private void mnuClose_Click(object sender, EventArgs e)

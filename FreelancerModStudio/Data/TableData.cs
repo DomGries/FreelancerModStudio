@@ -23,7 +23,13 @@ namespace FreelancerModStudio.Data
             TemplateIndex = data.TemplateIndex;
 
             foreach (EditorINIBlock block in data.Blocks)
-                this.Blocks.Add(new TableBlock(block, TemplateIndex));
+            {
+                int id = 0;
+                if (this.Blocks.Count > 0)
+                    id = this.Blocks[this.Blocks.Count - 1].ID + 1;
+
+                this.Blocks.Add(new TableBlock(id, block, TemplateIndex));
+            }
         }
 
         public EditorINIData GetEditorData()
@@ -40,6 +46,7 @@ namespace FreelancerModStudio.Data
     [Serializable]
     public class TableBlock : IComparable<TableBlock>
     {
+        public int ID { get; set; }
         public string Name { get; set; }
         public string Group { get; set; }
         public ContentType ObjectType { get; set; }
@@ -50,13 +57,15 @@ namespace FreelancerModStudio.Data
         public ArchtypeInfo Archtype { get; set; }
         public bool Visibility { get; set; }
 
-        public TableBlock()
+        public TableBlock(int id)
         {
+            ID = id;
             ObjectType = ContentType.None;
         }
 
-        public TableBlock(EditorINIBlock block, int templateIndex)
+        public TableBlock(int id, EditorINIBlock block, int templateIndex)
         {
+            ID = id;
             ObjectType = ContentType.None;
 
             //name of block

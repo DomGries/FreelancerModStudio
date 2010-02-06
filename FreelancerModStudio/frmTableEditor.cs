@@ -22,10 +22,10 @@ namespace FreelancerModStudio
         bool modified = false;
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
 
-        public delegate void SelectedDataChangedType(EditorINIBlock[] data, int templateIndex);
+        public delegate void SelectedDataChangedType(TableBlock[] data, int templateIndex);
         public SelectedDataChangedType SelectedDataChanged;
 
-        public delegate void DataVisibilityChangedType(EditorINIBlock[] data, bool visibility);
+        public delegate void DataVisibilityChangedType(TableBlock block, bool visibility);
         public DataVisibilityChangedType DataVisibilityChanged;
 
         public delegate void ContentChangedType(ContentInterface content);
@@ -34,16 +34,16 @@ namespace FreelancerModStudio
         public delegate void DocumentChangedType(DocumentInterface document);
         public DocumentChangedType DocumentChanged;
 
-        private void OnSelectedDataChanged(EditorINIBlock[] data, int templateIndex)
+        private void OnSelectedDataChanged(TableBlock[] data, int templateIndex)
         {
             if (this.SelectedDataChanged != null)
                 this.SelectedDataChanged(data, templateIndex);
         }
 
-        private void OnDataVisibilityChanged(EditorINIBlock[] data, bool visibility)
+        private void OnDataVisibilityChanged(TableBlock block, bool visibility)
         {
             if (this.DataVisibilityChanged != null)
-                this.DataVisibilityChanged(data, visibility);
+                this.DataVisibilityChanged(block, visibility);
         }
 
         private void OnContentChanged(ContentInterface content)
@@ -251,7 +251,7 @@ namespace FreelancerModStudio
                     {
                         block.Visibility = newValue;
 
-                        OnDataVisibilityChanged(new EditorINIBlock[] { block.Block }, newValue);
+                        OnDataVisibilityChanged(block, newValue);
                         return newValue;
                     }
 
@@ -436,18 +436,22 @@ namespace FreelancerModStudio
                 }
             }
 
+            int id = 0;
+            if (Data.Blocks.Count > 0)
+                id = Data.Blocks[Data.Blocks.Count - 1].ID + 1;
+
             //add actual block
-            undoManager.Execute(new ChangedData() { NewBlocks = new TableBlock[] { new TableBlock(editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
+            undoManager.Execute(new ChangedData() { NewBlocks = new TableBlock[] { new TableBlock(id, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
         }
 
-        public EditorINIBlock[] GetSelectedBlocks()
+        public TableBlock[] GetSelectedBlocks()
         {
             if (objectListView1.SelectedObjects.Count == 0)
                 return null;
 
-            List<EditorINIBlock> blocks = new List<EditorINIBlock>();
+            List<TableBlock> blocks = new List<TableBlock>();
             foreach (TableBlock tableData in objectListView1.SelectedObjects)
-                blocks.Add(tableData.Block);
+                blocks.Add(tableData);
 
             return blocks.ToArray();
         }
@@ -724,7 +728,13 @@ namespace FreelancerModStudio
             {
                 TableBlock[] blocks = new TableBlock[editorData.Blocks.Count];
                 for (int i = 0; i < editorData.Blocks.Count; i++)
-                    blocks[i] = new TableBlock(editorData.Blocks[i], Data.TemplateIndex);
+                {
+                    int id = 0;
+                    if (Data.Blocks.Count > 0)
+                        id = Data.Blocks[Data.Blocks.Count - 1].ID + 1;
+
+                    blocks[i] = new TableBlock(id, editorData.Blocks[i], Data.TemplateIndex);
+                }
 
                 undoManager.Execute(new ChangedData() { NewBlocks = blocks, Type = ChangedType.Add });
             }
@@ -785,15 +795,10 @@ namespace FreelancerModStudio
             {
                 bool visibility = !((TableBlock)objectListView1.SelectedObjects[0]).Visibility;
 
-                List<EditorINIBlock> blocks = new List<EditorINIBlock>();
                 foreach (TableBlock block in objectListView1.SelectedObjects)
-                {
-                    block.Visibility = visibility;
-                    blocks.Add(block.Block);
-                }
+                    OnDataVisibilityChanged(block, visibility);
 
                 objectListView1.RefreshObjects(objectListView1.SelectedObjects);
-                OnDataVisibilityChanged(blocks.ToArray(), visibility);
             }
         }
     }

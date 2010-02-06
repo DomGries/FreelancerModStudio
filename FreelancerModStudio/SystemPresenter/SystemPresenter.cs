@@ -17,7 +17,7 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public class SystemPresenter
     {
-        public List<ContentBase> Objects { get; set; }
+        public Table<int, ContentBase> Objects { get; set; }
         public HelixView3D Viewport { get; set; }
 
         private ModelVisual3D lightning;
@@ -79,37 +79,27 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 selectedContent = value;
 
-                //goto content
-                Viewport.LookAt(value.Position.ToPoint3D(), ContentAnimator.AnimationDuration.TimeSpan.TotalMilliseconds);
-
-                //select content visually
-                Point3DCollection points = new Point3DCollection();
-                Point3DCollection positions = SelectedContent.GetMesh().Positions;
-                for (int i = 0; i < positions.Count - 1; i++)
+                if (value != null)
                 {
-                    points.Add(positions[i]);
-                    points.Add(positions[i + 1]);
-                }
-                points.Add(positions[positions.Count - 1]);
-                points.Add(positions[0]);
+                    //goto content
+                    Viewport.LookAt(value.Position.ToPoint3D(), ContentAnimator.AnimationDuration.TimeSpan.TotalMilliseconds);
 
-                WireLines lines = GetWireBox(SelectedContent.GetMesh().Bounds);
+                    //select content visually
+                    Selection = GetSelectionBox(value);
 
-                ContentAnimator.AddTransformation(lines, new TranslateTransform3D(value.Position));
-                if (value is Zone && ((Zone)value).Shape != ZoneShape.Sphere)
-                {
-                    ContentAnimator.AddTransformation(lines, new ScaleTransform3D(value.Scale, value.Position.ToPoint3D()));
-                    ContentAnimator.AddTransformation(lines, new RotateTransform3D(value.Rotation, value.Position.ToPoint3D()));
+                    Viewport.Title = GetTitle(value.Block.Block);
                 }
                 else
-                {
-                    ContentAnimator.AddTransformation(lines, new RotateTransform3D(value.Rotation, value.Position.ToPoint3D()));
-                    ContentAnimator.AddTransformation(lines, new ScaleTransform3D(value.Scale, value.Position.ToPoint3D()));
-                }
-
-                Selection = lines;
-                Viewport.Title = GetTitle(value.Block);
+                    Viewport.Title = string.Empty;
             }
+        }
+
+        private ModelVisual3D GetSelectionBox(ContentBase content)
+        {
+            WireLines lines = GetWireBox(content.GetMesh().Bounds);
+            lines.Transform = content.Model.Transform;
+
+            return lines;
         }
 
         private WireLines GetWireBox(Rect3D bounds)
@@ -166,21 +156,23 @@ namespace FreelancerModStudio.SystemPresenter
 
         public SystemPresenter(HelixView3D viewport)
         {
-            Objects = new List<ContentBase>();
+            Objects = new Table<int, ContentBase>();
             Viewport = viewport;
         }
 
         public void Show(TableData data)
         {
             LoadObjects(data);
-            //ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(2000));
+            ContentAnimator.AnimationDuration = new Duration(TimeSpan.Zero);
 
             ClearDisplay(false);
 
             foreach (ContentBase content in Objects)
             {
                 content.LoadModel();
-                Viewport.Add(content.Model);
+
+                if (content.Visibility)
+                    Viewport.Add(content.Model);
             }
 
             ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
@@ -223,6 +215,68 @@ namespace FreelancerModStudio.SystemPresenter
                 if (light || model != Lightning)
                     Viewport.Remove(model);
             }
+        }
+
+        public void UpdateValues(ContentBase content, TableBlock tableBlock)
+        {
+            SetValues(content, tableBlock);
+            content.SetDisplay(content.Position, content.Rotation, content.Scale);
+        }
+
+        private void SetValues(ContentBase content, TableBlock block)
+        {
+            int positionIndex = -1;
+            int rotationIndex = -1;
+            int scaleIndex = -1;
+
+            if (block.ObjectType == ContentType.LightSource)
+            {
+                positionIndex = (int)LightSourceOptionType.Position;
+                rotationIndex = (int)LightSourceOptionType.Rotation;
+            }
+            else if (block.ObjectType == ContentType.Zone)
+            {
+                positionIndex = (int)ZoneOptionType.Position;
+                rotationIndex = (int)ZoneOptionType.Rotation;
+                scaleIndex = (int)ZoneOptionType.Size;
+            }
+            else
+            {
+                positionIndex = (int)ObjectOptionType.Position;
+                rotationIndex = (int)ObjectOptionType.Rotation;
+            }
+
+            Vector3D position = new Vector3D(0, 0, 0);
+            Rotation3D rotation = new AxisAngleRotation3D(position, 0);
+            Vector3D scale = new Vector3D(1, 1, 1);
+            ZoneShape shape = ZoneShape.Box;
+
+            //get transformation of content
+            foreach (EditorINIOption option in block.Block.Options)
+            {
+                if (option.Values.Count > 0)
+                {
+                    if (option.TemplateIndex == positionIndex)
+                    {
+                        Vector3D tempPosition = ParseVector3D(option.Values[0].Value.ToString()) / 1000;
+                        position = new Vector3D(tempPosition.X, -tempPosition.Z, tempPosition.Y);
+                    }
+                    else if (option.TemplateIndex == rotationIndex)
+                        rotation = ParseRotation(option.Values[0].Value.ToString());
+                    else if (block.ObjectType == ContentType.Zone && option.TemplateIndex == (int)ZoneOptionType.Shape)
+                        shape = ParseShape(option.Values[0].Value.ToString());
+                    else if (option.TemplateIndex == scaleIndex)
+                        scale = ParseSize(option.Values[0].Value.ToString());
+                }
+            }
+
+            //set content values
+            if (block.ObjectType == ContentType.Zone)
+                ((Zone)content).Shape = shape;
+            else if (block.ObjectType != ContentType.LightSource)
+                scale = new Vector3D(block.Archtype.Radius, block.Archtype.Radius, block.Archtype.Radius) / 1000;
+
+            content.SetDisplay(position, rotation, scale);
         }
 
         private void LoadObjects(TableData data)
@@ -282,80 +336,15 @@ namespace FreelancerModStudio.SystemPresenter
 
         private ContentBase GetContent(TableBlock block)
         {
-            BlockType blockType = (BlockType)block.Block.TemplateIndex;
-
-            int positionIndex = -1;
-            int rotationIndex = -1;
-            int scaleIndex = -1;
-
-            ContentType type;
-            if (blockType == BlockType.LightSource)
-            {
-                type = ContentType.LightSource;
-
-                positionIndex = (int)LightSourceOptionType.Position;
-                rotationIndex = (int)LightSourceOptionType.Rotation;
-            }
-            else if (blockType == BlockType.Zone)
-            {
-                type = ContentType.Zone;
-
-                positionIndex = (int)ZoneOptionType.Position;
-                rotationIndex = (int)ZoneOptionType.Rotation;
-                scaleIndex = (int)ZoneOptionType.Size;
-            }
-            else
-            {
-                type = block.Archtype.Type;
-
-                positionIndex = (int)ObjectOptionType.Position;
-                rotationIndex = (int)ObjectOptionType.Rotation;
-            }
-
-            ContentBase content = GetContentFromType(type);
+            ContentBase content = GetContentFromType(block.ObjectType);
             if (content == null)
                 return null;
 
-            Vector3D position = new Vector3D(0, 0, 0);
-            Rotation3D rotation = null;
-            Vector3D scale = new Vector3D(1, 1, 1);
-            ZoneShape shape = ZoneShape.Box;
+            content.Visibility = block.Visibility;
+            content.ID = block.ID;
+            SetValues(content, block);
 
-            //get transformation of content
-            foreach (EditorINIOption option in block.Block.Options)
-            {
-                if (option.Values.Count > 0)
-                {
-                    if (option.TemplateIndex == positionIndex)
-                    {
-                        Vector3D tempPosition = ParseVector3D(option.Values[0].Value.ToString()) / 1000;
-                        position = new Vector3D(tempPosition.X, -tempPosition.Z, tempPosition.Y);
-                    }
-                    else if (option.TemplateIndex == rotationIndex)
-                        rotation = ParseRotation(option.Values[0].Value.ToString());
-                    else if (blockType == BlockType.Zone && option.TemplateIndex == (int)ZoneOptionType.Shape)
-                        shape = ParseShape(option.Values[0].Value.ToString());
-                    else if (option.TemplateIndex == scaleIndex)
-                        scale = ParseSize(option.Values[0].Value.ToString());
-                }
-            }
-
-            //set content
-            if (type == ContentType.Zone)
-                ((Zone)content).Shape = shape;
-            else if (type != ContentType.LightSource)
-                scale = new Vector3D(block.Archtype.Radius, block.Archtype.Radius, block.Archtype.Radius) / 1000;
-
-            if (position != content.Position)
-                content.Position = position;
-
-            if (rotation != null && rotation != content.Rotation)
-                content.Rotation = rotation;
-
-            if (scale != content.Scale)
-                content.Scale = scale;
-
-            content.Block = block.Block;
+            content.Block = block;
             return content;
         }
 
@@ -385,7 +374,7 @@ namespace FreelancerModStudio.SystemPresenter
             else if (occurances == 1)
             {
                 Vector tempScale = ParseVector(scale) / 1000;
-                return new Vector3D(tempScale.X, tempScale.Y, 1);
+                return new Vector3D(tempScale.X, 1, tempScale.Y);
             }
             else if (occurances == 2)
             {

@@ -49,13 +49,13 @@ namespace FreelancerModStudio
                 propertyGrid.SelectedObject = null;
         }
 
-        public void ShowData(EditorINIBlock[] blocks, int templateIndex)
+        public void ShowData(TableBlock[] blocks, int templateIndex)
         {
             List<PropertyBlock> propertyBlocks = new List<PropertyBlock>();
 
             //loop each selected block
-            foreach (EditorINIBlock block in blocks)
-                propertyBlocks.Add(new PropertyBlock(block, Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex]));
+            foreach (TableBlock block in blocks)
+                propertyBlocks.Add(new PropertyBlock(block.Block, Helper.Template.Data.Files[templateIndex].Blocks[block.Block.TemplateIndex]));
 
             propertyGrid.SelectedObjects = propertyBlocks.ToArray();
             propertyGrid.ExpandAllGridItems();

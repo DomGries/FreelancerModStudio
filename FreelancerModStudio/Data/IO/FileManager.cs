@@ -411,5 +411,10 @@ namespace FreelancerModStudio.Data.IO
             Value = value;
             SubOptions = subOptions;
         }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
     }
 }

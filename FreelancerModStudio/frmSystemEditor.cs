@@ -15,7 +15,7 @@ using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio
 {
-    public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface, DocumentInterface
+    public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface
     {
         SystemPresenter.SystemPresenter systemPresenter = null;
 
@@ -49,6 +49,7 @@ namespace FreelancerModStudio
 
         public void ShowData(TableData data)
         {
+            Clear();
             systemPresenter.Show(data);
         }
 
@@ -58,24 +59,32 @@ namespace FreelancerModStudio
             systemPresenter.Objects.Clear();
         }
 
-        public void Select(EditorINIBlock block)
+        public void Select(int id)
         {
-            foreach (ContentBase content in systemPresenter.Objects)
-            {
-                if (content.Block == block)
-                    systemPresenter.SelectedContent = content;
-            }
+            ContentBase content;
+            if (systemPresenter.Objects.TryGetValue(id, out content))
+                systemPresenter.SelectedContent = content;
         }
 
-        public void SetVisibility(EditorINIBlock[] blocks, bool value)
+        public void Deselect()
         {
-            foreach (EditorINIBlock block in blocks)
+            systemPresenter.SelectedContent = null;
+        }
+
+        public void SetVisibility(int id, bool value)
+        {
+            ContentBase content;
+            if (systemPresenter.Objects.TryGetValue(id, out content))
+                systemPresenter.SetVisibility(content, value);
+        }
+
+        public void SetValues(TableBlock[] blocks)
+        {
+            foreach (TableBlock block in blocks)
             {
-                foreach (ContentBase content in systemPresenter.Objects)
-                {
-                    if (content.Block == block)
-                        systemPresenter.SetVisibility(content, value);
-                }
+                ContentBase content;
+                if (systemPresenter.Objects.TryGetValue(block.ID, out content))
+                    systemPresenter.UpdateValues(content, block);
             }
         }
 
@@ -86,46 +95,6 @@ namespace FreelancerModStudio
 
         //    systemPresenter.Viewport.Status = status;
         //}
-
-        public bool CanSave()
-        {
-            return false;
-        }
-
-        public bool CanUndo()
-        {
-            return false;
-        }
-
-        public bool CanRedo()
-        {
-            return false;
-        }
-
-        public string GetTitle()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SaveAs()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Undo()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Redo()
-        {
-            throw new NotImplementedException();
-        }
 
         public bool CanCopy()
         {

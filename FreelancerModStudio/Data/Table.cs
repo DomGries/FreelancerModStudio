@@ -86,6 +86,11 @@ namespace FreelancerModStudio.Data
             }
         }
 
+        public void Clear()
+        {
+            dictionary.Clear();
+        }
+
         public IEnumerator<TValue> GetEnumerator()
         {
             return dictionary.Values.GetEnumerator();

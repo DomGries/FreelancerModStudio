@@ -5,81 +5,54 @@ using System.Text;
 using System.Windows.Media.Media3D;
 using HelixEngine;
 using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public abstract class ContentBase
+    public abstract class ContentBase : ITableRow<int>
     {
-        static Vector3D DefaultPosition = new Vector3D(0, 0, 0);
-        static Rotation3D DefaultRotation = new AxisAngleRotation3D(new Vector3D(0, 0, 0), 0);
-        static Vector3D DefaultScale = new Vector3D(1, 1, 1);
-
-        public EditorINIBlock Block { get; set; }
+        public int ID { get; set; }
+        public TableBlock Block { get; set; }
         public ModelVisual3D Model { get; set; }
         public bool Visibility { get; set; }
 
-        private Vector3D position;
-        public Vector3D Position
+        public Vector3D Position { get; set; }
+        public Rotation3D Rotation { get; set; }
+        public Vector3D Scale { get; set; }
+
+        public void SetDisplay(Vector3D position, Rotation3D rotation, Vector3D scale)
         {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                if (Model != null)
-                    ContentAnimator.AnimatePosition(Model, position, value);
-
-                position = value;
-
-                //if (Model != null)
-                //    ContentAnimator.AddTransformation(Model, new TranslateTransform3D(value));
-            }
+            SetDisplay(position, rotation, scale, false);
         }
 
-        private Rotation3D rotation;
-        public Rotation3D Rotation
+        private void SetDisplay(Vector3D position, Rotation3D rotation, Vector3D scale, bool always)
         {
-            get
+            if (Model == null)
             {
-                return rotation;
+                Position = position;
+                Rotation = rotation;
+                Scale = scale;
+                return;
             }
-            set
+
+            ContentAnimator.SetPosition(Model, Position, position, always);
+            if (this is Zone && ((Zone)this).Shape != ZoneShape.Sphere)
             {
-                if (Model != null)
-                    ContentAnimator.AnimateRotation(Model, rotation, value, Position);
-
-                rotation = value;
-
-                //if (Model != null)
-                //    ContentAnimator.AddTransformation(Model, new RotateTransform3D(value, Position.ToPoint3D()));
+                ContentAnimator.SetScale(Model, Scale, scale, position, always);
+                ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);
             }
-        }
-
-        private Vector3D scale;
-        public Vector3D Scale
-        {
-            get
+            else
             {
-                return scale;
-            }
-            set
-            {
-                if (Model != null)
-                    ContentAnimator.AnimateScale(Model, scale, value, Position);
-
-                scale = value;
-
-                //if (Model != null)
-                //    ContentAnimator.AddTransformation(Model, new ScaleTransform3D(value, Position.ToPoint3D()));
+                ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);
+                ContentAnimator.SetScale(Model, Scale, scale, position, always);
             }
         }
 
         public ContentBase()
         {
-            position = DefaultPosition;
-            rotation = DefaultRotation;
-            scale = DefaultScale;
+            Position = new Vector3D(0, 0, 0);
+            Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, 0), 0);
+            Scale = new Vector3D(1, 1, 1);
 
             Visibility = true;
         }
@@ -91,23 +64,7 @@ namespace FreelancerModStudio.SystemPresenter
         {
             Model = new ModelVisual3D() { Content = GetGeometry() };
 
-            if (Position != DefaultPosition)
-                ContentAnimator.AddTransformation(Model, new TranslateTransform3D(Position));
-
-            if (this is Zone && ((Zone)this).Shape != ZoneShape.Sphere)
-            {
-                if (Scale != DefaultScale)
-                    ContentAnimator.AddTransformation(Model, new ScaleTransform3D(Scale, Position.ToPoint3D()));
-                if (Rotation != DefaultRotation)
-                    ContentAnimator.AddTransformation(Model, new RotateTransform3D(Rotation, Position.ToPoint3D()));
-            }
-            else
-            {
-                if (Rotation != DefaultRotation)
-                    ContentAnimator.AddTransformation(Model, new RotateTransform3D(Rotation, Position.ToPoint3D()));
-                if (Scale != DefaultScale)
-                    ContentAnimator.AddTransformation(Model, new ScaleTransform3D(Scale, Position.ToPoint3D()));
-            }
+            SetDisplay(Position, Rotation, Scale, true);
         }
     }
 

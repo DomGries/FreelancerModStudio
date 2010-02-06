@@ -341,8 +341,6 @@ namespace HelixEngine.Wires
                     matxScreenToVisual.Invert();                // might not be possible !!!!!!
                     needRecalculation = true;
                 }
-                else
-                    throw new ApplicationException("Here's where the problem is");
 
             }
 

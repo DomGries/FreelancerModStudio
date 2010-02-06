@@ -117,6 +117,7 @@ namespace FreelancerModStudio.Data
         }
     }
 
+    [Serializable]
     public class ArchtypeInfo
     {
         public ContentType Type { get; set; }

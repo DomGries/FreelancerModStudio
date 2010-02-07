@@ -27,7 +27,7 @@ namespace FreelancerModStudio.SystemPresenter
 
     public static class SharedMaterials
     {
-        public static Material LightSource = MaterialHelper.CreateMaterial(Brushes.LightYellow);
+        public static Material LightSource = MaterialHelper.CreateMaterial(Brushes.Yellow);
         public static Material Sun = MaterialHelper.CreateMaterial(Brushes.Orange);
         public static Material Planet = MaterialHelper.CreateMaterial(Brushes.DeepSkyBlue);
         public static Material Station = MaterialHelper.CreateMaterial(Brushes.Blue);
@@ -48,7 +48,7 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public static MeshGeometry3D LightSource = GetMesh(new SphereMesh()
         {
-            Radius = 0.1,
+            Radius = 0.4,
             Slices = 18,
             Stacks = 9
         });

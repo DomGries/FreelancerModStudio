@@ -24,7 +24,7 @@ namespace FreelancerModStudio
         public delegate void DataChangedType(ChangedData data);
         public DataChangedType DataChanged;
 
-        public delegate void SelectionChangedType(TableBlock[] data, int templateIndex);
+        public delegate void SelectionChangedType(List<TableBlock> data, int templateIndex);
         public SelectionChangedType SelectionChanged;
 
         //public delegate void SelectedDataChangedType(TableBlock[] data, int templateIndex);
@@ -45,7 +45,7 @@ namespace FreelancerModStudio
                 this.DataChanged(data);
         }
 
-        private void OnSelectionChanged(TableBlock[] data, int templateIndex)
+        private void OnSelectionChanged(List<TableBlock> data, int templateIndex)
         {
             if (this.SelectionChanged != null)
                 this.SelectionChanged(data, templateIndex);
@@ -487,7 +487,7 @@ namespace FreelancerModStudio
             undoManager.Execute(new ChangedData() { NewBlocks = new List<TableBlock> { new TableBlock(id, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
         }
 
-        public TableBlock[] GetSelectedBlocks()
+        public List<TableBlock> GetSelectedBlocks()
         {
             if (objectListView1.SelectedObjects.Count == 0)
                 return null;
@@ -496,7 +496,7 @@ namespace FreelancerModStudio
             foreach (TableBlock tableData in objectListView1.SelectedObjects)
                 blocks.Add(tableData);
 
-            return blocks.ToArray();
+            return blocks;
         }
 
         public void SetBlocks(PropertyBlock[] blocks)
@@ -829,7 +829,7 @@ namespace FreelancerModStudio
 
         public void Select(TableBlock block)
         {
-            objectListView1.SelectedObject = block;
+            objectListView1.SelectedObjects = new List<TableBlock> { block };
             EnsureSelectionVisible();
         }
 

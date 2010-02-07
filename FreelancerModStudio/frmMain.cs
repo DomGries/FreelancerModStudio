@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
+using System.Text;
+using System.IO;
 
 namespace FreelancerModStudio
 {
@@ -138,7 +140,7 @@ namespace FreelancerModStudio
         {
         }
 
-        private void DefaultEditor_SelectedDataChanged(TableBlock[] data, int templateIndex)
+        private void DefaultEditor_SelectedDataChanged(List<TableBlock> data, int templateIndex)
         {
             if (data != null)
             {
@@ -150,13 +152,18 @@ namespace FreelancerModStudio
 
         private void DefaultEditor_DataChanged(ChangedData data)
         {
-            //if (systemEditor != null)
-            //{
-            //    systemEditor.ChangeData!
-            //}
+            if (systemEditor != null)
+            {
+                if (data.Type == ChangedType.Add)
+                    systemEditor.Add(data.NewBlocks);
+                else if (data.Type == ChangedType.Delete)
+                    systemEditor.Delete(data.NewBlocks);
+                else
+                    systemEditor.SetValues(data.NewBlocks);
+            }
         }
 
-        private void DefaultEditor_SelectionChanged(TableBlock[] data, int templateIndex)
+        private void DefaultEditor_SelectionChanged(List<TableBlock> data, int templateIndex)
         {
             if (data != null)
             {
@@ -397,10 +404,25 @@ namespace FreelancerModStudio
             }
         }
 
+        private string ShowSolarArchtypeSelector()
+        {
+            OpenFileDialog openFile = new OpenFileDialog();
+            openFile.Title = "Solar Archtype INI";
+            openFile.Filter = "Solar INI|*.ini";
+            if (openFile.ShowDialog() == DialogResult.OK)
+                return openFile.FileName;
+
+            return null;
+        }
+
         private frmTableEditor DisplayFile(string file, int templateIndex)
         {
-            string archtypeFile = @"D:\DAT\DWN\1.5b15-sdk_20050627\Solar\SolarArch.ini";
             int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Arch");
+            string archtypeFile = Helper.Archtype.GetRelativeArchtype(file, templateIndex, archtypeTemplate);
+
+            //user interaction required to get the path of the archtype file
+            if (archtypeFile == null)
+                archtypeFile = ShowSolarArchtypeSelector();
 
             frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
             defaultEditor.LoadArchtypes(archtypeFile, archtypeTemplate);
@@ -558,7 +580,7 @@ namespace FreelancerModStudio
                     systemEditor.ShowData(defaultEditor.Data);
 
                     //select initially
-                    TableBlock[] blocks = defaultEditor.GetSelectedBlocks();
+                    List<TableBlock> blocks = defaultEditor.GetSelectedBlocks();
                     if (blocks != null)
                         systemEditor.Select(blocks[0].ID);
                 }

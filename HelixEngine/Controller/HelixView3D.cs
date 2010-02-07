@@ -38,7 +38,6 @@ namespace HelixEngine
 
             // check performance
             // http://blogs.msdn.com/wpfsdk/archive/2007/01/15/maximizing-wpf-3d-performance-on-tier-2-hardware.aspx
-            // RenderOptions.EdgeMode
         }
 
         #region Viewport/Children/Camera access properties

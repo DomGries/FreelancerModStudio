@@ -69,12 +69,11 @@ namespace FreelancerModStudio.SystemPresenter
         public int CompareTo(ContentBase other)
         {
             //sort by object type, scale
-            //int objectTypeComparison = this.Block.ObjectType.CompareTo(other.Block.ObjectType);
-            //if (objectTypeComparison == 0)
-            //    return this.Scale.CompareTo(other.Scale);
+            int objectTypeComparison = this.Block.ObjectType.CompareTo(other.Block.ObjectType);
+            if (objectTypeComparison == 0)
+                return this.Scale.CompareTo(other.Scale);
 
-            //sort by scale
-            return this.Scale.CompareTo(other.Scale);
+            return objectTypeComparison;
         }
     }
 

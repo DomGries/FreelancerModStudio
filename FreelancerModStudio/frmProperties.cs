@@ -49,7 +49,7 @@ namespace FreelancerModStudio
                 propertyGrid.SelectedObject = null;
         }
 
-        public void ShowData(TableBlock[] blocks, int templateIndex)
+        public void ShowData(List<TableBlock> blocks, int templateIndex)
         {
             List<PropertyBlock> propertyBlocks = new List<PropertyBlock>();
 

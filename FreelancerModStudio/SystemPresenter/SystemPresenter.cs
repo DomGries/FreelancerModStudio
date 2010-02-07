@@ -118,7 +118,11 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void Show(TableData data)
         {
-            LoadObjects(data);
+            Add(data.Blocks);
+        }
+
+        public void RefreshDisplay()
+        {
             ContentAnimator.AnimationDuration = new Duration(TimeSpan.Zero);
 
             ClearDisplay(false);
@@ -126,15 +130,54 @@ namespace FreelancerModStudio.SystemPresenter
             List<ContentBase> objects = Objects.Values.ToList<ContentBase>();
             objects.Sort();
 
+            ShowObjects(objects);
+
+            ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
+        }
+
+        private void ShowObjects(List<ContentBase> objects)
+        {
             foreach (ContentBase content in objects)
             {
-                content.LoadModel();
+                if (content.Model == null)
+                    content.LoadModel();
 
                 if (content.Visibility)
                     Viewport.Add(content.Model);
             }
+        }
 
-            ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
+        public void Add(List<TableBlock> blocks)
+        {
+            foreach (TableBlock block in blocks)
+            {
+                ContentBase content = null;
+                if ((BlockType)block.Block.TemplateIndex == BlockType.Object)
+                    content = GetContent(block);
+                else if ((BlockType)block.Block.TemplateIndex == BlockType.LightSource)
+                    content = GetContent(block);
+                else if ((BlockType)block.Block.TemplateIndex == BlockType.Zone)
+                    content = GetContent(block);
+
+                if (content != null)
+                    Objects.Add(content);
+            }
+
+            //reload models and resort everything
+            RefreshDisplay();
+        }
+
+        public void Delete(List<TableBlock> blocks)
+        {
+            foreach (TableBlock block in blocks)
+            {
+                ContentBase content;
+                if (Objects.TryGetValue(block.ID, out content))
+                {
+                    Objects.Remove(content);
+                    Viewport.Remove(content.Model);
+                }
+            }
         }
 
         private void camera_SelectionChanged(DependencyObject visual)
@@ -242,19 +285,18 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void ClearDisplay(bool light)
         {
-            for (int i = Viewport.Children.Count - 1; i >= 0; i--)
+            if (light)
+                Viewport.Children.Clear();
+            else
             {
-                ModelVisual3D model = (ModelVisual3D)Viewport.Children[i];
-                if (light || model != Lightning)
-                    Viewport.Remove(model);
+                for (int i = Viewport.Children.Count - 1; i >= 0; i--)
+                {
+                    ModelVisual3D model = (ModelVisual3D)Viewport.Children[i];
+                    if (model != Lightning)
+                        Viewport.Remove(model);
+                }
             }
         }
-
-        //public void UpdateValues(ContentBase content, TableBlock tableBlock)
-        //{
-        //    SetValues(content, tableBlock);
-        //    //content.SetDisplay(content.Position, content.Rotation, content.Scale);
-        //}
 
         public void SetValues(ContentBase content, TableBlock block)
         {
@@ -310,27 +352,10 @@ namespace FreelancerModStudio.SystemPresenter
                 scale = new Vector3D(block.Archtype.Radius, block.Archtype.Radius, block.Archtype.Radius) / 1000;
 
             content.SetDisplay(position, rotation, scale);
-        }
 
-        private void LoadObjects(TableData data)
-        {
-            //Zone zone = new Zone() { Shape = ZoneShape.Cylinder };
-            //zone.LoadModel();
-            //Objects.Add(zone);
-            //return;
-            foreach (TableBlock block in data.Blocks)
-            {
-                ContentBase content = null;
-                if ((BlockType)block.Block.TemplateIndex == BlockType.Object)
-                    content = GetContent(block);
-                else if ((BlockType)block.Block.TemplateIndex == BlockType.LightSource)
-                    content = GetContent(block);
-                else if ((BlockType)block.Block.TemplateIndex == BlockType.Zone)
-                    content = GetContent(block);
-
-                if (content != null)
-                    Objects.Add(content);
-            }
+            //also update selection wire box
+            if (selectedContent == content)
+                Selection = GetSelectionBox(content);
         }
 
         private ContentBase GetContentFromType(ContentType type)

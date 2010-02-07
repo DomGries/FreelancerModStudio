@@ -15,7 +15,7 @@ namespace FreelancerModStudio.Data
         public ArchtypeInfo TypeOf(string archtype)
         {
             ArchtypeInfo info;
-            if (contentTable.TryGetValue(archtype, out info))
+            if (contentTable != null && contentTable.TryGetValue(archtype, out info))
                 return info;
 
             return null;
@@ -95,26 +95,29 @@ namespace FreelancerModStudio.Data
 
         public ArchtypeManager(string file, int templateIndex)
         {
-            FileManager fileManager = new FileManager(file);
-            EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, templateIndex);
-            TableData solarArch = new TableData(iniContent);
+            if (file != null)
+            {
+                FileManager fileManager = new FileManager(file);
+                EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, templateIndex);
+                TableData solarArch = new TableData(iniContent);
 
-            CreateContentTable(solarArch.Blocks);
+                CreateContentTable(solarArch.Blocks);
+            }
         }
+    }
 
-        enum SolarBlockType
-        {
-            Solar = 1,
-            Other
-        }
+    enum SolarBlockType
+    {
+        Solar = 1,
+        Other
+    }
 
-        enum SolarOptionType
-        {
-            Nickname = 18,
-            Radius = 25,
-            Type = 27,
-            Other
-        }
+    enum SolarOptionType
+    {
+        Nickname = 18,
+        Radius = 25,
+        Type = 27,
+        Other
     }
 
     [Serializable]

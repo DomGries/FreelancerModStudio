@@ -647,8 +647,11 @@ namespace HelixEngine
             {
                 case CameraMode.Inspect:
                     Point3D target = Camera.Position + Camera.LookDirection;
-                    Camera.LookDirection *= (1 + delta);
-                    Camera.Position = target - Camera.LookDirection;
+                    Vector3D lookDirection = Camera.LookDirection * (1 + delta);
+                    LookAt(target, lookDirection, 0);
+                    //Point3D target = Camera.Position + Camera.LookDirection;
+                    //Camera.LookDirection *= (1 + delta);
+                    //Camera.Position = target - Camera.LookDirection;
                     break;
                 case CameraMode.WalkAround:
                     Camera.Position -= Camera.LookDirection * delta;

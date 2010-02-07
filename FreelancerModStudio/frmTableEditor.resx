@@ -157,7 +157,7 @@
     <value>1</value>
   </data>
   <data name="mnuAdd.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Ctrl+E</value>
+    <value>Strg+E</value>
   </data>
   <data name="mnuAdd.Size" type="System.Drawing.Size, System.Drawing">
     <value>142, 22</value>
@@ -172,7 +172,7 @@
     <value>False</value>
   </data>
   <data name="mnuDelete.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
-    <value>Del</value>
+    <value>Entf</value>
   </data>
   <data name="mnuDelete.Size" type="System.Drawing.Size, System.Drawing">
     <value>142, 22</value>

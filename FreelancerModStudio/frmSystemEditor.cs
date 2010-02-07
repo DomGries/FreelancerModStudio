@@ -93,7 +93,7 @@ namespace FreelancerModStudio
                 systemPresenter.SetVisibility(content, value);
         }
 
-        public void SetValues(TableBlock[] blocks)
+        public void SetValues(List<TableBlock> blocks)
         {
             foreach (TableBlock block in blocks)
             {
@@ -101,6 +101,17 @@ namespace FreelancerModStudio
                 if (systemPresenter.Objects.TryGetValue(block.ID, out content))
                     systemPresenter.SetValues(content, block);
             }
+        }
+
+        public void Add(List<TableBlock> blocks)
+        {
+            systemPresenter.Add(blocks);
+            systemPresenter.RefreshDisplay();
+        }
+
+        public void Delete(List<TableBlock> blocks)
+        {
+            systemPresenter.Delete(blocks);
         }
 
         //void PositionUpdater_Tick(object sender, EventArgs e)

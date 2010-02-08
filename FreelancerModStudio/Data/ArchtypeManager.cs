@@ -28,7 +28,7 @@ namespace FreelancerModStudio.Data
 
             foreach (TableBlock block in blocks)
             {
-                if ((SolarBlockType)block.Block.TemplateIndex == SolarBlockType.Solar)
+                if (block.Block.Name.ToLower() == "solar")
                 {
                     ContentType type = ContentType.None;
                     string name = null;
@@ -36,20 +36,20 @@ namespace FreelancerModStudio.Data
 
                     foreach (EditorINIOption option in block.Block.Options)
                     {
-                        if ((SolarOptionType)option.TemplateIndex == SolarOptionType.Nickname)
+                        if (option.Values.Count > 0)
                         {
-                            if (option.Values.Count > 0)
-                                name = option.Values[0].Value.ToString();
-                        }
-                        else if ((SolarOptionType)option.TemplateIndex == SolarOptionType.Type)
-                        {
-                            if (option.Values.Count > 0)
-                                type = GetType(option.Values[0].Value.ToString());
-                        }
-                        else if ((SolarOptionType)option.TemplateIndex == SolarOptionType.Radius)
-                        {
-                            if (option.Values.Count > 0)
-                                radius = double.Parse(option.Values[0].Value.ToString(), usCulture);
+                            switch (option.Name.ToLower())
+                            {
+                                case "nickname":
+                                    name = option.Values[0].Value.ToString();
+                                    break;
+                                case "solar_radius":
+                                    radius = ParseRadius(option.Values[0].Value.ToString());
+                                    break;
+                                case "type":
+                                    type = ParseType(option.Values[0].Value.ToString());
+                                    break;
+                            }
                         }
                     }
 
@@ -59,7 +59,16 @@ namespace FreelancerModStudio.Data
             }
         }
 
-        private ContentType GetType(string type)
+        private double ParseRadius(string radius)
+        {
+            double value;
+            if (double.TryParse(radius, NumberStyles.Any, new CultureInfo("en-US", false), out value))
+                return value;
+
+            return 1;
+        }
+
+        private ContentType ParseType(string type)
         {
             type = type.ToLower();
 
@@ -88,7 +97,7 @@ namespace FreelancerModStudio.Data
             else if (type == "non_targetable")
                 return ContentType.Construct;
             else if (type == "airlock_gate")
-                return ContentType.JumpGate; //airlock_gate = jumpgate ??
+                return ContentType.JumpGate;
 
             return ContentType.None;
         }
@@ -106,20 +115,6 @@ namespace FreelancerModStudio.Data
         }
     }
 
-    enum SolarBlockType
-    {
-        Solar = 1,
-        Other
-    }
-
-    enum SolarOptionType
-    {
-        Nickname = 18,
-        Radius = 25,
-        Type = 27,
-        Other
-    }
-
     [Serializable]
     public class ArchtypeInfo
     {
@@ -130,39 +125,5 @@ namespace FreelancerModStudio.Data
         {
             return Type.ToString() + ", " + Radius.ToString();
         }
-    }
-
-    enum BlockType
-    {
-        LightSource = 10,
-        Object = 11,
-        Zone = 12,
-        Other
-    }
-
-    enum LightSourceOptionType
-    {
-        Color = 2,
-        Position = 6,
-        Rotation = 8,
-        Other
-    }
-
-    enum ObjectOptionType
-    {
-        Archtype = 2,
-        Position = 20,
-        Rotation = 24,
-        Other
-    }
-
-    enum ZoneOptionType
-    {
-        Position = 22,
-        Rotation = 28,
-        Shape = 29,
-        Size = 30,
-        Spin = 34,
-        Other
     }
 }

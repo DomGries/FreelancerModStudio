@@ -169,28 +169,33 @@ namespace FreelancerModStudio
 
         private void SetArchtype(TableBlock block, ArchtypeManager archtypeManager)
         {
-            BlockType blockType = (BlockType)block.Block.TemplateIndex;
-            if (blockType == BlockType.LightSource)
-                block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.LightSource;
-            else if (blockType == BlockType.Zone)
-                block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.Zone;
-            else
+            switch (block.Block.Name.ToLower())
             {
-                //get type of object based on archtype
-                foreach (EditorINIOption option in block.Block.Options)
-                {
-                    if ((ObjectOptionType)option.TemplateIndex == ObjectOptionType.Archtype)
-                    {
-                        if (option.Values.Count > 0)
-                        {
-                            block.Archtype = archtypeManager.TypeOf(option.Values[0].Value.ToString());
-                            if (block.Archtype != null)
-                                block.ObjectType = block.Archtype.Type;
+                case "lightsource":
+                    block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.LightSource;
+                    break;
+                case "zone":
+                    block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.Zone;
+                    break;
+                case "object":
 
-                            break;
+                    //get type of object based on archtype
+                    foreach (EditorINIOption option in block.Block.Options)
+                    {
+                        if (option.Name.ToLower() == "archetype")
+                        {
+                            if (option.Values.Count > 0)
+                            {
+                                block.Archtype = archtypeManager.TypeOf(option.Values[0].Value.ToString());
+                                if (block.Archtype != null)
+                                    block.ObjectType = block.Archtype.Type;
+
+                                break;
+                            }
                         }
                     }
-                }
+
+                    break;
             }
 
             if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)

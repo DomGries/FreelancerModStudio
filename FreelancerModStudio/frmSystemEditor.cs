@@ -65,7 +65,7 @@ namespace FreelancerModStudio
         public void ShowData(TableData data)
         {
             Clear();
-            systemPresenter.Show(data);
+            systemPresenter.Add(data.Blocks);
         }
 
         public void Clear()

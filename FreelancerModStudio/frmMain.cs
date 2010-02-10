@@ -404,28 +404,9 @@ namespace FreelancerModStudio
             }
         }
 
-        private string ShowSolarArchtypeSelector()
-        {
-            OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Title = "Solar Archtype INI";
-            openFile.Filter = "Solar INI|*.ini";
-            if (openFile.ShowDialog() == DialogResult.OK)
-                return openFile.FileName;
-
-            return null;
-        }
-
         private frmTableEditor DisplayFile(string file, int templateIndex)
         {
-            int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Arch");
-            string archtypeFile = Helper.Archtype.GetRelativeArchtype(file, templateIndex, archtypeTemplate);
-
-            //user interaction required to get the path of the archtype file
-            if (archtypeFile == null)
-                archtypeFile = ShowSolarArchtypeSelector();
-
             frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
-            defaultEditor.LoadArchtypes(archtypeFile, archtypeTemplate);
             defaultEditor.ShowData();
 
             defaultEditor.DataChanged += DefaultEditor_DataChanged;

@@ -104,9 +104,11 @@ namespace FreelancerModStudio.SystemPresenter
             Stacks = 5
         });
 
+        //public static MeshGeometry3D ZoneCylinder = GetMesh(new BoxMesh());
+
         public static MeshGeometry3D ZoneCylinder = GetMesh(new CylinderMesh()
         {
-            Slices = 9,
+            Slices = 4,
         });
 
         public static MeshGeometry3D Path = GetMesh(new SphereMesh()

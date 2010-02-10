@@ -120,7 +120,7 @@ namespace HelixEngine.Meshes
             // Begin at the top end. Fill the collections.
             for (int stack = 0; stack <= EndStacks; stack++)
             {
-                double y = Length;
+                double y = Length / 2;
                 double radius = stack * Radius / EndStacks;
                 int top = (stack + 0) * (Slices + 1);
                 int bot = (stack + 1) * (Slices + 1);
@@ -157,7 +157,7 @@ namespace HelixEngine.Meshes
             // Length of the cylinder: Fill in the collections.
             for (int stack = 0; stack <= Stacks; stack++)
             {
-                double y = Length - stack * Length / Stacks;
+                double y = Length - stack * Length / Stacks - Length / 2;
                 int top = offset + (stack + 0) * (Slices + 1);
                 int bot = offset + (stack + 1) * (Slices + 1);
 
@@ -190,7 +190,7 @@ namespace HelixEngine.Meshes
             // Finish with the bottom end. Fill the collections.
             for (int stack = 0; stack <= EndStacks; stack++)
             {
-                double y = 0;
+                double y = -Length / 2;
                 double radius = (EndStacks - stack) * Radius / EndStacks;
                 int top = offset + (stack + 0) * (Slices + 1);
                 int bot = offset + (stack + 1) * (Slices + 1);

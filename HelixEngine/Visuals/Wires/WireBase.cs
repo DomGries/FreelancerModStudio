@@ -48,7 +48,7 @@ namespace HelixEngine.Wires
             GeometryModel3D model = new GeometryModel3D(mesh, matgrp);
 
             // Remove this later
-            model.BackMaterial = new DiffuseMaterial(Brushes.Red);
+            //model.BackMaterial = new DiffuseMaterial(Brushes.Red);
 
             // Set the Content property to the GeometryModel3D.
             Content = model;

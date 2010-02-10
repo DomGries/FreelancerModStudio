@@ -12,6 +12,7 @@ namespace FreelancerModStudio.SystemPresenter
     public abstract class ContentBase : IComparable<ContentBase>, ITableRow<int>
     {
         public int ID { get; set; }
+        //public int ModelIndex { get; set; }
         public TableBlock Block { get; set; }
         public ModelVisual3D Model { get; set; }
         public bool Visibility { get; set; }
@@ -29,14 +30,14 @@ namespace FreelancerModStudio.SystemPresenter
         {
             if (Model != null)
             {
-                ContentAnimator.SetScale(Model, Scale, scale, position, always);
 
                 //if (this is Zone && ((Zone)this).Shape != ZoneShape.Sphere)
                 //    ContentAnimator.SetRotation(Model, Rotation, rotation, new Vector3D(Position.X - Scale.X / 2, Position.Y - Scale.Y / 2, Position.Z - Scale.Z / 2), always);
                 //else
-                ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);
 
                 ContentAnimator.SetPosition(Model, Position, position, always);
+                ContentAnimator.SetScale(Model, Scale, scale, position, always);
+                ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);
             }
 
             Position = position;

@@ -158,10 +158,28 @@ namespace FreelancerModStudio
             objectListView1.Refresh();
         }
 
-        public void LoadArchtypes(string file, int templateIndex)
+        private string ShowSolarArchtypeSelector()
         {
+            OpenFileDialog openFile = new OpenFileDialog();
+            openFile.Title = "Open Solar Archtype INI";
+            openFile.Filter = "Solar Archtype INI|*.ini";
+            if (openFile.ShowDialog() == DialogResult.OK)
+                return openFile.FileName;
+
+            return null;
+        }
+
+        public void LoadArchtypes()
+        {
+            int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Arch");
+            string archtypeFile = Helper.Archtype.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
+
+            //user interaction required to get the path of the archtype file
+            if (archtypeFile == null)
+                archtypeFile = ShowSolarArchtypeSelector();
+
             if (Helper.Archtype.ArchtypeManager == null)
-                Helper.Archtype.LoadArchtypes(file, templateIndex);
+                Helper.Archtype.LoadArchtypes(archtypeFile, archtypeTemplate);
 
             foreach (TableBlock block in Data.Blocks)
                 SetArchtype(block, Helper.Archtype.ArchtypeManager);
@@ -204,11 +222,15 @@ namespace FreelancerModStudio
 
         public void ShowData()
         {
+            bool isSystem = Data.TemplateIndex == Helper.Template.Data.Files.IndexOf("System");
+            if (isSystem)
+                LoadArchtypes();
+
 #if DEBUG
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
             st.Start();
 #endif
-            AddColumns();
+            AddColumns(isSystem);
 
             //sort by type and name
             Data.Blocks.Sort();
@@ -229,12 +251,11 @@ namespace FreelancerModStudio
 #endif
         }
 
-        private void AddColumns()
+        private void AddColumns(bool isSystem)
         {
             //clear all items and columns
             objectListView1.Clear();
 
-            bool isSystem = Data.TemplateIndex == Helper.Template.Data.Files.IndexOf("System");
             objectListView1.CheckBoxes = isSystem;
 
             OLVColumn[] cols =
@@ -396,16 +417,17 @@ namespace FreelancerModStudio
             return false;
         }
 
-        private void AddBlocks(List<TableBlock> blocks)
+        private void AddBlocks(List<TableBlock> blocks, int undoBlock, bool undo)
         {
-            List<ChangedData> overwrittenData = new List<ChangedData>();
-
             List<TableBlock> selectedData = new List<TableBlock>();
             for (int i = 0; i < blocks.Count; i++)
             {
                 Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[blocks[i].Block.TemplateIndex];
                 TableBlock tableBlock = blocks[i];
-                tableBlock.Modified = TableModified.Changed;
+
+                //set block to be modified except in is undo mode
+                if (!undo)
+                    tableBlock.Modified = TableModified.Changed;
 
                 //set archtype of block
                 if (tableBlock.Archtype == null)
@@ -418,17 +440,16 @@ namespace FreelancerModStudio
                 {
                     for (int j = 0; j < Data.Blocks.Count; j++)
                     {
+                        //block already exists
                         if (Data.Blocks[j].Block.TemplateIndex == blocks[i].Block.TemplateIndex)
                         {
-                            //block already exists
-                            //undoManager.CurrentData[0].NewBlocks.RemoveAt(i - overwrittenData.Count);
-
-                            overwrittenData.Add(new ChangedData()
+                            //overwrite data if we add blocks which are single then they are overwritten which means they have to be changed to edit in the undo history
+                            undoManager.CurrentData[undoBlock] = new ChangedData()
                             {
                                 Type = ChangedType.Edit,
                                 OldBlocks = new List<TableBlock>() { Data.Blocks[j] },
                                 NewBlocks = new List<TableBlock>() { tableBlock },
-                            });
+                            };
 
                             //overwrite block
                             Data.Blocks[j] = tableBlock;
@@ -440,22 +461,10 @@ namespace FreelancerModStudio
                 }
 
                 if (!existSingle)
-                {
                     Data.Blocks.Add(blocks[i]);
-
-                    overwrittenData.Add(new ChangedData()
-                    {
-                        Type = ChangedType.Add,
-                        NewBlocks = new List<TableBlock>() { tableBlock }
-                    });
-                }
 
                 selectedData.Add(tableBlock);
             }
-
-            //overwrite data if we add blocks which are single then they are overwritten which means they have to be changed to edit in the undo history
-            //undoManager.CurrentData.AddRange(overwrittenData);
-            undoManager.CurrentData = overwrittenData;
 
             Data.Blocks.Sort();
 
@@ -808,28 +817,29 @@ namespace FreelancerModStudio
             undoManager.Redo(1);
         }
 
-        private void ExecuteDataChanged(ChangedData data)
+        private void ExecuteDataChanged(ChangedData data, int undoBlock, bool undo)
         {
             if (data.Type == ChangedType.Add)
-                AddBlocks(data.NewBlocks);
+                AddBlocks(data.NewBlocks, undoBlock, undo);
             else if (data.Type == ChangedType.Delete)
                 DeleteBlocks(data.NewBlocks);
             else if (data.Type == ChangedType.Edit)
                 ChangeBlocks(data.NewBlocks, data.OldBlocks);
 
-            OnDocumentChanged((DocumentInterface)this);
             OnDataChanged(data);
         }
 
         private void UndoManager_DataChanged(List<ChangedData> data, bool undo)
         {
-            foreach (ChangedData change in data)
+            for (int i = 0; i < data.Count; i++)
             {
                 if (undo)
-                    ExecuteDataChanged(change.GetUndoData());
+                    ExecuteDataChanged(data[i].GetUndoData(), i, undo);
                 else
-                    ExecuteDataChanged(change);
+                    ExecuteDataChanged(data[i], i, undo);
             }
+
+            OnDocumentChanged((DocumentInterface)this);
         }
 
         public void Select(TableBlock block)

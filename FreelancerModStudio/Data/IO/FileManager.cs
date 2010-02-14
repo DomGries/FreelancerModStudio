@@ -60,7 +60,7 @@ namespace FreelancerModStudio.Data.IO
             return GetEditorData(iniData, templateFileIndex); ;
         }
 
-        private EditorINIData GetEditorData(INIBlocks iniData, int templateFileIndex)
+        EditorINIData GetEditorData(INIBlocks iniData, int templateFileIndex)
         {
 #if DEBUG
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
@@ -166,7 +166,7 @@ namespace FreelancerModStudio.Data.IO
             return editorData;
         }
 
-        private INIBlocks ReadINI()
+        INIBlocks ReadINI()
         {
             IsBini = false;
             INIManager iniManager = new INIManager(File);
@@ -253,7 +253,7 @@ namespace FreelancerModStudio.Data.IO
             return -1;
         }
 
-        private object ConvertToTemplate(Template.OptionType type, string value)
+        object ConvertToTemplate(Template.OptionType type, string value)
         {
             try
             {
@@ -294,7 +294,7 @@ namespace FreelancerModStudio.Data.IO
             return value;
         }
 
-        private object ConvertToArray(ArrayType type, string value)
+        object ConvertToArray(ArrayType type, string value)
         {
             string[] arrayValues = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 

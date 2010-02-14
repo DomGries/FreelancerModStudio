@@ -26,7 +26,7 @@ namespace FreelancerModStudio.SystemPresenter
             SetDisplay(position, rotation, scale, false);
         }
 
-        private void SetDisplay(Vector3D position, Rotation3D rotation, Vector3D scale, bool always)
+        void SetDisplay(Vector3D position, Rotation3D rotation, Vector3D scale, bool always)
         {
             if (Model != null)
             {

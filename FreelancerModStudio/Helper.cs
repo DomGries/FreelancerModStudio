@@ -96,8 +96,8 @@ namespace FreelancerModStudio
 
         public struct Template
         {
-            private static FreelancerModStudio.Data.Template data;
-            private static int selectedLanguage = -1;
+            static FreelancerModStudio.Data.Template data;
+            static int selectedLanguage = -1;
 
             public static void Load()
             {
@@ -295,7 +295,7 @@ namespace FreelancerModStudio
                 MessageBox.Show(Get(exception), Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            private static string Get(Exception exception)
+            static string Get(Exception exception)
             {
                 System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder(exception.Message);
 

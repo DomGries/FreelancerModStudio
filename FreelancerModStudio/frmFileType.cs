@@ -10,7 +10,7 @@ namespace FreelancerModStudio
 {
     public partial class frmFileType : Form
     {
-        public int FileTypeIndex { get; private set; }
+        public int FileTypeIndex { get; set; }
 
         public frmFileType(string filePath)
         {
@@ -41,7 +41,7 @@ namespace FreelancerModStudio
                 fileTypeComboBox.SelectedIndex = 0;
         }
 
-        private void frmFileType_FormClosed(object sender, FormClosedEventArgs e)
+        void frmFileType_FormClosed(object sender, FormClosedEventArgs e)
         {
             FileTypeIndex = ((FileTypeItem)fileTypeComboBox.SelectedItem).Index;
             Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType = fileTypeComboBox.SelectedIndex;

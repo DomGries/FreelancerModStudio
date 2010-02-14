@@ -20,7 +20,7 @@ namespace FreelancerModStudio.SystemPresenter
         public Table<int, ContentBase> Objects { get; set; }
         public HelixView3D Viewport { get; set; }
 
-        private ModelVisual3D lightning;
+        ModelVisual3D lightning;
         public ModelVisual3D Lightning
         {
             get
@@ -44,7 +44,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        private ModelVisual3D selection;
+        ModelVisual3D selection;
         public ModelVisual3D Selection
         {
             get
@@ -68,7 +68,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        private ContentBase selectedContent;
+        ContentBase selectedContent;
         public ContentBase SelectedContent
         {
             get
@@ -82,7 +82,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        private void SetSelectedContent(ContentBase content)
+        void SetSelectedContent(ContentBase content)
         {
             selectedContent = content;
 
@@ -107,7 +107,7 @@ namespace FreelancerModStudio.SystemPresenter
         public delegate void SelectionChangedType(ContentBase content);
         public SelectionChangedType SelectionChanged;
 
-        private void OnSelectionChanged(ContentBase content)
+        void OnSelectionChanged(ContentBase content)
         {
             if (this.SelectionChanged != null)
                 this.SelectionChanged(content);
@@ -134,7 +134,7 @@ namespace FreelancerModStudio.SystemPresenter
             ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
-        private void ShowObjects(List<ContentBase> objects)
+        void ShowObjects(List<ContentBase> objects)
         {
             //int index = 0;
             foreach (ContentBase content in objects)
@@ -181,7 +181,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        private void camera_SelectionChanged(DependencyObject visual)
+        void camera_SelectionChanged(DependencyObject visual)
         {
             ModelVisual3D model = (ModelVisual3D)visual;
             foreach (ContentBase content in Objects)
@@ -195,7 +195,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        private ModelVisual3D GetSelectionBox(ContentBase content)
+        ModelVisual3D GetSelectionBox(ContentBase content)
         {
             WireLines lines = GetWireBox(content.GetMesh().Bounds);
             lines.Transform = content.Model.Transform;
@@ -203,7 +203,7 @@ namespace FreelancerModStudio.SystemPresenter
             return lines;
         }
 
-        private WireLines GetWireBox(Rect3D bounds)
+        WireLines GetWireBox(Rect3D bounds)
         {
             Point3DCollection points = new Point3DCollection();
             points.Add(new Point3D(bounds.X, bounds.Y, bounds.Z));
@@ -245,7 +245,7 @@ namespace FreelancerModStudio.SystemPresenter
             return new WireLines() { Lines = points, Color = Colors.Yellow, Thickness = 2 };
         }
 
-        private string GetTitle(EditorINIBlock block)
+        string GetTitle(EditorINIBlock block)
         {
             if (block.Options.Count > block.MainOptionIndex)
             {
@@ -294,7 +294,7 @@ namespace FreelancerModStudio.SystemPresenter
             SetValues(content, block);
         }
 
-        private void SetValues(ContentBase content, TableBlock block)
+        void SetValues(ContentBase content, TableBlock block)
         {
             string positionString = "0,0,0";
             string rotationString = "0,0,0";
@@ -357,7 +357,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        private ContentBase GetContentFromType(ContentType type)
+        ContentBase GetContentFromType(ContentType type)
         {
             if (type == ContentType.LightSource)
                 return new LightSource();
@@ -391,7 +391,7 @@ namespace FreelancerModStudio.SystemPresenter
             return null;
         }
 
-        private ContentBase GetContent(TableBlock block)
+        ContentBase GetContent(TableBlock block)
         {
             ContentBase content = GetContentFromType(block.ObjectType);
             if (content == null)
@@ -405,7 +405,7 @@ namespace FreelancerModStudio.SystemPresenter
             return content;
         }
 
-        private double ParseDouble(string text, double defaultValue)
+        double ParseDouble(string text, double defaultValue)
         {
             double value;
             if (double.TryParse(text, NumberStyles.Any, new CultureInfo("en-US", false), out value))
@@ -414,7 +414,7 @@ namespace FreelancerModStudio.SystemPresenter
             return defaultValue;
         }
 
-        private Vector3D ParseScale(string scale, ZoneShape shape)
+        Vector3D ParseScale(string scale, ZoneShape shape)
         {
             string[] values = scale.Split(new char[] { ',' });
 
@@ -440,7 +440,7 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(1, 1, 1);
         }
 
-        private Rotation3D ParseRotation(string vector, bool localTransform)
+        Rotation3D ParseRotation(string vector, bool localTransform)
         {
             Vector3D tempRotation = ParseVector(vector);
             Vector3D factor = new Vector3D(GetFactor(tempRotation.X), GetFactor(tempRotation.Y), GetFactor(tempRotation.Z));
@@ -470,21 +470,21 @@ namespace FreelancerModStudio.SystemPresenter
             return new AxisAngleRotation3D(new Vector3D(0, 0, 0), 0);
         }
 
-        private double GetFactor(double number)
+        double GetFactor(double number)
         {
             if (number < 0)
                 return -1;
             return 1;
         }
 
-        private double GetPositive(double number)
+        double GetPositive(double number)
         {
             if (number < 0)
                 return number * -1;
             return number;
         }
 
-        private ZoneShape ParseShape(string shape)
+        ZoneShape ParseShape(string shape)
         {
             shape = shape.ToLower();
             if (shape == "box")
@@ -497,7 +497,7 @@ namespace FreelancerModStudio.SystemPresenter
                 return ZoneShape.Ellipsoid;
         }
 
-        private Vector3D ParseVector(string vector)
+        Vector3D ParseVector(string vector)
         {
             //User Vector3D.Parse after implementation of type handling
             string[] values = vector.Split(new char[] { ',' });
@@ -511,7 +511,7 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(0, 0, 0);
         }
 
-        private Vector3D ParsePosition(string vector)
+        Vector3D ParsePosition(string vector)
         {
             Vector3D tempVector = ParseVector(vector);
             return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y) / 1000;

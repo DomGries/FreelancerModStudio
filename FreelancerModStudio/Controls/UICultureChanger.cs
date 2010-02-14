@@ -80,7 +80,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Encapsulates all information needed to apply localized resources to a form or field.
     /// </summary>
-    private class ChangeInfo
+    class ChangeInfo
     {
         #region instance fields
         /// <summary>
@@ -94,7 +94,7 @@ public class UICultureChanger : Component
         /// <summary>
         /// Stores the name of the form or field.
         /// </summary>
-        private string name;
+        string name;
 
         /// <summary>
         /// Gets the instance of the form or field.
@@ -107,7 +107,7 @@ public class UICultureChanger : Component
         /// <summary>
         /// Stores the instance of the form or field.
         /// </summary>
-        private object value;
+        object value;
 
         /// <summary>
         /// Gets the <see cref="Type"/> object of the form or field.
@@ -120,7 +120,7 @@ public class UICultureChanger : Component
         /// <summary>
         /// Stores the <see cref="Type"/> object of the form or field.
         /// </summary>
-        private Type type;
+        Type type;
         #endregion
 
         #region construction
@@ -144,7 +144,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a collection of <see cref="Form"/> objects whose UI culture will be changed.
     /// </summary>
-    private List<Form> forms;
+    List<Form> forms;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized Text values are applied when changing the UI culture.
@@ -161,7 +161,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a value indicating whether localized Text values are applied when changing the UI culture.
     /// </summary>
-    private bool applyText;
+    bool applyText;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized Size values are applied when changing the UI culture.
@@ -178,7 +178,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a value indicating whether localized Size values are applied when changing the UI culture.
     /// </summary>
-    private bool applySize;
+    bool applySize;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized Location values are applied when changing the UI culture.
@@ -195,7 +195,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a value indicating whether localized Location values are applied when changing the UI culture.
     /// </summary>
-    private bool applyLocation;
+    bool applyLocation;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized RightToLeft values are applied when changing the UI culture.
@@ -212,7 +212,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a value indicating whether localized RightToLeft values are applied when changing the UI culture.
     /// </summary>
-    private bool applyRightToLeft;
+    bool applyRightToLeft;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized RightToLeftLayout values are applied when changing the UI culture.
@@ -229,7 +229,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a value indicating whether localized RightToLeftLayout values are applied when changing the UI culture.
     /// </summary>
-    private bool applyRightToLeftLayout;
+    bool applyRightToLeftLayout;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized ToolTip values are applied when changing the UI culture.
@@ -246,7 +246,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a value indicating whether localized ToolTip values are applied when changing the UI culture.
     /// </summary>
-    private bool applyToolTip;
+    bool applyToolTip;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized Help values are applied when changing the UI culture.
@@ -263,7 +263,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a value indicating whether localized Help values are applied when changing the UI culture.
     /// </summary>
-    private bool applyHelp;
+    bool applyHelp;
 
     /// <summary>
     /// Gets or sets a value indicating whether the Size values of forms remain unchanged when changing the UI culture.
@@ -283,7 +283,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a value indicating whether the Size values of forms remain unchanged when changing the UI culture.
     /// </summary>
-    private bool preserveFormSize;
+    bool preserveFormSize;
 
     /// <summary>
     /// Gets or sets a value indicating whether the Location values of forms remain unchanged when changing the UI culture.
@@ -303,7 +303,7 @@ public class UICultureChanger : Component
     /// <summary>
     /// Stores a value indicating whether the Location values of forms remain unchanged when changing the UI culture.
     /// </summary>
-    private bool preserveFormLocation;
+    bool preserveFormLocation;
     #endregion
 
     #region construction, deconstruction
@@ -391,7 +391,7 @@ public class UICultureChanger : Component
     /// </summary>
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">A <see cref="FormClosedEventArgs"/> object that contains the event data.</param>
-    private void Form_FormClosed(object sender, FormClosedEventArgs e)
+    void Form_FormClosed(object sender, FormClosedEventArgs e)
     {
         Form form = sender as Form;
         if (form != null)
@@ -421,7 +421,7 @@ public class UICultureChanger : Component
     ///   <see cref="Thread.CurrentUICulture"/>.
     /// </summary>
     /// <param name="form">The <see cref="Form"/> object to which changed UI culture should be applied.</param>
-    private void ApplyCultureToForm(Form form)
+    void ApplyCultureToForm(Form form)
     {
         // Create a resource manager for the form and determine its fields via reflection.
         // Create and fill a collection, containing all infos needed to apply localized resources.

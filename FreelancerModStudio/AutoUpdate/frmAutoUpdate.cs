@@ -17,12 +17,12 @@ namespace FreelancerModStudio.AutoUpdate
             this.Icon = Properties.Resources.LogoIcon;
         }
 
-        private PageType mCurrentPage = PageType.Checking;
+        PageType mCurrentPage = PageType.Checking;
 
         public delegate void ActionRequiredType(ActionType value);
         public ActionRequiredType ActionRequired;
 
-        private void OnAction(ActionType action)
+        void OnAction(ActionType action)
         {
             if (this.ActionRequired != null)
                 this.ActionRequired(action);
@@ -129,12 +129,12 @@ namespace FreelancerModStudio.AutoUpdate
             this.Text = String.Format(Properties.Strings.UpdatesFormDownloadText, percent);
         }
 
-        private void btnAbort_Click(object sender, EventArgs e)
+        void btnAbort_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void btnNext_Click(object sender, EventArgs e)
+        void btnNext_Click(object sender, EventArgs e)
         {
             switch (this.mCurrentPage)
             {
@@ -155,7 +155,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        private void frmAutoUpdate_FormClosing(object sender, FormClosingEventArgs e)
+        void frmAutoUpdate_FormClosing(object sender, FormClosingEventArgs e)
         {
             if ((this.mCurrentPage == PageType.Checking || this.mCurrentPage == PageType.Downloading))
                 this.OnAction(ActionType.Abort);

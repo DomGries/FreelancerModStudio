@@ -8,17 +8,17 @@ namespace FreelancerModStudio.AutoUpdate
 {
     public class AutoUpdate
     {
-        private Uri mUpdateFileUri;
+        Uri mUpdateFileUri;
         public Uri CheckFileUri { get; set; }
 
-        private bool mSilentSetup;
+        bool mSilentSetup;
         public bool SilentDownload { get; set; }
         public bool SilentCheck { get; set; }
-        private StatusType mStatus = StatusType.Waiting;
+        StatusType mStatus = StatusType.Waiting;
 
-        private WebClient mWebClient;
+        WebClient mWebClient;
 
-        private frmAutoUpdate mUpdaterForm;
+        frmAutoUpdate mUpdaterForm;
 
         public event EventHandler<CancelEventArgs> RestartingApplication;
 
@@ -28,8 +28,8 @@ namespace FreelancerModStudio.AutoUpdate
                 this.RestartingApplication(this, e);
         }
 
-        private delegate void ProgressChangedInvoker(long bytes, long bytesTotal, int percent);
-        private delegate void SetStatusInvoker(PageType status);
+        delegate void ProgressChangedInvoker(long bytes, long bytesTotal, int percent);
+        delegate void SetStatusInvoker(PageType status);
 
         public AutoUpdate()
         {
@@ -84,7 +84,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        private void UpdateAviable(bool value)
+        void UpdateAviable(bool value)
         {
             if (value)
             {
@@ -104,7 +104,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        private void SetPage(PageType value, bool wait)
+        void SetPage(PageType value, bool wait)
         {
             if (this.mUpdaterForm == null || this.mUpdaterForm.IsDisposed || !this.mUpdaterForm.IsHandleCreated)
             {
@@ -121,7 +121,7 @@ namespace FreelancerModStudio.AutoUpdate
                 this.mUpdaterForm.Invoke(new SetStatusInvoker(this.mUpdaterForm.SetPage), value);
         }
 
-        private bool IsNewer(string fileContent)
+        bool IsNewer(string fileContent)
         {
             try
             {
@@ -155,7 +155,7 @@ namespace FreelancerModStudio.AutoUpdate
             return false;
         }
 
-        private void DownloadUpdate()
+        void DownloadUpdate()
         {
             this.mStatus = StatusType.Downloading;
 
@@ -177,7 +177,7 @@ namespace FreelancerModStudio.AutoUpdate
             this.mWebClient.DownloadFileAsync(this.mUpdateFileUri, destFile);
         }
 
-        private void Download_CheckFile_Completed(object sender, DownloadStringCompletedEventArgs e)
+        void Download_CheckFile_Completed(object sender, DownloadStringCompletedEventArgs e)
         {
             //delete event handlers
             this.mWebClient.DownloadStringCompleted -= new DownloadStringCompletedEventHandler(this.Download_CheckFile_Completed);
@@ -204,7 +204,7 @@ namespace FreelancerModStudio.AutoUpdate
                 this.mStatus = StatusType.Waiting;
         }
 
-        private void Download_Update_Completed(object sender, AsyncCompletedEventArgs e)
+        void Download_Update_Completed(object sender, AsyncCompletedEventArgs e)
         {
             //delete event handlers
             this.mWebClient.DownloadProgressChanged -= new DownloadProgressChangedEventHandler(this.Download_Update_ProgressChanged);
@@ -236,18 +236,18 @@ namespace FreelancerModStudio.AutoUpdate
                 this.mStatus = StatusType.UpdateAviable;
         }
 
-        private void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             if (!this.SilentDownload && this.mUpdaterForm != null && !this.mUpdaterForm.IsDisposed && this.mUpdaterForm.IsHandleCreated)
                 this.mUpdaterForm.BeginInvoke(new ProgressChangedInvoker(this.mUpdaterForm.ChangeProgress), new object[] { e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage });
         }
 
-        private void Abort()
+        void Abort()
         {
             this.mWebClient.CancelAsync();
         }
 
-        private void AutoUpdateForm_ActionRequired(ActionType action)
+        void AutoUpdateForm_ActionRequired(ActionType action)
         {
             switch (action)
             {

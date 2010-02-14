@@ -8,15 +8,15 @@ namespace FreelancerModStudio
 {
     public sealed class StringLogicalComparer : IComparer
     {
-        private static readonly IComparer _default = new StringLogicalComparer();
-        private static readonly IComparer _defaultZeroesFirst = new StringLogicalComparer(true);
-        private bool zeroesFirst = false;
+        static readonly IComparer _default = new StringLogicalComparer();
+        static readonly IComparer _defaultZeroesFirst = new StringLogicalComparer(true);
+        bool zeroesFirst = false;
 
-        private StringLogicalComparer()
+        StringLogicalComparer()
         {
         }
 
-        private StringLogicalComparer(bool zeroesFirst)
+        StringLogicalComparer(bool zeroesFirst)
 		{
 			this.zeroesFirst = zeroesFirst;
 		}
@@ -142,7 +142,7 @@ namespace FreelancerModStudio
             }
         }
 
-        private static int CompareNumbers(
+        static int CompareNumbers(
             string s1, int s1Length, ref int i1,
             string s2, int s2Length, ref int i2,
             bool zeroesFirst)
@@ -188,7 +188,7 @@ namespace FreelancerModStudio
             return 1;
         }
 
-        private static void ScanNumber(string s, int length, int start, ref int nzStart, ref int end)
+        static void ScanNumber(string s, int length, int start, ref int nzStart, ref int end)
         {
             nzStart = start;
             end = start;

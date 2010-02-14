@@ -32,9 +32,9 @@
                 <ControlTemplate TargetType="{x:Type local:HelixView3D}">
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}" Focusable="True">
                         <Grid>
-                            <AdornerDecorator x:Name="PART_AdornerLayer" DataContext="{TemplateBinding DataContext}" Focusable="True">
+                            <AdornerDecorator x:Name="PART_AdornerLayer" DataContext="{TemplateBinding DataContext}">
                                 <!-- the main viewport3D is inserted here -->
                             </AdornerDecorator>
 

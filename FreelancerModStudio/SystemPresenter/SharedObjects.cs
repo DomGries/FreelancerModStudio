@@ -80,6 +80,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static MeshGeometry3D JumpHole = GetMesh(new CylinderMesh()
         {
+            Radius = 0.5,
             Length = 0.25,
         });
 
@@ -87,6 +88,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static MeshGeometry3D DockingRing = GetMesh(new CylinderMesh()
         {
+            Radius = 0.5,
             Length = 0.25,
         });
 
@@ -104,12 +106,16 @@ namespace FreelancerModStudio.SystemPresenter
             Stacks = 5
         });
 
-        //public static MeshGeometry3D ZoneCylinder = GetMesh(new BoxMesh());
-
-        public static MeshGeometry3D ZoneCylinder = GetMesh(new CylinderMesh()
+        public static MeshGeometry3D ZoneCylinder = GetMesh(new BoxMesh()
         {
-            Slices = 4,
+            //Width = 2,
+            //Depth = 2,
         });
+
+        //public static MeshGeometry3D ZoneCylinder = GetMesh(new CylinderMesh()
+        //{
+        //    Slices = 4,
+        //});
 
         public static MeshGeometry3D Path = GetMesh(new SphereMesh()
         {
@@ -117,7 +123,7 @@ namespace FreelancerModStudio.SystemPresenter
             Stacks = 9
         });
 
-        private static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
+        static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
         {
             MeshGeometry3D geometry = mesh.Geometry;
             geometry.Freeze();
@@ -178,7 +184,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static GeometryModel3D Path =
             GetGeometry(SharedMeshes.Path, SharedMaterials.Path);
 
-        private static GeometryModel3D GetGeometry(Geometry3D geometry, Material material)
+        static GeometryModel3D GetGeometry(Geometry3D geometry, Material material)
         {
             GeometryModel3D model = new GeometryModel3D(geometry, material);
             model.Freeze();

@@ -10,7 +10,7 @@ namespace FreelancerModStudio.Data
 {
     public class ArchtypeManager
     {
-        private SortedList<string, ArchtypeInfo> contentTable;
+        SortedList<string, ArchtypeInfo> contentTable;
 
         public ArchtypeInfo TypeOf(string archtype)
         {
@@ -59,7 +59,7 @@ namespace FreelancerModStudio.Data
             }
         }
 
-        private double ParseRadius(string radius)
+        double ParseRadius(string radius)
         {
             double value;
             if (double.TryParse(radius, NumberStyles.Any, new CultureInfo("en-US", false), out value))
@@ -68,7 +68,7 @@ namespace FreelancerModStudio.Data
             return 1;
         }
 
-        private ContentType ParseType(string type)
+        ContentType ParseType(string type)
         {
             type = type.ToLower();
 

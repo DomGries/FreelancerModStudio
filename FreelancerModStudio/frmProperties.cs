@@ -18,13 +18,13 @@ namespace FreelancerModStudio
         public delegate void ContentChangedType(ContentInterface content);
         public ContentChangedType ContentChanged;
 
-        private void OnOptionsChanged(PropertyBlock[] blocks)
+        void OnOptionsChanged(PropertyBlock[] blocks)
         {
             if (this.OptionsChanged != null)
                 this.OptionsChanged(blocks);
         }
 
-        private void OnContentChanged(ContentInterface content)
+        void OnContentChanged(ContentInterface content)
         {
             if (this.ContentChanged != null)
                 this.ContentChanged(content);
@@ -64,18 +64,18 @@ namespace FreelancerModStudio
             propertyGrid.SelectedGridItem.Select();
         }
 
-        private void descriptionToolStripMenuItem_Click(object sender, EventArgs e)
+        void descriptionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             propertyGrid.HelpVisible = descriptionToolStripMenuItem.Checked;
         }
 
-        private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             if (e.ChangedItem.Value != e.OldValue)
                 OnOptionsChanged((PropertyBlock[])propertyGrid.SelectedObjects);
         }
 
-        private void propertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
+        void propertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
         {
             if (this.DockHandler.IsActivated)
                 this.OnContentChanged((ContentInterface)this);

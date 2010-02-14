@@ -9,8 +9,8 @@ namespace FreelancerModStudio.Data.IO
     public class BINIManager
     {
         public string File { get; set; }
-        public bool IsBini { get; private set; }
-        public INIBlocks Data { get; private set; }
+        public bool IsBini { get; set; }
+        public INIBlocks Data { get; set; }
 
         public BINIManager(string file)
         {
@@ -106,7 +106,7 @@ namespace FreelancerModStudio.Data.IO
 
     public class StringTable
     {
-        private SortedList<int, string> Strings = new SortedList<int, string>();
+        SortedList<int, string> Strings = new SortedList<int, string>();
 
         public StringTable(string content)
         {

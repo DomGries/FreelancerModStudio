@@ -12,6 +12,7 @@ using HelixEngine;
 using System.Windows.Forms.Integration;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.Data;
+using System.Windows.Input;
 
 namespace FreelancerModStudio
 {
@@ -22,7 +23,7 @@ namespace FreelancerModStudio
         public delegate void SelectionChangedType(TableBlock block);
         public SelectionChangedType SelectionChanged;
 
-        private void OnSelectionChanged(TableBlock block)
+        void OnSelectionChanged(TableBlock block)
         {
             if (this.SelectionChanged != null)
                 this.SelectionChanged(block);
@@ -38,6 +39,7 @@ namespace FreelancerModStudio
             view.TextBrush = System.Windows.Media.Brushes.White;
             view.ShowViewCube = true;
             view.Camera.NearPlaneDistance = 0.001;
+            view.KeyDown += new System.Windows.Input.KeyEventHandler(view_KeyDown);
 
             ElementHost host = new ElementHost();
             host.Child = view;
@@ -49,7 +51,12 @@ namespace FreelancerModStudio
             systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
         }
 
-        private void systemPresenter_SelectionChanged(ContentBase content)
+        void view_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            OnKeyDown(new System.Windows.Forms.KeyEventArgs((System.Windows.Forms.Keys)KeyInterop.VirtualKeyFromKey(e.Key)));
+        }
+
+        void systemPresenter_SelectionChanged(ContentBase content)
         {
             OnSelectionChanged(content.Block);
         }
@@ -121,6 +128,12 @@ namespace FreelancerModStudio
 
         //    systemPresenter.Viewport.Status = status;
         //}
+
+        public void SetFocus()
+        {
+            Keyboard.Focus(systemPresenter.Viewport);
+            System.Diagnostics.Debug.WriteLine("focus " + DateTime.Now.ToLongTimeString());
+        }
 
         public bool CanCopy()
         {

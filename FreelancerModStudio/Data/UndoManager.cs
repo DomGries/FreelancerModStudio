@@ -9,10 +9,10 @@ namespace FreelancerModStudio.Data
         public delegate void DataChangedType(List<T> o, bool undo);
         public DataChangedType DataChanged;
 
-        private List<List<T>> changes = new List<List<T>>();
-        private int current = 0;
+        List<List<T>> changes = new List<List<T>>();
+        int current = 0;
 
-        private void OnDataChanged(List<T> o, bool undo)
+        void OnDataChanged(List<T> o, bool undo)
         {
             if (this.DataChanged != null)
                 this.DataChanged(o, undo);

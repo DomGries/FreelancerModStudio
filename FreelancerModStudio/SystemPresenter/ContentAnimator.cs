@@ -37,7 +37,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        private static bool RotationEquals(Rotation3D rotationX, Rotation3D rotationY)
+        static bool RotationEquals(Rotation3D rotationX, Rotation3D rotationY)
         {
             AxisAngleRotation3D x = (AxisAngleRotation3D)rotationX;
             AxisAngleRotation3D y = (AxisAngleRotation3D)rotationY;

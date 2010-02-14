@@ -4,7 +4,7 @@ using System.Drawing;
 public class SeperatorLine : System.Windows.Forms.Control
 {
 
-    private System.ComponentModel.Container components = null;
+    System.ComponentModel.Container components = null;
 
     public SeperatorLine()
     {
@@ -24,7 +24,7 @@ public class SeperatorLine : System.Windows.Forms.Control
         base.Dispose(disposing);
     }
 
-    private void InitializeComponent()
+    void InitializeComponent()
     {
         this.Name = "SeperatorLine";
         this.Size = new System.Drawing.Size(100, 2);

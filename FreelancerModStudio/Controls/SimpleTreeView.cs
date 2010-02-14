@@ -24,7 +24,7 @@ namespace test
             this.DragDrop += new DragEventHandler(SimpleTreeView_DragDrop);
         }
         
-        private void tree_DragOver(object sender, System.Windows.Forms.DragEventArgs e)
+        void tree_DragOver(object sender, System.Windows.Forms.DragEventArgs e)
         {
             //string format = typeof(TreeNode).ToString();
 
@@ -91,7 +91,7 @@ namespace test
                 AddNode(this.Nodes, item.Path, item);
         }
 
-        private void AddNode(TreeNodeCollection nodes, string path, ITreeViewItem item)
+        void AddNode(TreeNodeCollection nodes, string path, ITreeViewItem item)
         {
             string[] structure = path.Split(new char[] { Path.DirectorySeparatorChar }, 2, StringSplitOptions.RemoveEmptyEntries);
             string root = structure[0];
@@ -134,7 +134,7 @@ namespace test
             return objects.ToArray();
         }
 
-        private void RemoveNode(TreeNodeCollection nodes, string key)
+        void RemoveNode(TreeNodeCollection nodes, string key)
         {
             int index = nodes.IndexOfKey(key);
 
@@ -149,7 +149,7 @@ namespace test
         //        this.SelectedNode = e.Node;
         //}
 
-        private List<TreeNode> m_SelectedNodes = new List<TreeNode>();
+        List<TreeNode> m_SelectedNodes = new List<TreeNode>();
         public List<TreeNode> SelectedNodes
         {
             get
@@ -168,7 +168,7 @@ namespace test
         }
 
         // Note we use the new keyword to Hide the native treeview's SelectedNode property.
-        private TreeNode m_SelectedNode;
+        TreeNode m_SelectedNode;
         public new TreeNode SelectedNode
         {
             get { return m_SelectedNode; }
@@ -451,7 +451,7 @@ namespace test
             this.EndUpdate();
         }
 
-        private void SelectNode(TreeNode node)
+        void SelectNode(TreeNode node)
         {
             this.BeginUpdate();
 
@@ -591,7 +591,7 @@ namespace test
             this.EndUpdate();
         }
 
-        private void ClearSelectedNodes()
+        void ClearSelectedNodes()
         {
             foreach (TreeNode node in m_SelectedNodes)
             {
@@ -603,7 +603,7 @@ namespace test
             m_SelectedNode = null;
         }
 
-        private void SelectSingleNode(TreeNode node, bool change)
+        void SelectSingleNode(TreeNode node, bool change)
         {
             if (node == null)
                 return;
@@ -613,7 +613,7 @@ namespace test
             node.EnsureVisible();
         }
 
-        private void HighlightSelection()
+        void HighlightSelection()
         {
             foreach (TreeNode node in m_SelectedNodes)
             {
@@ -622,7 +622,7 @@ namespace test
             }
         }
 
-        private void DimSelection()
+        void DimSelection()
         {
             foreach (TreeNode node in m_SelectedNodes)
             {
@@ -631,7 +631,7 @@ namespace test
             }
         }
 
-        private void ToggleNode(TreeNode node, bool selectNode, bool change)
+        void ToggleNode(TreeNode node, bool selectNode, bool change)
         {
             if (selectNode)
             {

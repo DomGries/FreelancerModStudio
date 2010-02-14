@@ -39,12 +39,12 @@ namespace FreelancerModStudio
             this.TabText = Properties.Strings.SolutionExplorerText;
         }
 
-        //private void AddNode(Settings.Template.File file)
+        //void AddNode(Settings.Template.File file)
         //{
         //    //file.Path
         //}
 
-        //private void BuildList ()
+        //void BuildList ()
         //{
         //    foreach (Settings.Template.File file in Helper.Template.Data.Files)
         //    {

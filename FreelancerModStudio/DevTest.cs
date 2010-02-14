@@ -23,7 +23,7 @@ namespace FreelancerModStudio
             }
         }
 
-        private static List<INIDataTemplate> dataList = new List<INIDataTemplate>();
+        static List<INIDataTemplate> dataList = new List<INIDataTemplate>();
         public static void CreateTemplate(string path)
         {
             CreateTemplate(System.IO.Directory.GetFiles(path), path, path.Length + 1);
@@ -99,7 +99,7 @@ namespace FreelancerModStudio
             template.Save("newTemplate.xml");
         }
 
-        private static void CreateTemplate(string[] files, string path, int dataPathIndex)
+        static void CreateTemplate(string[] files, string path, int dataPathIndex)
         {
             foreach (string file in files)
                 CreateTemplateFromFile(file, dataPathIndex);
@@ -1327,7 +1327,7 @@ namespace FreelancerModStudio
             };
         #endregion
 
-        private static int GetTemplateFileGroup(string filePath)
+        static int GetTemplateFileGroup(string filePath)
         {
             for (int i = 0; i < fileGroups.Length; i++)
             {
@@ -1340,7 +1340,7 @@ namespace FreelancerModStudio
             return -1;
         }
 
-        private static void CreateTemplateFromFile(string file, int dataPathIndex)
+        static void CreateTemplateFromFile(string file, int dataPathIndex)
         {
             INIManager iniManager = new INIManager(file);
             INIBlocks newBlocks = iniManager.Read();

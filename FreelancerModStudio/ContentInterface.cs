@@ -29,6 +29,7 @@ namespace FreelancerModStudio
         bool CanSave();
         bool CanUndo();
         bool CanRedo();
+        bool CanChangeVisibility();
 
         string GetTitle();
 
@@ -36,5 +37,7 @@ namespace FreelancerModStudio
         void SaveAs();
         void Undo();
         void Redo();
+
+        void ChangeVisibility();
     }
 }

@@ -80,7 +80,7 @@ namespace HelixEngine
         private Model3DGroup _coordinateSystemLights;
         private Model3DGroup _viewCubeLights;
         private ViewCubeVisual3D _viewCube;
-        private AdornerDecorator _adornerLayer;
+        public AdornerDecorator AdornerLayer;
 
         private const string PartAdornerLayer = "PART_AdornerLayer";
         private const string PartCoordinateView = "PART_CoordinateView";
@@ -105,13 +105,13 @@ namespace HelixEngine
 
         public override void OnApplyTemplate()
         {
-            if (_adornerLayer == null)
+            if (AdornerLayer == null)
             {
-                _adornerLayer = Template.FindName(PartAdornerLayer, this) as AdornerDecorator;
-                if (_adornerLayer != null)
-                    _adornerLayer.Child = _viewport;
+                AdornerLayer = Template.FindName(PartAdornerLayer, this) as AdornerDecorator;
+                if (AdornerLayer != null)
+                    AdornerLayer.Child = _viewport;
             }
-            Debug.Assert(_adornerLayer != null, String.Format("{0} is missing from the template.", PartAdornerLayer));
+            Debug.Assert(AdornerLayer != null, String.Format("{0} is missing from the template.", PartAdornerLayer));
 
             if (_cameraController == null)
             {

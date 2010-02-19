@@ -34,7 +34,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}" Focusable="True">
                         <Grid>
-                            <AdornerDecorator x:Name="PART_AdornerLayer" DataContext="{TemplateBinding DataContext}">
+                            <AdornerDecorator x:Name="PART_AdornerLayer" DataContext="{TemplateBinding DataContext}" Focusable="False">
                                 <!-- the main viewport3D is inserted here -->
                             </AdornerDecorator>
 

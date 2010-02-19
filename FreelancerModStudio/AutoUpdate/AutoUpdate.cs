@@ -163,7 +163,7 @@ namespace FreelancerModStudio.AutoUpdate
             if (!this.SilentDownload || !this.SilentCheck)
                 this.SetPage(PageType.Downloading, false);
 
-            string destFile = Path.Combine(System.Windows.Forms.Application.StartupPath, Path.Combine(FreelancerModStudio.Properties.Resources.UpdateDownloadPath, Path.GetFileName(this.mUpdateFileUri.AbsolutePath)));
+            string destFile = Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), System.Windows.Forms.Application.ProductName), Path.Combine(FreelancerModStudio.Properties.Resources.UpdateDownloadPath, Path.GetFileName(this.mUpdateFileUri.AbsolutePath)));
 
             //create update directory if not existing
             if (!Directory.Exists(Path.GetDirectoryName(destFile)))
@@ -269,7 +269,7 @@ namespace FreelancerModStudio.AutoUpdate
         {
             if (Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName != null)
             {
-                string file = Path.Combine(System.Windows.Forms.Application.StartupPath, Path.Combine(FreelancerModStudio.Properties.Resources.UpdateDownloadPath, Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName));
+                string file = Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), System.Windows.Forms.Application.ProductName), Path.Combine(FreelancerModStudio.Properties.Resources.UpdateDownloadPath, Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName));
 
                 //start file (setup) and exit app
                 if (File.Exists(file))

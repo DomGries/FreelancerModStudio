@@ -38,7 +38,7 @@ namespace FreelancerModStudio
         {
             //load layout
             bool layoutLoaded = false;
-            string layoutFile = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.LayoutPath);
+            string layoutFile = System.IO.Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), System.Windows.Forms.Application.ProductName), Properties.Resources.LayoutPath);
             if (System.IO.File.Exists(layoutFile))
             {
                 try
@@ -204,9 +204,12 @@ namespace FreelancerModStudio
         void SetSettings()
         {
             //save layout
-            string layoutFile = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.LayoutPath);
+            string layoutFile = System.IO.Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), System.Windows.Forms.Application.ProductName), Properties.Resources.LayoutPath);
             try
             {
+                if (!Directory.Exists(Path.GetDirectoryName(layoutFile)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(layoutFile));
+
                 dockPanel1.SaveAsXml(layoutFile);
             }
             catch { }
@@ -360,9 +363,9 @@ namespace FreelancerModStudio
 
         void OpenRecentFile(string file, int templateIndex)
         {
-            OpenFile(file, templateIndex);
             try
             {
+                OpenFile(file, templateIndex);
             }
             catch
             {
@@ -798,12 +801,7 @@ namespace FreelancerModStudio
         void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
         {
             if (this.dockPanel1.ActiveContent != null)
-            {
                 Content_DisplayChanged((ContentInterface)this.dockPanel1.ActiveContent);
-
-                if (this.dockPanel1.ActiveContent is frmSystemEditor)
-                    ((frmSystemEditor)this.dockPanel1.ActiveContent).SetFocus();
-            }
         }
 
         void Document_DisplayChanged(DocumentInterface document)
@@ -816,6 +814,7 @@ namespace FreelancerModStudio
 
             this.mnuUndo.Enabled = document.CanUndo();
             this.mnuRedo.Enabled = document.CanRedo();
+            this.mnuChangeVisibility.Visible = this.mnuChangeVisibility.Enabled = document.CanChangeVisibility();
         }
 
         void Content_DisplayChanged(ContentInterface content)
@@ -840,27 +839,26 @@ namespace FreelancerModStudio
 
         void mnu3dEditor_Click(object sender, EventArgs e)
         {
-            TableData data = null;
-            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
-            {
-                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument;
-                data = editor.Data;
-            }
-
             if (systemEditor == null)
             {
                 systemEditor = new frmSystemEditor();
                 systemEditor.SelectionChanged += systemEditor_SelectionChanged;
-                systemEditor.KeyDown += new KeyEventHandler(systemEditor_KeyDown);
                 systemEditor.Show(this.dockPanel1);
             }
             else
                 systemEditor.Show();
 
-            if (data != null)
+            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
             {
+                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument;
+
                 systemEditor.Clear();
-                systemEditor.ShowData(data);
+                systemEditor.ShowData(editor.Data);
+
+                //select initially
+                List<TableBlock> blocks = editor.GetSelectedBlocks();
+                if (blocks != null)
+                    systemEditor.Select(blocks[0].ID);
             }
         }
 
@@ -870,16 +868,9 @@ namespace FreelancerModStudio
                 ((frmTableEditor)dockPanel1.ActiveDocument.DockHandler.Content).Select(block);
         }
 
-        void systemEditor_KeyDown(object sender, KeyEventArgs e)
+        private void mnuChangeVisibility_Click(object sender, EventArgs e)
         {
-            frmTableEditor editor = null;
-            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
-                editor = (frmTableEditor)dockPanel1.ActiveDocument;
-            else
-                return;
-
-            if (e.KeyData == Keys.Space)
-                editor.HideShowSelected();
+            ((DocumentInterface)this.dockPanel1.ActiveDocument).ChangeVisibility();
         }
     }
 }

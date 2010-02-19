@@ -20,6 +20,7 @@ namespace FreelancerModStudio
 
         bool modified = false;
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
+        ArchtypeManager archtype = null;
 
         public delegate void DataChangedType(ChangedData data);
         public DataChangedType DataChanged;
@@ -173,17 +174,17 @@ namespace FreelancerModStudio
         public void LoadArchtypes()
         {
             int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Arch");
-            string archtypeFile = Helper.Archtype.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
+            string archtypeFile = ArchtypeManager.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
 
             //user interaction required to get the path of the archtype file
             if (archtypeFile == null)
                 archtypeFile = ShowSolarArchtypeSelector();
 
-            if (Helper.Archtype.ArchtypeManager == null)
-                Helper.Archtype.LoadArchtypes(archtypeFile, archtypeTemplate);
+            if (archtype == null)
+                archtype = new ArchtypeManager(archtypeFile, archtypeTemplate);
 
             foreach (TableBlock block in Data.Blocks)
-                SetArchtype(block, Helper.Archtype.ArchtypeManager);
+                SetArchtype(block, archtype);
         }
 
         void SetArchtype(TableBlock block, ArchtypeManager archtypeManager)
@@ -440,7 +441,7 @@ namespace FreelancerModStudio
 
                 //set archtype of block
                 if (tableBlock.Archtype == null)
-                    SetArchtype(tableBlock, Helper.Archtype.ArchtypeManager);
+                    SetArchtype(tableBlock, archtype);
 
                 bool existSingle = false;
 
@@ -595,7 +596,7 @@ namespace FreelancerModStudio
             for (int i = 0; i < oldBlocks.Count; i++)
             {
                 if (!undo)
-                    SetArchtype(newBlocks[i], Helper.Archtype.ArchtypeManager);
+                    SetArchtype(newBlocks[i], archtype);
 
                 int index = Data.Blocks.IndexOf(oldBlocks[i]);
                 Data.Blocks[index] = newBlocks[i];
@@ -874,12 +875,25 @@ namespace FreelancerModStudio
 
                 foreach (TableBlock block in objectListView1.SelectedObjects)
                 {
-                    block.Visibility = visibility;
-                    OnDataVisibilityChanged(block, visibility);
+                    if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
+                    {
+                        block.Visibility = visibility;
+                        OnDataVisibilityChanged(block, visibility);
+                    }
                 }
 
                 objectListView1.RefreshObjects(objectListView1.SelectedObjects);
             }
+        }
+
+        public bool CanChangeVisibility()
+        {
+            return archtype != null;
+        }
+
+        public void ChangeVisibility()
+        {
+            HideShowSelected();
         }
     }
 }

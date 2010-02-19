@@ -147,7 +147,7 @@ namespace HelixEngine
         {
             if (!_doUpdates)
                 return;
-            Debug.WriteLine("  Tesselating");
+
             // create a new model incase the old model was frozen
             // todo...
             Model.Geometry = Tessellate();

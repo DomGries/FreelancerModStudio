@@ -157,49 +157,19 @@ namespace FreelancerModStudio
             }
         }
 
-        public struct Archtype
-        {
-            public static ArchtypeManager ArchtypeManager { get; set; }
-
-            public static void LoadArchtypes(string file, int templateIndex)
-            {
-                ArchtypeManager = new ArchtypeManager(file, templateIndex);
-            }
-
-            public static string GetRelativeArchtype(string file, int fileTemplate, int archtypeTemplate)
-            {
-                //get archtype path
-                if (fileTemplate > 0 && fileTemplate < Helper.Template.Data.Files.Count)
-                {
-                    string[] directories = Helper.Template.Data.Files[fileTemplate].Path.Split(new char[] { Path.DirectorySeparatorChar });
-                    StringBuilder archtypePath = new StringBuilder(file);
-                    for (int i = 0; i < directories.Length; i++)
-                    {
-                        int lastIndex = archtypePath.ToString().LastIndexOf(Path.DirectorySeparatorChar);
-                        if (lastIndex == -1)
-                            break;
-                        archtypePath.Remove(lastIndex, archtypePath.Length - lastIndex);
-                    }
-
-                    archtypePath.Append(@"\Solar\SolarArch.ini");
-
-                    if (File.Exists(archtypePath.ToString()))
-                        return archtypePath.ToString();
-                }
-
-                return null;
-            }
-        }
-
         public struct Settings
         {
             public static FreelancerModStudio.Data.Settings Data;
 
             public static void Save()
             {
+                string file = System.IO.Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Properties.Resources.SettingsPath);
                 try
                 {
-                    Data.Save(System.IO.Path.Combine(Application.StartupPath, Properties.Resources.SettingsPath));
+                    if (!Directory.Exists(Path.GetDirectoryName(file)))
+                        Directory.CreateDirectory(Path.GetDirectoryName(file));
+
+                    Data.Save(file);
                 }
                 catch (Exception ex)
                 {
@@ -209,7 +179,7 @@ namespace FreelancerModStudio
 
             public static void Load()
             {
-                string File = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.SettingsPath);
+                string File = System.IO.Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Properties.Resources.SettingsPath);
                 Data = new FreelancerModStudio.Data.Settings();
 
                 if (System.IO.File.Exists(File))

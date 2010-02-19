@@ -136,26 +136,23 @@ namespace FreelancerModStudio.SystemPresenter
 
         void ShowObjects(List<ContentBase> objects)
         {
-            //int index = 0;
             foreach (ContentBase content in objects)
             {
-                //Objects[content.ID].ModelIndex = index;
-                //index++;
-
                 if (content.Model == null)
                     content.LoadModel();
 
                 if (content.Visibility)
+                {
                     Viewport.Add(content.Model);
+
+                    if (content == SelectedContent)
+                        Selection = GetSelectionBox(content);
+                }
             }
         }
 
         public void Add(List<TableBlock> blocks)
         {
-            //ContentBase content = new Zone() { Shape = ZoneShape.Cylinder };
-
-            //content.SetDisplay(new Vector3D(0, 0, 0), (Rotation3D)new AxisAngleRotation3D(new Vector3D(0, 0, 0), 0), new Vector3D(1, 1, 10));
-            //Objects.Add(content);
             foreach (TableBlock block in blocks)
             {
                 ContentBase content = GetContent(block);

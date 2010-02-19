@@ -21,6 +21,30 @@ namespace FreelancerModStudio.Data
             return null;
         }
 
+        public static string GetRelativeArchtype(string file, int fileTemplate, int archtypeTemplate)
+        {
+            //get archtype path
+            if (fileTemplate > 0 && fileTemplate < Helper.Template.Data.Files.Count)
+            {
+                string[] directories = Helper.Template.Data.Files[fileTemplate].Path.Split(new char[] { System.IO.Path.DirectorySeparatorChar });
+                StringBuilder archtypePath = new StringBuilder(file);
+                for (int i = 0; i < directories.Length; i++)
+                {
+                    int lastIndex = archtypePath.ToString().LastIndexOf(System.IO.Path.DirectorySeparatorChar);
+                    if (lastIndex == -1)
+                        break;
+                    archtypePath.Remove(lastIndex, archtypePath.Length - lastIndex);
+                }
+
+                archtypePath.Append(@"\Solar\SolarArch.ini");
+
+                if (System.IO.File.Exists(archtypePath.ToString()))
+                    return archtypePath.ToString();
+            }
+
+            return null;
+        }
+
         public void CreateContentTable(List<TableBlock> blocks)
         {
             CultureInfo usCulture = new CultureInfo("en-US", false);

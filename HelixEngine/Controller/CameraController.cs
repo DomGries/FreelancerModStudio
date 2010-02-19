@@ -302,7 +302,7 @@ namespace HelixEngine
             EventSurface.MouseDown += MouseDownHandler;
             EventSurface.MouseUp += MouseUpHandler;
             EventSurface.MouseWheel += OnMouseWheel;
-            EventSurface.KeyDown += OnKeyDown;
+            //EventSurface.KeyDown += OnKeyDown;
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
@@ -313,7 +313,7 @@ namespace HelixEngine
             EventSurface.MouseDown -= MouseDownHandler;
             EventSurface.MouseUp -= MouseUpHandler;
             EventSurface.MouseWheel -= OnMouseWheel;
-            EventSurface.KeyDown -= OnKeyDown;
+            //EventSurface.KeyDown -= OnKeyDown;
             CompositionTarget.Rendering -= CompositionTarget_Rendering;
         }
 

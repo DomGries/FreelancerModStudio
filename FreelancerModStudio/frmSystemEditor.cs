@@ -39,7 +39,6 @@ namespace FreelancerModStudio
             view.TextBrush = System.Windows.Media.Brushes.White;
             view.ShowViewCube = true;
             view.Camera.NearPlaneDistance = 0.001;
-            view.KeyDown += new System.Windows.Input.KeyEventHandler(view_KeyDown);
 
             ElementHost host = new ElementHost();
             host.Child = view;
@@ -128,12 +127,6 @@ namespace FreelancerModStudio
 
         //    systemPresenter.Viewport.Status = status;
         //}
-
-        public void SetFocus()
-        {
-            Keyboard.Focus(systemPresenter.Viewport);
-            System.Diagnostics.Debug.WriteLine("focus " + DateTime.Now.ToLongTimeString());
-        }
 
         public bool CanCopy()
         {

@@ -60,6 +60,7 @@ Source: "src\Settings_de.xml"; DestName: "FreelancerModStudio.xml"; DestDir: "{u
 
 [UninstallDelete]
 Name: "{userappdata}\Freelancer Mod Studio\FreelancerModStudio.Layout.xml"; Type: files
+Name: "{userappdata}\Freelancer Mod Studio"; Type: dirifempty
 
 [Icons]
 Name: "{group}\Freelancer Mod Studio"; Filename: "{app}\FreelancerModStudio"

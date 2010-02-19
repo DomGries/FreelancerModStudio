@@ -30,11 +30,6 @@ namespace FreelancerModStudio.SystemPresenter
         {
             if (Model != null)
             {
-
-                //if (this is Zone && ((Zone)this).Shape != ZoneShape.Sphere)
-                //    ContentAnimator.SetRotation(Model, Rotation, rotation, new Vector3D(Position.X - Scale.X / 2, Position.Y - Scale.Y / 2, Position.Z - Scale.Z / 2), always);
-                //else
-
                 ContentAnimator.SetPosition(Model, Position, position, always);
                 ContentAnimator.SetScale(Model, Scale, scale, position, always);
                 ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);

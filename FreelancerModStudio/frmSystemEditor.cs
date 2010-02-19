@@ -50,11 +50,6 @@ namespace FreelancerModStudio
             systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
         }
 
-        void view_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            OnKeyDown(new System.Windows.Forms.KeyEventArgs((System.Windows.Forms.Keys)KeyInterop.VirtualKeyFromKey(e.Key)));
-        }
-
         void systemPresenter_SelectionChanged(ContentBase content)
         {
             OnSelectionChanged(content.Block);

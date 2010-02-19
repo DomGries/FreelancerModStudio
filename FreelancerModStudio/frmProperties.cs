@@ -51,6 +51,12 @@ namespace FreelancerModStudio
 
         public void ShowData(List<TableBlock> blocks, int templateIndex)
         {
+            if (blocks == null)
+            {
+                propertyGrid.SelectedObjects = null;
+                return;
+            }
+
             List<PropertyBlock> propertyBlocks = new List<PropertyBlock>();
 
             //loop each selected block

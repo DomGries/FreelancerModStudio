@@ -140,16 +140,6 @@ namespace FreelancerModStudio
         {
         }
 
-        void DefaultEditor_SelectedDataChanged(List<TableBlock> data, int templateIndex)
-        {
-            if (data != null)
-            {
-                propertiesForm.ShowData(data, templateIndex);
-                if (systemEditor != null)
-                    systemEditor.SetValues(data);
-            }
-        }
-
         void DefaultEditor_DataChanged(ChangedData data)
         {
             if (systemEditor != null)
@@ -569,11 +559,11 @@ namespace FreelancerModStudio
                         systemEditor.Select(blocks[0].ID);
                 }
 
-                DefaultEditor_SelectedDataChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
+                DefaultEditor_SelectionChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
                 Document_DisplayChanged((DocumentInterface)activeDocument);
             }
             else
-                DefaultEditor_SelectedDataChanged(null, 0);
+                DefaultEditor_SelectionChanged(null, 0);
         }
 
         void mnuOptions_Click(object sender, EventArgs e)
@@ -843,7 +833,8 @@ namespace FreelancerModStudio
             {
                 systemEditor = new frmSystemEditor();
                 systemEditor.SelectionChanged += systemEditor_SelectionChanged;
-                systemEditor.Show(this.dockPanel1);
+
+                systemEditor.Show(dockPanel1);
             }
             else
                 systemEditor.Show();

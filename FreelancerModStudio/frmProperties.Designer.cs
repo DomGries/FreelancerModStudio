@@ -97,7 +97,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.HideOnClose = true;
             this.Name = "frmProperties";
-            this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockLeft;
+            this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockRight;
             this.TabText = "Properties";
             this.Text = "Properties";
             this.contextMenuStrip1.ResumeLayout(false);

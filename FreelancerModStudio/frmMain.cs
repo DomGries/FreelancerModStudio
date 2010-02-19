@@ -686,7 +686,7 @@ namespace FreelancerModStudio
 
         void mnuProperties_Click(object sender, EventArgs e)
         {
-            propertiesForm.Show(dockPanel1);
+            propertiesForm.Show(dockPanel1, DockState.DockLeft);
         }
 
         void mnuNewFile_Click(object sender, EventArgs e)

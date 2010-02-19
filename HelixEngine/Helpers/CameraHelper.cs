@@ -23,7 +23,7 @@ namespace HelixEngine
                 return;
 
             camera.UpDirection = new Vector3D(0, 1, 0);
-            camera.Position = new Point3D(0, 0, 500);
+            camera.Position = new Point3D(0, 0, 300);
 
             var target = new Point3D(0, 0, 0);
             camera.LookDirection = target - camera.Position;

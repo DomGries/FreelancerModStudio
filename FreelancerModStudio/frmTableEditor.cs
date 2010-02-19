@@ -28,9 +28,6 @@ namespace FreelancerModStudio
         public delegate void SelectionChangedType(List<TableBlock> data, int templateIndex);
         public SelectionChangedType SelectionChanged;
 
-        //public delegate void SelectedDataChangedType(TableBlock[] data, int templateIndex);
-        //public SelectedDataChangedType SelectedDataChanged;
-
         public delegate void DataVisibilityChangedType(TableBlock block, bool visibility);
         public DataVisibilityChangedType DataVisibilityChanged;
 
@@ -51,12 +48,6 @@ namespace FreelancerModStudio
             if (this.SelectionChanged != null)
                 this.SelectionChanged(data, templateIndex);
         }
-
-        //void OnSelectedDataChanged(TableBlock[] data, int templateIndex)
-        //{
-        //    if (this.SelectedDataChanged != null)
-        //        this.SelectedDataChanged(data, templateIndex);
-        //}
 
         void OnDataVisibilityChanged(TableBlock block, bool visibility)
         {
@@ -587,17 +578,16 @@ namespace FreelancerModStudio
                 newBlocks[i].Modified = TableModified.Changed;
             }
 
+            foreach (TableBlock block in newBlocks)
+                SetArchtype(block, archtype);
+
             undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Edit });
-            //OnDataChanged(GetSelectedBlocks(), Data.TemplateIndex);
         }
 
-        void ChangeBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks, bool undo)
+        void ChangeBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
         {
             for (int i = 0; i < oldBlocks.Count; i++)
             {
-                if (!undo)
-                    SetArchtype(newBlocks[i], archtype);
-
                 int index = Data.Blocks.IndexOf(oldBlocks[i]);
                 Data.Blocks[index] = newBlocks[i];
             }
@@ -837,7 +827,7 @@ namespace FreelancerModStudio
             else if (data.Type == ChangedType.Delete)
                 DeleteBlocks(data.NewBlocks);
             else if (data.Type == ChangedType.Edit)
-                ChangeBlocks(data.NewBlocks, data.OldBlocks, undo);
+                ChangeBlocks(data.NewBlocks, data.OldBlocks);
 
             OnDataChanged(data);
         }

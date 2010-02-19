@@ -12,8 +12,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Resources\LogoIcon.ico</ApplicationIcon>
     <StartupObject>FreelancerModStudio.Program</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>

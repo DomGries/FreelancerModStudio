@@ -101,12 +101,19 @@ namespace FreelancerModStudio
 
         public void SetValues(List<TableBlock> blocks)
         {
+            List<TableBlock> newBlocks = new List<TableBlock>();
+
             foreach (TableBlock block in blocks)
             {
                 ContentBase content;
                 if (systemPresenter.Objects.TryGetValue(block.ID, out content))
                     systemPresenter.ChangeValues(content, block);
+                else
+                    newBlocks.Add(block);
             }
+
+            if (newBlocks.Count > 0)
+                Add(newBlocks);
         }
 
         public void Add(List<TableBlock> blocks)

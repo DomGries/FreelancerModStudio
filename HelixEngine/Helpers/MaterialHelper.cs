@@ -8,8 +8,6 @@ namespace HelixEngine
     /// </summary>
     public static class MaterialHelper
     {
-        public static double DefaultSpecularPower = 100;
-
         public static Brush CreateTransparentBrush(Brush brush, double opacity)
         {
             brush = brush.Clone();
@@ -30,41 +28,42 @@ namespace HelixEngine
 
         public static Material CreateMaterial(Brush brush)
         {
-            return CreateMaterial(brush, DefaultSpecularPower);
+            return new DiffuseMaterial(brush);
         }
 
-        public static Material CreateMaterial(Brush brush, double specularPower)
+        public static Material CreateMaterial(Brush brush, double opacity)
         {
-            var mg = new MaterialGroup();
-            mg.Children.Add(new DiffuseMaterial(brush));
-            if (specularPower > 0)
-                mg.Children.Add(new SpecularMaterial(Brushes.White, specularPower));
-            return mg;
+            return CreateMaterial(CreateTransparentBrush(brush, opacity));
         }
 
-        public static Material CreateMaterial(Brush diffuse, Brush emissive, Brush specular, double opacity, double specularPower)
+        public static Material CreateEmissiveMaterial(Color c)
         {
-            var mg = new MaterialGroup();
-            if (diffuse != null)
-            {
-                diffuse = diffuse.Clone();
-                diffuse.Opacity = opacity;
-                mg.Children.Add(new DiffuseMaterial(diffuse));
-            }
-            if (emissive != null)
-            {
-                emissive = emissive.Clone();
-                emissive.Opacity = opacity;
-                mg.Children.Add(new EmissiveMaterial(emissive));
-            }
-            if (specular != null)
-            {
-                specular = specular.Clone();
-                specular.Opacity = opacity;
-                mg.Children.Add(new SpecularMaterial(specular, specularPower));
-            }
-            return mg;
+            return CreateEmissiveMaterial(new SolidColorBrush(c));
         }
 
+        public static Material CreateEmissiveMaterial(Brush brush)
+        {
+            return new EmissiveMaterial(brush);
+        }
+
+        public static Material CreateEmissiveMaterial(Brush brush, double opacity)
+        {
+            return CreateEmissiveMaterial(CreateTransparentBrush(brush, opacity));
+        }
+
+        public static Material CreateSpectacularMaterial(Color c, double specularPower)
+        {
+            return CreateSpectacularMaterial(new SolidColorBrush(c), specularPower);
+        }
+
+        public static Material CreateSpectacularMaterial(Brush brush, double specularPower)
+        {
+            return new SpecularMaterial(brush, specularPower);
+        }
+
+        public static Material CreateSpectacularMaterial(Brush brush, double opacity, double specularPower)
+        {
+            return CreateSpectacularMaterial(CreateTransparentBrush(brush, opacity), specularPower);
+        }
     }
 }

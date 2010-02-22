@@ -28,7 +28,7 @@ namespace HelixEngine
 
         public HelixView3D()
         {
-            _viewport = new Viewport3D { IsHitTestVisible = false, ClipToBounds = false };
+            _viewport = new Viewport3D { IsHitTestVisible = false };
             _viewport.Camera = CameraHelper.CreateDefaultCamera();
             _viewport.Camera.Changed += Camera_Changed;
 

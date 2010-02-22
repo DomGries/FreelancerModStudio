@@ -29,7 +29,7 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public static Material LightSource = MaterialHelper.CreateEmissiveMaterial(Brushes.Yellow);
         public static Material Sun = MaterialHelper.CreateEmissiveMaterial(Brushes.Orange);
-        public static Material Planet = MaterialHelper.CreateEmissiveMaterial(Brushes.DeepSkyBlue);
+        public static Material Planet = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 60, 120));
         public static Material Station = MaterialHelper.CreateEmissiveMaterial(Brushes.Blue);
         public static Material Satellite = MaterialHelper.CreateEmissiveMaterial(Brushes.BlueViolet);
         public static Material Construct = MaterialHelper.CreateEmissiveMaterial(Brushes.Fuchsia);

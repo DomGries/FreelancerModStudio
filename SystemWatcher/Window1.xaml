@@ -10,8 +10,8 @@
     </Window.Resources>
     <Grid>
         <helix:HelixView3D x:Name="view" ShowViewCube="True" Background="Black" TextBrush="White"/>
-        <Border Background="{StaticResource ButtonBG}" CornerRadius="4" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,2,2,0">
-            <TextBlock FontSize="14" Margin="6, 2" MouseDown="MenuItem_Click">Open</TextBlock>
+        <Border MouseDown="MenuItem_Click" MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave" Background="{StaticResource ButtonBG}" CornerRadius="4" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,2,2,0">
+            <TextBlock FontSize="14" Margin="6, 2">Open</TextBlock>
         </Border>
     </Grid>
 </Window>

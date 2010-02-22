@@ -70,17 +70,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\ArchtypeManager.cs" />
-    <Compile Include="Data\ChangedData.cs" />
     <Compile Include="Data\IO\BINIManager.cs" />
     <Compile Include="Data\IO\FileManager.cs" />
     <Compile Include="Data\IO\INIManager.cs" />
-    <Compile Include="Data\Mod.cs" />
-    <Compile Include="Data\News.cs" />
     <Compile Include="Data\Serializer.cs" />
     <Compile Include="Data\Table.cs" />
     <Compile Include="Data\TableData.cs" />
     <Compile Include="Data\Template.cs" />
-    <Compile Include="Data\UndoManager.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

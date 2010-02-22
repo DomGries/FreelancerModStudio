@@ -17,6 +17,7 @@ using FreelancerModStudio;
 using FreelancerModStudio.SystemPresenter;
 using System.Threading;
 using System.IO;
+using System.Windows.Media.Animation;
 
 namespace fms_test
 {
@@ -272,6 +273,27 @@ namespace fms_test
                 if (systemPresenter.SelectedContent != null)
                     systemPresenter.SetVisibility(systemPresenter.SelectedContent, false);
             }
+        }
+
+        private void Border_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var brush = (SolidColorBrush)this.FindResource("ButtonBG");
+            AnimateOpacity(brush, 1.0, 200);
+        }
+
+        private void Border_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var brush = (SolidColorBrush)this.FindResource("ButtonBG");
+            AnimateOpacity(brush, 0.5, 200);
+        }
+
+        private void AnimateOpacity(Brush obj, double toOpacity, double animationTime)
+        {
+            DoubleAnimation animation = new DoubleAnimation(toOpacity,
+                new Duration(TimeSpan.FromMilliseconds(animationTime)))
+                { AccelerationRatio = 0.3, DecelerationRatio = 0.5 };
+
+            obj.BeginAnimation(Brush.OpacityProperty, animation);
         }
     }
 }

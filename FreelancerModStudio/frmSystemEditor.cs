@@ -46,7 +46,6 @@ namespace FreelancerModStudio
             this.Controls.Add(host);
 
             systemPresenter = new SystemPresenter.SystemPresenter(view);
-            systemPresenter.Lightning = new DefaultLightsVisual3D();
             systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
         }
 

@@ -259,7 +259,6 @@ namespace fms_test
             Helper.Thread.Start(ref loadingThread, ts, ThreadPriority.Highest, true);
 
             systemPresenter = new SystemPresenter(view);
-            systemPresenter.Lightning = new DefaultLightsVisual3D();
             monitor.Changed += new FileSystemEventHandler(monitor_Changed);
 
             InputBindings.Add(new InputBinding(ApplicationCommands.Open, new KeyGesture(Key.O, ModifierKeys.Control)));

@@ -11,7 +11,7 @@
 AppName=Freelancer Mod Studio
 AppVersion=0.9
 AppVerName=Freelancer Mod Studio 0.9
-AppCopyright=Copyright © stfx 2009
+AppCopyright=Copyright © stfx 2009-2010
 VersionInfoVersion=0.9
 VersionInfoCompany=stfx
 AppPublisher=stfx
@@ -51,6 +51,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "..\FreelancerModStudio\bin\Release\FreelancerModStudio.exe"; DestDir: "{app}"
 Source: "..\FreelancerModStudio\bin\Release\FreelancerModStudio.XmlSerializers.dll"; DestDir: "{app}"
+Source: "..\FreelancerModStudio\bin\Release\HelixEngine.dll"; DestDir: "{app}"
 Source: "..\FreelancerModStudio\bin\Release\ObjectListView.dll"; DestDir: "{app}"
 Source: "..\FreelancerModStudio\bin\Release\WeifenLuo.WinFormsUI.Docking.dll"; DestDir: "{app}"
 Source: "..\FreelancerModStudio\bin\Release\de\FreelancerModStudio.resources.dll"; DestDir: "{app}\de"

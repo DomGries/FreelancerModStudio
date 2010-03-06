@@ -35,10 +35,7 @@ namespace FreelancerModStudio.Data
             [XmlArrayItem("File")]
             public Files Files = new Files();
 
-            public CostumTypes CostumTypes;
-
-            [XmlArrayItem("Language")]
-            public List<Language> Languages;
+            //public CostumTypes CostumTypes;
         }
 
         public class File
@@ -46,10 +43,10 @@ namespace FreelancerModStudio.Data
             [XmlAttribute("name")]
             public string Name;
 
-            //[XmlAttribute("name")]
             public FileType Type = FileType.ini;
 
-            public string Path;
+            [XmlArrayItem("Path")]
+            public List<string> Pathes;
 
             [XmlArrayItem("Block")]
             public List<Block> Blocks;

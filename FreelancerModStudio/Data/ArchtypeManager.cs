@@ -26,7 +26,7 @@ namespace FreelancerModStudio.Data
             //get archtype path
             if (fileTemplate > 0 && fileTemplate < Helper.Template.Data.Files.Count)
             {
-                string[] directories = Helper.Template.Data.Files[fileTemplate].Path.Split(new char[] { System.IO.Path.DirectorySeparatorChar });
+                string[] directories = Helper.Template.Data.Files[fileTemplate].Pathes[0].Split(new char[] { System.IO.Path.DirectorySeparatorChar });
                 StringBuilder archtypePath = new StringBuilder(file);
                 for (int i = 0; i < directories.Length; i++)
                 {

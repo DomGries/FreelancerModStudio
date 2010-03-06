@@ -113,16 +113,6 @@ namespace FreelancerModStudio
                     Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.TemplateLoadException, Properties.Resources.TemplatePath), ex));
                     Environment.Exit(0);
                 }
-
-                //set selected language
-                for (int i = 0; i < data.Data.Languages.Count; i++)
-                {
-                    if (data.Data.Languages[i].ID.ToLower() == Settings.GetShortLanguage())
-                    {
-                        selectedLanguage = i;
-                        break;
-                    }
-                }
             }
 
             public struct Data
@@ -133,27 +123,11 @@ namespace FreelancerModStudio
                     set { data.Data.Files = value; }
                 }
 
-                public static FreelancerModStudio.Data.Template.Language Language
-                {
-                    get
-                    {
-                        if (selectedLanguage != -1)
-                            return data.Data.Languages[selectedLanguage];
-                        else
-                            return null;
-                    }
-                    set
-                    {
-                        if (selectedLanguage != -1)
-                            data.Data.Languages[selectedLanguage] = value;
-                    }
-                }
-
-                public static FreelancerModStudio.Data.Template.CostumTypes CostumTypes
-                {
-                    get { return data.Data.CostumTypes; }
-                    set { data.Data.CostumTypes = value; }
-                }
+                //public static FreelancerModStudio.Data.Template.CostumTypes CostumTypes
+                //{
+                //    get { return data.Data.CostumTypes; }
+                //    set { data.Data.CostumTypes = value; }
+                //}
             }
         }
 

@@ -21,6 +21,7 @@ namespace FreelancerModStudio.SystemPresenter
         JumpGate,
         TradeLane,
         Zone,
+        System,
         None
     }
 

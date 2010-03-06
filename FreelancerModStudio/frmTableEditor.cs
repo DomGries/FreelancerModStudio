@@ -20,6 +20,8 @@ namespace FreelancerModStudio
 
         bool modified = false;
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
+
+        public bool IsUniverse { get; set; }
         ArchtypeManager archtype = null;
 
         public delegate void DataChangedType(ChangedData data);
@@ -164,15 +166,18 @@ namespace FreelancerModStudio
 
         public void LoadArchtypes()
         {
-            int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Arch");
-            string archtypeFile = ArchtypeManager.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
+            if (!IsUniverse)
+            {
+                int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Arch");
+                string archtypeFile = ArchtypeManager.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
 
-            //user interaction required to get the path of the archtype file
-            if (archtypeFile == null)
-                archtypeFile = ShowSolarArchtypeSelector();
+                //user interaction required to get the path of the archtype file
+                if (archtypeFile == null)
+                    archtypeFile = ShowSolarArchtypeSelector();
 
-            if (archtype == null)
-                archtype = new ArchtypeManager(archtypeFile, archtypeTemplate);
+                if (archtype == null)
+                    archtype = new ArchtypeManager(archtypeFile, archtypeTemplate);
+            }
 
             foreach (TableBlock block in Data.Blocks)
                 SetArchtype(block, archtype);
@@ -188,32 +193,36 @@ namespace FreelancerModStudio
                 case "zone":
                     block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.Zone;
                     break;
+                case "system":
+                    block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.System;
+                    break;
                 case "object":
-
-                    bool hasArchtype = false;
-
-                    //get type of object based on archtype
-                    foreach (EditorINIOption option in block.Block.Options)
+                    if (archtypeManager != null)
                     {
-                        if (option.Name.ToLower() == "archetype")
-                        {
-                            if (option.Values.Count > 0)
-                            {
-                                block.Archtype = archtypeManager.TypeOf(option.Values[0].Value.ToString());
-                                if (block.Archtype != null)
-                                {
-                                    block.ObjectType = block.Archtype.Type;
-                                    hasArchtype = true;
-                                }
+                        bool hasArchtype = false;
 
-                                break;
+                        //get type of object based on archtype
+                        foreach (EditorINIOption option in block.Block.Options)
+                        {
+                            if (option.Name.ToLower() == "archetype")
+                            {
+                                if (option.Values.Count > 0)
+                                {
+                                    block.Archtype = archtypeManager.TypeOf(option.Values[0].Value.ToString());
+                                    if (block.Archtype != null)
+                                    {
+                                        block.ObjectType = block.Archtype.Type;
+                                        hasArchtype = true;
+                                    }
+
+                                    break;
+                                }
                             }
                         }
+
+                        if (!hasArchtype)
+                            block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.None;
                     }
-
-                    if (!hasArchtype)
-                        block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.None;
-
                     break;
             }
 
@@ -224,7 +233,8 @@ namespace FreelancerModStudio
         public void ShowData()
         {
             bool isSystem = Data.TemplateIndex == Helper.Template.Data.Files.IndexOf("System");
-            if (isSystem)
+            IsUniverse = Data.TemplateIndex == Helper.Template.Data.Files.IndexOf("Universe");
+            if (isSystem || IsUniverse)
                 LoadArchtypes();
 
 #if DEBUG

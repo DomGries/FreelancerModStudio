@@ -353,6 +353,12 @@ namespace FreelancerModStudio.SystemPresenter
                 scale = new Vector3D(1, 1, 1);
                 rotation = ParseRotation(rotationString, false);
             }
+            else if (block.ObjectType == ContentType.System)
+            {
+                position = ParseUniverseVector(positionString);
+                scale = new Vector3D(1, 1, 1);
+                rotation = ParseRotation(rotationString, false);
+            }
             else
             {
                 scale = new Vector3D(block.Archtype.Radius, block.Archtype.Radius, block.Archtype.Radius) / 1000;
@@ -372,7 +378,7 @@ namespace FreelancerModStudio.SystemPresenter
         {
             if (type == ContentType.LightSource)
                 return new LightSource();
-            else if (type == ContentType.Sun)
+            else if (type == ContentType.Sun || type == ContentType.System)
                 return new Sun();
             else if (type == ContentType.Planet)
                 return new Planet();
@@ -508,9 +514,22 @@ namespace FreelancerModStudio.SystemPresenter
                 return ZoneShape.Ellipsoid;
         }
 
+        Vector3D ParseUniverseVector(string vector)
+        {
+            //Use Point.Parse after implementation of type handling
+            string[] values = vector.Split(new char[] { ',' });
+            if (values.Length > 1)
+            {
+                double tempScale1 = ParseDouble(values[0], 0);
+                double tempScale2 = ParseDouble(values[1], 0);
+                return new Vector3D(tempScale1, -tempScale2, 0) / 0.15;
+            }
+            return new Vector3D(0, 0, 0);
+        }
+
         Vector3D ParseVector(string vector)
         {
-            //User Vector3D.Parse after implementation of type handling
+            //Use Vector3D.Parse after implementation of type handling
             string[] values = vector.Split(new char[] { ',' });
             if (values.Length > 2)
             {

@@ -246,9 +246,12 @@ namespace FreelancerModStudio.Data.IO
         {
             for (int i = 0; i < Helper.Template.Data.Files.Count; i++)
             {
-                string pattern = ".+" + Helper.Template.Data.Files[i].Path.Replace("\\", "\\\\").Replace("*", "[^\\\\]+");
-                if (System.Text.RegularExpressions.Regex.Match(file.ToLower(), pattern).Success)
-                    return i;
+                foreach (string path in Helper.Template.Data.Files[i].Pathes)
+                {
+                    string pattern = ".+" + path.Replace("\\", "\\\\").Replace("*", "[^\\\\]+");
+                    if (System.Text.RegularExpressions.Regex.Match(file.ToLower(), pattern).Success)
+                        return i;
+                }
             }
             return -1;
         }

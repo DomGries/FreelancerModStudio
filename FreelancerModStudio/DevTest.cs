@@ -91,7 +91,7 @@ namespace FreelancerModStudio
 
                 Template.File file = new Template.File();
                 file.Name = System.IO.Path.GetFileName(iniDataTemplate.Path.ToLower());
-                file.Path = iniDataTemplate.Path.ToLower();
+                file.Pathes = new List<string>() { iniDataTemplate.Path.ToLower() };
                 file.Blocks = templateBlocks;
                 template.Data.Files.Add(file);
             }

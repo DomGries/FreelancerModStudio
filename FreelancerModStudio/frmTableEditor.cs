@@ -326,9 +326,7 @@ namespace FreelancerModStudio
         void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
             OnSelectionChanged(GetSelectedBlocks(), Data.TemplateIndex);
-
-            if (this.DockHandler.IsActivated)
-                OnContentChanged((ContentInterface)this);
+            OnContentChanged((ContentInterface)this);
         }
 
         void Save(string file)
@@ -494,12 +492,10 @@ namespace FreelancerModStudio
                 }
             }
 
-            int id = 0;
-            if (Data.Blocks.Count > 0)
-                id = Data.Blocks[Data.Blocks.Count - 1].ID + 1;
+            Data.MaxID++;
 
             //add actual block
-            undoManager.Execute(new ChangedData() { NewBlocks = new List<TableBlock> { new TableBlock(id, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
+            undoManager.Execute(new ChangedData() { NewBlocks = new List<TableBlock> { new TableBlock(Data.MaxID, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
         }
 
         public List<TableBlock> GetSelectedBlocks()
@@ -770,8 +766,7 @@ namespace FreelancerModStudio
 
             Clipboard.Copy(data);
 
-            if (this.DockHandler.IsActivated)
-                OnContentChanged((ContentInterface)this);
+            OnContentChanged((ContentInterface)this);
         }
 
         public void Cut()
@@ -789,15 +784,17 @@ namespace FreelancerModStudio
                 List<TableBlock> blocks = new List<TableBlock>();
                 for (int i = 0; i < editorData.Blocks.Count; i++)
                 {
-                    int id = 0;
-                    if (Data.Blocks.Count > 0)
-                        id = Data.Blocks[Data.Blocks.Count - 1].ID + 1;
-
-                    blocks.Add(new TableBlock(id, editorData.Blocks[i], Data.TemplateIndex));
+                    Data.MaxID++;
+                    blocks.Add(new TableBlock(Data.MaxID, editorData.Blocks[i], Data.TemplateIndex));
                 }
 
                 undoManager.Execute(new ChangedData() { NewBlocks = blocks, Type = ChangedType.Add });
             }
+        }
+
+        public bool UseDocument()
+        {
+            return false;
         }
 
         public bool CanUndo()

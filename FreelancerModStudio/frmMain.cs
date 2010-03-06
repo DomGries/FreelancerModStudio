@@ -404,7 +404,6 @@ namespace FreelancerModStudio
 
             defaultEditor.DataChanged += DefaultEditor_DataChanged;
             defaultEditor.SelectionChanged += DefaultEditor_SelectionChanged;
-            //defaultEditor.SelectedDataChanged += DefaultEditor_SelectedDataChanged;
             defaultEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
             defaultEditor.ContentChanged += Content_DisplayChanged;
             defaultEditor.DocumentChanged += Document_DisplayChanged;
@@ -492,7 +491,15 @@ namespace FreelancerModStudio
                 if (!this.CancelModClose())
                 {
                     //create mod
-                    this.CreateMod(new Mod.About(frmNewMod.txtName.Text, frmNewMod.txtAuthor.Text, Properties.Resources.DefaultModVersion, frmNewMod.txtHomepage.Text, frmNewMod.txtDescription.Text), frmNewMod.txtSaveLocation.Text.Trim());
+                    Mod.About about = new Mod.About()
+                    {
+                        Name = frmNewMod.txtName.Text,
+                        Author = frmNewMod.txtAuthor.Text,
+                        Version = Properties.Resources.DefaultModVersion,
+                        HomePage = frmNewMod.txtHomepage.Text,
+                        Description = frmNewMod.txtDescription.Text
+                    };
+                    this.CreateMod(about, frmNewMod.txtSaveLocation.Text.Trim());
 
                     //set mod save location
                     Helper.Settings.Data.Data.Forms.NewMod.ModSaveLocation = frmNewMod.txtSaveLocation.Text.Trim();
@@ -706,19 +713,28 @@ namespace FreelancerModStudio
             AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
         }
 
+        ContentInterface GetContent()
+        {
+            ContentInterface content = (ContentInterface)this.dockPanel1.ActiveContent;
+            if (content.UseDocument() && this.dockPanel1.ActiveDocument != null)
+                return (ContentInterface)this.dockPanel1.ActiveDocument;
+
+            return content;
+        }
+
         void mnuCut_Click(object sender, EventArgs e)
         {
-            ((ContentInterface)this.dockPanel1.ActiveContent).Cut();
+            GetContent().Cut();
         }
 
         void mnuCopy_Click(object sender, EventArgs e)
         {
-            ((ContentInterface)this.dockPanel1.ActiveContent).Copy();
+            GetContent().Copy();
         }
 
         void mnuPaste_Click(object sender, EventArgs e)
         {
-            ((ContentInterface)this.dockPanel1.ActiveContent).Paste();
+            GetContent().Paste();
         }
 
         void mnuUndo_Click(object sender, EventArgs e)
@@ -742,17 +758,17 @@ namespace FreelancerModStudio
             if (((ToolStripMenuItem)sender).Tag != null)
                 index = (int)((ToolStripMenuItem)sender).Tag;
 
-            ((ContentInterface)this.dockPanel1.ActiveContent).Add(index);
+            GetContent().Add(index);
         }
 
         void mnuDelete_Click(object sender, EventArgs e)
         {
-            ((ContentInterface)this.dockPanel1.ActiveContent).Delete();
+            GetContent().Delete();
         }
 
         void mnuSelectAll_Click(object sender, EventArgs e)
         {
-            ((ContentInterface)this.dockPanel1.ActiveContent).SelectAll();
+            GetContent().SelectAll();
         }
 
         void mnuGoTo_Click(object sender, EventArgs e)
@@ -791,7 +807,7 @@ namespace FreelancerModStudio
         void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
         {
             if (this.dockPanel1.ActiveContent != null)
-                Content_DisplayChanged((ContentInterface)this.dockPanel1.ActiveContent);
+                Content_DisplayChanged(GetContent());
         }
 
         void Document_DisplayChanged(DocumentInterface document)

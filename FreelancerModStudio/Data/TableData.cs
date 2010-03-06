@@ -11,6 +11,7 @@ namespace FreelancerModStudio.Data
     {
         public List<TableBlock> Blocks { get; set; }
         public int TemplateIndex { get; set; }
+        public int MaxID { get; set; }
 
         public TableData()
         {
@@ -24,11 +25,8 @@ namespace FreelancerModStudio.Data
 
             foreach (EditorINIBlock block in data.Blocks)
             {
-                int id = 0;
-                if (this.Blocks.Count > 0)
-                    id = this.Blocks[this.Blocks.Count - 1].ID + 1;
-
-                this.Blocks.Add(new TableBlock(id, block, TemplateIndex));
+                MaxID++;
+                Blocks.Add(new TableBlock(MaxID, block, TemplateIndex));
             }
         }
 

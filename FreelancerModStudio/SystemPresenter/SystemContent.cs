@@ -12,7 +12,6 @@ namespace FreelancerModStudio.SystemPresenter
     public abstract class ContentBase : IComparable<ContentBase>, ITableRow<int>
     {
         public int ID { get; set; }
-        //public int ModelIndex { get; set; }
         public TableBlock Block { get; set; }
         public ModelVisual3D Model { get; set; }
         public bool Visibility { get; set; }
@@ -23,16 +22,18 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void SetDisplay(Vector3D position, Rotation3D rotation, Vector3D scale)
         {
-            SetDisplay(position, rotation, scale, false);
-        }
-
-        void SetDisplay(Vector3D position, Rotation3D rotation, Vector3D scale, bool always)
-        {
             if (Model != null)
             {
-                ContentAnimator.SetPosition(Model, Position, position, always);
-                ContentAnimator.SetScale(Model, Scale, scale, position, always);
-                ContentAnimator.SetRotation(Model, Rotation, rotation, position, always);
+                ContentAnimation animation = new ContentAnimation()
+                {
+                    OldPosition = Position,
+                    OldRotation = Rotation,
+                    OldScale = Scale,
+                    NewPosition = position,
+                    NewRotation = rotation,
+                    NewScale = scale,
+                };
+                ContentAnimator.Animate(Model, animation);
             }
 
             Position = position;
@@ -56,7 +57,7 @@ namespace FreelancerModStudio.SystemPresenter
         {
             Model = new ModelVisual3D() { Content = GetGeometry() };
 
-            SetDisplay(Position, Rotation, Scale, true);
+            SetDisplay(Position, Rotation, Scale);
         }
 
         public int CompareTo(ContentBase other)
@@ -242,9 +243,20 @@ namespace FreelancerModStudio.SystemPresenter
     public class Zone : ContentBase
     {
         public ZoneShape Shape { get; set; }
+        public ZoneType Type { get; set; }
 
         protected override GeometryModel3D GetGeometry()
         {
+            if (Type == ZoneType.Vignette)
+                return SharedGeometries.ZoneVignette;
+            else if (Type == ZoneType.Exclusion)
+            {
+                if (Shape == ZoneShape.Box)
+                    return SharedGeometries.ZoneExclusionBox;
+                else if (Shape == ZoneShape.Sphere || Shape == ZoneShape.Ellipsoid)
+                    return SharedGeometries.ZoneExclusionSphere;
+            }
+
             if (Shape == ZoneShape.Box)
                 return SharedGeometries.ZoneBox;
             else if (Shape == ZoneShape.Cylinder)
@@ -264,21 +276,6 @@ namespace FreelancerModStudio.SystemPresenter
         }
     }
 
-    public class Path : ContentBase
-    {
-        public PathType Type { get; set; }
-
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.Path;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Path;
-        }
-    }
-
     public enum PathType
     {
         Friendly,
@@ -290,7 +287,14 @@ namespace FreelancerModStudio.SystemPresenter
     {
         Box,
         Sphere,
-        Ellipsoid,
-        Cylinder
+        Cylinder,
+        Ellipsoid
+    }
+
+    public enum ZoneType
+    {
+        Zone,
+        Vignette,
+        Exclusion
     }
 }

@@ -47,16 +47,6 @@ namespace FreelancerModStudio.Data
 			public string Version;
 			public string HomePage;
 			public string Description;
-
-			public About() { }
-			public About(string name, string author, string version, string homePage, string description)
-			{
-				this.Name = name;
-				this.Author = author;
-				this.Version = version;
-				this.HomePage = homePage;
-				this.Description = description;
-			}
 		}
 
 		public Mod() { }

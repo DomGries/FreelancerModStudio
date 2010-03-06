@@ -166,5 +166,10 @@ namespace FreelancerModStudio
         {
             throw new NotImplementedException();
         }
+
+        public bool UseDocument()
+        {
+            return false;
+        }
     }
 }

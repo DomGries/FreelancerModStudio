@@ -13,6 +13,7 @@ using System.Windows.Forms.Integration;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.Data;
 using System.Windows.Input;
+using System.Threading;
 
 namespace FreelancerModStudio
 {
@@ -32,19 +33,57 @@ namespace FreelancerModStudio
         public frmSystemEditor()
         {
             InitializeComponent();
+            LoadingThread();
+        }
 
+        //private void frmSystemEditor_Load(object sender, EventArgs e)
+        //{
+        //    ProgressBar progress = new ProgressBar();
+        //    progress.Width = this.Width / 2;
+        //    progress.Height = 23;
+        //    progress.Top = this.Height / 2 - 23 / 2;
+        //    progress.Left = this.Width / 4;
+        //    progress.Style = ProgressBarStyle.Marquee;
+        //    this.Controls.Add(progress);
+
+        //    //start loading thread
+        //    ThreadStart threadStart = new ThreadStart(LoadingThread);
+        //    Thread thread = new Thread(threadStart);
+        //    Helper.Thread.Start(ref thread, threadStart, ThreadPriority.Normal, true);
+        //}
+
+        void LoadingThread()
+        {
+#if DEBUG
+            System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
+            st.Start();
+#endif
             //create viewport using the Helix Engine
             HelixView3D view = new HelixView3D();
             view.Background = System.Windows.Media.Brushes.Black;
-            view.TextBrush = System.Windows.Media.Brushes.White;
+            view.Foreground = System.Windows.Media.Brushes.White;
+            view.FontSize = 16;
+            view.FontWeight = System.Windows.FontWeights.Bold;
+            view.ClipToBounds = false;
             view.ShowViewCube = true;
             view.Camera.NearPlaneDistance = 0.001;
-
+#if DEBUG
+            st.Stop();
+            System.Diagnostics.Debug.WriteLine("init HelixView: " + st.ElapsedMilliseconds + "ms");
+            st.Start();
+#endif
             ElementHost host = new ElementHost();
             host.Child = view;
             host.Dock = DockStyle.Fill;
+            //this.Invoke(new MethodInvoker(delegate
+            //{
             this.Controls.Add(host);
-
+            //}));
+#if DEBUG
+            st.Stop();
+            System.Diagnostics.Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");
+            st.Start();
+#endif
             systemPresenter = new SystemPresenter.SystemPresenter(view);
             systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
         }
@@ -58,8 +97,11 @@ namespace FreelancerModStudio
         {
             base.Dispose();
 
-            systemPresenter.ClearDisplay(true);
-            systemPresenter.Objects.Clear();
+            if (systemPresenter != null)
+            {
+                systemPresenter.ClearDisplay(true);
+                systemPresenter.Objects.Clear();
+            }
         }
 
         public void ShowData(TableData data)
@@ -113,7 +155,6 @@ namespace FreelancerModStudio
         public void Add(List<TableBlock> blocks)
         {
             systemPresenter.Add(blocks);
-            systemPresenter.RefreshDisplay();
         }
 
         public void Delete(List<TableBlock> blocks)
@@ -129,39 +170,46 @@ namespace FreelancerModStudio
         //    systemPresenter.Viewport.Status = status;
         //}
 
+        public bool UseDocument()
+        {
+            return true;
+        }
+
+        #region ContentInterface Members
+
         public bool CanCopy()
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool CanCut()
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool CanPaste()
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool CanAdd()
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool CanAddMultiple()
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool CanDelete()
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public bool CanSelectAll()
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public ToolStripDropDown MultipleAddDropDown()
@@ -198,5 +246,7 @@ namespace FreelancerModStudio
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

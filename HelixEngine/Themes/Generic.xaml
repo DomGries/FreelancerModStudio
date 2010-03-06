@@ -30,59 +30,30 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:HelixView3D}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" Focusable="True">
-                        <Grid>
-                            <AdornerDecorator x:Name="PART_AdornerLayer" DataContext="{TemplateBinding DataContext}" Focusable="False">
-                                <!-- the main viewport3D is inserted here -->
-                            </AdornerDecorator>
+                    <Grid Background="{TemplateBinding Background}" Focusable="False">
+                        <AdornerDecorator x:Name="PART_AdornerLayer" DataContext="{TemplateBinding DataContext}" Focusable="False">
+                            <!-- the main viewport3D is inserted here -->
+                        </AdornerDecorator>
 
-                            <!-- Coordinate system -->
-                            <Viewport3D x:Name="PART_CoordinateView" Width="80" Height="80" Margin="0"  
-                                HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                                Visibility="{TemplateBinding ShowCoordinateSystem, Converter={local:BoolToVisibilityConverter}}">
-                                <local:ArrowVisual3D Point2="10 0 0" Fill="Red"/>
-                                <local:ArrowVisual3D Point2="0 10 0" Fill="Green"/>
-                                <local:ArrowVisual3D Point2="0 0 10" Fill="Blue"/>
-                            </Viewport3D>
-                            
-                            <local:CameraController x:Name="PART_CameraController" 
-                                                 CameraRotationMode="{TemplateBinding CameraRotationMode}"
-                                                 CameraMode="{TemplateBinding CameraMode}"
-                                                 InfiniteSpin="{TemplateBinding InfiniteSpin}"/>
-                            
-                            <Border VerticalAlignment="Top" Background="{TemplateBinding TitleBackground}" IsHitTestVisible="False">
-                                <Grid>                                    
-                                    <!-- Titles -->
-                                    <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                                        <!-- Title -->
-                                        <TextBlock Text="{TemplateBinding Title}" 
-                                                   FontWeight="Bold" 
-                                                   FontFamily="{TemplateBinding TitleFontFamily}" 
-                                                   FontSize="{TemplateBinding TitleSize}" 
-                                                   Foreground="{TemplateBinding TextBrush}"/>
-                                        <!-- SubTitle -->
-                                        <TextBlock Text="{TemplateBinding SubTitle}" 
-                                                   FontSize="{TemplateBinding SubTitleSize}" 
-                                                   FontFamily="{TemplateBinding TitleFontFamily}" 
-                                                   Foreground="{TemplateBinding TextBrush}"/>
-                                    </StackPanel>
+                        <local:CameraController x:Name="PART_CameraController" 
+                            CameraRotationMode="{TemplateBinding CameraRotationMode}"
+                            CameraMode="{TemplateBinding CameraMode}"
+                            InfiniteSpin="{TemplateBinding InfiniteSpin}"/>
 
-                                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
-                                        <!-- Status -->
-                                        <TextBlock  HorizontalAlignment="Right" Text="{TemplateBinding Status}"  Foreground="{TemplateBinding TextBrush}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                           
-                            <Viewport3D x:Name="PART_ViewCubeView" Width="80" Height="80" Margin="0" Opacity="0.5"
-                                HorizontalAlignment="Right" VerticalAlignment="Bottom" ClipToBounds="False"
-                                Visibility="{TemplateBinding ShowViewCube, Converter={local:BoolToVisibilityConverter}}">
-                                <local:ViewCubeVisual3D x:Name="PART_ViewCube"/>
-                            </Viewport3D>
-                        </Grid>
-                    </Border>
+                        <!-- Title -->
+                        <TextBlock Text="{TemplateBinding Title}"
+                            FontFamily="{TemplateBinding FontFamily}" 
+                            FontSize="{TemplateBinding FontSize}" 
+                            FontWeight="{TemplateBinding FontWeight}" 
+                            Foreground="{TemplateBinding Foreground}"
+                            IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5"/>
+
+                        <Viewport3D x:Name="PART_ViewCubeView" Width="80" Height="80" Margin="0" Opacity="0.5"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom" ClipToBounds="False"
+                            Visibility="{TemplateBinding ShowViewCube, Converter={local:BoolToVisibilityConverter}}">
+                            <local:ViewCubeVisual3D x:Name="PART_ViewCube"/>
+                        </Viewport3D>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

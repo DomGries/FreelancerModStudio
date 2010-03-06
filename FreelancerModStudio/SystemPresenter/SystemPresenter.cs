@@ -120,49 +120,35 @@ namespace FreelancerModStudio.SystemPresenter
             Viewport.SelectionChanged += camera_SelectionChanged;
         }
 
-        public void RefreshDisplay()
+        void AddContent(ContentBase content)
         {
-            //ContentAnimator.AnimationDuration = new Duration(TimeSpan.Zero);
+            if (content.Model == null)
+                content.LoadModel();
 
-            ClearDisplay(false);
-
-            List<ContentBase> objects = Objects.Values.ToList<ContentBase>();
-            objects.Sort();
-
-            ShowObjects(objects);
-
-            ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
-        }
-
-        void ShowObjects(List<ContentBase> objects)
-        {
-            foreach (ContentBase content in objects)
+            if (content.Visibility)
             {
-                if (content.Model == null)
-                    content.LoadModel();
+                Viewport.Add(content.Model);
 
-                if (content.Visibility)
-                {
-                    Viewport.Add(content.Model);
-
-                    if (content == SelectedContent)
-                        Selection = GetSelectionBox(content);
-                }
+                if (content == SelectedContent)
+                    Selection = GetSelectionBox(content);
             }
+
+            Objects.Add(content);
         }
 
         public void Add(List<TableBlock> blocks)
         {
+            ContentAnimator.AnimationDuration = new Duration(TimeSpan.Zero);
+
             foreach (TableBlock block in blocks)
             {
                 ContentBase content = GetContent(block);
 
                 if (content != null)
-                    Objects.Add(content);
+                    AddContent(content);
             }
 
-            //reload models and resort everything
-            RefreshDisplay();
+            ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
         public void Delete(List<TableBlock> blocks)
@@ -171,11 +157,14 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 ContentBase content;
                 if (Objects.TryGetValue(block.ID, out content))
-                {
-                    Objects.Remove(content);
-                    Viewport.Remove(content.Model);
-                }
+                    Delete(content);
             }
+        }
+
+        public void Delete(ContentBase content)
+        {
+            Objects.Remove(content);
+            Viewport.Remove(content.Model);
         }
 
         void camera_SelectionChanged(DependencyObject visual)
@@ -260,9 +249,8 @@ namespace FreelancerModStudio.SystemPresenter
 
                 if (visibility)
                 {
-                    //Viewport.Children.Insert(content.ModelIndex, content.Model);
-                    //reload models and resort everything
-                    RefreshDisplay();
+                    //show model
+                    Viewport.Add(content.Model);
                 }
                 else
                     //hide model
@@ -272,7 +260,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void ClearDisplay(bool light)
         {
-            if (light)
+            if (light || Lightning == null)
                 Viewport.Children.Clear();
             else
             {
@@ -287,8 +275,18 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void ChangeValues(ContentBase content, TableBlock block)
         {
-            content.Block = block;
-            SetValues(content, block);
+            if (block.ObjectType == ContentType.None)
+            {
+                //delete content if it was changed back to an invalid type
+                Delete(content);
+                if (selectedContent == content)
+                    SelectedContent = null;
+            }
+            else
+            {
+                content.Block = block;
+                SetValues(content, block);
+            }
         }
 
         void SetValues(ContentBase content, TableBlock block)
@@ -297,25 +295,34 @@ namespace FreelancerModStudio.SystemPresenter
             string rotationString = "0,0,0";
             string shapeString = "box";
             string scaleString = "1,1,1";
+            string vignetteString = "";
+            string flagsString = "";
 
             //get transformation of content
             foreach (EditorINIOption option in block.Block.Options)
             {
                 if (option.Values.Count > 0)
                 {
+                    string value = option.Values[0].Value.ToString();
                     switch (option.Name.ToLower())
                     {
                         case "pos":
-                            positionString = option.Values[0].Value.ToString();
+                            positionString = value;
                             break;
                         case "rotate":
-                            rotationString = option.Values[0].Value.ToString();
+                            rotationString = value;
                             break;
                         case "shape":
-                            shapeString = option.Values[0].Value.ToString();
+                            shapeString = value;
                             break;
                         case "size":
-                            scaleString = option.Values[0].Value.ToString();
+                            scaleString = value;
+                            break;
+                        case "vignette_type":
+                            vignetteString = value;
+                            break;
+                        case "property_flags":
+                            flagsString = value;
                             break;
                     }
                 }
@@ -328,11 +335,18 @@ namespace FreelancerModStudio.SystemPresenter
             //set content values
             if (block.ObjectType == ContentType.Zone)
             {
+                Zone zone = (Zone)content;
+
                 ZoneShape shape = ParseShape(shapeString);
                 scale = ParseScale(scaleString, shape);
                 rotation = ParseRotation(rotationString, shape == ZoneShape.Cylinder);
 
-                ((Zone)content).Shape = shape;
+                zone.Shape = shape;
+
+                if (vignetteString != "")
+                    zone.Type = ZoneType.Vignette;
+                else if (flagsString == "131072")
+                    zone.Type = ZoneType.Exclusion;
             }
             else if (block.ObjectType == ContentType.LightSource)
             {

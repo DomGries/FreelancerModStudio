@@ -6,6 +6,8 @@ namespace FreelancerModStudio
 {
     public interface ContentInterface
     {
+        bool UseDocument();
+
         bool CanCopy();
         bool CanCut();
         bool CanPaste();

@@ -21,7 +21,6 @@ namespace FreelancerModStudio.SystemPresenter
         JumpGate,
         TradeLane,
         Zone,
-        Path,
         None
     }
 
@@ -30,18 +29,19 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material LightSource = MaterialHelper.CreateEmissiveMaterial(Brushes.Yellow);
         public static Material Sun = MaterialHelper.CreateEmissiveMaterial(Brushes.Orange);
         public static Material Planet = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 60, 120));
-        public static Material Station = MaterialHelper.CreateEmissiveMaterial(Brushes.Blue);
+        public static Material Station = MaterialHelper.CreateEmissiveMaterial(Brushes.OrangeRed);
         public static Material Satellite = MaterialHelper.CreateEmissiveMaterial(Brushes.BlueViolet);
         public static Material Construct = MaterialHelper.CreateEmissiveMaterial(Brushes.Fuchsia);
         public static Material Depot = MaterialHelper.CreateEmissiveMaterial(Brushes.SlateGray);
-        public static Material Ship = MaterialHelper.CreateEmissiveMaterial(Brushes.LawnGreen);
+        public static Material Ship = MaterialHelper.CreateEmissiveMaterial(Brushes.Yellow);
         public static Material WeaponsPlatform = MaterialHelper.CreateEmissiveMaterial(Brushes.BurlyWood);
         public static Material TradeLane = MaterialHelper.CreateEmissiveMaterial(Brushes.Cyan);
-        public static Material JumpHole = MaterialHelper.CreateEmissiveMaterial(Brushes.Coral);
-        public static Material JumpGate = MaterialHelper.CreateEmissiveMaterial(Brushes.OrangeRed);
-        public static Material DockingRing = MaterialHelper.CreateEmissiveMaterial(Brushes.DarkGreen);
+        public static Material JumpHole = MaterialHelper.CreateEmissiveMaterial(Brushes.DarkGreen);
+        public static Material JumpGate = MaterialHelper.CreateEmissiveMaterial(Brushes.DarkGreen);
+        public static Material DockingRing = MaterialHelper.CreateEmissiveMaterial(Brushes.Firebrick);
         public static Material Zone = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 20, 20));
-        public static Material Path = MaterialHelper.CreateMaterial(Brushes.WhiteSmoke);
+        public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 20, 10));
+        public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 10, 0));
     }
 
     public static class SharedMeshes
@@ -117,12 +117,6 @@ namespace FreelancerModStudio.SystemPresenter
         //    Slices = 4,
         //});
 
-        public static MeshGeometry3D Path = GetMesh(new SphereMesh()
-        {
-            Slices = 18,
-            Stacks = 9
-        });
-
         static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
         {
             MeshGeometry3D geometry = mesh.Geometry;
@@ -181,8 +175,14 @@ namespace FreelancerModStudio.SystemPresenter
         public static GeometryModel3D ZoneCylinder =
             GetGeometry(SharedMeshes.ZoneCylinder, SharedMaterials.Zone);
 
-        public static GeometryModel3D Path =
-            GetGeometry(SharedMeshes.Path, SharedMaterials.Path);
+        public static GeometryModel3D ZoneVignette =
+            GetGeometry(SharedMeshes.ZoneSphere, SharedMaterials.ZoneVignette);
+
+        public static GeometryModel3D ZoneExclusionSphere =
+            GetGeometry(SharedMeshes.ZoneSphere, SharedMaterials.ZoneExclusion);
+
+        public static GeometryModel3D ZoneExclusionBox =
+            GetGeometry(SharedMeshes.ZoneBox, SharedMaterials.ZoneExclusion);
 
         static GeometryModel3D GetGeometry(Geometry3D geometry, Material material)
         {

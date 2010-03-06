@@ -89,6 +89,7 @@
     <Compile Include="Visuals\Meshes\Polyhedra\TetrahedronMesh.cs" />
     <Compile Include="Visuals\Meshes\SphereMesh.cs" />
     <Compile Include="Visuals\Meshes\TorusMesh.cs" />
+    <Compile Include="Visuals\Meshes\TruncatedConeVisual3D.cs" />
     <Compile Include="Visuals\Paths\BezierSegment3D.cs" />
     <Compile Include="Visuals\Paths\LineSegment3D.cs" />
     <Compile Include="Visuals\Paths\PathFigure3D.cs" />

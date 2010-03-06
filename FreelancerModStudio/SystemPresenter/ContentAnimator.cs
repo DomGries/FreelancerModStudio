@@ -9,69 +9,45 @@ using HelixEngine;
 
 namespace FreelancerModStudio.SystemPresenter
 {
+    public class ContentAnimation
+    {
+        public Vector3D OldPosition { get; set; }
+        public Rotation3D OldRotation { get; set; }
+        public Vector3D OldScale { get; set; }
+
+        public Vector3D NewPosition { get; set; }
+        public Rotation3D NewRotation { get; set; }
+        public Vector3D NewScale { get; set; }
+    }
+
     public static class ContentAnimator
     {
-        public static Duration AnimationDuration = new Duration(TimeSpan.FromMilliseconds(2000));
+        public static Duration AnimationDuration = new Duration(TimeSpan.Zero);
         public static double AnimationAccelerationRatio = 0.3;
         public static double AnimationDecelerationRatio = 0.5;
 
-        public static void SetPosition(ModelVisual3D model, Vector3D oldPosition, Vector3D newPosition, bool always)
+        public static void Animate(ModelVisual3D model, ContentAnimation animation)
         {
-            if (always || newPosition != oldPosition)
+            Transform3DGroup transform = new Transform3DGroup();
+            if (AnimationDuration.TimeSpan == TimeSpan.Zero)
             {
-                if (AnimationDuration.TimeSpan == TimeSpan.Zero)
-                    ContentAnimator.AddTransformation(model, new TranslateTransform3D(newPosition));
-                else
-                    AnimatePosition(model, oldPosition, newPosition);
+                transform.Children.Add(new ScaleTransform3D(animation.NewScale));
+                transform.Children.Add(new RotateTransform3D(animation.NewRotation));
+                transform.Children.Add(new TranslateTransform3D(animation.NewPosition));
+
+                model.Transform = new MatrixTransform3D(transform.Value);
+            }
+            else
+            {
+                transform.Children.Add(AnimateScale(animation.OldScale, animation.NewScale));
+                transform.Children.Add(AnimateRotation(animation.OldRotation, animation.NewRotation));
+                transform.Children.Add(AnimatePosition(animation.OldPosition, animation.NewPosition));
+
+                model.Transform = transform;
             }
         }
 
-        public static void SetRotation(ModelVisual3D model, Rotation3D oldRotation, Rotation3D newRotation, Vector3D center, bool always)
-        {
-            if (always || !RotationEquals(newRotation, oldRotation))
-            {
-                if (AnimationDuration.TimeSpan == TimeSpan.Zero)
-                    ContentAnimator.AddTransformation(model, new RotateTransform3D(newRotation));
-                else
-                    AnimateRotation(model, oldRotation, newRotation, center);
-            }
-        }
-
-        static bool RotationEquals(Rotation3D rotationX, Rotation3D rotationY)
-        {
-            AxisAngleRotation3D x = (AxisAngleRotation3D)rotationX;
-            AxisAngleRotation3D y = (AxisAngleRotation3D)rotationY;
-            bool angleEqual = x.Angle == y.Angle;
-            if (angleEqual)
-                return x.Axis == y.Axis;
-
-            return angleEqual;
-        }
-
-        public static void SetScale(ModelVisual3D model, Vector3D oldScale, Vector3D newScale, Vector3D center, bool always)
-        {
-            if (always || newScale != oldScale)
-            {
-                if (AnimationDuration.TimeSpan == TimeSpan.Zero)
-                    ContentAnimator.AddTransformation(model, new ScaleTransform3D(newScale));
-                else
-                    AnimateScale(model, oldScale, newScale, center);
-            }
-        }
-
-        public static void AddTransformation(ModelVisual3D model, Transform3D value)
-        {
-            Transform3DGroup group = new Transform3DGroup();
-            group.Children.Add(model.Transform);
-
-            //add new transform
-            group.Children.Add(value);
-
-            //add sum of all transforms
-            model.Transform = new MatrixTransform3D(group.Value);
-        }
-
-        public static void AnimatePosition(ModelVisual3D model, Vector3D oldPosition, Vector3D newPosition)
+        static TranslateTransform3D AnimatePosition(Vector3D oldPosition, Vector3D newPosition)
         {
             TranslateTransform3D transform = new TranslateTransform3D(oldPosition);
 
@@ -108,12 +84,12 @@ namespace FreelancerModStudio.SystemPresenter
                 transform.BeginAnimation(TranslateTransform3D.OffsetZProperty, animationZ);
             }
 
-            AddTransformationAnimation(model, transform);
+            return transform;
         }
 
-        public static void AnimateRotation(ModelVisual3D model, Rotation3D oldRotation, Rotation3D newRotation, Vector3D center)
+        static RotateTransform3D AnimateRotation(Rotation3D oldRotation, Rotation3D newRotation)
         {
-            RotateTransform3D transform = new RotateTransform3D(oldRotation, center.ToPoint3D());
+            RotateTransform3D transform = new RotateTransform3D(oldRotation);
 
             Rotation3DAnimation animation = new Rotation3DAnimation(oldRotation, newRotation, AnimationDuration)
             {
@@ -124,12 +100,12 @@ namespace FreelancerModStudio.SystemPresenter
 
             transform.BeginAnimation(RotateTransform3D.RotationProperty, animation);
 
-            AddTransformationAnimation(model, transform);
+            return transform;
         }
 
-        public static void AnimateScale(ModelVisual3D model, Vector3D oldScale, Vector3D newScale, Vector3D center)
+        static ScaleTransform3D AnimateScale(Vector3D oldScale, Vector3D newScale)
         {
-            ScaleTransform3D transform = new ScaleTransform3D(oldScale, center.ToPoint3D());
+            ScaleTransform3D transform = new ScaleTransform3D(oldScale);
 
             if (newScale.X != oldScale.X)
             {
@@ -164,25 +140,7 @@ namespace FreelancerModStudio.SystemPresenter
                 transform.BeginAnimation(ScaleTransform3D.ScaleZProperty, animationZ);
             }
 
-            AddTransformationAnimation(model, transform);
-        }
-
-        public static void AddTransformationAnimation(ModelVisual3D model, Transform3D value)
-        {
-            if (model.Transform is Transform3DGroup == false)
-                model.Transform = new Transform3DGroup();
-
-            Type type = value.GetType();
-            Transform3DGroup transformGroup = (Transform3DGroup)model.Transform;
-            for (int i = 0; i < transformGroup.Children.Count; i++)
-            {
-                if (transformGroup.Children[i].GetType() == type)
-                {
-                    transformGroup.Children[i] = value;
-                    return;
-                }
-            }
-            transformGroup.Children.Add(value);
+            return transform;
         }
     }
 }

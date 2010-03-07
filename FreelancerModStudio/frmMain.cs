@@ -555,22 +555,27 @@ namespace FreelancerModStudio
             if (activeDocument != null && activeDocument is frmTableEditor)
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-
-                if (systemEditor != null)
-                {
-                    systemEditor.ShowData(defaultEditor.Data);
-
-                    //select initially
-                    List<TableBlock> blocks = defaultEditor.GetSelectedBlocks();
-                    if (blocks != null)
-                        systemEditor.Select(blocks[0].ID);
-                }
+                ShowSystemEditor(defaultEditor);
 
                 DefaultEditor_SelectionChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
                 Document_DisplayChanged((DocumentInterface)activeDocument);
             }
             else
                 DefaultEditor_SelectionChanged(null, 0);
+        }
+
+        private void ShowSystemEditor(frmTableEditor editor)
+        {
+            if (systemEditor != null)
+            {
+                systemEditor.IsUniverse = editor.IsUniverse;
+                systemEditor.ShowData(editor.Data, editor.File);
+
+                //select initially
+                List<TableBlock> blocks = editor.GetSelectedBlocks();
+                if (blocks != null)
+                    systemEditor.Select(blocks[0].ID);
+            }
         }
 
         void mnuOptions_Click(object sender, EventArgs e)
@@ -856,17 +861,7 @@ namespace FreelancerModStudio
                 systemEditor.Show();
 
             if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
-            {
-                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument;
-
-                systemEditor.Clear();
-                systemEditor.ShowData(editor.Data);
-
-                //select initially
-                List<TableBlock> blocks = editor.GetSelectedBlocks();
-                if (blocks != null)
-                    systemEditor.Select(blocks[0].ID);
-            }
+                ShowSystemEditor((frmTableEditor)dockPanel1.ActiveDocument);
         }
 
         void systemEditor_SelectionChanged(TableBlock block)

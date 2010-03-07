@@ -168,7 +168,7 @@ namespace FreelancerModStudio
         {
             if (!IsUniverse)
             {
-                int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Arch");
+                int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Archtype");
                 string archtypeFile = ArchtypeManager.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
 
                 //user interaction required to get the path of the archtype file

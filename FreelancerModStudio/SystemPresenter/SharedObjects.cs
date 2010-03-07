@@ -43,80 +43,43 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material Zone = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 20, 20));
         public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 20, 10));
         public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 10, 0));
+
+        public static Material ConnectionJumphole = MaterialHelper.CreateEmissiveMaterial(Brushes.Red);
+        public static Material ConnectionJumpgate = MaterialHelper.CreateEmissiveMaterial(Brushes.Green);
+        public static Material Connection = MaterialHelper.CreateEmissiveMaterial(Brushes.Blue);
     }
 
     public static class SharedMeshes
     {
-        public static MeshGeometry3D LightSource = GetMesh(new SphereMesh()
+        public static MeshGeometry3D Sphere = GetMesh(new SphereMesh()
+        {
+            Slices = 18,
+            Stacks = 9
+        });
+
+        public static MeshGeometry3D SphereLightSource = GetMesh(new SphereMesh()
         {
             Radius = 0.4,
             Slices = 18,
             Stacks = 9
         });
 
-        public static MeshGeometry3D Sun = GetMesh(new SphereMesh()
-        {
-            Slices = 18,
-            Stacks = 9
-        });
 
-        public static MeshGeometry3D Planet = GetMesh(new SphereMesh()
-        {
-            Slices = 18,
-            Stacks = 9
-        });
-
-        public static MeshGeometry3D Station = GetMesh(new BoxMesh());
-
-        public static MeshGeometry3D Ship = GetMesh(new TetrahedronMesh());
-
-        public static MeshGeometry3D WeaponsPlatform = GetMesh(new BoxMesh());
-
-        public static MeshGeometry3D TradeLane = GetMesh(new BoxMesh()
+        public static MeshGeometry3D BoxTradeLane = GetMesh(new BoxMesh()
         {
             Width = 1,
             Depth = 1.6,
             Height = 0.4,
         });
 
-        public static MeshGeometry3D JumpHole = GetMesh(new CylinderMesh()
+        public static MeshGeometry3D CylinderRing = GetMesh(new CylinderMesh()
         {
             Radius = 0.5,
             Length = 0.25,
         });
 
-        public static MeshGeometry3D JumpGate = GetMesh(new TetrahedronMesh());
-
-        public static MeshGeometry3D DockingRing = GetMesh(new CylinderMesh()
-        {
-            Radius = 0.5,
-            Length = 0.25,
-        });
-
-        public static MeshGeometry3D Satellite = GetMesh(new BoxMesh());
-
-        public static MeshGeometry3D Construct = GetMesh(new BoxMesh());
-
-        public static MeshGeometry3D Depot = GetMesh(new BoxMesh());
-
-        public static MeshGeometry3D ZoneBox = GetMesh(new BoxMesh());
-
-        public static MeshGeometry3D ZoneSphere = GetMesh(new SphereMesh()
-        {
-            Slices = 18,
-            Stacks = 9
-        });
-
-        public static MeshGeometry3D ZoneCylinder = GetMesh(new BoxMesh()
-        {
-            //Width = 2,
-            //Depth = 2,
-        });
-
-        //public static MeshGeometry3D ZoneCylinder = GetMesh(new CylinderMesh()
-        //{
-        //    Slices = 4,
-        //});
+        public static MeshGeometry3D Pyramid = GetMesh(new TetrahedronMesh());
+        public static MeshGeometry3D Box = GetMesh(new BoxMesh());
 
         static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
         {
@@ -129,61 +92,70 @@ namespace FreelancerModStudio.SystemPresenter
     public static class SharedGeometries
     {
         public static GeometryModel3D LightSource =
-            GetGeometry(SharedMeshes.LightSource, SharedMaterials.LightSource);
+            GetGeometry(SharedMeshes.SphereLightSource, SharedMaterials.LightSource);
 
         public static GeometryModel3D Sun =
-            GetGeometry(SharedMeshes.Sun, SharedMaterials.Sun);
+            GetGeometry(SharedMeshes.Sphere, SharedMaterials.Sun);
 
         public static GeometryModel3D Planet =
-            GetGeometry(SharedMeshes.Planet, SharedMaterials.Planet);
+            GetGeometry(SharedMeshes.Sphere, SharedMaterials.Planet);
 
         public static GeometryModel3D Station =
-            GetGeometry(SharedMeshes.Station, SharedMaterials.Station);
+            GetGeometry(SharedMeshes.Box, SharedMaterials.Station);
 
         public static GeometryModel3D Ship =
-            GetGeometry(SharedMeshes.Ship, SharedMaterials.Ship);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Ship);
 
         public static GeometryModel3D WeaponsPlatform =
-            GetGeometry(SharedMeshes.WeaponsPlatform, SharedMaterials.WeaponsPlatform);
+            GetGeometry(SharedMeshes.Box, SharedMaterials.WeaponsPlatform);
 
         public static GeometryModel3D TradeLane =
-            GetGeometry(SharedMeshes.TradeLane, SharedMaterials.TradeLane);
+            GetGeometry(SharedMeshes.BoxTradeLane, SharedMaterials.TradeLane);
 
         public static GeometryModel3D JumpHole =
-            GetGeometry(SharedMeshes.JumpHole, SharedMaterials.JumpHole);
+            GetGeometry(SharedMeshes.CylinderRing, SharedMaterials.JumpHole);
 
         public static GeometryModel3D JumpGate =
-            GetGeometry(SharedMeshes.JumpGate, SharedMaterials.JumpGate);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.JumpGate);
 
         public static GeometryModel3D DockingRing =
-            GetGeometry(SharedMeshes.DockingRing, SharedMaterials.DockingRing);
+            GetGeometry(SharedMeshes.CylinderRing, SharedMaterials.DockingRing);
 
         public static GeometryModel3D Satellite =
-            GetGeometry(SharedMeshes.Satellite, SharedMaterials.Satellite);
+            GetGeometry(SharedMeshes.Box, SharedMaterials.Satellite);
 
         public static GeometryModel3D Construct =
-            GetGeometry(SharedMeshes.Construct, SharedMaterials.Construct);
+            GetGeometry(SharedMeshes.Box, SharedMaterials.Construct);
 
         public static GeometryModel3D Depot =
-            GetGeometry(SharedMeshes.Depot, SharedMaterials.Depot);
+            GetGeometry(SharedMeshes.Box, SharedMaterials.Depot);
 
         public static GeometryModel3D ZoneBox =
-            GetGeometry(SharedMeshes.ZoneBox, SharedMaterials.Zone);
+            GetGeometry(SharedMeshes.Box, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneSphere =
-            GetGeometry(SharedMeshes.ZoneSphere, SharedMaterials.Zone);
+            GetGeometry(SharedMeshes.Sphere, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneCylinder =
-            GetGeometry(SharedMeshes.ZoneCylinder, SharedMaterials.Zone);
+            GetGeometry(SharedMeshes.Box, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneVignette =
-            GetGeometry(SharedMeshes.ZoneSphere, SharedMaterials.ZoneVignette);
+            GetGeometry(SharedMeshes.Sphere, SharedMaterials.ZoneVignette);
 
         public static GeometryModel3D ZoneExclusionSphere =
-            GetGeometry(SharedMeshes.ZoneSphere, SharedMaterials.ZoneExclusion);
+            GetGeometry(SharedMeshes.Sphere, SharedMaterials.ZoneExclusion);
 
         public static GeometryModel3D ZoneExclusionBox =
-            GetGeometry(SharedMeshes.ZoneBox, SharedMaterials.ZoneExclusion);
+            GetGeometry(SharedMeshes.Box, SharedMaterials.ZoneExclusion);
+
+        public static GeometryModel3D Connection =
+            GetGeometry(SharedMeshes.Box, SharedMaterials.Connection);
+
+        public static GeometryModel3D ConnectionJumpgate =
+            GetGeometry(SharedMeshes.Box, SharedMaterials.ConnectionJumpgate);
+
+        public static GeometryModel3D ConnectionJumphole =
+            GetGeometry(SharedMeshes.Box, SharedMaterials.ConnectionJumphole);
 
         static GeometryModel3D GetGeometry(Geometry3D geometry, Material material)
         {

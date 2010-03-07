@@ -14,6 +14,7 @@ using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.Data;
 using System.Windows.Input;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace FreelancerModStudio
 {
@@ -82,7 +83,6 @@ namespace FreelancerModStudio
 #if DEBUG
             st.Stop();
             System.Diagnostics.Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");
-            st.Start();
 #endif
             systemPresenter = new SystemPresenter.SystemPresenter(view);
             systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
@@ -104,10 +104,21 @@ namespace FreelancerModStudio
             }
         }
 
-        public void ShowData(TableData data)
+        public void ShowData(TableData data, string file)
         {
             Clear();
             systemPresenter.Add(data.Blocks);
+
+            if (IsUniverse)
+            {
+                
+                    int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
+                    systemPresenter.LoadUniverseConnections(System.IO.Path.GetDirectoryName(file), systemTemplate);
+                    ThreadStart threadStart = new ThreadStart(delegate
+                    { });
+                Thread thread = new Thread(threadStart);
+                Helper.Thread.Start(ref thread, threadStart, ThreadPriority.Normal, true);
+            }
         }
 
         public void Clear()
@@ -169,6 +180,18 @@ namespace FreelancerModStudio
 
         //    systemPresenter.Viewport.Status = status;
         //}
+
+        public bool IsUniverse
+        {
+            get
+            {
+                return systemPresenter.IsUniverse;
+            }
+            set
+            {
+                systemPresenter.IsUniverse = value;
+            }
+        }
 
         public bool UseDocument()
         {

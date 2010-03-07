@@ -5,7 +5,7 @@
 
 #include "scripts\products\ngen.iss"
 #include "scripts\products\msi31.iss"
-#include "scripts\products\dotnetfx35sp1lp.iss"
+#include "scripts\products\dotnetfx35sp1.iss"
 
 [Setup]
 AppName=Freelancer Mod Studio
@@ -82,7 +82,6 @@ begin
 	
 	//install .netfx 3.5 sp1
 	dotnetfx35sp1();
-	dotnetfx35sp1lp();
 	
 	Result := true;
 end;

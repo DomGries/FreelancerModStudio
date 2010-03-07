@@ -56,7 +56,6 @@ namespace FreelancerModStudio.SystemPresenter
         public void LoadModel()
         {
             Model = new ModelVisual3D() { Content = GetGeometry() };
-
             SetDisplay(Position, Rotation, Scale);
         }
 
@@ -80,7 +79,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.LightSource;
+            return SharedMeshes.SphereLightSource;
         }
     }
 
@@ -93,7 +92,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Sun;
+            return SharedMeshes.Sphere;
         }
     }
 
@@ -106,7 +105,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Planet;
+            return SharedMeshes.Sphere;
         }
     }
 
@@ -119,7 +118,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Station;
+            return SharedMeshes.Box;
         }
     }
 
@@ -132,7 +131,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Satellite;
+            return SharedMeshes.Box;
         }
     }
 
@@ -145,7 +144,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Construct;
+            return SharedMeshes.Box;
         }
     }
 
@@ -158,7 +157,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Depot;
+            return SharedMeshes.Box;
         }
     }
 
@@ -171,7 +170,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Ship;
+            return SharedMeshes.Pyramid;
         }
     }
 
@@ -184,7 +183,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.WeaponsPlatform;
+            return SharedMeshes.Box;
         }
     }
 
@@ -197,7 +196,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.TradeLane;
+            return SharedMeshes.BoxTradeLane;
         }
     }
 
@@ -210,7 +209,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.JumpHole;
+            return SharedMeshes.CylinderRing;
         }
     }
 
@@ -223,7 +222,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.JumpGate;
+            return SharedMeshes.Pyramid;
         }
     }
 
@@ -236,7 +235,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.DockingRing;
+            return SharedMeshes.CylinderRing;
         }
     }
 
@@ -267,20 +266,31 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            if (Shape == ZoneShape.Box)
-                return SharedMeshes.ZoneBox;
-            else if (Shape == ZoneShape.Cylinder)
-                return SharedMeshes.ZoneCylinder;
+            if (Shape == ZoneShape.Box || Shape == ZoneShape.Cylinder)
+                return SharedMeshes.Box;
             else
-                return SharedMeshes.ZoneSphere;
+                return SharedMeshes.Sphere;
         }
     }
 
-    public enum PathType
+    public class Connection : ContentBase
     {
-        Friendly,
-        Hostile,
-        Neutral
+        public ConnectionType Type { get; set; }
+
+        protected override GeometryModel3D GetGeometry()
+        {
+            if (Type == ConnectionType.Jumpgate)
+                return SharedGeometries.ConnectionJumpgate;
+            else if (Type == ConnectionType.Jumphole)
+                return SharedGeometries.ConnectionJumphole;
+            else
+                return SharedGeometries.Connection;
+        }
+
+        public override MeshGeometry3D GetMesh()
+        {
+            return SharedMeshes.Box;
+        }
     }
 
     public enum ZoneShape
@@ -296,5 +306,12 @@ namespace FreelancerModStudio.SystemPresenter
         Zone,
         Vignette,
         Exclusion
+    }
+
+    public enum ConnectionType
+    {
+        Both,
+        Jumpgate,
+        Jumphole
     }
 }

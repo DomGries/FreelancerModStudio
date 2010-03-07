@@ -34,7 +34,6 @@ namespace FreelancerModStudio.SystemPresenter
                 transform.Children.Add(new ScaleTransform3D(animation.NewScale));
                 transform.Children.Add(new RotateTransform3D(animation.NewRotation));
                 transform.Children.Add(new TranslateTransform3D(animation.NewPosition));
-
                 model.Transform = new MatrixTransform3D(transform.Value);
             }
             else

@@ -74,6 +74,7 @@
     <Compile Include="Helpers\ViewportInfo.cs" />
     <Compile Include="Helpers\VisualInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Visuals\Composite\Skybox.cs" />
     <Compile Include="Visuals\Composite\ViewCubeVisual3D.cs" />
     <Compile Include="Visuals\Meshes\ArrowVisual3D.cs" />
     <Compile Include="Visuals\Meshes\BoxMesh.cs" />

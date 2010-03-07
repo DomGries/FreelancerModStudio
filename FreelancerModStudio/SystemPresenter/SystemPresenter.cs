@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Windows;
 using FreelancerModStudio.Data.IO;
 using HelixEngine.Wires;
+using System.Windows.Threading;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -19,6 +20,7 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public Table<int, ContentBase> Objects { get; set; }
         public HelixView3D Viewport { get; set; }
+        public bool IsUniverse { get; set; }
 
         ModelVisual3D lightning;
         public ModelVisual3D Lightning
@@ -273,6 +275,160 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
+        public void LoadUniverseConnections(string path, int systemTemplate)
+        {
+            List<GlobalConnection> connections = new List<GlobalConnection>();
+            foreach (ContentBase content in Objects)
+            {
+                foreach (EditorINIOption option in content.Block.Block.Options)
+                {
+                    if (option.Name.ToLower() == "file" && option.Values.Count > 0)
+                    {
+                        connections.Add(new GlobalConnection()
+                        {
+                            Content = content,
+                            Universe = LoadUniverseConnection(content, System.IO.Path.Combine(path, option.Values[0].Value.ToString()), systemTemplate)
+                        });
+                        break;
+                    }
+                }
+
+            }
+
+            DisplayUniverseConnections(connections);
+        }
+
+        public class GlobalConnection
+        {
+            public ContentBase Content { get; set; }
+            public Table<ContentBase, UniverseConnection> Universe { get; set; }
+        }
+
+        public class UniverseConnection : ITableRow<ContentBase>
+        {
+            public ContentBase ID { get; set; }
+            public bool Jumpgate { get; set; }
+            public bool Jumphole { get; set; }
+        }
+
+        Table<ContentBase, UniverseConnection> LoadUniverseConnection(ContentBase content, string file, int systemTemplate)
+        {
+            FileManager fileManager = new FileManager(file);
+            EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, systemTemplate);
+
+            Table<ContentBase, UniverseConnection> connections = new Table<ContentBase, UniverseConnection>();
+
+            foreach (EditorINIBlock block in iniContent.Blocks)
+            {
+                if (block.Name.ToLower() == "object")
+                {
+                    string archtypeString = null;
+                    string gotoString = null;
+
+                    foreach (EditorINIOption option in block.Options)
+                    {
+                        if (option.Values.Count > 0)
+                        {
+                            string value = option.Values[0].Value.ToString();
+                            switch (option.Name.ToLower())
+                            {
+                                case "archetype":
+                                    archtypeString = value;
+                                    break;
+                                case "goto":
+                                    gotoString = value;
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (archtypeString != null && gotoString != null)
+                    {
+                        UniverseConnection connection = null;
+                        if (archtypeString == "jumphole" && gotoString.Contains(','))
+                        {
+                            connection = new UniverseConnection()
+                            {
+                                ID = GetContent(gotoString.Substring(0, gotoString.IndexOf(','))),
+                                Jumphole = true
+                            };
+                        }
+                        else if (archtypeString == "jumpgate" && gotoString.Contains(','))
+                        {
+                            connection = new UniverseConnection()
+                            {
+                                ID = GetContent(gotoString.Substring(0, gotoString.IndexOf(','))),
+                                Jumpgate = true
+                            };
+                        }
+
+                        if (connection != null && connection.ID != null)
+                        {
+                            UniverseConnection existingConnection;
+                            if (connections.TryGetValue(connection.ID, out existingConnection))
+                            {
+                                if (!existingConnection.Jumpgate)
+                                    existingConnection.Jumpgate = connection.Jumpgate;
+
+                                if (!existingConnection.Jumphole)
+                                    existingConnection.Jumphole = connection.Jumphole;
+                            }
+                            else
+                                connections.Add(connection);
+                        }
+                    }
+                }
+            }
+            return connections;
+        }
+
+        ContentBase GetContent(string name)
+        {
+            foreach (ContentBase content in Objects)
+            {
+                if (content.Block.Name.ToLower() == name.ToLower())
+                    return content;
+            }
+            return null;
+        }
+
+        void DisplayUniverseConnections(List<GlobalConnection> connections)
+        {
+            double sphereLenght = 1 - 0.36;
+
+            //Viewport.Dispatcher.Invoke(new Action(delegate
+            //{
+                foreach (GlobalConnection globalConnection in connections)
+                {
+                    foreach (UniverseConnection connection in globalConnection.Universe)
+                    {
+                        Connection line = new Connection();
+                        if (connection.Jumpgate && !connection.Jumphole)
+                            line.Type = ConnectionType.Jumpgate;
+                        else if (!connection.Jumpgate && connection.Jumphole)
+                            line.Type = ConnectionType.Jumphole;
+                        else if (connection.Jumpgate && connection.Jumphole)
+                            line.Type = ConnectionType.Both;
+
+
+                        line.Position = (globalConnection.Content.Position + connection.ID.Position) / 2;
+                        line.Scale = new Vector3D(Vector3D.Multiply((globalConnection.Content.Position - connection.ID.Position), sphereLenght).Length, 1, 1);
+
+                        if (globalConnection.Content.Position == new Vector3D(0, 0, 0) || connection.ID.Position == new Vector3D(0, 0, 0))
+                            line.Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, 0), 0);
+                        else
+                        {
+                            double angleBetween = Vector3D.AngleBetween(globalConnection.Content.Position, connection.ID.Position);
+                            line.Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angleBetween);
+                        }
+
+                        line.LoadModel();
+                        Viewport.Add(line.Model);
+                    }
+                }
+            //}));
+        }
+
         public void ChangeValues(ContentBase content, TableBlock block)
         {
             if (block.ObjectType == ContentType.None)
@@ -356,7 +512,7 @@ namespace FreelancerModStudio.SystemPresenter
             else if (block.ObjectType == ContentType.System)
             {
                 position = ParseUniverseVector(positionString);
-                scale = new Vector3D(1, 1, 1);
+                scale = new Vector3D(2, 2, 2);
                 rotation = ParseRotation(rotationString, false);
             }
             else
@@ -522,7 +678,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 double tempScale1 = ParseDouble(values[0], 0);
                 double tempScale2 = ParseDouble(values[1], 0);
-                return new Vector3D(tempScale1, -tempScale2, 0) / 0.15;
+                return new Vector3D(tempScale1 - 7, -tempScale2 + 7, 0) / 0.09;
             }
             return new Vector3D(0, 0, 0);
         }

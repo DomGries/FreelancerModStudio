@@ -27,8 +27,9 @@ namespace FreelancerModStudio
             }
             catch (Exception ex)
             {
-                string text = "A critical error occured!" + Environment.NewLine + Environment.NewLine + "Please post an error report on the homepage (link inside Help menu).";
-                Helper.Exceptions.Show(new Exception(text, ex));
+                string text = "A critical error occured!" + Environment.NewLine + Environment.NewLine + "Do you want to post an issue report?";
+                if (MessageBox.Show(Helper.Exceptions.Get(new Exception(text, ex)), Helper.Assembly.Title, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+                    System.Diagnostics.Process.Start("http://code.google.com/p/freelancermodstudio/issues");
             }
 #endif
         }

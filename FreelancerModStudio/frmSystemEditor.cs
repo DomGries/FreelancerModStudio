@@ -34,26 +34,10 @@ namespace FreelancerModStudio
         public frmSystemEditor()
         {
             InitializeComponent();
-            LoadingThread();
+            InitializeView();
         }
 
-        //private void frmSystemEditor_Load(object sender, EventArgs e)
-        //{
-        //    ProgressBar progress = new ProgressBar();
-        //    progress.Width = this.Width / 2;
-        //    progress.Height = 23;
-        //    progress.Top = this.Height / 2 - 23 / 2;
-        //    progress.Left = this.Width / 4;
-        //    progress.Style = ProgressBarStyle.Marquee;
-        //    this.Controls.Add(progress);
-
-        //    //start loading thread
-        //    ThreadStart threadStart = new ThreadStart(LoadingThread);
-        //    Thread thread = new Thread(threadStart);
-        //    Helper.Thread.Start(ref thread, threadStart, ThreadPriority.Normal, true);
-        //}
-
-        void LoadingThread()
+        void InitializeView()
         {
 #if DEBUG
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
@@ -76,10 +60,7 @@ namespace FreelancerModStudio
             ElementHost host = new ElementHost();
             host.Child = view;
             host.Dock = DockStyle.Fill;
-            //this.Invoke(new MethodInvoker(delegate
-            //{
             this.Controls.Add(host);
-            //}));
 #if DEBUG
             st.Stop();
             System.Diagnostics.Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");

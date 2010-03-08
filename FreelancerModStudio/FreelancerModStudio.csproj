@@ -223,6 +223,8 @@
     <Compile Include="SystemPresenter\ContentAnimator.cs" />
     <Compile Include="SystemPresenter\DefaultLightsVisual3D.cs" />
     <Compile Include="SystemPresenter\SharedObjects.cs" />
+    <Compile Include="SystemPresenter\SystemParser.cs" />
+    <Compile Include="SystemPresenter\UniverseAnalyzer.cs" />
     <Compile Include="SystemPresenter\SystemContent.cs" />
     <Compile Include="SystemPresenter\SystemPresenter.cs" />
   </ItemGroup>

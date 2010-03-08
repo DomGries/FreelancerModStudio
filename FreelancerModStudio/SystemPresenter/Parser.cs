@@ -9,7 +9,7 @@ using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public class SystemParser
+    public class Parser
     {
         public void SetValues(ContentBase content, TableBlock block)
         {
@@ -155,20 +155,6 @@ namespace FreelancerModStudio.SystemPresenter
             return new AxisAngleRotation3D(new Vector3D(0, 0, 0), 0);
         }
 
-        double GetFactor(double number)
-        {
-            if (number < 0)
-                return -1;
-            return 1;
-        }
-
-        double GetPositive(double number)
-        {
-            if (number < 0)
-                return number * -1;
-            return number;
-        }
-
         ZoneShape ParseShape(string shape)
         {
             shape = shape.ToLower();
@@ -213,6 +199,20 @@ namespace FreelancerModStudio.SystemPresenter
         {
             Vector3D tempVector = ParseVector(vector);
             return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y) / 1000;
+        }
+
+        public static double GetFactor(double number)
+        {
+            if (number < 0)
+                return -1;
+            return 1;
+        }
+
+        public static double GetPositive(double number)
+        {
+            if (number < 0)
+                return number * -1;
+            return number;
         }
     }
 }

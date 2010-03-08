@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
+using IO = System.IO;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public class UniverseAnalyzer
+    public class Analyzer
     {
         public List<GlobalConnection> Connections { get; set; }
         public Table<int, ContentBase> Universe { get; set; }
@@ -28,23 +29,52 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     if (option.Name.ToLower() == "file" && option.Values.Count > 0)
                     {
-                        Connections.Add(new GlobalConnection()
+                        AddConnection(new GlobalConnection()
                         {
                             Content = content,
-                            Universe = GetConnections(content, System.IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()))
+                            Universe = GetConnections(content, IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()))
                         });
+
+
                         break;
                     }
                 }
             }
         }
 
-        Table<ContentBase, UniverseConnection> GetConnections(ContentBase content, string file)
+        void AddConnection(GlobalConnection connection)
+        {
+            //bool contains = false;
+            for (int i = 0; i < Connections.Count; i++)
+            {
+                if (Connections[i].Universe.Contains(connection.ID))
+                {
+                    int index = connection.Universe.IndexOf(Connections[i].ID);
+                    if (index != -1)
+                        connection.Universe.RemoveAt(index);
+                    //integrate connection
+                    //foreach (UniverseConnection universeConnection in connection.Universe)
+                    //{
+                    //    if (!Connections[i].Universe.Contains(universeConnection.ID))
+                    //        Connections[i].Universe.Add(universeConnection);
+                    //}
+
+                    //contains = true;
+                    //break;
+                }
+            }
+
+            //if (!contains)
+            if (connection.Universe.Count > 0)
+                Connections.Add(connection);
+        }
+
+        UniverseConnections GetConnections(ContentBase content, string file)
         {
             FileManager fileManager = new FileManager(file);
             EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, SystemTemplate);
 
-            Table<ContentBase, UniverseConnection> connections = new Table<ContentBase, UniverseConnection>();
+            UniverseConnections connections = new UniverseConnections();
 
             foreach (EditorINIBlock block in iniContent.Blocks)
             {
@@ -77,7 +107,7 @@ namespace FreelancerModStudio.SystemPresenter
                         {
                             connection = new UniverseConnection()
                             {
-                                ID = GetContent(gotoString.Substring(0, gotoString.IndexOf(','))),
+                                Connection = GetContent(gotoString.Substring(0, gotoString.IndexOf(','))),
                                 Jumphole = true
                             };
                         }
@@ -85,12 +115,12 @@ namespace FreelancerModStudio.SystemPresenter
                         {
                             connection = new UniverseConnection()
                             {
-                                ID = GetContent(gotoString.Substring(0, gotoString.IndexOf(','))),
+                                Connection = GetContent(gotoString.Substring(0, gotoString.IndexOf(','))),
                                 Jumpgate = true
                             };
                         }
 
-                        if (connection != null && connection.ID != null)
+                        if (connection != null && connection.ID != -1)
                         {
                             UniverseConnection existingConnection;
                             if (connections.TryGetValue(connection.ID, out existingConnection))
@@ -101,7 +131,7 @@ namespace FreelancerModStudio.SystemPresenter
                                 if (!existingConnection.Jumphole)
                                     existingConnection.Jumphole = connection.Jumphole;
                             }
-                            else
+                            else if (connection.ID != content.ID)
                                 connections.Add(connection);
                         }
                     }
@@ -123,14 +153,62 @@ namespace FreelancerModStudio.SystemPresenter
 
     public class GlobalConnection
     {
+        public int ID
+        {
+            get
+            {
+                if (Content != null)
+                    return Content.ID;
+                else
+                    return -1;
+            }
+        }
+
         public ContentBase Content { get; set; }
-        public Table<ContentBase, UniverseConnection> Universe { get; set; }
+        public Table<int, UniverseConnection> Universe { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (UniverseConnection connection in Universe)
+                sb.Append(connection.ToString() + " ");
+
+            return Content.Block.Name + " - " + sb.ToString();
+        }
     }
 
-    public class UniverseConnection : ITableRow<ContentBase>
+    public class UniverseConnections : Table<int, UniverseConnection>
     {
-        public ContentBase ID { get; set; }
+        public override string ToString()
+        {
+            string[] sb = new string[this.Count];
+            for (int i = 0; i < this.Count; i++)
+                sb[i] = this.Values[i].ToString();
+
+            return string.Join(", ", sb);
+        }
+    }
+
+    public class UniverseConnection : ITableRow<int>
+    {
+        public int ID
+        {
+            get
+            {
+                if (Connection != null)
+                    return Connection.ID;
+                else
+                    return -1;
+            }
+        }
+
+        public ContentBase Connection { get; set; }
         public bool Jumpgate { get; set; }
         public bool Jumphole { get; set; }
+
+        public override string ToString()
+        {
+            return Connection.Block.Name;
+        }
     }
 }

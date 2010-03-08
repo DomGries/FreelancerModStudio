@@ -9,7 +9,7 @@ namespace FreelancerModStudio.Data
 {
     public interface ITableRow<T>
     {
-        T ID { get; set; }
+        T ID { get; }
     }
 
     [Serializable]
@@ -47,6 +47,16 @@ namespace FreelancerModStudio.Data
         public int IndexOf(TKey key)
         {
             return dictionary.IndexOfKey(key);
+        }
+
+        public bool Contains(TValue value)
+        {
+            return IndexOf(value) != -1;
+        }
+
+        public bool Contains(TKey key)
+        {
+            return IndexOf(key) != -1;
         }
 
         public void Add(TValue value)

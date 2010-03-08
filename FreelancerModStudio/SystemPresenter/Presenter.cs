@@ -16,7 +16,7 @@ using System.Windows.Threading;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public class SystemPresenter
+    public class Presenter
     {
         public Table<int, ContentBase> Objects { get; set; }
         public HelixView3D Viewport { get; set; }
@@ -91,7 +91,7 @@ namespace FreelancerModStudio.SystemPresenter
             if (content != null)
             {
                 //goto content
-                Viewport.LookAt(content.Position.ToPoint3D(), ContentAnimator.AnimationDuration.TimeSpan.TotalMilliseconds);
+                Viewport.LookAt(content.Position.ToPoint3D(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
 
                 //select content visually
                 Selection = GetSelectionBox(content);
@@ -115,7 +115,7 @@ namespace FreelancerModStudio.SystemPresenter
                 this.SelectionChanged(content);
         }
 
-        public SystemPresenter(HelixView3D viewport)
+        public Presenter(HelixView3D viewport)
         {
             Objects = new Table<int, ContentBase>();
             Viewport = viewport;
@@ -140,7 +140,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void Add(List<TableBlock> blocks)
         {
-            ContentAnimator.AnimationDuration = new Duration(TimeSpan.Zero);
+            Animator.AnimationDuration = new Duration(TimeSpan.Zero);
 
             foreach (TableBlock block in blocks)
             {
@@ -150,7 +150,7 @@ namespace FreelancerModStudio.SystemPresenter
                     AddContent(content);
             }
 
-            ContentAnimator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
+            Animator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
         public void Delete(List<TableBlock> blocks)
@@ -275,9 +275,9 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public void LoadUniverseConnections(string path, int systemTemplate)
+        public void DisplayUniverse(string path, int systemTemplate)
         {
-            UniverseAnalyzer analyzer = new UniverseAnalyzer()
+            Analyzer analyzer = new Analyzer()
             {
                 Universe = Objects,
                 UniversePath = path,
@@ -290,8 +290,6 @@ namespace FreelancerModStudio.SystemPresenter
 
         void DisplayUniverseConnections(List<GlobalConnection> connections)
         {
-            double sphereLenght = 1 - 0.36;
-
             //Viewport.Dispatcher.Invoke(new Action(delegate
             //{
             foreach (GlobalConnection globalConnection in connections)
@@ -306,20 +304,43 @@ namespace FreelancerModStudio.SystemPresenter
                     else if (connection.Jumpgate && connection.Jumphole)
                         line.Type = ConnectionType.Both;
 
+                    Vector3D newPos = (globalConnection.Content.Position + connection.Connection.Position) / 2;
+                    //line.Position = newPos - (globalConnection.Content.Position - newPos) / 2;
+                    //line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length / 2, 1);
+                    line.Position = newPos;
+                    line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length, 1);
 
-                    line.Position = (globalConnection.Content.Position + connection.ID.Position) / 2;
-                    line.Scale = new Vector3D(1, Vector3D.Multiply((globalConnection.Content.Position - connection.ID.Position), sphereLenght).Length, 1);
+                    Vector v1 = new Vector(globalConnection.Content.Position.X, globalConnection.Content.Position.Y);
+                    Vector v2 = new Vector(connection.Connection.Position.X, connection.Connection.Position.Y);
 
-                    Vector v2 = new Vector(connection.ID.Position.X, connection.ID.Position.Y);
-                    double angleBetween = Vector.AngleBetween(new Vector(0, v2.Y), v2);
+                    double a = Difference(v2.X, v1.X);
+                    double b = Difference(v2.Y, v1.Y);
+                    double factor = 1;
+                    if (v2.X < v1.X)
+                        factor = -1;
 
-                    line.Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, 1), angleBetween);
+                    if (v2.Y < v1.Y)
+                        factor *= -1;
+
+                    double c = Math.Sqrt(a * a + b * b);
+
+                    double angle = Math.Acos(a / c) * 180 / Math.PI;
+
+                    line.Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + 90);
 
                     line.LoadModel();
                     Viewport.Add(line.Model);
                 }
             }
             //}));
+        }
+
+        double Difference(double x, double y)
+        {
+            if (x > y)
+                return x - y;
+            else
+                return y - x;
         }
 
         public void ChangeValues(ContentBase content, TableBlock block)
@@ -340,7 +361,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetValues(ContentBase content, TableBlock block)
         {
-            SystemParser parser = new SystemParser();
+            Parser parser = new Parser();
             parser.SetValues(content, block);
 
             if (selectedContent == content)
@@ -368,7 +389,7 @@ namespace FreelancerModStudio.SystemPresenter
         {
             if (type == ContentType.LightSource)
                 return new LightSource();
-            else if (type == ContentType.Sun || type == ContentType.System)
+            else if (type == ContentType.Sun)
                 return new Sun();
             else if (type == ContentType.Planet)
                 return new Planet();
@@ -394,6 +415,8 @@ namespace FreelancerModStudio.SystemPresenter
                 return new TradeLane();
             else if (type == ContentType.Zone)
                 return new Zone();
+            else if (type == ContentType.System)
+                return new System();
 
             return null;
         }

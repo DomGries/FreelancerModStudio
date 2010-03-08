@@ -20,7 +20,7 @@ namespace FreelancerModStudio.SystemPresenter
         public Vector3D NewScale { get; set; }
     }
 
-    public static class ContentAnimator
+    public static class Animator
     {
         public static Duration AnimationDuration = new Duration(TimeSpan.Zero);
         public static double AnimationAccelerationRatio = 0.3;

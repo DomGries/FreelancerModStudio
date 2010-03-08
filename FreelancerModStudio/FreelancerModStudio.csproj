@@ -220,13 +220,14 @@
     <Compile Include="Data\ChangedData.cs" />
     <Compile Include="Data\ArchtypeManager.cs" />
     <Compile Include="StringLogicalComparer.cs" />
-    <Compile Include="SystemPresenter\ContentAnimator.cs" />
-    <Compile Include="SystemPresenter\DefaultLightsVisual3D.cs" />
-    <Compile Include="SystemPresenter\SharedObjects.cs" />
-    <Compile Include="SystemPresenter\SystemParser.cs" />
-    <Compile Include="SystemPresenter\UniverseAnalyzer.cs" />
-    <Compile Include="SystemPresenter\SystemContent.cs" />
-    <Compile Include="SystemPresenter\SystemPresenter.cs" />
+    <Compile Include="System\Animator.cs" />
+    <Compile Include="System\ContentBase.cs" />
+    <Compile Include="System\DefaultLightsVisual3D.cs" />
+    <Compile Include="System\SharedObjects.cs" />
+    <Compile Include="System\Parser.cs" />
+    <Compile Include="System\Analyzer.cs" />
+    <Compile Include="System\Content.cs" />
+    <Compile Include="System\Presenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\About.ico" />

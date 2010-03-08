@@ -44,9 +44,10 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 20, 10));
         public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 10, 0));
 
-        public static Material ConnectionJumphole = MaterialHelper.CreateEmissiveMaterial(Brushes.Red);
-        public static Material ConnectionJumpgate = MaterialHelper.CreateEmissiveMaterial(Brushes.Green);
-        public static Material Connection = MaterialHelper.CreateEmissiveMaterial(Brushes.Blue);
+        public static Material System = MaterialHelper.CreateEmissiveMaterial(Brushes.Silver);
+        public static Material ConnectionJumphole = MaterialHelper.CreateEmissiveMaterial(Brushes.OrangeRed);
+        public static Material ConnectionJumpgate = MaterialHelper.CreateEmissiveMaterial(Brushes.DodgerBlue);
+        public static Material Connection = MaterialHelper.CreateEmissiveMaterial(Brushes.Yellow);
     }
 
     public static class SharedMeshes
@@ -147,6 +148,9 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static GeometryModel3D ZoneExclusionBox =
             GetGeometry(SharedMeshes.Box, SharedMaterials.ZoneExclusion);
+
+        public static GeometryModel3D System =
+            GetGeometry(SharedMeshes.Sphere, SharedMaterials.System);
 
         public static GeometryModel3D Connection =
             GetGeometry(SharedMeshes.Box, SharedMaterials.Connection);

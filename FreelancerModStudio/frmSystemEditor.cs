@@ -20,7 +20,7 @@ namespace FreelancerModStudio
 {
     public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface
     {
-        SystemPresenter.SystemPresenter systemPresenter = null;
+        SystemPresenter.Presenter systemPresenter = null;
 
         public delegate void SelectionChangedType(TableBlock block);
         public SelectionChangedType SelectionChanged;
@@ -65,7 +65,7 @@ namespace FreelancerModStudio
             st.Stop();
             System.Diagnostics.Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");
 #endif
-            systemPresenter = new SystemPresenter.SystemPresenter(view);
+            systemPresenter = new SystemPresenter.Presenter(view);
             systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
         }
 
@@ -94,7 +94,7 @@ namespace FreelancerModStudio
             {
                 
                     int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
-                    systemPresenter.LoadUniverseConnections(System.IO.Path.GetDirectoryName(file), systemTemplate);
+                    systemPresenter.DisplayUniverse(System.IO.Path.GetDirectoryName(file), systemTemplate);
                     ThreadStart threadStart = new ThreadStart(delegate
                     { });
                 Thread thread = new Thread(threadStart);

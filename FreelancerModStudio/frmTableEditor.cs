@@ -601,6 +601,7 @@ namespace FreelancerModStudio
             Data.Blocks.Sort();
 
             objectListView1.SetObjects(Data.Blocks);
+            objectListView1.RefreshObjects(Data.Blocks);
             objectListView1.SelectObjects(newBlocks);
             EnsureSelectionVisible();
 

@@ -24,6 +24,7 @@ namespace FreelancerModStudio
 
         public delegate void SelectionChangedType(TableBlock block);
         public SelectionChangedType SelectionChanged;
+        Thread universeLoadingThread = null;
 
         void OnSelectionChanged(TableBlock block)
         {
@@ -87,18 +88,20 @@ namespace FreelancerModStudio
 
         public void ShowData(TableData data, string file)
         {
+            Helper.Thread.Abort(ref universeLoadingThread, false);
+
             Clear();
             systemPresenter.Add(data.Blocks);
 
             if (IsUniverse)
             {
-                
+                ThreadStart threadStart = new ThreadStart(delegate
+                {
                     int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
                     systemPresenter.DisplayUniverse(System.IO.Path.GetDirectoryName(file), systemTemplate);
-                    ThreadStart threadStart = new ThreadStart(delegate
-                    { });
-                Thread thread = new Thread(threadStart);
-                Helper.Thread.Start(ref thread, threadStart, ThreadPriority.Normal, true);
+                });
+
+                Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);
             }
         }
 

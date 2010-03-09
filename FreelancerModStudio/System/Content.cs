@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media.Media3D;
+using HelixEngine;
+using System.Windows.Media;
 namespace FreelancerModStudio.SystemPresenter
 {
     public class LightSource : ContentBase
@@ -222,16 +224,42 @@ namespace FreelancerModStudio.SystemPresenter
 
     public class Connection : ContentBase
     {
-        public ConnectionType Type { get; set; }
+        public ConnectionType StartType { get; set; }
+        public ConnectionType EndType { get; set; }
 
         protected override GeometryModel3D GetGeometry()
         {
-            if (Type == ConnectionType.Jumpgate)
-                return SharedGeometries.ConnectionJumpgate;
-            else if (Type == ConnectionType.Jumphole)
-                return SharedGeometries.ConnectionJumphole;
+            Material material;
+
+            if (StartType == EndType)
+            {
+                //solid brush
+                if (StartType == ConnectionType.Jumpgate)
+                    material = MaterialHelper.CreateEmissiveMaterial(SharedMaterials.ConnectionJumpgate);
+                else if (StartType == ConnectionType.Jumphole)
+                    material = MaterialHelper.CreateEmissiveMaterial(SharedMaterials.ConnectionJumphole);
+                else
+                    material = MaterialHelper.CreateEmissiveMaterial(SharedMaterials.ConnectionBoth);
+            }
             else
-                return SharedGeometries.Connection;
+            {
+                Color startColor = GetColor(StartType);
+                Color endColor = GetColor(EndType);
+
+                material = MaterialHelper.CreateEmissiveMaterial(new LinearGradientBrush(startColor, endColor, 90));
+            }
+
+            return SharedGeometries.GetGeometry(SharedMeshes.Box, material);
+        }
+
+        Color GetColor(ConnectionType type)
+        {
+            if (StartType == ConnectionType.Jumpgate)
+                return SharedMaterials.ConnectionJumpgate;
+            else if (StartType == ConnectionType.Jumphole)
+                return SharedMaterials.ConnectionJumphole;
+            else
+                return SharedMaterials.ConnectionBoth;
         }
 
         public override MeshGeometry3D GetMesh()

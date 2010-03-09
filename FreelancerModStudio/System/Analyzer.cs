@@ -29,12 +29,15 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     if (option.Name.ToLower() == "file" && option.Values.Count > 0)
                     {
-                        AddConnection(new GlobalConnection()
+                        UniverseConnections universeConnections = GetConnections(content, IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()));
+                        if (universeConnections != null)
                         {
-                            Content = content,
-                            Universe = GetConnections(content, IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()))
-                        });
-
+                            AddConnection(new GlobalConnection()
+                            {
+                                Content = content,
+                                Universe = universeConnections
+                            });
+                        }
 
                         break;
                     }
@@ -51,7 +54,10 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     int index = connection.Universe.IndexOf(Connections[i].ID);
                     if (index != -1)
+                    {
                         connection.Universe.RemoveAt(index);
+                    }
+
                     //integrate connection
                     //foreach (UniverseConnection universeConnection in connection.Universe)
                     //{
@@ -71,6 +77,9 @@ namespace FreelancerModStudio.SystemPresenter
 
         UniverseConnections GetConnections(ContentBase content, string file)
         {
+            if (!IO.File.Exists(file))
+                return null;
+
             FileManager fileManager = new FileManager(file);
             EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, SystemTemplate);
 

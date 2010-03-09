@@ -11,6 +11,8 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public class Parser
     {
+        public bool ModelChanged { get; set; }
+
         public void SetValues(ContentBase content, TableBlock block)
         {
             string positionString = "0,0,0";
@@ -44,7 +46,7 @@ namespace FreelancerModStudio.SystemPresenter
                             vignetteString = value;
                             break;
                         case "property_flags":
-                            flagsString = value;
+                            flagsString = value.ToLower();
                             break;
                     }
                 }
@@ -63,12 +65,20 @@ namespace FreelancerModStudio.SystemPresenter
                 scale = ParseScale(scaleString, shape);
                 rotation = ParseRotation(rotationString, shape == ZoneShape.Cylinder);
 
+                ZoneShape oldShape = zone.Shape;
+                ZoneType oldType = zone.Type;
+
                 zone.Shape = shape;
 
-                if (vignetteString != "")
+                if (vignetteString == "open" || vignetteString == "field" || vignetteString == "exclusion")
                     zone.Type = ZoneType.Vignette;
                 else if (flagsString == "131072")
                     zone.Type = ZoneType.Exclusion;
+                else
+                    zone.Type = ZoneType.Zone;
+
+                if (zone.Shape != oldShape || zone.Type != oldType)
+                    ModelChanged = true;
             }
             else if (block.ObjectType == ContentType.LightSource)
             {

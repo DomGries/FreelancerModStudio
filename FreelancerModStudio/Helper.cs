@@ -189,6 +189,9 @@ namespace FreelancerModStudio
         {
             public static void Start(ref System.Threading.Thread thread, System.Threading.ThreadStart threadDelegate, System.Threading.ThreadPriority priority, bool isBackground)
             {
+                Abort(ref thread, true);
+                thread = new System.Threading.Thread(threadDelegate);
+
                 thread.Priority = priority;
                 thread.IsBackground = isBackground;
 

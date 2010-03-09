@@ -290,49 +290,49 @@ namespace FreelancerModStudio.SystemPresenter
 
         void DisplayUniverseConnections(List<GlobalConnection> connections)
         {
-            //Viewport.Dispatcher.Invoke(new Action(delegate
-            //{
-            foreach (GlobalConnection globalConnection in connections)
+            Viewport.Dispatcher.Invoke(new Action(delegate
             {
-                foreach (UniverseConnection connection in globalConnection.Universe)
+                foreach (GlobalConnection globalConnection in connections)
                 {
-                    Connection line = new Connection();
-                    if (connection.Jumpgate && !connection.Jumphole)
-                        line.Type = ConnectionType.Jumpgate;
-                    else if (!connection.Jumpgate && connection.Jumphole)
-                        line.Type = ConnectionType.Jumphole;
-                    else if (connection.Jumpgate && connection.Jumphole)
-                        line.Type = ConnectionType.Both;
+                    foreach (UniverseConnection connection in globalConnection.Universe)
+                    {
+                        Connection line = new Connection();
+                        if (connection.Jumpgate && !connection.Jumphole)
+                            line.StartType = ConnectionType.Jumpgate;
+                        else if (!connection.Jumpgate && connection.Jumphole)
+                            line.StartType = ConnectionType.Jumphole;
+                        else if (connection.Jumpgate && connection.Jumphole)
+                            line.StartType = ConnectionType.Both;
 
-                    Vector3D newPos = (globalConnection.Content.Position + connection.Connection.Position) / 2;
-                    //line.Position = newPos - (globalConnection.Content.Position - newPos) / 2;
-                    //line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length / 2, 1);
-                    line.Position = newPos;
-                    line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length, 1);
+                        Vector3D newPos = (globalConnection.Content.Position + connection.Connection.Position) / 2;
+                        //line.Position = newPos - (globalConnection.Content.Position - newPos) / 2;
+                        //line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length / 2, 1);
+                        line.Position = newPos;
+                        line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length, 1);
 
-                    Vector v1 = new Vector(globalConnection.Content.Position.X, globalConnection.Content.Position.Y);
-                    Vector v2 = new Vector(connection.Connection.Position.X, connection.Connection.Position.Y);
+                        Vector v1 = new Vector(globalConnection.Content.Position.X, globalConnection.Content.Position.Y);
+                        Vector v2 = new Vector(connection.Connection.Position.X, connection.Connection.Position.Y);
 
-                    double a = Difference(v2.X, v1.X);
-                    double b = Difference(v2.Y, v1.Y);
-                    double factor = 1;
-                    if (v2.X < v1.X)
-                        factor = -1;
+                        double a = Difference(v2.X, v1.X);
+                        double b = Difference(v2.Y, v1.Y);
+                        double factor = 1;
+                        if (v2.X < v1.X)
+                            factor = -1;
 
-                    if (v2.Y < v1.Y)
-                        factor *= -1;
+                        if (v2.Y < v1.Y)
+                            factor *= -1;
 
-                    double c = Math.Sqrt(a * a + b * b);
+                        double c = Math.Sqrt(a * a + b * b);
 
-                    double angle = Math.Acos(a / c) * 180 / Math.PI;
+                        double angle = Math.Acos(a / c) * 180 / Math.PI;
 
-                    line.Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + 90);
+                        line.Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + 90);
 
-                    line.LoadModel();
-                    Viewport.Add(line.Model);
+                        line.LoadModel();
+                        Viewport.Add(line.Model);
+                    }
                 }
-            }
-            //}));
+            }));
         }
 
         double Difference(double x, double y)
@@ -364,10 +364,24 @@ namespace FreelancerModStudio.SystemPresenter
             Parser parser = new Parser();
             parser.SetValues(content, block);
 
+            if (parser.ModelChanged && content.Model != null)
+                ReloadModel(content);
+
             if (selectedContent == content)
             {
                 //update selection if changed content is selected
                 SetSelectedContent(content);
+            }
+        }
+
+        void ReloadModel(ContentBase content)
+        {
+            int index = Viewport.Children.IndexOf(content.Model);
+            if (index != -1)
+            {
+                Viewport.Children.RemoveAt(index);
+                content.LoadModel();
+                Viewport.Children.Insert(index, content.Model);
             }
         }
 

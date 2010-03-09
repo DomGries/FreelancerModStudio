@@ -45,9 +45,11 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 10, 0));
 
         public static Material System = MaterialHelper.CreateEmissiveMaterial(Brushes.Silver);
-        public static Material ConnectionJumphole = MaterialHelper.CreateEmissiveMaterial(Brushes.OrangeRed);
-        public static Material ConnectionJumpgate = MaterialHelper.CreateEmissiveMaterial(Brushes.DodgerBlue);
-        public static Material Connection = MaterialHelper.CreateEmissiveMaterial(Brushes.Yellow);
+        //public static Material ConnectionJumphole = MaterialHelper.CreateEmissiveMaterial(new LinearGradientBrush(Colors.Red, Colors.DodgerBlue, 90));
+
+        public static Color ConnectionJumphole = Colors.OrangeRed;
+        public static Color ConnectionJumpgate = Colors.DodgerBlue;
+        public static Color ConnectionBoth = Colors.Yellow;
     }
 
     public static class SharedMeshes
@@ -152,16 +154,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static GeometryModel3D System =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.System);
 
-        public static GeometryModel3D Connection =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.Connection);
-
-        public static GeometryModel3D ConnectionJumpgate =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.ConnectionJumpgate);
-
-        public static GeometryModel3D ConnectionJumphole =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.ConnectionJumphole);
-
-        static GeometryModel3D GetGeometry(Geometry3D geometry, Material material)
+        public static GeometryModel3D GetGeometry(Geometry3D geometry, Material material)
         {
             GeometryModel3D model = new GeometryModel3D(geometry, material);
             model.Freeze();

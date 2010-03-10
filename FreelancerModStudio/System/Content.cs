@@ -186,10 +186,10 @@ namespace FreelancerModStudio.SystemPresenter
                 return SharedGeometries.ZoneVignette;
             else if (Type == ZoneType.Exclusion)
             {
-                if (Shape == ZoneShape.Box)
-                    return SharedGeometries.ZoneExclusionBox;
-                else if (Shape == ZoneShape.Sphere || Shape == ZoneShape.Ellipsoid)
+                if (Shape == ZoneShape.Sphere || Shape == ZoneShape.Ellipsoid)
                     return SharedGeometries.ZoneExclusionSphere;
+                else
+                    return SharedGeometries.ZoneExclusionBox;
             }
 
             if (Shape == ZoneShape.Box)
@@ -211,6 +211,8 @@ namespace FreelancerModStudio.SystemPresenter
 
     public class System : ContentBase
     {
+        public string Path { get; set; }
+
         protected override GeometryModel3D GetGeometry()
         {
             return SharedGeometries.System;

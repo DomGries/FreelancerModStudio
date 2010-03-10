@@ -13,6 +13,7 @@ using System.Windows;
 using FreelancerModStudio.Data.IO;
 using HelixEngine.Wires;
 using System.Windows.Threading;
+using IO = System.IO;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -84,6 +85,31 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
+        public delegate void SelectionChangedType(ContentBase content);
+        public SelectionChangedType SelectionChanged;
+
+        void OnSelectionChanged(ContentBase content)
+        {
+            if (this.SelectionChanged != null)
+                this.SelectionChanged(content);
+        }
+
+        public delegate void FileOpenType(string file);
+        public FileOpenType FileOpen;
+
+        void OnFileOpen(string file)
+        {
+            if (this.FileOpen != null)
+                this.FileOpen(file);
+        }
+
+        public Presenter(HelixView3D viewport)
+        {
+            Objects = new Table<int, ContentBase>();
+            Viewport = viewport;
+            Viewport.SelectionChanged += camera_SelectionChanged;
+        }
+
         void SetSelectedContent(ContentBase content)
         {
             selectedContent = content;
@@ -104,22 +130,6 @@ namespace FreelancerModStudio.SystemPresenter
                 Selection = null;
                 Viewport.Title = string.Empty;
             }
-        }
-
-        public delegate void SelectionChangedType(ContentBase content);
-        public SelectionChangedType SelectionChanged;
-
-        void OnSelectionChanged(ContentBase content)
-        {
-            if (this.SelectionChanged != null)
-                this.SelectionChanged(content);
-        }
-
-        public Presenter(HelixView3D viewport)
-        {
-            Objects = new Table<int, ContentBase>();
-            Viewport = viewport;
-            Viewport.SelectionChanged += camera_SelectionChanged;
         }
 
         void AddContent(ContentBase content)
@@ -178,9 +188,30 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     SelectedContent = content;
                     OnSelectionChanged(content);
+
+                    if (IsUniverse && content is System)
+                        DisplayContextMenu(((System)content).Path);
+
                     return;
                 }
             }
+        }
+
+        void DisplayContextMenu(string path)
+        {
+            ContextMenu menu = new ContextMenu();
+            MenuItem item = new MenuItem();
+            item.Header = string.Format(Properties.Strings.SystemPresenterOpen, IO.Path.GetFileName(path));
+            item.Tag = path;
+            item.Click += new RoutedEventHandler(item_Click);
+
+            menu.Items.Add(item);
+            menu.IsOpen = true;
+        }
+
+        void item_Click(object sender, RoutedEventArgs e)
+        {
+            OnFileOpen((string)((MenuItem)sender).Tag);
         }
 
         ModelVisual3D GetSelectionBox(ContentBase content)

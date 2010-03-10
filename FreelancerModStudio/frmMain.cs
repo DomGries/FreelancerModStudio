@@ -720,36 +720,56 @@ namespace FreelancerModStudio
 
         ContentInterface GetContent()
         {
-            ContentInterface content = (ContentInterface)this.dockPanel1.ActiveContent;
-            if (content.UseDocument() && this.dockPanel1.ActiveDocument != null)
-                return (ContentInterface)this.dockPanel1.ActiveDocument;
+            ContentInterface content = this.dockPanel1.ActiveContent as ContentInterface;
+            if (content != null && content.UseDocument())
+            {
+                if (this.dockPanel1.ActiveDocument != null)
+                    return (ContentInterface)this.dockPanel1.ActiveDocument;
+                else
+                    return null;
+            }
 
             return content;
         }
 
+        DocumentInterface GetDocument()
+        {
+            return this.dockPanel1.ActiveDocument as DocumentInterface;
+        }
+
         void mnuCut_Click(object sender, EventArgs e)
         {
-            GetContent().Cut();
+            ContentInterface content = GetContent();
+            if (content != null)
+                content.Cut();
         }
 
         void mnuCopy_Click(object sender, EventArgs e)
         {
-            GetContent().Copy();
+            ContentInterface content = GetContent();
+            if (content != null)
+                content.Copy();
         }
 
         void mnuPaste_Click(object sender, EventArgs e)
         {
-            GetContent().Paste();
+            ContentInterface content = GetContent();
+            if (content != null)
+                content.Paste();
         }
 
         void mnuUndo_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)this.dockPanel1.ActiveDocument).Undo();
+            DocumentInterface content = GetDocument();
+            if (content != null)
+                content.Undo();
         }
 
         void mnuRedo_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)this.dockPanel1.ActiveDocument).Redo();
+            DocumentInterface content = GetDocument();
+            if (content != null)
+                content.Redo();
         }
 
         void mnuClose_Click(object sender, EventArgs e)
@@ -759,21 +779,36 @@ namespace FreelancerModStudio
 
         void mnuAdd_Click(object sender, EventArgs e)
         {
-            int index = 0;
-            if (((ToolStripMenuItem)sender).Tag != null)
-                index = (int)((ToolStripMenuItem)sender).Tag;
+            ContentInterface content = GetContent();
+            if (content != null)
+            {
+                int index = 0;
+                if (((ToolStripMenuItem)sender).Tag != null)
+                    index = (int)((ToolStripMenuItem)sender).Tag;
 
-            GetContent().Add(index);
+                content.Add(index);
+            }
         }
 
         void mnuDelete_Click(object sender, EventArgs e)
         {
-            GetContent().Delete();
+            ContentInterface content = GetContent();
+            if (content != null)
+                content.Delete();
         }
 
         void mnuSelectAll_Click(object sender, EventArgs e)
         {
-            GetContent().SelectAll();
+            ContentInterface content = GetContent();
+            if (content != null)
+                content.SelectAll();
+        }
+
+        private void mnuChangeVisibility_Click(object sender, EventArgs e)
+        {
+            DocumentInterface content = GetDocument();
+            if (content != null)
+                content.ChangeVisibility();
         }
 
         void mnuGoTo_Click(object sender, EventArgs e)
@@ -806,13 +841,15 @@ namespace FreelancerModStudio
 
                 //no editors found
                 SetDocumentMenus(false);
+
+                if (systemEditor != null)
+                    systemEditor.Clear();
             }
         }
 
         void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
         {
-            if (this.dockPanel1.ActiveContent != null)
-                Content_DisplayChanged(GetContent());
+            Content_DisplayChanged(GetContent());
         }
 
         void Document_DisplayChanged(DocumentInterface document)
@@ -830,21 +867,38 @@ namespace FreelancerModStudio
 
         void Content_DisplayChanged(ContentInterface content)
         {
-            this.mnuCopy.Enabled = content.CanCopy();
-            this.mnuCut.Enabled = content.CanCut();
-            this.mnuPaste.Enabled = content.CanPaste();
-            this.mnuAdd.Enabled = content.CanAdd();
-            this.mnuDelete.Enabled = content.CanDelete();
-            this.mnuSelectAll.Enabled = content.CanSelectAll();
+            if (content == null)
+            {
+                this.mnuCopy.Enabled = false;
+                this.mnuCut.Enabled = false;
+                this.mnuPaste.Enabled = false;
+                this.mnuAdd.Enabled = false;
+                this.mnuDelete.Enabled = false;
+                this.mnuSelectAll.Enabled = false;
+                this.mnuChangeVisibility.Enabled = false;
 
-            this.mnuAdd.Click -= this.mnuAdd_Click;
-
-            if (content.CanAddMultiple())
-                this.mnuAdd.DropDown = content.MultipleAddDropDown();
+                this.mnuAdd.Click -= this.mnuAdd_Click;
+                this.mnuAdd.DropDown = new ToolStripDropDown();
+            }
             else
             {
-                this.mnuAdd.Click += this.mnuAdd_Click;
-                this.mnuAdd.DropDown = new ToolStripDropDown();
+                this.mnuCopy.Enabled = content.CanCopy();
+                this.mnuCut.Enabled = content.CanCut();
+                this.mnuPaste.Enabled = content.CanPaste();
+                this.mnuAdd.Enabled = content.CanAdd();
+                this.mnuDelete.Enabled = content.CanDelete();
+                this.mnuSelectAll.Enabled = content.CanSelectAll();
+                this.mnuChangeVisibility.Enabled = true;
+
+                this.mnuAdd.Click -= this.mnuAdd_Click;
+
+                if (content.CanAddMultiple())
+                    this.mnuAdd.DropDown = content.MultipleAddDropDown();
+                else
+                {
+                    this.mnuAdd.Click += this.mnuAdd_Click;
+                    this.mnuAdd.DropDown = new ToolStripDropDown();
+                }
             }
         }
 
@@ -854,6 +908,7 @@ namespace FreelancerModStudio
             {
                 systemEditor = new frmSystemEditor();
                 systemEditor.SelectionChanged += systemEditor_SelectionChanged;
+                systemEditor.FileOpen += systemEditor_FileOpen;
 
                 systemEditor.Show(dockPanel1);
             }
@@ -864,15 +919,21 @@ namespace FreelancerModStudio
                 ShowSystemEditor((frmTableEditor)dockPanel1.ActiveDocument);
         }
 
+        void systemEditor_FileOpen(string file)
+        {
+            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
+            {
+                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument;
+
+                string path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(editor.File), file);
+                OpenFile(path, Helper.Template.Data.Files.IndexOf("System"));
+            }
+        }
+
         void systemEditor_SelectionChanged(TableBlock block)
         {
             if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
-                ((frmTableEditor)dockPanel1.ActiveDocument.DockHandler.Content).Select(block);
-        }
-
-        private void mnuChangeVisibility_Click(object sender, EventArgs e)
-        {
-            ((DocumentInterface)this.dockPanel1.ActiveDocument).ChangeVisibility();
+                ((frmTableEditor)dockPanel1.ActiveDocument).Select(block);
         }
     }
 }

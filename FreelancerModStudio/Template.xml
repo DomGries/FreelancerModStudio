@@ -3471,7 +3471,7 @@
     <File name="Equipment">
       <Type>ini</Type>
       <Pathes>
-        <Path>equipment\*equip.ini</Path>
+        <Path>equipment\*equip*</Path>
       </Pathes>
       <Blocks>
         <Block name="Engine" multiple="true" identifier="nickname">
@@ -4003,7 +4003,7 @@
     <File name="Equipment Goods">
       <Type>ini</Type>
       <Pathes>
-        <Path>equipment\*good*.ini</Path>
+        <Path>equipment\*good*</Path>
       </Pathes>
       <Blocks>
         <Block name="Good" multiple="true" identifier="nickname">

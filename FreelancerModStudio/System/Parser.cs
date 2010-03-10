@@ -21,6 +21,7 @@ namespace FreelancerModStudio.SystemPresenter
             string scaleString = "1,1,1";
             string vignetteString = "";
             string flagsString = "";
+            string fileString = "";
 
             //get transformation of content
             foreach (EditorINIOption option in block.Block.Options)
@@ -47,6 +48,9 @@ namespace FreelancerModStudio.SystemPresenter
                             break;
                         case "property_flags":
                             flagsString = value.ToLower();
+                            break;
+                        case "file":
+                            fileString = value;
                             break;
                     }
                 }
@@ -90,6 +94,9 @@ namespace FreelancerModStudio.SystemPresenter
                 position = ParseUniverseVector(positionString);
                 scale = new Vector3D(2, 2, 2);
                 rotation = ParseRotation(rotationString, false);
+
+                System system = (System)content;
+                system.Path = fileString;
             }
             else
             {

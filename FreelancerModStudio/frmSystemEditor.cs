@@ -21,15 +21,23 @@ namespace FreelancerModStudio
     public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface
     {
         SystemPresenter.Presenter systemPresenter = null;
+        Thread universeLoadingThread = null;
 
         public delegate void SelectionChangedType(TableBlock block);
         public SelectionChangedType SelectionChanged;
-        Thread universeLoadingThread = null;
 
         void OnSelectionChanged(TableBlock block)
         {
             if (this.SelectionChanged != null)
                 this.SelectionChanged(block);
+        }
+
+        public FreelancerModStudio.SystemPresenter.Presenter.FileOpenType FileOpen;
+
+        void OnFileOpen(string file)
+        {
+            if (this.FileOpen != null)
+                this.FileOpen(file);
         }
 
         public frmSystemEditor()
@@ -68,6 +76,7 @@ namespace FreelancerModStudio
 #endif
             systemPresenter = new SystemPresenter.Presenter(view);
             systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
+            systemPresenter.FileOpen += systemPresenter_FileOpen;
         }
 
         void systemPresenter_SelectionChanged(ContentBase content)
@@ -75,15 +84,9 @@ namespace FreelancerModStudio
             OnSelectionChanged(content.Block);
         }
 
-        public new void Dispose()
+        void systemPresenter_FileOpen(string file)
         {
-            base.Dispose();
-
-            if (systemPresenter != null)
-            {
-                systemPresenter.ClearDisplay(true);
-                systemPresenter.Objects.Clear();
-            }
+            OnFileOpen(file);
         }
 
         public void ShowData(TableData data, string file)
@@ -105,10 +108,25 @@ namespace FreelancerModStudio
             }
         }
 
+        public new void Dispose()
+        {
+            base.Dispose();
+
+            if (systemPresenter != null)
+                Clear(true);
+        }
+
+        void Clear(bool clearLight)
+        {
+            Helper.Thread.Abort(ref universeLoadingThread, true);
+
+            systemPresenter.ClearDisplay(clearLight);
+            systemPresenter.Objects.Clear();
+        }
+
         public void Clear()
         {
-            systemPresenter.ClearDisplay(false);
-            systemPresenter.Objects.Clear();
+            Clear(false);
         }
 
         public void Select(int id)

@@ -249,4 +249,7 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
   <data name="FileEditorSaveAs" xml:space="preserve">
     <value>{0} speichern &amp;unter...</value>
   </data>
+  <data name="SystemPresenterOpen" xml:space="preserve">
+    <value>{0} öffnen</value>
+  </data>
 </root>

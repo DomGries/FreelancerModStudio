@@ -10,8 +10,10 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public class Analyzer
     {
-        public List<GlobalConnection> Connections { get; set; }
+        public Table<UniverseConnectionID, UniverseConnection> Connections { get; set; }
+
         public Table<int, ContentBase> Universe { get; set; }
+        public ArchtypeManager Archtype { get; set; }
         public string UniversePath { get; set; }
         public int SystemTemplate { get; set; }
 
@@ -22,22 +24,17 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void LoadUniverseConnections()
         {
-            Connections = new List<GlobalConnection>();
+            Connections = new Table<UniverseConnectionID, UniverseConnection>();
+
             foreach (ContentBase content in Universe)
             {
                 foreach (EditorINIOption option in content.Block.Block.Options)
                 {
                     if (option.Name.ToLower() == "file" && option.Values.Count > 0)
                     {
-                        UniverseConnections universeConnections = GetConnections(content, IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()));
-                        if (universeConnections != null)
-                        {
-                            AddConnection(new GlobalConnection()
-                            {
-                                Content = content,
-                                Universe = universeConnections
-                            });
-                        }
+                        Table<int, ConnectionPart> systemConnections = GetConnections(content, IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()));
+                        if (systemConnections != null)
+                            AddConnections(content, systemConnections);
 
                         break;
                     }
@@ -45,37 +42,28 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void AddConnection(GlobalConnection connection)
+        void AddConnections(ContentBase content, Table<int, ConnectionPart> connections)
         {
-            //bool contains = false;
-            for (int i = 0; i < Connections.Count; i++)
+            foreach (ConnectionPart connectionPart in connections)
             {
-                if (Connections[i].Universe.Contains(connection.ID))
+                UniverseConnection connection = new UniverseConnection()
                 {
-                    int index = connection.Universe.IndexOf(Connections[i].ID);
-                    if (index != -1)
-                    {
-                        connection.Universe.RemoveAt(index);
-                    }
+                    From = new ConnectionPart() { Content = content, Jumpgate = connectionPart.Jumpgate, Jumphole = connectionPart.Jumphole },
+                    To = new ConnectionPart() { Content = connectionPart.Content }
+                };
 
-                    //integrate connection
-                    //foreach (UniverseConnection universeConnection in connection.Universe)
-                    //{
-                    //    if (!Connections[i].Universe.Contains(universeConnection.ID))
-                    //        Connections[i].Universe.Add(universeConnection);
-                    //}
-
-                    //contains = true;
-                    //break;
+                int index = Connections.IndexOf(connection.ID);
+                if (index != -1)
+                {
+                    Connections.Values[index].To.Jumpgate = connection.From.Jumpgate;
+                    Connections.Values[index].To.Jumphole = connection.From.Jumphole;
                 }
+                else
+                    Connections.Add(connection);
             }
-
-            //if (!contains)
-            if (connection.Universe.Count > 0)
-                Connections.Add(connection);
         }
 
-        UniverseConnections GetConnections(ContentBase content, string file)
+        Table<int, ConnectionPart> GetConnections(ContentBase content, string file)
         {
             if (!IO.File.Exists(file))
                 return null;
@@ -83,7 +71,7 @@ namespace FreelancerModStudio.SystemPresenter
             FileManager fileManager = new FileManager(file);
             EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, SystemTemplate);
 
-            UniverseConnections connections = new UniverseConnections();
+            Table<int, ConnectionPart> connections = new Table<int, ConnectionPart>();
 
             foreach (EditorINIBlock block in iniContent.Blocks)
             {
@@ -111,42 +99,43 @@ namespace FreelancerModStudio.SystemPresenter
 
                     if (archtypeString != null && gotoString != null)
                     {
-                        UniverseConnection connection = null;
-                        if (archtypeString == "jumphole" && gotoString.Contains(','))
+                        ArchtypeInfo archtypeInfo = Archtype.TypeOf(archtypeString);
+                        if (archtypeInfo != null)
                         {
-                            connection = new UniverseConnection()
-                            {
-                                Connection = GetContent(gotoString.Substring(0, gotoString.IndexOf(','))),
-                                Jumphole = true
-                            };
-                        }
-                        else if (archtypeString == "jumpgate" && gotoString.Contains(','))
-                        {
-                            connection = new UniverseConnection()
-                            {
-                                Connection = GetContent(gotoString.Substring(0, gotoString.IndexOf(','))),
-                                Jumpgate = true
-                            };
-                        }
+                            ConnectionPart connection = new ConnectionPart();
+                            connection.Content = GetContent(BeforeSeperator(gotoString, ","));
 
-                        if (connection != null && connection.ID != -1)
-                        {
-                            UniverseConnection existingConnection;
+                            if (archtypeInfo.Type == ContentType.JumpGate)
+                                connection.Jumpgate = true;
+                            else if (archtypeInfo.Type == ContentType.JumpHole)
+                                connection.Jumphole = true;
+
+                            ConnectionPart existingConnection;
                             if (connections.TryGetValue(connection.ID, out existingConnection))
                             {
-                                if (!existingConnection.Jumpgate)
-                                    existingConnection.Jumpgate = connection.Jumpgate;
+                                if (connection.Jumpgate)
+                                    existingConnection.Jumpgate = true;
 
-                                if (!existingConnection.Jumphole)
-                                    existingConnection.Jumphole = connection.Jumphole;
+                                if (connection.Jumphole)
+                                    existingConnection.Jumphole = true;
                             }
-                            else if (connection.ID != content.ID)
+                            else if (content.ID != connection.ID && connection.ID != -1)
                                 connections.Add(connection);
                         }
                     }
                 }
             }
+
             return connections;
+        }
+
+        string BeforeSeperator(string value, string seperator)
+        {
+            int index = value.IndexOf(seperator);
+            if (index == -1)
+                return value;
+
+            return value.Substring(0, index);
         }
 
         ContentBase GetContent(string name)
@@ -160,7 +149,48 @@ namespace FreelancerModStudio.SystemPresenter
         }
     }
 
-    public class GlobalConnection
+    public class UniverseConnection : ITableRow<UniverseConnectionID>
+    {
+        public UniverseConnectionID ID
+        {
+            get
+            {
+                if (From != null && To != null)
+                    return new UniverseConnectionID() { From = From.Content.ID, To = To.Content.ID };
+                else
+                    return null;
+            }
+        }
+
+        public ConnectionPart From { get; set; }
+        public ConnectionPart To { get; set; }
+
+        public override string ToString()
+        {
+            return From.Content.Block.Name + " - " + To.Content.Block.Name;
+        }
+    }
+
+    public class UniverseConnectionID : IComparable<UniverseConnectionID>
+    {
+        public int From { get; set; }
+        public int To { get; set; }
+
+        public int CompareTo(UniverseConnectionID other)
+        {
+            int from = To.CompareTo(other.From);
+            int from2 = To.CompareTo(other.To);
+
+            if (from == 0)
+                return From.CompareTo(other.To);
+            else if (from2 == 0)
+                return From.CompareTo(other.From);
+
+            return (From * To).CompareTo(other.From*other.To);
+        }
+    }
+
+    public class ConnectionPart : ITableRow<int>
     {
         public int ID
         {
@@ -174,50 +204,12 @@ namespace FreelancerModStudio.SystemPresenter
         }
 
         public ContentBase Content { get; set; }
-        public Table<int, UniverseConnection> Universe { get; set; }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (UniverseConnection connection in Universe)
-                sb.Append(connection.ToString() + " ");
-
-            return Content.Block.Name + " - " + sb.ToString();
-        }
-    }
-
-    public class UniverseConnections : Table<int, UniverseConnection>
-    {
-        public override string ToString()
-        {
-            string[] sb = new string[this.Count];
-            for (int i = 0; i < this.Count; i++)
-                sb[i] = this.Values[i].ToString();
-
-            return string.Join(", ", sb);
-        }
-    }
-
-    public class UniverseConnection : ITableRow<int>
-    {
-        public int ID
-        {
-            get
-            {
-                if (Connection != null)
-                    return Connection.ID;
-                else
-                    return -1;
-            }
-        }
-
-        public ContentBase Connection { get; set; }
         public bool Jumpgate { get; set; }
         public bool Jumphole { get; set; }
 
         public override string ToString()
         {
-            return Connection.Block.Name;
+            return Content.Block.Name;
         }
     }
 }

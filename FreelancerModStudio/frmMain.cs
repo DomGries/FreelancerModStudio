@@ -568,8 +568,10 @@ namespace FreelancerModStudio
         {
             if (systemEditor != null)
             {
-                systemEditor.IsUniverse = editor.IsUniverse;
-                systemEditor.ShowData(editor.Data, editor.File);
+                if (editor.IsUniverse)
+                    systemEditor.ShowData(editor.Data, editor.File, editor.Archtype);
+                else
+                    systemEditor.ShowData(editor.Data, editor.File, null);
 
                 //select initially
                 List<TableBlock> blocks = editor.GetSelectedBlocks();

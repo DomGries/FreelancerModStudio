@@ -89,23 +89,28 @@ namespace FreelancerModStudio
             OnFileOpen(file);
         }
 
-        public void ShowData(TableData data, string file)
+        public void ShowData(TableData data, string file, ArchtypeManager archtype)
         {
             Helper.Thread.Abort(ref universeLoadingThread, false);
 
             Clear();
             systemPresenter.Add(data.Blocks);
 
-            if (IsUniverse)
-            {
-                ThreadStart threadStart = new ThreadStart(delegate
-                {
-                    int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
-                    systemPresenter.DisplayUniverse(System.IO.Path.GetDirectoryName(file), systemTemplate);
-                });
+            if (archtype != null)
+                DisplayUniverse(System.IO.Path.GetDirectoryName(file), archtype);
+        }
 
-                Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);
-            }
+        void DisplayUniverse(string path, ArchtypeManager archtype)
+        {
+            ThreadStart threadStart = new ThreadStart(delegate
+            {
+                systemPresenter.IsUniverse = true;
+
+                int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
+                systemPresenter.DisplayUniverse(path, systemTemplate, archtype);
+            });
+
+            Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);
         }
 
         public new void Dispose()
@@ -182,18 +187,6 @@ namespace FreelancerModStudio
 
         //    systemPresenter.Viewport.Status = status;
         //}
-
-        public bool IsUniverse
-        {
-            get
-            {
-                return systemPresenter.IsUniverse;
-            }
-            set
-            {
-                systemPresenter.IsUniverse = value;
-            }
-        }
 
         public bool UseDocument()
         {

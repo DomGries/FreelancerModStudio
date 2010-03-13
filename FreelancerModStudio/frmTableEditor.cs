@@ -22,7 +22,7 @@ namespace FreelancerModStudio
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
 
         public bool IsUniverse { get; set; }
-        ArchtypeManager archtype = null;
+        public ArchtypeManager Archtype { get; set; }
 
         public delegate void DataChangedType(ChangedData data);
         public DataChangedType DataChanged;
@@ -166,21 +166,18 @@ namespace FreelancerModStudio
 
         public void LoadArchtypes()
         {
-            if (!IsUniverse)
-            {
-                int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Archtype");
-                string archtypeFile = ArchtypeManager.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
+            int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Archtype");
+            string archtypeFile = ArchtypeManager.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
 
-                //user interaction required to get the path of the archtype file
-                if (archtypeFile == null)
-                    archtypeFile = ShowSolarArchtypeSelector();
+            //user interaction required to get the path of the archtype file
+            if (archtypeFile == null)
+                archtypeFile = ShowSolarArchtypeSelector();
 
-                if (archtype == null)
-                    archtype = new ArchtypeManager(archtypeFile, archtypeTemplate);
-            }
+            if (Archtype == null)
+                Archtype = new ArchtypeManager(archtypeFile, archtypeTemplate);
 
             foreach (TableBlock block in Data.Blocks)
-                SetArchtype(block, archtype);
+                SetArchtype(block, Archtype);
         }
 
         void SetArchtype(TableBlock block, ArchtypeManager archtypeManager)
@@ -440,7 +437,7 @@ namespace FreelancerModStudio
 
                 //set archtype of block
                 if (tableBlock.Archtype == null)
-                    SetArchtype(tableBlock, archtype);
+                    SetArchtype(tableBlock, Archtype);
 
                 bool existSingle = false;
 
@@ -585,7 +582,7 @@ namespace FreelancerModStudio
             }
 
             foreach (TableBlock block in newBlocks)
-                SetArchtype(block, archtype);
+                SetArchtype(block, Archtype);
 
             undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Edit });
         }
@@ -886,7 +883,7 @@ namespace FreelancerModStudio
 
         public bool CanChangeVisibility()
         {
-            return archtype != null;
+            return Archtype != null;
         }
 
         public void ChangeVisibility()

@@ -186,11 +186,11 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 if (content.Model == model)
                 {
+                    if (SelectedContent == content && IsUniverse && content is System)
+                        DisplayContextMenu(((System)content).Path);
+
                     SelectedContent = content;
                     OnSelectionChanged(content);
-
-                    if (IsUniverse && content is System)
-                        DisplayContextMenu(((System)content).Path);
 
                     return;
                 }
@@ -306,64 +306,70 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public void DisplayUniverse(string path, int systemTemplate)
+        public void DisplayUniverse(string path, int systemTemplate, ArchtypeManager archtype)
         {
             Analyzer analyzer = new Analyzer()
             {
                 Universe = Objects,
                 UniversePath = path,
-                SystemTemplate = systemTemplate
+                SystemTemplate = systemTemplate,
+                Archtype = archtype
             };
             analyzer.Analyze();
 
             DisplayUniverseConnections(analyzer.Connections);
         }
 
-        void DisplayUniverseConnections(List<GlobalConnection> connections)
+        void DisplayUniverseConnections(Table<UniverseConnectionID, UniverseConnection> connections)
         {
             Viewport.Dispatcher.Invoke(new Action(delegate
             {
-                foreach (GlobalConnection globalConnection in connections)
+                foreach (UniverseConnection connection in connections)
                 {
-                    foreach (UniverseConnection connection in globalConnection.Universe)
-                    {
-                        Connection line = new Connection();
-                        if (connection.Jumpgate && !connection.Jumphole)
-                            line.StartType = ConnectionType.Jumpgate;
-                        else if (!connection.Jumpgate && connection.Jumphole)
-                            line.StartType = ConnectionType.Jumphole;
-                        else if (connection.Jumpgate && connection.Jumphole)
-                            line.StartType = ConnectionType.Both;
+                    Connection line = new Connection();
+                    line.StartType = GetConnectionType(connection.From.Jumpgate, connection.From.Jumphole);
+                    line.EndType = GetConnectionType(connection.To.Jumpgate, connection.To.Jumphole);
 
-                        Vector3D newPos = (globalConnection.Content.Position + connection.Connection.Position) / 2;
-                        //line.Position = newPos - (globalConnection.Content.Position - newPos) / 2;
-                        //line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length / 2, 1);
-                        line.Position = newPos;
-                        line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length, 1);
+                    Vector3D newPos = (connection.From.Content.Position + connection.To.Content.Position) / 2;
+                    //line.Position = newPos - (globalConnection.Content.Position - newPos) / 2;
+                    //line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length / 2, 1);
+                    line.Position = newPos;
+                    line.Scale = new Vector3D(1, (connection.From.Content.Position - connection.To.Content.Position).Length, 1);
 
-                        Vector v1 = new Vector(globalConnection.Content.Position.X, globalConnection.Content.Position.Y);
-                        Vector v2 = new Vector(connection.Connection.Position.X, connection.Connection.Position.Y);
+                    Vector v1 = new Vector(connection.From.Content.Position.X, connection.From.Content.Position.Y);
+                    Vector v2 = new Vector(connection.To.Content.Position.X, connection.To.Content.Position.Y);
 
-                        double a = Difference(v2.X, v1.X);
-                        double b = Difference(v2.Y, v1.Y);
-                        double factor = 1;
-                        if (v2.X < v1.X)
-                            factor = -1;
+                    double a = Difference(v2.X, v1.X);
+                    double b = Difference(v2.Y, v1.Y);
+                    double factor = 1;
+                    if (v2.X < v1.X)
+                        factor = -1;
 
-                        if (v2.Y < v1.Y)
-                            factor *= -1;
+                    if (v2.Y < v1.Y)
+                        factor *= -1;
 
-                        double c = Math.Sqrt(a * a + b * b);
+                    double c = Math.Sqrt(a * a + b * b);
 
-                        double angle = Math.Acos(a / c) * 180 / Math.PI;
+                    double angle = Math.Acos(a / c) * 180 / Math.PI;
 
-                        line.Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + 90);
+                    line.Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + 90);
 
-                        line.LoadModel();
-                        Viewport.Add(line.Model);
-                    }
+                    line.LoadModel();
+                    Viewport.Add(line.Model);
                 }
             }));
+        }
+
+        ConnectionType GetConnectionType(bool jumpgate, bool jumphole)
+        {
+            if (jumpgate && !jumphole)
+                return ConnectionType.Jumpgate;
+            else if (!jumpgate && jumphole)
+                return ConnectionType.Jumphole;
+            else if (jumpgate && jumphole)
+                return ConnectionType.Both;
+
+            return ConnectionType.None;
         }
 
         double Difference(double x, double y)

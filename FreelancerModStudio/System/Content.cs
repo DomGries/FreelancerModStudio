@@ -234,17 +234,11 @@ namespace FreelancerModStudio.SystemPresenter
             Material material;
 
             if (StartType == EndType)
-            {
                 //solid brush
-                if (StartType == ConnectionType.Jumpgate)
-                    material = MaterialHelper.CreateEmissiveMaterial(SharedMaterials.ConnectionJumpgate);
-                else if (StartType == ConnectionType.Jumphole)
-                    material = MaterialHelper.CreateEmissiveMaterial(SharedMaterials.ConnectionJumphole);
-                else
-                    material = MaterialHelper.CreateEmissiveMaterial(SharedMaterials.ConnectionBoth);
-            }
+                material = MaterialHelper.CreateEmissiveMaterial(GetColor(StartType));
             else
             {
+                //gradient brush
                 Color startColor = GetColor(StartType);
                 Color endColor = GetColor(EndType);
 
@@ -256,12 +250,14 @@ namespace FreelancerModStudio.SystemPresenter
 
         Color GetColor(ConnectionType type)
         {
-            if (StartType == ConnectionType.Jumpgate)
+            if (type == ConnectionType.Jumpgate)
                 return SharedMaterials.ConnectionJumpgate;
-            else if (StartType == ConnectionType.Jumphole)
+            else if (type == ConnectionType.Jumphole)
                 return SharedMaterials.ConnectionJumphole;
-            else
+            else if (type == ConnectionType.Both)
                 return SharedMaterials.ConnectionBoth;
+            else
+                return SharedMaterials.ConnectionNone;
         }
 
         public override MeshGeometry3D GetMesh()
@@ -289,6 +285,7 @@ namespace FreelancerModStudio.SystemPresenter
     {
         Both,
         Jumpgate,
-        Jumphole
+        Jumphole,
+        None
     }
 }

@@ -45,11 +45,10 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 10, 0));
 
         public static Material System = MaterialHelper.CreateEmissiveMaterial(Brushes.Silver);
-        //public static Material ConnectionJumphole = MaterialHelper.CreateEmissiveMaterial(new LinearGradientBrush(Colors.Red, Colors.DodgerBlue, 90));
-
         public static Color ConnectionJumphole = Colors.OrangeRed;
-        public static Color ConnectionJumpgate = Colors.DodgerBlue;
-        public static Color ConnectionBoth = Colors.Yellow;
+        public static Color ConnectionJumpgate = Colors.Yellow;
+        public static Color ConnectionBoth = Colors.DodgerBlue;
+        public static Color ConnectionNone = Colors.Black;
     }
 
     public static class SharedMeshes

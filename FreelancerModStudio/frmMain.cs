@@ -62,6 +62,9 @@ namespace FreelancerModStudio
                 if (System.IO.File.Exists(arguments[i]))
                     OpenFile(arguments[i]);
             }
+
+            if (this.dockPanel1.DocumentsCount == 0)
+                SetDocumentMenus(false);
         }
 
         IDockContent GetContentFromPersistString(string persistString)
@@ -856,6 +859,12 @@ namespace FreelancerModStudio
 
         void Document_DisplayChanged(DocumentInterface document)
         {
+            if (document == null)
+            {
+                SetDocumentMenus(false);
+                return;
+            }
+
             if (document.CanSave())
             {
                 this.mnuSave.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSave, document.GetTitle());

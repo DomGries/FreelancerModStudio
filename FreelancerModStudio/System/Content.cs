@@ -202,8 +202,10 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            if (Shape == ZoneShape.Box || Shape == ZoneShape.Cylinder)
+            if (Shape == ZoneShape.Box)
                 return SharedMeshes.Box;
+            else if (Shape == ZoneShape.Cylinder)
+                return SharedMeshes.Cylinder;
             else
                 return SharedMeshes.Sphere;
         }
@@ -212,6 +214,12 @@ namespace FreelancerModStudio.SystemPresenter
     public class System : ContentBase
     {
         public string Path { get; set; }
+        public List<Connection> Connections { get; set; }
+
+        public System()
+        {
+            Connections = new List<Connection>();
+        }
 
         protected override GeometryModel3D GetGeometry()
         {
@@ -226,21 +234,23 @@ namespace FreelancerModStudio.SystemPresenter
 
     public class Connection : ContentBase
     {
-        public ConnectionType StartType { get; set; }
-        public ConnectionType EndType { get; set; }
+        public ContentBase From { get; set; }
+        public ContentBase To { get; set; }
+        public ConnectionType FromType { get; set; }
+        public ConnectionType ToType { get; set; }
 
         protected override GeometryModel3D GetGeometry()
         {
             Material material;
 
-            if (StartType == EndType)
+            if (FromType == ToType)
                 //solid brush
-                material = MaterialHelper.CreateEmissiveMaterial(GetColor(StartType));
+                material = MaterialHelper.CreateEmissiveMaterial(GetColor(FromType));
             else
             {
                 //gradient brush
-                Color startColor = GetColor(StartType);
-                Color endColor = GetColor(EndType);
+                Color startColor = GetColor(FromType);
+                Color endColor = GetColor(ToType);
 
                 material = MaterialHelper.CreateEmissiveMaterial(new LinearGradientBrush(startColor, endColor, 90));
             }

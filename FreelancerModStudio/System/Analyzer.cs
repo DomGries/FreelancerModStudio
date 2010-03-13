@@ -52,11 +52,11 @@ namespace FreelancerModStudio.SystemPresenter
                     To = new ConnectionPart() { Content = connectionPart.Content }
                 };
 
-                int index = Connections.IndexOf(connection.ID);
-                if (index != -1)
+                UniverseConnection existingConnection;
+                if (Connections.TryGetValue(connection.ID, out existingConnection))
                 {
-                    Connections.Values[index].To.Jumpgate = connection.From.Jumpgate;
-                    Connections.Values[index].To.Jumphole = connection.From.Jumphole;
+                    existingConnection.To.Jumpgate = connection.From.Jumpgate;
+                    existingConnection.To.Jumphole = connection.From.Jumphole;
                 }
                 else
                     Connections.Add(connection);
@@ -186,7 +186,7 @@ namespace FreelancerModStudio.SystemPresenter
             else if (from2 == 0)
                 return From.CompareTo(other.From);
 
-            return (From * To).CompareTo(other.From*other.To);
+            return (From * To).CompareTo(other.From * other.To);
         }
     }
 

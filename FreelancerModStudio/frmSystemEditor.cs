@@ -98,14 +98,16 @@ namespace FreelancerModStudio
 
             if (archtype != null)
                 DisplayUniverse(System.IO.Path.GetDirectoryName(file), archtype);
+            else
+                systemPresenter.IsUniverse = false;
         }
 
         void DisplayUniverse(string path, ArchtypeManager archtype)
         {
+            systemPresenter.IsUniverse = true;
+
             ThreadStart threadStart = new ThreadStart(delegate
             {
-                systemPresenter.IsUniverse = true;
-
                 int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
                 systemPresenter.DisplayUniverse(path, systemTemplate, archtype);
             });

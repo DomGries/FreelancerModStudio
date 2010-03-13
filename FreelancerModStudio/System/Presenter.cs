@@ -175,6 +175,9 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void Delete(ContentBase content)
         {
+            if (IsUniverse && content is System)
+                DeleteConnections(content as System);
+
             Objects.Remove(content);
             Viewport.Remove(content.Model);
         }
@@ -325,39 +328,69 @@ namespace FreelancerModStudio.SystemPresenter
             Viewport.Dispatcher.Invoke(new Action(delegate
             {
                 foreach (UniverseConnection connection in connections)
-                {
-                    Connection line = new Connection();
-                    line.StartType = GetConnectionType(connection.From.Jumpgate, connection.From.Jumphole);
-                    line.EndType = GetConnectionType(connection.To.Jumpgate, connection.To.Jumphole);
-
-                    Vector3D newPos = (connection.From.Content.Position + connection.To.Content.Position) / 2;
-                    //line.Position = newPos - (globalConnection.Content.Position - newPos) / 2;
-                    //line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length / 2, 1);
-                    line.Position = newPos;
-                    line.Scale = new Vector3D(1, (connection.From.Content.Position - connection.To.Content.Position).Length, 1);
-
-                    Vector v1 = new Vector(connection.From.Content.Position.X, connection.From.Content.Position.Y);
-                    Vector v2 = new Vector(connection.To.Content.Position.X, connection.To.Content.Position.Y);
-
-                    double a = Difference(v2.X, v1.X);
-                    double b = Difference(v2.Y, v1.Y);
-                    double factor = 1;
-                    if (v2.X < v1.X)
-                        factor = -1;
-
-                    if (v2.Y < v1.Y)
-                        factor *= -1;
-
-                    double c = Math.Sqrt(a * a + b * b);
-
-                    double angle = Math.Acos(a / c) * 180 / Math.PI;
-
-                    line.Rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + 90);
-
-                    line.LoadModel();
-                    Viewport.Add(line.Model);
-                }
+                    Viewport.Add(GetConnection(connection).Model);
             }));
+        }
+
+        void DeleteConnections(System system)
+        {
+            foreach (Connection connection in system.Connections)
+                Delete(connection);
+        }
+
+        void UpdateConnections(System system)
+        {
+            foreach (Connection connection in system.Connections)
+                SetConnection(connection);
+        }
+
+        Connection GetConnection(UniverseConnection connection)
+        {
+            Connection line = new Connection();
+            SetConnection(line, connection);
+
+            line.LoadModel();
+            return line;
+        }
+
+        void SetConnection(Connection line, UniverseConnection connection)
+        {
+            line.From = connection.From.Content;
+            line.To = connection.To.Content;
+            line.FromType = GetConnectionType(connection.From.Jumpgate, connection.From.Jumphole);
+            line.ToType = GetConnectionType(connection.To.Jumpgate, connection.To.Jumphole);
+
+            (connection.From.Content as System).Connections.Add(line);
+            (connection.To.Content as System).Connections.Add(line);
+
+            SetConnection(line);
+        }
+
+        void SetConnection(Connection line)
+        {
+            Vector3D position = (line.From.Position + line.To.Position) / 2;
+            //line.Position = newPos - (globalConnection.Content.Position - newPos) / 2;
+            //line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length / 2, 1);
+            Vector3D scale = new Vector3D(1, (line.From.Position - line.To.Position).Length, 1);
+
+            Vector v1 = new Vector(line.From.Position.X, line.From.Position.Y);
+            Vector v2 = new Vector(line.To.Position.X, line.To.Position.Y);
+
+            double a = Difference(v2.X, v1.X);
+            double b = Difference(v2.Y, v1.Y);
+            double factor = 1;
+            if (v2.X < v1.X)
+                factor = -1;
+
+            if (v2.Y < v1.Y)
+                factor *= -1;
+
+            double c = Math.Sqrt(a * a + b * b);
+            double angle = Math.Acos(a / c) * 180 / Math.PI;
+
+            Rotation3D rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + 90);
+
+            line.SetDisplay(position, rotation, scale);
         }
 
         ConnectionType GetConnectionType(bool jumpgate, bool jumphole)
@@ -403,6 +436,9 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (parser.ModelChanged && content.Model != null)
                 ReloadModel(content);
+
+            if (IsUniverse && content is System)
+                UpdateConnections(content as System);
 
             if (selectedContent == content)
             {

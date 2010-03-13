@@ -80,6 +80,12 @@ namespace FreelancerModStudio.SystemPresenter
             Length = 0.25,
         });
 
+        public static MeshGeometry3D Cylinder = GetMesh(new BoxMesh()
+        {
+            Depth = 2,
+            Width = 2
+        });
+
         public static MeshGeometry3D Pyramid = GetMesh(new TetrahedronMesh());
         public static MeshGeometry3D Box = GetMesh(new BoxMesh());
 
@@ -139,7 +145,7 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneCylinder =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.Zone);
+            GetGeometry(SharedMeshes.Cylinder, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneVignette =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.ZoneVignette);

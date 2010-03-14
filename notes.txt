@@ -1,3 +1,2 @@
 todo:
--zone shape changed bug
 -Change whole project to WPF would result in better performance and more powerful visual display but would be very time consuming

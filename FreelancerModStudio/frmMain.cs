@@ -395,8 +395,12 @@ namespace FreelancerModStudio
                 dockPanel1.ActiveDocumentPane.ActiveContent = dockPanel1.DocumentsToArray()[documentIndex];
             else
             {
-                DisplayFile(file, templateIndex);
-                AddToRecentFiles(file, templateIndex);
+                try
+                {
+                    DisplayFile(file, templateIndex);
+                    AddToRecentFiles(file, templateIndex);
+                }
+                catch { }
             }
         }
 
@@ -937,7 +941,8 @@ namespace FreelancerModStudio
                 frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument;
 
                 string path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(editor.File), file);
-                OpenFile(path, Helper.Template.Data.Files.IndexOf("System"));
+                if (System.IO.File.Exists(path))
+                    OpenFile(path, Helper.Template.Data.Files.IndexOf("System"));
             }
         }
 

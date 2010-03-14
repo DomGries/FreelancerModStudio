@@ -112,7 +112,7 @@ begin
 	end;
 end;
 
-function PrepareToInstall: String;
+function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
 	i: Integer;
 	s: string;

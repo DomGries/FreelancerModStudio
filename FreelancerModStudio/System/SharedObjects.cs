@@ -34,7 +34,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material Satellite = MaterialHelper.CreateEmissiveMaterial(Brushes.BlueViolet);
         public static Material Construct = MaterialHelper.CreateEmissiveMaterial(Brushes.Fuchsia);
         public static Material Depot = MaterialHelper.CreateEmissiveMaterial(Brushes.SlateGray);
-        public static Material Ship = MaterialHelper.CreateEmissiveMaterial(Brushes.Yellow);
+        public static Material Ship = MaterialHelper.CreateEmissiveMaterial(Brushes.Gold);
         public static Material WeaponsPlatform = MaterialHelper.CreateEmissiveMaterial(Brushes.BurlyWood);
         public static Material TradeLane = MaterialHelper.CreateEmissiveMaterial(Brushes.Cyan);
         public static Material JumpHole = MaterialHelper.CreateEmissiveMaterial(Brushes.DarkGreen);
@@ -66,12 +66,9 @@ namespace FreelancerModStudio.SystemPresenter
             Stacks = 9
         });
 
-
         public static MeshGeometry3D BoxTradeLane = GetMesh(new BoxMesh()
         {
-            Width = 1,
-            Depth = 1.6,
-            Height = 0.4,
+            Height = 0.3,
         });
 
         public static MeshGeometry3D CylinderRing = GetMesh(new CylinderMesh()
@@ -86,7 +83,7 @@ namespace FreelancerModStudio.SystemPresenter
             Width = 2
         });
 
-        public static MeshGeometry3D Pyramid = GetMesh(new TetrahedronMesh());
+        public static MeshGeometry3D Pyramid = GetMesh(new PyramidMesh());
         public static MeshGeometry3D Box = GetMesh(new BoxMesh());
 
         static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)

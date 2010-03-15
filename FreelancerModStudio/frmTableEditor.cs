@@ -156,12 +156,20 @@ namespace FreelancerModStudio
         string ShowSolarArchtypeSelector()
         {
             OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Title = "Open Solar Archtype INI";
+            openFile.Title = string.Format(Properties.Strings.FileEditorOpenSolarArch, PathGetFileName(File));
             openFile.Filter = "Solar Archtype INI|*.ini";
             if (openFile.ShowDialog() == DialogResult.OK)
                 return openFile.FileName;
 
             return null;
+        }
+
+        string PathGetFileName(string path)
+        {
+            if (path.Trim() == string.Empty)
+                return path;
+
+            return System.IO.Path.GetFileName(path);
         }
 
         public void LoadArchtypes()

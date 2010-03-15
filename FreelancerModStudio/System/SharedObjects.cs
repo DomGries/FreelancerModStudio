@@ -27,7 +27,7 @@ namespace FreelancerModStudio.SystemPresenter
 
     public static class SharedMaterials
     {
-        public static Material LightSource = MaterialHelper.CreateEmissiveMaterial(Brushes.Yellow);
+        public static Material LightSource = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(120, 120, 0));
         public static Material Sun = MaterialHelper.CreateEmissiveMaterial(Brushes.Orange);
         public static Material Planet = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 60, 120));
         public static Material Station = MaterialHelper.CreateEmissiveMaterial(Brushes.OrangeRed);
@@ -59,11 +59,11 @@ namespace FreelancerModStudio.SystemPresenter
             Stacks = 9
         });
 
-        public static MeshGeometry3D SphereLightSource = GetMesh(new SphereMesh()
+        public static MeshGeometry3D SphereLightSource = GetMesh(new OctahedronMesh()
         {
-            Radius = 0.4,
-            Slices = 18,
-            Stacks = 9
+            //Radius = 0.4,
+            //Slices = 18,
+            //Stacks = 9
         });
 
         public static MeshGeometry3D BoxTradeLane = GetMesh(new BoxMesh()

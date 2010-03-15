@@ -151,6 +151,15 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Open Solar Archtype INI ({0}) ähnelt.
+        /// </summary>
+        internal static string FileEditorOpenSolarArch {
+            get {
+                return ResourceManager.GetString("FileEditorOpenSolarArch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die &amp;Save {0} ähnelt.
         /// </summary>
         internal static string FileEditorSave {
@@ -165,6 +174,15 @@ namespace FreelancerModStudio.Properties {
         internal static string FileEditorSaveAs {
             get {
                 return ResourceManager.GetString("FileEditorSaveAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The file &apos;{0}&apos; could not be opened.{1} ähnelt.
+        /// </summary>
+        internal static string FileErrorOpen {
+            get {
+                return ResourceManager.GetString("FileErrorOpen", resourceCulture);
             }
         }
         
@@ -254,7 +272,7 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Open {0] ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Open {0}... ähnelt.
         /// </summary>
         internal static string SystemPresenterOpen {
             get {

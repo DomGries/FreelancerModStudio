@@ -97,22 +97,26 @@ namespace FreelancerModStudio
             systemPresenter.Add(data.Blocks);
 
             if (archtype != null)
-                DisplayUniverse(System.IO.Path.GetDirectoryName(file), archtype);
+                DisplayUniverse(file, archtype);
             else
                 systemPresenter.IsUniverse = false;
         }
 
-        void DisplayUniverse(string path, ArchtypeManager archtype)
+        void DisplayUniverse(string file, ArchtypeManager archtype)
         {
             systemPresenter.IsUniverse = true;
-
-            ThreadStart threadStart = new ThreadStart(delegate
+            if (System.IO.File.Exists(file))
             {
-                int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
-                systemPresenter.DisplayUniverse(path, systemTemplate, archtype);
-            });
+                string path = System.IO.Path.GetDirectoryName(file);
 
-            Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);
+                ThreadStart threadStart = new ThreadStart(delegate
+                {
+                    int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
+                    systemPresenter.DisplayUniverse(path, systemTemplate, archtype);
+                });
+
+                Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);
+            }
         }
 
         public new void Dispose()
@@ -141,6 +145,8 @@ namespace FreelancerModStudio
             ContentBase content;
             if (systemPresenter.Objects.TryGetValue(id, out content))
                 systemPresenter.SelectedContent = content;
+            else
+                Deselect();
         }
 
         public void Deselect()

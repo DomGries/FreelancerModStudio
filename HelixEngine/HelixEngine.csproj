@@ -86,6 +86,8 @@
     <Compile Include="Visuals\Meshes\MeshGeneratorBase.cs" />
     <Compile Include="Visuals\Meshes\MyModelUIElement3D.cs" />
     <Compile Include="Visuals\Meshes\PieSliceVisual3D.cs" />
+    <Compile Include="Visuals\Meshes\Polyhedra\CubeMesh.cs" />
+    <Compile Include="Visuals\Meshes\Polyhedra\OctahedronMesh.cs" />
     <Compile Include="Visuals\Meshes\Polyhedra\PolyhedronMeshBase.cs" />
     <Compile Include="Visuals\Meshes\SphereMesh.cs" />
     <Compile Include="Visuals\Meshes\Polyhedra\PyramidMesh.cs" />

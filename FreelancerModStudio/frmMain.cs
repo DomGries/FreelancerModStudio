@@ -385,7 +385,16 @@ namespace FreelancerModStudio
                 }
 
             }
-            OpenFile(file, templateIndex);
+
+            try
+            {
+                OpenFile(file, templateIndex);
+            }
+            catch (Exception ex)
+            {
+                string error = Environment.NewLine + Environment.NewLine + ex.Message;
+                MessageBox.Show(String.Format(Properties.Strings.FileErrorOpen, file, error), Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         void OpenFile(string file, int templateIndex)
@@ -934,15 +943,26 @@ namespace FreelancerModStudio
                 ShowSystemEditor((frmTableEditor)dockPanel1.ActiveDocument);
         }
 
-        void systemEditor_FileOpen(string file)
+        void systemEditor_FileOpen(string path)
         {
             if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
             {
                 frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument;
+                string file = "";
 
-                string path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(editor.File), file);
-                if (System.IO.File.Exists(path))
-                    OpenFile(path, Helper.Template.Data.Files.IndexOf("System"));
+                try
+                {
+                    file = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(editor.File), path);
+                    if (System.IO.File.Exists(file))
+                        OpenFile(file, Helper.Template.Data.Files.IndexOf("System"));
+                    else
+                        throw new FileNotFoundException();
+                }
+                catch (Exception ex)
+                {
+                    string error = Environment.NewLine + Environment.NewLine + ex.Message;
+                    MessageBox.Show(String.Format(Properties.Strings.FileErrorOpen, file, error), Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

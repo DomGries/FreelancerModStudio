@@ -250,6 +250,12 @@ If that problem persists, download and install the update manually.</value>
     <value>Save {0} &amp;as...</value>
   </data>
   <data name="SystemPresenterOpen" xml:space="preserve">
-    <value>Open {0]</value>
+    <value>Open {0}...</value>
+  </data>
+  <data name="FileErrorOpen" xml:space="preserve">
+    <value>The file '{0}' could not be opened.{1}</value>
+  </data>
+  <data name="FileEditorOpenSolarArch" xml:space="preserve">
+    <value>Open Solar Archtype INI ({0})</value>
   </data>
 </root>

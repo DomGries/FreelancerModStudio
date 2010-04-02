@@ -248,7 +248,7 @@ namespace FreelancerModStudio.Data.IO
             {
                 foreach (string path in Helper.Template.Data.Files[i].Pathes)
                 {
-                    string pattern = ".+" + path.Replace("\\", "\\\\").Replace("*", "[^\\\\]+");
+                    string pattern = ".+" + path.Replace("\\", "\\\\").Replace("*", "[^\\\\]*");
                     if (System.Text.RegularExpressions.Regex.Match(file.ToLower(), pattern).Success)
                         return i;
                 }

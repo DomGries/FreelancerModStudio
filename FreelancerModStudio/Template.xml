@@ -3704,17 +3704,6 @@
             <Option>use_sound</Option>
           </Options>
         </Block>
-        <Block name="LootCrate" multiple="true" identifier="nickname">
-          <Options>
-            <Option>DA_archetype</Option>
-            <Option>explosion_arch</Option>
-            <Option>hit_pts</Option>
-            <Option>LODranges</Option>
-            <Option>mass</Option>
-            <Option>material_library</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
         <Block name="Shield" multiple="true" identifier="nickname">
           <Options>
             <Option>DA_archetype</Option>
@@ -3724,9 +3713,11 @@
         </Block>
         <Block name="ShieldGenerator" multiple="true" identifier="nickname">
           <Options>
+            <Option>child_impulse</Option>
             <Option>constant_power_draw</Option>
             <Option>DA_archetype</Option>
             <Option>debris_type</Option>
+            <Option>explosion_resistance</Option>
             <Option>hit_pts</Option>
             <Option>HP_child</Option>
             <Option>ids_info</Option>
@@ -3738,12 +3729,16 @@
             <Option>nickname</Option>
             <Option>offline_rebuild_time</Option>
             <Option>offline_threshold</Option>
+            <Option>parent_impulse</Option>
             <Option>rebuild_power_draw</Option>
             <Option>regeneration_rate</Option>
+            <Option>separation_explosion</Option>
             <Option>shield_collapse_particle</Option>
             <Option>shield_collapse_sound</Option>
-            <Option>shield_hit_effects</Option>
+            <Option multiple="true">shield_hit_effects</Option>
             <Option>shield_rebuilt_sound</Option>
+            <Option>shield_type</Option>
+            <Option>toughness</Option>
             <Option>volume</Option>
           </Options>
         </Block>
@@ -3764,38 +3759,6 @@
             <Option>tl_ship_enter</Option>
             <Option>tl_ship_exit</Option>
             <Option>tl_ship_travel</Option>
-          </Options>
-        </Block>
-        <Block name="ShieldGenerator" multiple="true" identifier="nickname">
-          <Options>
-            <Option>child_impulse</Option>
-            <Option>constant_power_draw</Option>
-            <Option>DA_archetype</Option>
-            <Option>debris_type</Option>
-            <Option>explosion_resistance</Option>
-            <Option>hit_pts</Option>
-            <Option>HP_child</Option>
-            <Option>hp_type</Option>
-            <Option>ids_info</Option>
-            <Option>ids_name</Option>
-            <Option>LODranges</Option>
-            <Option>lootable</Option>
-            <Option>mass</Option>
-            <Option>material_library</Option>
-            <Option>max_capacity</Option>
-            <Option>nickname</Option>
-            <Option>offline_rebuild_time</Option>
-            <Option>offline_threshold</Option>
-            <Option>parent_impulse</Option>
-            <Option>rebuild_power_draw</Option>
-            <Option>regeneration_rate</Option>
-            <Option>separation_explosion</Option>
-            <Option>shield_collapse_sound</Option>
-            <Option multiple="true">shield_hit_effects</Option>
-            <Option>shield_rebuilt_sound</Option>
-            <Option>shield_type</Option>
-            <Option>toughness</Option>
-            <Option>volume</Option>
           </Options>
         </Block>
         <Block name="Thruster" multiple="true" identifier="nickname">
@@ -3891,16 +3854,6 @@
           <Options>
             <Option>LODranges</Option>
             <Option>obj</Option>
-          </Options>
-        </Block>
-        <Block name="LootCrate">
-          <Options>
-            <Option>DA_archetype</Option>
-            <Option>explosion_arch</Option>
-            <Option>hit_pts</Option>
-            <Option>LODranges</Option>
-            <Option>mass</Option>
-            <Option>nickname</Option>
           </Options>
         </Block>
         <Block name="Mine" multiple="true" identifier="nickname">

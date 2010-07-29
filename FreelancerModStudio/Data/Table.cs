@@ -15,7 +15,17 @@ namespace FreelancerModStudio.Data
     [Serializable]
     public class Table<TKey, TValue> : IEnumerable<TValue>
     {
-        SortedList<TKey, TValue> dictionary = new SortedList<TKey, TValue>();
+        SortedList<TKey, TValue> dictionary;
+
+        public Table()
+        {
+            dictionary = new SortedList<TKey, TValue>();
+        }
+
+        public Table(IComparer<TKey> comparer)
+        {
+            dictionary = new SortedList<TKey, TValue>(comparer);
+        }
 
         public TValue this[TKey key]
         {
@@ -32,6 +42,21 @@ namespace FreelancerModStudio.Data
         public bool TryGetValue(TKey key, out TValue value)
         {
             return dictionary.TryGetValue(key, out value);
+        }
+
+        public bool TryGetValue(TKey key, out TValue value, out int index)
+        {
+            index = dictionary.IndexOfKey(key);
+            if (index != -1)
+            {
+                value = dictionary.Values[index];
+                return true;
+            }
+            else
+            {
+                value = default(TValue);
+                return false;
+            }
         }
 
         public TKey KeyOf(int index)

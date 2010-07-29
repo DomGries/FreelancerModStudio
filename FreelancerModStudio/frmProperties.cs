@@ -61,7 +61,7 @@ namespace FreelancerModStudio
 
             //loop each selected block
             foreach (TableBlock block in blocks)
-                propertyBlocks.Add(new PropertyBlock(block.Block, Helper.Template.Data.Files[templateIndex].Blocks[block.Block.TemplateIndex]));
+                propertyBlocks.Add(new PropertyBlock(block.Block, Helper.Template.Data.Files[templateIndex].Blocks.Values[block.Block.TemplateIndex]));
 
             propertyGrid.SelectedObjects = propertyBlocks.ToArray();
             propertyGrid.ExpandAllGridItems();

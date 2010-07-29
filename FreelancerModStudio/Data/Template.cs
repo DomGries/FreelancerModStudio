@@ -49,10 +49,10 @@ namespace FreelancerModStudio.Data
             public List<string> Pathes;
 
             [XmlArrayItem("Block")]
-            public List<Block> Blocks;
+            public Table<string, Block> Blocks = new Table<string,Block>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public class Block
+        public class Block : ITableRow<string>
         {
             [XmlAttribute("name")]
             public string Name;
@@ -65,6 +65,11 @@ namespace FreelancerModStudio.Data
 
             [XmlArrayItem("Option")]
             public Options Options;
+
+            public string ID
+            {
+                get { return Name; }
+            }
         }
 
         public class Option : IComparable<Option>

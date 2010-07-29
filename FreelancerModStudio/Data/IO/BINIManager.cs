@@ -10,7 +10,7 @@ namespace FreelancerModStudio.Data.IO
     {
         public string File { get; set; }
         public bool IsBini { get; set; }
-        public INIBlocks Data { get; set; }
+        public List<INIBlock> Data { get; set; }
 
         public BINIManager(string file)
         {
@@ -19,7 +19,7 @@ namespace FreelancerModStudio.Data.IO
 
         public void Read()
         {
-            Data = new INIBlocks();
+            Data = new List<INIBlock>();
             FileStream stream = null;
             BinaryReader binaryReader = null;
             try
@@ -91,7 +91,7 @@ namespace FreelancerModStudio.Data.IO
                         }
                         block.Add(entryName, new INIOption(string.Join(", ", options.ToArray()), i));
                     }
-                    Data.Add(sectionName, block);
+                    Data.Add(new INIBlock() { Name = sectionName, Options = block } );
                 }
             }
             catch (Exception ex)

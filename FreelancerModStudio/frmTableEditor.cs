@@ -249,14 +249,14 @@ namespace FreelancerModStudio
             AddColumns(isSystem);
 
             //sort by type and name
-            Data.Blocks.Sort();
+            //Data.Blocks.Sort();
             objectListView1.SetObjects(Data.Blocks);
 
             //add block types to add menu
             for (int i = 0; i < Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Count; i++)
             {
                 ToolStripMenuItem addItem = new ToolStripMenuItem();
-                addItem.Text = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[i].Name;
+                addItem.Text = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[i].Name;
                 addItem.Tag = i;
                 addItem.Click += mnuAddItem_Click;
                 this.mnuAdd.DropDownItems.Add(addItem);
@@ -436,7 +436,7 @@ namespace FreelancerModStudio
             List<TableBlock> selectedData = new List<TableBlock>();
             for (int i = 0; i < blocks.Count; i++)
             {
-                Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[blocks[i].Block.TemplateIndex];
+                Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[blocks[i].Block.TemplateIndex];
                 TableBlock tableBlock = blocks[i];
 
                 //set block to be modified except in is undo mode
@@ -480,7 +480,7 @@ namespace FreelancerModStudio
                 selectedData.Add(tableBlock);
             }
 
-            Data.Blocks.Sort();
+            //Data.Blocks.Sort();
 
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.SelectedObjects = selectedData;
@@ -491,7 +491,7 @@ namespace FreelancerModStudio
 
         void AddBlock(string blockName, int templateIndex)
         {
-            Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks[templateIndex];
+            Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[templateIndex];
 
             //add options to new block
             EditorINIBlock editorBlock = new EditorINIBlock(blockName, templateIndex);
@@ -603,7 +603,7 @@ namespace FreelancerModStudio
                 Data.Blocks[index] = newBlocks[i];
             }
 
-            Data.Blocks.Sort();
+            //Data.Blocks.Sort();
 
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.RefreshObjects(Data.Blocks);

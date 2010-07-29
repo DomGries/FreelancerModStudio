@@ -14,16 +14,16 @@ namespace FreelancerModStudio.Data.IO
             File = file;
         }
 
-        public INIBlocks Read()
+        public List<INIBlock> Read()
         {
-            INIBlocks data = new INIBlocks();
+            List<INIBlock> data = new List<INIBlock>();
 
             StreamReader streamReader = null;
 
             try
             {
                 streamReader = new StreamReader(File, Encoding.Default);
-                KeyValuePair<string, INIOptions> currentBlock = new KeyValuePair<string, INIOptions>();
+                INIBlock currentBlock = new INIBlock();
                 int currentOptionIndex = 0;
 
                 while (!streamReader.EndOfStream)
@@ -35,26 +35,26 @@ namespace FreelancerModStudio.Data.IO
                     if (commentIndex != -1)
                         line = line.Substring(0, commentIndex).Trim();
 
-                    if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] != ']')
-                    {
-                        //reset current block if block was commented out
-                        if (currentBlock.Key != null)
-                            data.Add(currentBlock.Key, currentBlock.Value);
+                    //if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] != ']')
+                    //{
+                    //    //reset current block if block was commented out
+                    //    if (currentBlock.Key != null)
+                    //        data.Add(currentBlock.Key, currentBlock.Value);
 
-                        currentBlock = new KeyValuePair<string, INIOptions>();
-                    }
-                    else if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] == ']')
+                    //    currentBlock = new KeyValuePair<string, INIOptions>();
+                    //}
+                    if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] == ']')
                     {
                         //new block
-                        if (currentBlock.Key != null)
-                            data.Add(currentBlock.Key, currentBlock.Value);
+                        if (currentBlock.Name != null)
+                            data.Add(currentBlock);
 
                         string blockName = line.Substring(1, line.Length - 2).Trim();
 
-                        currentBlock = new KeyValuePair<string, INIOptions>(blockName, new INIOptions());
+                        currentBlock = new INIBlock() { Name = blockName, Options = new INIOptions() };
                         currentOptionIndex = 0;
                     }
-                    else if (currentBlock.Key != null)
+                    else if (currentBlock.Name != null)
                     {
                         //new value for block
                         int valueIndex = line.IndexOf('=');
@@ -64,14 +64,14 @@ namespace FreelancerModStudio.Data.IO
                             string optionName = line.Substring(0, valueIndex).Trim();
                             string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
 
-                            currentBlock.Value.Add(optionName, new INIOption(optionValue, currentOptionIndex));
+                            currentBlock.Options.Add(optionName, new INIOption(optionValue, currentOptionIndex));
                             currentOptionIndex++;
                         }
                     }
                 }
 
-                if (currentBlock.Key != null)
-                    data.Add(currentBlock.Key, currentBlock.Value);
+                if (currentBlock.Name != null)
+                    data.Add(currentBlock);
             }
             catch (Exception ex)
             {
@@ -84,7 +84,7 @@ namespace FreelancerModStudio.Data.IO
             return data;
         }
 
-        public void Write(INIBlocks data)
+        public void Write(List<INIBlock> data)
         {
             StreamWriter streamWriter = null;
 
@@ -94,18 +94,18 @@ namespace FreelancerModStudio.Data.IO
 
                 //write each block
                 int i = 0;
-                foreach (KeyValuePair<string, List<INIOptions>> block in data)
+                foreach (INIBlock block in data)
                 {
-                    for (int j = 0; j < block.Value.Count; j++)
+                    for (int j = 0; j < block.Options.Count; j++)
                     {
                         if (i + j > 0)
                             streamWriter.Write(Environment.NewLine + Environment.NewLine);
 
-                        streamWriter.WriteLine("[" + block.Key + "]");
+                        streamWriter.WriteLine("[" + block.Name + "]");
 
                         //write each option
                         int k = 0;
-                        foreach (KeyValuePair<string, List<INIOption>> option in block.Value[j])
+                        foreach (KeyValuePair<string, List<INIOption>> option in block.Options)
                         {
                             for (int h = 0; h < option.Value.Count; h++)
                             {
@@ -121,7 +121,7 @@ namespace FreelancerModStudio.Data.IO
                                     streamWriter.Write(Environment.NewLine);
                             }
 
-                            if (k < block.Value[j].Count - 1)
+                            if (k < block.Options.Count - 1)
                                 streamWriter.Write(Environment.NewLine);
 
                             k++;
@@ -140,29 +140,10 @@ namespace FreelancerModStudio.Data.IO
         }
     }
    
-    public class INIBlocks : Dictionary<string, List<INIOptions>>
+    public class INIBlock
     {
-        public INIBlocks() : base(StringComparer.OrdinalIgnoreCase) { }
-
-        public new void Add(string key, List<INIOptions> values)
-        {
-            if (this.ContainsKey(key))
-            {
-                //add value to existing option
-                foreach (INIOptions options in values)
-                    this[key].Add(options);
-            }
-            else
-            {
-                //add new option
-                base.Add(key, values);
-            }
-        }
-
-        public void Add(string key, INIOptions values)
-        {
-            this.Add(key, new List<INIOptions>() {values});
-        }
+        public string Name { get; set; }
+        public INIOptions Options { get; set; }
     }
 
     public class INIOptions : Dictionary<string, List<INIOption>>

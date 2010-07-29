@@ -84,7 +84,7 @@ namespace FreelancerModStudio.Data
             }
 
             //name of group
-            if (Helper.Template.Data.Files[templateIndex].Blocks[block.TemplateIndex].Multiple)
+            if (Helper.Template.Data.Files[templateIndex].Blocks.Values[block.TemplateIndex].Multiple)
                 Group = block.Name;
             else
                 Group = Properties.Strings.FileDefaultCategory;

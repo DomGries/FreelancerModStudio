@@ -122,22 +122,22 @@ namespace FreelancerModStudio.Data.IO
                                         }
                                     }
 
-                                    //add entry
+                                    //add entry of multiple option
                                     editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniOptions[k].Value), editorChildOptions));
                                 }
                             }
-                            else
+                            else //single option
                             {
-                                //just add the first option if aviable to prevent multiple options which should be single
+                                //just add the last option (Freelancer like) if aviable to prevent multiple options which should be single
                                 if (iniBlock.Options[templateOption.Name].Count > 0)
-                                    editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniOptions[0].Value)));
+                                    editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniOptions[iniOptions.Count - 1].Value)));
                             }
 
                             //add option
                             editorBlock.Options.Add(editorOption);
                         }
                         else
-                            //add empty option
+                            //add empty option based on template
                             editorBlock.Options.Add(new EditorINIOption(templateOption.Name, j));
 
                         //set index of main option (value displayed in table view)

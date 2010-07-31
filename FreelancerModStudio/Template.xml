@@ -332,30 +332,30 @@
       <Blocks>
         <Block name="Base" multiple="true" identifier="nickname">
           <Options>
+            <Option>nickname</Option>
+            <Option>system</Option>
+            <Option>strid_name</Option>
+            <Option>file</Option>
             <Option>autosave_forbidden</Option>
             <Option>BGCS_base_run_by</Option>
-            <Option>file</Option>
-            <Option>nickname</Option>
-            <Option>strid_name</Option>
-            <Option>system</Option>
+            <Option>terrain_tiny</Option>
+            <Option>terrain_sml</Option>
+            <Option>terrain_mdm</Option>
+            <Option>terrain_lrg</Option>
             <Option>terrain_dyna_01</Option>
             <Option>terrain_dyna_02</Option>
-            <Option>terrain_lrg</Option>
-            <Option>terrain_mdm</Option>
-            <Option>terrain_sml</Option>
-            <Option>terrain_tiny</Option>
           </Options>
         </Block>
         <Block name="system" multiple="true" identifier="nickname">
           <Options>
-            <Option>file</Option>
-            <Option>ids_info</Option>
-            <Option>msg_id_prefix</Option>
-            <Option>NavMapScale</Option>
             <Option>nickname</Option>
+            <Option>file</Option>
             <Option>pos</Option>
-            <Option>strid_name</Option>
+            <Option>msg_id_prefix</Option>
             <Option>visit</Option>
+            <Option>strid_name</Option>
+            <Option>ids_info</Option>
+            <Option>NavMapScale</Option>
           </Options>
         </Block>
         <Block name="Time">
@@ -380,11 +380,11 @@
         </Block>
         <Block name="Archetype">
           <Options>
-            <Option multiple="true">equipment</Option>
             <Option multiple="true">ship</Option>
             <Option multiple="true" parent="ship">simple</Option>
-            <Option multiple="true">snd</Option>
             <Option multiple="true">solar</Option>
+            <Option multiple="true">equipment</Option>
+            <Option multiple="true">snd</Option>
             <Option multiple="true">voice</Option>
           </Options>
         </Block>
@@ -407,9 +407,9 @@
         </Block>
         <Block name="Music">
           <Options>
-            <Option>battle</Option>
-            <Option>danger</Option>
             <Option>space</Option>
+            <Option>danger</Option>
+            <Option>battle</Option>
           </Options>
         </Block>
         <Block name="Asteroids" multiple="true" identifier="zone">
@@ -438,97 +438,97 @@
         </Block>
         <Block name="LightSource" multiple="true" identifier="nickname">
           <Options>
-            <Option>attenuation</Option>
-            <Option>atten_curve</Option>
-            <Option>color</Option>
-            <Option>color_curve</Option>
-            <Option>direction</Option>
             <Option>nickname</Option>
             <Option>pos</Option>
+            <Option>color</Option>
             <Option>range</Option>
-            <Option>rotate</Option>
             <Option>type</Option>
+            <Option>direction</Option>
+            <Option>atten_curve</Option>
+            <Option>attenuation</Option>
+            <Option>color_curve</Option>
+            <Option>rotate</Option>
           </Options>
         </Block>
         <Block name="Object" multiple="true" identifier="nickname">
           <Options>
-            <Option>Ambient</Option>
-            <Option>ambient_color</Option>
-            <Option>Archetype</Option>
-            <Option>atmosphere_range</Option>
-            <Option>Base</Option>
-            <Option>behavior</Option>
-            <Option>burn_color</Option>
-            <Option>difficulty_level</Option>
-            <Option>dock_with</Option>
-            <Option>faction</Option>
-            <Option>goto</Option>
-            <Option>ids_info</Option>
-            <Option>ids_name</Option>
-            <Option>jump_effect</Option>
-            <Option>loadout</Option>
-            <Option>msg_id_prefix</Option>
-            <Option>next_ring</Option>
             <Option>nickname</Option>
-            <Option>parent</Option>
-            <Option>pilot</Option>
+            <Option>ids_name</Option>
             <Option>pos</Option>
-            <Option>prev_ring</Option>
-            <Option>reputation</Option>
-            <Option>ring</Option>
             <Option>rotate</Option>
-            <Option>space_costume</Option>
-            <Option>spin</Option>
+            <Option>ambient_color</Option>
+            <Option>archetype</Option>
+            <Option>msg_id_prefix</Option>
+            <Option>jump_effect</Option>
             <Option>star</Option>
-            <Option>tradelane_space_name</Option>
+            <Option>spin</Option>
+            <Option>atmosphere_range</Option>
+            <Option>burn_color</Option>
+            <Option>ids_info</Option>
             <Option>visit</Option>
+            <Option>Ambient</Option>
+            <Option>ring</Option>
+            <Option>dock_with</Option>
+            <Option>base</Option>
+            <Option>prev_ring</Option>
+            <Option>next_ring</Option>
+            <Option>reputation</Option>
+            <Option>tradelane_space_name</Option>
+            <Option>behavior</Option>
+            <Option>faction</Option>
             <Option>voice</Option>
+            <Option>space_costume</Option>
+            <Option>difficulty_level</Option>
+            <Option>goto</Option>
+            <Option>loadout</Option>
+            <Option>pilot</Option>
+            <Option>parent</Option>
           </Options>
         </Block>
-        <Block name="Zone" multiple="true" identifier="nickname">
+        <Block name="zone" multiple="true" identifier="nickname">
           <Options>
-            <Option>attack_ids</Option>
-            <Option>comment</Option>
-            <Option>damage</Option>
-            <Option>density</Option>
-            <Option multiple="true">density_restriction</Option>
-            <Option>difficulty</Option>
-            <Option>edge_fraction</Option>
-            <Option multiple="true">encounter</Option>
-            <Option multiple="true" parent="encounter">faction</Option>
-            <Option multiple="true">faction_weight</Option>
-            <Option>ids_info</Option>
-            <Option>ids_name</Option>
-            <Option>interference</Option>
-            <Option>lane_id</Option>
-            <Option>max_battle_size</Option>
-            <Option>mission_eligible</Option>
-            <Option>mission_type</Option>
-            <Option>Music</Option>
             <Option>nickname</Option>
-            <Option>path_label</Option>
-            <Option>pop_type</Option>
-            <Option>population_additive</Option>
+            <Option>ids_name</Option>
             <Option>pos</Option>
-            <Option>property_flags</Option>
-            <Option>property_fog_color</Option>
-            <Option>relief_time</Option>
-            <Option>repop_time</Option>
-            <Option>reputation</Option>
             <Option>rotate</Option>
             <Option>shape</Option>
             <Option>size</Option>
-            <Option>sort</Option>
+            <Option>spin</Option>
+            <Option>damage</Option>
+            <Option>ids_info</Option>
+            <Option>property_flags</Option>
+            <Option>property_fog_color</Option>
+            <Option>visit</Option>
             <Option>spacedust</Option>
             <Option>spacedust_maxparticles</Option>
-            <Option>spin</Option>
-            <Option>toughness</Option>
+            <Option>attack_ids</Option>
+            <Option>reputation</Option>
+            <Option>comment</Option>
+            <Option>lane_id</Option>
             <Option>tradelane_attack</Option>
             <Option>tradelane_down</Option>
-            <Option>usage</Option>
+            <Option>mission_type</Option>
+            <Option>interference</Option>
+            <Option>edge_fraction</Option>
+            <Option>sort</Option>
             <Option>vignette_type</Option>
-            <Option>visit</Option>
+            <Option>toughness</Option>
+            <Option>difficulty</Option>
+            <Option>density</Option>
+            <Option>repop_time</Option>
+            <Option>max_battle_size</Option>
+            <Option>pop_type</Option>
+            <Option>relief_time</Option>
+            <Option>population_additive</Option>
+            <Option>path_label</Option>
+            <Option>usage</Option>
+            <Option>mission_eligible</Option>
             <Option>zone_creation_distance</Option>
+            <Option multiple="true">faction_weight</Option>
+            <Option multiple="true">density_restriction</Option>
+            <Option multiple="true">encounter</Option>
+            <Option multiple="true" parent="encounter">faction</Option>
+            <Option>Music</Option>
           </Options>
         </Block>
       </Blocks>

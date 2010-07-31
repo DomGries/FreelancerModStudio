@@ -76,6 +76,10 @@ namespace FreelancerModStudio
             LoadIcons();
             undoManager.DataChanged += UndoManager_DataChanged;
 
+            SimpleDropSink dropSink = objectListView1.DropSink as SimpleDropSink;
+            dropSink.CanDropBetween = true;
+            dropSink.CanDropOnItem = false;
+
             if (file != null)
             {
                 FileManager fileManager = new FileManager(file);
@@ -897,6 +901,35 @@ namespace FreelancerModStudio
         public void ChangeVisibility()
         {
             HideShowSelected();
+        }
+
+        private void objectListView1_CanDrop(object sender, OlvDropEventArgs e)
+        {
+            TableBlock block = e.DropTargetItem.RowObject as TableBlock;
+            if (block != null)
+                e.Effect = DragDropEffects.Move;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void objectListView1_Dropped(object sender, OlvDropEventArgs e)
+        {
+            OLVDataObject o = e.DataObject as OLVDataObject;
+            if (o != null && o.ModelObjects.Count > 0)
+            {
+                foreach (TableBlock block in o.ModelObjects)
+                {
+                    int index = Data.Blocks.IndexOf(block);
+                    Data.Blocks.Insert(e.DropTargetIndex, block);
+
+                    if (e.DropTargetIndex < index)
+                        Data.Blocks.RemoveAt(index + 1);
+                    else
+                        Data.Blocks.RemoveAt(index);
+                }
+                objectListView1.SetObjects(Data.Blocks);
+                objectListView1.SelectObjects(o.ModelObjects);
+            }
         }
     }
 }

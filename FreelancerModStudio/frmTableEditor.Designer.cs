@@ -49,13 +49,17 @@
             this.objectListView1.GridLines = true;
             this.objectListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.objectListView1.HideSelection = false;
+            this.objectListView1.IsSimpleDragSource = true;
+            this.objectListView1.IsSimpleDropSink = true;
             this.objectListView1.Name = "objectListView1";
             this.objectListView1.ShowGroups = false;
             this.objectListView1.ShowImagesOnSubItems = true;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.VirtualMode = true;
+            this.objectListView1.Dropped += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.objectListView1_Dropped);
             this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
+            this.objectListView1.CanDrop += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.objectListView1_CanDrop);
             // 
             // contextMenuStrip1
             // 

@@ -39,6 +39,12 @@ namespace FreelancerModStudio.Data
 
             return data;
         }
+
+        public void RefreshID()
+        {
+            for (int i = 0; i < Blocks.Count; i++)
+                Blocks[i].ID = i;
+        }
     }
 
     [Serializable]

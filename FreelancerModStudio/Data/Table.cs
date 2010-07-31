@@ -121,6 +121,14 @@ namespace FreelancerModStudio.Data
             }
         }
 
+        public System.Collections.IList List
+        {
+            get
+            {
+                return (System.Collections.IList)Values;
+            }
+        }
+
         public void Clear()
         {
             dictionary.Clear();

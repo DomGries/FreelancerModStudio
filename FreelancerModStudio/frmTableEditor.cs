@@ -281,12 +281,14 @@ namespace FreelancerModStudio
             OLVColumn[] cols =
             {
                     new OLVColumn(Properties.Strings.FileEditorColumnName, "Name"),
-                    new OLVColumn(Properties.Strings.FileEditorColumnType, "Group")
+                    new OLVColumn(Properties.Strings.FileEditorColumnType, "Group"),
+                    new OLVColumn("#", "ID")
             };
 
             cols[0].Width = 150;
             cols[1].MinimumWidth = 120;
             cols[1].FillsFreeSpace = true;
+            cols[2].Width = cols[2].MinimumWidth = cols[2].MaximumWidth = 30;
 
             if (isSystem)
             {
@@ -917,18 +919,29 @@ namespace FreelancerModStudio
             OLVDataObject o = e.DataObject as OLVDataObject;
             if (o != null && o.ModelObjects.Count > 0)
             {
+                bool changed = false;
                 foreach (TableBlock block in o.ModelObjects)
                 {
                     int index = Data.Blocks.IndexOf(block);
-                    Data.Blocks.Insert(e.DropTargetIndex, block);
+                    if (index != e.DropTargetIndex)
+                    {
+                        Data.Blocks.Insert(e.DropTargetIndex, block);
 
-                    if (e.DropTargetIndex < index)
-                        Data.Blocks.RemoveAt(index + 1);
-                    else
-                        Data.Blocks.RemoveAt(index);
+                        if (e.DropTargetIndex < index)
+                            Data.Blocks.RemoveAt(index + 1);
+                        else
+                            Data.Blocks.RemoveAt(index);
+
+                        changed = true;
+                    }
                 }
-                objectListView1.SetObjects(Data.Blocks);
-                objectListView1.SelectObjects(o.ModelObjects);
+
+                if (changed)
+                {
+                    Data.RefreshID();
+                    objectListView1.SetObjects(Data.Blocks);
+                    objectListView1.SelectObjects(o.ModelObjects);
+                }
             }
         }
     }

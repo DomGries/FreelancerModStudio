@@ -190,32 +190,32 @@ namespace FreelancerModStudio.Data.IO
 
             //save data
             List<INIBlock> newData = new List<INIBlock>();
-            //foreach (EditorINIBlock block in data.Blocks)
-            //{
-            //    INIOptions newBlock = new INIOptions();
-            //    for (int i = 0; i < block.Options.Count; i++)
-            //    {
-            //        if (block.Options[i].Values.Count > 0)
-            //        {
-            //            List<INIOption> newOption = new List<INIOption>();
+            foreach (EditorINIBlock block in data.Blocks)
+            {
+                INIOptions newBlock = new INIOptions();
+                for (int i = 0; i < block.Options.Count; i++)
+                {
+                    if (block.Options[i].Values.Count > 0)
+                    {
+                        List<INIOption> newOption = new List<INIOption>();
 
-            //            for (int j = 0; j < block.Options[i].Values.Count; j++)
-            //            {
-            //                newOption.Add(new INIOption(block.Options[i].Values[j].Value.ToString()));
+                        for (int j = 0; j < block.Options[i].Values.Count; j++)
+                        {
+                            newOption.Add(new INIOption(block.Options[i].Values[j].Value.ToString()));
 
-            //                //add suboptions as options with defined parent
-            //                if (block.Options[i].Values[j].SubOptions != null)
-            //                {
-            //                    for (int k = 0; k < block.Options[i].Values[j].SubOptions.Count; k++)
-            //                        newOption.Add(new INIOption(block.Options[i].Values[j].SubOptions[k].ToString(), block.Options[i].ChildName));
-            //                }
-            //            }
+                            //add suboptions as options with defined parent
+                            if (block.Options[i].Values[j].SubOptions != null)
+                            {
+                                for (int k = 0; k < block.Options[i].Values[j].SubOptions.Count; k++)
+                                    newOption.Add(new INIOption(block.Options[i].Values[j].SubOptions[k].ToString(), block.Options[i].ChildName));
+                            }
+                        }
 
-            //            newBlock.Add(block.Options[i].Name, newOption);
-            //        }
-            //    }
-            //    newData.Add(block.Name, newBlock);
-            //}
+                        newBlock.Add(block.Options[i].Name, newOption);
+                    }
+                }
+                newData.Add(new INIBlock() { Name = block.Name, Options = newBlock });
+            }
 
             try
             {

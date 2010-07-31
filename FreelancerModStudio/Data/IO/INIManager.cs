@@ -96,36 +96,33 @@ namespace FreelancerModStudio.Data.IO
                 int i = 0;
                 foreach (INIBlock block in data)
                 {
-                    for (int j = 0; j < block.Options.Count; j++)
+                    if (i > 0)
+                        streamWriter.Write(Environment.NewLine + Environment.NewLine);
+
+                    streamWriter.WriteLine("[" + block.Name + "]");
+
+                    //write each option
+                    int k = 0;
+                    foreach (KeyValuePair<string, List<INIOption>> option in block.Options)
                     {
-                        if (i + j > 0)
-                            streamWriter.Write(Environment.NewLine + Environment.NewLine);
-
-                        streamWriter.WriteLine("[" + block.Name + "]");
-
-                        //write each option
-                        int k = 0;
-                        foreach (KeyValuePair<string, List<INIOption>> option in block.Options)
+                        for (int h = 0; h < option.Value.Count; h++)
                         {
-                            for (int h = 0; h < option.Value.Count; h++)
-                            {
-                                string key;
-                                if (option.Value[h].Parent == null)
-                                    key = option.Key;
-                                else
-                                    key = option.Value[h].Parent;
+                            string key;
+                            if (option.Value[h].Parent == null)
+                                key = option.Key;
+                            else
+                                key = option.Value[h].Parent;
 
-                                streamWriter.Write(key + " = " + option.Value[h].Value);
+                            streamWriter.Write(key + " = " + option.Value[h].Value);
 
-                                if (h < option.Value.Count - 1)
-                                    streamWriter.Write(Environment.NewLine);
-                            }
-
-                            if (k < block.Options.Count - 1)
+                            if (h < option.Value.Count - 1)
                                 streamWriter.Write(Environment.NewLine);
-
-                            k++;
                         }
+
+                        if (k < block.Options.Count - 1)
+                            streamWriter.Write(Environment.NewLine);
+
+                        k++;
                     }
                     i++;
                 }
@@ -139,7 +136,7 @@ namespace FreelancerModStudio.Data.IO
                 streamWriter.Close();
         }
     }
-   
+
     public class INIBlock
     {
         public string Name { get; set; }

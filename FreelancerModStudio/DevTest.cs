@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿/*#if DEBUG
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -1368,4 +1368,4 @@ namespace FreelancerModStudio
         }
     }
 }
-#endif
+#endif*/

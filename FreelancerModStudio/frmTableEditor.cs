@@ -281,14 +281,14 @@ namespace FreelancerModStudio
             OLVColumn[] cols =
             {
                     new OLVColumn(Properties.Strings.FileEditorColumnName, "Name"),
-                    new OLVColumn(Properties.Strings.FileEditorColumnType, "Group"),
-                    new OLVColumn("#", "ID")
+                    new OLVColumn("#", "ID"),
+                    new OLVColumn(Properties.Strings.FileEditorColumnType, "Group")
             };
 
             cols[0].Width = 150;
-            cols[1].MinimumWidth = 120;
-            cols[1].FillsFreeSpace = true;
-            cols[2].Width = cols[2].MinimumWidth = cols[2].MaximumWidth = 34;
+            cols[1].Width = cols[1].MinimumWidth = cols[1].MaximumWidth = 34;
+            cols[2].MinimumWidth = 120;
+            cols[2].FillsFreeSpace = true;
 
             if (isSystem)
             {
@@ -326,7 +326,7 @@ namespace FreelancerModStudio
                 };
 
                 //show content type if possible otherwise group
-                cols[1].AspectGetter = delegate(object x)
+                cols[2].AspectGetter = delegate(object x)
                 {
                     TableBlock block = (TableBlock)x;
                     if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
@@ -342,7 +342,7 @@ namespace FreelancerModStudio
             }
 
             //show ID + 1
-            cols[2].AspectGetter = delegate(object x)
+            cols[1].AspectGetter = delegate(object x)
             {
                 return ((TableBlock)x).ID + 1;
             };
@@ -944,8 +944,7 @@ namespace FreelancerModStudio
 
         private void objectListView1_CanDrop(object sender, OlvDropEventArgs e)
         {
-            TableBlock block = e.DropTargetItem.RowObject as TableBlock;
-            if (block != null)
+            if (e.DropTargetItem.RowObject is TableBlock)
                 e.Effect = DragDropEffects.Move;
             else
                 e.Effect = DragDropEffects.None;
@@ -954,7 +953,7 @@ namespace FreelancerModStudio
         private void objectListView1_Dropped(object sender, OlvDropEventArgs e)
         {
             OLVDataObject o = e.DataObject as OLVDataObject;
-            if (o != null && o.ModelObjects.Count > 0)
+            if (o != null)
             {
                 List<TableBlock> newBlocks = new List<TableBlock>();
                 List<TableBlock> oldBlocks = new List<TableBlock>();

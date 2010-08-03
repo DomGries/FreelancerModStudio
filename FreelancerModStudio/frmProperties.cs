@@ -41,6 +41,11 @@ namespace FreelancerModStudio
         public void RefreshSettings()
         {
             this.TabText = Properties.Strings.PropertiesText;
+
+            if (Helper.Settings.Data.Data.General.SortProperties)
+                propertyGrid.PropertySort = PropertySort.Alphabetical;
+            else
+                propertyGrid.PropertySort = PropertySort.NoSort;
         }
 
         public void ClearData()

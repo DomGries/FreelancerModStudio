@@ -41,7 +41,11 @@ namespace FreelancerModStudio.Data
         public class General
         {
             [CategoryAttribute("General"),
-                DisplayName("Display Recent Files")]
+                DisplayName("Display options sorted")]
+            public bool SortProperties { get; set; }
+
+            [CategoryAttribute("General"),
+                DisplayName("Display recent files")]
             public ushort RecentFilesCount { get; set; }
 
             [CategoryAttribute("General")]
@@ -87,11 +91,14 @@ namespace FreelancerModStudio.Data
 
             public General()
             {
+                SortProperties = true;
+                RecentFilesCount = 4;
+                Language = LanguageType.English;
+
                 EditorModifiedColor = Color.FromArgb(255, 255, 192);
                 EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
                 EditorHiddenColor = Color.FromArgb(128, 128, 128);
-                RecentFilesCount = 4;
-                Language = LanguageType.English;
+
                 AutoUpdate = new AutoUpdate();
             }
         }
@@ -103,11 +110,11 @@ namespace FreelancerModStudio.Data
         {
             [DisplayName("Active")]
             public bool Enabled { get; set; }
-            [DisplayName("Check Each Days")]
+            [DisplayName("Check each days")]
             public uint CheckInterval { get; set; }
-            [DisplayName("Download Silent")]
+            [DisplayName("Download silent")]
             public bool SilentDownload { get; set; }
-            [DisplayName("Check File")]
+            [DisplayName("Check file")]
             public string UpdateFile { get; set; }
 
             public DateTime LastCheck;

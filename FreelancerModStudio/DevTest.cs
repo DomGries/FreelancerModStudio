@@ -1,4 +1,4 @@
-﻿/*#if DEBUG
+﻿#if DEBUG
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,9 +14,9 @@ namespace FreelancerModStudio
         public class INIDataTemplate
         {
             public string Path;
-            public INIBlocks Blocks = new INIBlocks();
+            public List<INIBlock> Blocks = new List<INIBlock>();
 
-            public INIDataTemplate(string path, INIBlocks blocks)
+            public INIDataTemplate(string path, List<INIBlock> blocks)
             {
                 this.Path = path;
                 this.Blocks = blocks;
@@ -31,61 +31,58 @@ namespace FreelancerModStudio
             Template template = new Template();
             foreach (INIDataTemplate iniDataTemplate in dataList) //each file
             {
-                List<Template.Block> templateBlocks = new List<Template.Block>();
-                foreach (KeyValuePair<string, List<INIOptions>> block in iniDataTemplate.Blocks) //each block
+                Table<string, Template.Block> templateBlocks = new Table<string, Template.Block>();
+                foreach (INIBlock block in iniDataTemplate.Blocks) //each block
                 {
-                    foreach (INIOptions options in block.Value) //each options
+                    Template.Options templateOptions = new Template.Options();
+                    foreach (KeyValuePair<string, List<INIOption>> option in block.Options) //each option
                     {
-                        Template.Options templateOptions = new Template.Options();
-                        foreach (KeyValuePair<string, List<INIOption>> option in options) //each option
-                        {
-                            Template.Option templateOption = new Template.Option();
-                            templateOption.Multiple = option.Value.Count > 1;
-                            templateOption.Name = option.Key;
-                            templateOptions.Add(templateOption);
-                        }
+                        Template.Option templateOption = new Template.Option();
+                        templateOption.Multiple = option.Value.Count > 1;
+                        templateOption.Name = option.Key;
+                        templateOptions.Add(templateOption);
+                    }
 
-                        Template.Block templateBlock = new Template.Block();
-                        templateBlock.Name = block.Key;
-                        templateBlock.Options = templateOptions;
+                    Template.Block templateBlock = new Template.Block();
+                    templateBlock.Name = block.Name;
+                    templateBlock.Options = templateOptions;
 
-                        if (templateBlock.Multiple)
-                        {
-                            if (options.ContainsKey("nickname"))
-                                templateBlock.Identifier = "nickname";
-                        }
+                    if (templateBlock.Multiple)
+                    {
+                        if (block.Options.ContainsKey("nickname"))
+                            templateBlock.Identifier = "nickname";
+                    }
 
-                        if (templateBlocks.Count > 0 && templateBlocks[templateBlocks.Count - 1].Name.ToLower() == block.Key.ToLower())
+                    if (templateBlocks.Count > 0 && templateBlocks.Values[templateBlocks.Count - 1].Name.ToLower() == block.Name.ToLower())
+                    {
+                        //integration options
+                        foreach (Template.Option option in templateOptions)
                         {
-                            //integration options
-                            foreach (Template.Option option in templateOptions)
+                            int optionIndex = templateBlocks.Values[templateBlocks.Count - 1].Options.IndexOf(option.Name);
+                            if (optionIndex != -1)
                             {
-                                int optionIndex = templateBlocks[templateBlocks.Count - 1].Options.IndexOf(option.Name);
-                                if (optionIndex != -1)
-                                {
-                                    //change to multiple options if required
-                                    if (option.Multiple)
-                                        templateBlocks[templateBlocks.Count - 1].Options[optionIndex].Multiple = true;
-                                }
-                                else
-                                {
-                                    //add missing option
-                                    templateBlocks[templateBlocks.Count - 1].Options.Add(option);
-                                }
+                                //change to multiple options if required
+                                if (option.Multiple)
+                                    templateBlocks.Values[templateBlocks.Count - 1].Options[optionIndex].Multiple = true;
                             }
-
-                            //change to multiple blocks if required
-                            templateBlocks[templateBlocks.Count - 1].Multiple = templateBlocks[templateBlocks.Count - 1].Options.Count > 1;
-
-                            //sort options after integration
-                            templateBlocks[templateBlocks.Count - 1].Options.Sort();
+                            else
+                            {
+                                //add missing option
+                                templateBlocks.Values[templateBlocks.Count - 1].Options.Add(option);
+                            }
                         }
-                        else
-                        {
-                            //add new block
-                            templateBlock.Multiple = block.Value.Count > 1;
-                            templateBlocks.Add(templateBlock);
-                        }
+
+                        //change to multiple blocks if required
+                        templateBlocks.Values[templateBlocks.Count - 1].Multiple = templateBlocks.Values[templateBlocks.Count - 1].Options.Count > 1;
+
+                        //sort options after integration
+                        //templateBlocks.Values[templateBlocks.Count - 1].Options.Sort();
+                    }
+                    else
+                    {
+                        //add new block
+                        templateBlock.Multiple = block.Options.Count > 1;
+                        templateBlocks.Add(templateBlock);
                     }
                 }
 
@@ -1343,7 +1340,7 @@ namespace FreelancerModStudio
         static void CreateTemplateFromFile(string file, int dataPathIndex)
         {
             INIManager iniManager = new INIManager(file);
-            INIBlocks newBlocks = iniManager.Read();
+            List<INIBlock> newBlocks = iniManager.Read();
 
             string dataPath = file.Substring(dataPathIndex);
             int selectedFileGroup = GetTemplateFileGroup(dataPath);
@@ -1356,8 +1353,17 @@ namespace FreelancerModStudio
                     if (selectedFileGroupData.Contains(dataList[i].Path.ToLower()))
                     {
                         //integrate data
-                        foreach (KeyValuePair<string, List<INIOptions>> newBlock in newBlocks)
-                            dataList[i].Blocks.Add(newBlock.Key, newBlock.Value);
+                        foreach (INIBlock newBlock in newBlocks)
+                        {
+                            int blockIndex = IndexOfName(dataList[i].Blocks, newBlock.Name);
+                            if (blockIndex != -1)
+                            {
+                                foreach (KeyValuePair<string, List<INIOption>> option in newBlock.Options)
+                                    dataList[i].Blocks[blockIndex].Options.Add(option.Key, option.Value);
+                            }
+                            else
+                                dataList[i].Blocks.Add(newBlock);
+                        }
 
                         return;
                     }
@@ -1366,6 +1372,16 @@ namespace FreelancerModStudio
 
             dataList.Add(new INIDataTemplate(dataPath, newBlocks));
         }
+
+        static int IndexOfName(List<INIBlock> blocks, string name)
+        {
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                if (blocks[i].Name.ToLower() == name.ToLower())
+                    return i;
+            }
+            return -1;
+        }
     }
 }
-#endif*/
+#endif

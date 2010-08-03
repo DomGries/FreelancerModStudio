@@ -360,8 +360,8 @@ namespace FreelancerModStudio.SystemPresenter
             line.FromType = GetConnectionType(connection.From.Jumpgate, connection.From.Jumphole);
             line.ToType = GetConnectionType(connection.To.Jumpgate, connection.To.Jumphole);
 
-            (connection.From.Content as System).Connections.Add(line);
-            (connection.To.Content as System).Connections.Add(line);
+            ((System)connection.From.Content).Connections.Add(line);
+            ((System)connection.To.Content).Connections.Add(line);
 
             SetConnection(line);
         }

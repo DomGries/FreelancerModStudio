@@ -11,7 +11,7 @@ namespace FreelancerModStudio.Data
     {
         public List<TableBlock> Blocks { get; set; }
         public int TemplateIndex { get; set; }
-        public int MaxID { get; set; }
+        //public int MaxID { get; set; }
 
         public TableData()
         {
@@ -23,11 +23,8 @@ namespace FreelancerModStudio.Data
             Blocks = new List<TableBlock>();
             TemplateIndex = data.TemplateIndex;
 
-            foreach (EditorINIBlock block in data.Blocks)
-            {
-                MaxID++;
-                Blocks.Add(new TableBlock(MaxID, block, TemplateIndex));
-            }
+            for (int i = 0; i < data.Blocks.Count; i++)
+                Blocks.Add(new TableBlock(i, data.Blocks[i], TemplateIndex));
         }
 
         public EditorINIData GetEditorData()
@@ -96,6 +93,35 @@ namespace FreelancerModStudio.Data
                 Group = Properties.Strings.FileDefaultCategory;
 
             Block = block;
+        }
+
+        public string ToolTip
+        {
+            get
+            {
+                StringBuilder values = new StringBuilder();
+                foreach (EditorINIOption option in Block.Options)
+                {
+                    string append = null;
+                    if (option.Values.Count > 1)
+                        append = option.Name + " = [" + option.Values.Count.ToString() + "]";
+                    else if (option.Values.Count == 1)
+                        append = option.Name + " = " + option.Values[0].ToString();
+
+                    if (append != null)
+                    {
+                        if (values.Length > 0)
+                            values.Append(Environment.NewLine + append);
+                        else
+                            values.Append(append);
+                    }
+                }
+
+                if (values.Length == 0)
+                    return null;
+
+                return values.ToString();
+            }
         }
 
         public int CompareTo(TableBlock other)

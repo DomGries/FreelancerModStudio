@@ -288,7 +288,7 @@ namespace FreelancerModStudio
             cols[0].Width = 150;
             cols[1].MinimumWidth = 120;
             cols[1].FillsFreeSpace = true;
-            cols[2].Width = cols[2].MinimumWidth = cols[2].MaximumWidth = 30;
+            cols[2].Width = cols[2].MinimumWidth = cols[2].MaximumWidth = 34;
 
             if (isSystem)
             {
@@ -340,6 +340,18 @@ namespace FreelancerModStudio
                 objectListView1.BooleanCheckStateGetter = null;
                 objectListView1.BooleanCheckStatePutter = null;
             }
+
+            //show ID + 1
+            cols[2].AspectGetter = delegate(object x)
+            {
+                return ((TableBlock)x).ID + 1;
+            };
+
+            //show all options of a block in the tooltip
+            objectListView1.CellToolTipGetter = delegate(OLVColumn col, Object x)
+            {
+                return ((TableBlock)x).ToolTip;
+            };
 
             objectListView1.Columns.AddRange(cols);
         }
@@ -481,18 +493,22 @@ namespace FreelancerModStudio
                 }
 
                 if (!existSingle)
-                    Data.Blocks.Add(blocks[i]);
+                {
+                    if (blocks[i].ID >= Data.Blocks.Count)
+                        Data.Blocks.Add(blocks[i]);
+                    else
+                        Data.Blocks.Insert(blocks[i].ID, blocks[i]);
+                }
 
                 selectedData.Add(tableBlock);
             }
 
             //Data.Blocks.Sort();
+            Data.RefreshID();
 
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.SelectedObjects = selectedData;
             EnsureSelectionVisible();
-
-            Modified = true;
         }
 
         void AddBlock(string blockName, int templateIndex)
@@ -513,10 +529,14 @@ namespace FreelancerModStudio
                 }
             }
 
-            Data.MaxID++;
+            int id;
+            if (objectListView1.SelectedObjects.Count > 0)
+                id = ((TableBlock)objectListView1.SelectedObjects[objectListView1.SelectedObjects.Count - 1]).ID + 1;
+            else
+                id = Data.Blocks.Count;
 
             //add actual block
-            undoManager.Execute(new ChangedData() { NewBlocks = new List<TableBlock> { new TableBlock(Data.MaxID, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
+            undoManager.Execute(new ChangedData() { NewBlocks = new List<TableBlock> { new TableBlock(id, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
         }
 
         public List<TableBlock> GetSelectedBlocks()
@@ -610,13 +630,36 @@ namespace FreelancerModStudio
             }
 
             //Data.Blocks.Sort();
-
+            Data.RefreshID();
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.RefreshObjects(Data.Blocks);
+
+            //select objects which were selected before
             objectListView1.SelectObjects(newBlocks);
             EnsureSelectionVisible();
+        }
 
-            Modified = true;
+        private void MoveBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks, bool undo)
+        {
+            List<TableBlock> blocks = new List<TableBlock>();
+            for (int i = 0; i < oldBlocks.Count; i++)
+            {
+                int oldIndex = oldBlocks[i].ID - i;
+                int newIndex = newBlocks[i].ID - i;
+
+                blocks.Add(Data.Blocks[oldIndex]);
+
+                Data.Blocks.RemoveAt(oldIndex);
+                Data.Blocks.Insert(newIndex, blocks[blocks.Count - 1]);
+            }
+
+            Data.RefreshID();
+            objectListView1.SetObjects(Data.Blocks);
+            objectListView1.RefreshObjects(Data.Blocks);
+
+            //select objects which were selected before
+            objectListView1.SelectObjects(blocks);
+            EnsureSelectionVisible();
         }
 
         void DeleteBlocks(List<TableBlock> blocks)
@@ -626,13 +669,12 @@ namespace FreelancerModStudio
             foreach (TableBlock tableBlock in blocks)
                 Data.Blocks.Remove(tableBlock);
 
+            Data.RefreshID();
             objectListView1.RemoveObjects(blocks);
 
             //select objects which were selected before
             objectListView1.SelectObjects(selection);
             EnsureSelectionVisible();
-
-            Modified = true;
         }
 
         void DeleteSelectedBlocks()
@@ -805,10 +847,7 @@ namespace FreelancerModStudio
             {
                 List<TableBlock> blocks = new List<TableBlock>();
                 for (int i = 0; i < editorData.Blocks.Count; i++)
-                {
-                    Data.MaxID++;
-                    blocks.Add(new TableBlock(Data.MaxID, editorData.Blocks[i], Data.TemplateIndex));
-                }
+                    blocks.Add(new TableBlock(Data.Blocks.Count, editorData.Blocks[i], Data.TemplateIndex));
 
                 undoManager.Execute(new ChangedData() { NewBlocks = blocks, Type = ChangedType.Add });
             }
@@ -847,6 +886,8 @@ namespace FreelancerModStudio
                 DeleteBlocks(data.NewBlocks);
             else if (data.Type == ChangedType.Edit)
                 ChangeBlocks(data.NewBlocks, data.OldBlocks);
+            else if (data.Type == ChangedType.Move)
+                MoveBlocks(data.NewBlocks, data.OldBlocks, undo);
 
             OnDataChanged(data);
         }
@@ -854,13 +895,9 @@ namespace FreelancerModStudio
         void UndoManager_DataChanged(List<ChangedData> data, bool undo)
         {
             for (int i = 0; i < data.Count; i++)
-            {
-                if (undo)
-                    ExecuteDataChanged(data[i].GetUndoData(), i, undo);
-                else
-                    ExecuteDataChanged(data[i], i, undo);
-            }
+                ExecuteDataChanged(undo ? data[i].GetUndoData() : data[i], i, undo);
 
+            Modified = true;
             OnDocumentChanged((DocumentInterface)this);
         }
 
@@ -919,29 +956,21 @@ namespace FreelancerModStudio
             OLVDataObject o = e.DataObject as OLVDataObject;
             if (o != null && o.ModelObjects.Count > 0)
             {
-                bool changed = false;
+                List<TableBlock> newBlocks = new List<TableBlock>();
+                List<TableBlock> oldBlocks = new List<TableBlock>();
+
                 foreach (TableBlock block in o.ModelObjects)
                 {
-                    int index = Data.Blocks.IndexOf(block);
-                    if (index != e.DropTargetIndex)
+                    int newIndex = e.DropTargetIndex + newBlocks.Count;
+                    if (block.ID != newIndex)
                     {
-                        Data.Blocks.Insert(e.DropTargetIndex, block);
-
-                        if (e.DropTargetIndex < index)
-                            Data.Blocks.RemoveAt(index + 1);
-                        else
-                            Data.Blocks.RemoveAt(index);
-
-                        changed = true;
+                        newBlocks.Add(new TableBlock(newIndex));
+                        oldBlocks.Add(new TableBlock(block.ID));
                     }
                 }
 
-                if (changed)
-                {
-                    Data.RefreshID();
-                    objectListView1.SetObjects(Data.Blocks);
-                    objectListView1.SelectObjects(o.ModelObjects);
-                }
+                if (oldBlocks.Count > 0)
+                    undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Move });
             }
         }
     }

@@ -40,5 +40,5 @@ namespace FreelancerModStudio.Data
         }
     }
 
-    public enum ChangedType { Add, Edit, Delete }
+    public enum ChangedType { Add, Edit, Move, Delete }
 }

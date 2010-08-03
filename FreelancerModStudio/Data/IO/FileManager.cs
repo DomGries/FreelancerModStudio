@@ -68,19 +68,23 @@ namespace FreelancerModStudio.Data.IO
 #endif
 
             EditorINIData editorData = new EditorINIData(templateFileIndex);
+            Template.File templateFile = Helper.Template.Data.Files[templateFileIndex];
 
             //loop each ini block
             foreach (INIBlock iniBlock in iniData)
             {
                 Template.Block templateBlock;
                 int templateBlockIndex;
-                if (Helper.Template.Data.Files[templateFileIndex].Blocks.TryGetValue(iniBlock.Name, out templateBlock, out templateBlockIndex))
+
+                //get template block based on ini block name
+                if (templateFile.Blocks.TryGetValue(iniBlock.Name, out templateBlock, out templateBlockIndex))
                 {
                     EditorINIBlock editorBlock = new EditorINIBlock(templateBlock.Name, templateBlockIndex);
 
                     //loop each template option
                     for (int j = 0; j < templateBlock.Options.Count; j++)
                     {
+                        //handle nested options
                         Template.Option childTemplateOption = null;
                         if (j < templateBlock.Options.Count - 1 && templateBlock.Options[j + 1].Parent != null)
                         {
@@ -92,6 +96,8 @@ namespace FreelancerModStudio.Data.IO
                         EditorINIOption editorOption = new EditorINIOption(templateOption.Name, j);
 
                         List<INIOption> iniOptions;
+
+                        //get ini options based on template option name
                         if (iniBlock.Options.TryGetValue(templateOption.Name, out iniOptions))
                         {
                             //h is used to start again at last child option in order to provide better performance
@@ -104,6 +110,8 @@ namespace FreelancerModStudio.Data.IO
                                 {
                                     List<object> editorChildOptions = null;
                                     List<INIOption> iniChildOptions;
+
+                                    //get ini options of child based on child's template option name
                                     if (childTemplateOption != null && iniBlock.Options.TryGetValue(childTemplateOption.Name, out iniChildOptions))
                                     {
                                         editorOption.ChildTemplateIndex = j + 1;
@@ -128,9 +136,15 @@ namespace FreelancerModStudio.Data.IO
                             }
                             else //single option
                             {
-                                //just add the last option (Freelancer like) if aviable to prevent multiple options which should be single
-                                if (iniBlock.Options[templateOption.Name].Count > 0)
-                                    editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniOptions[iniOptions.Count - 1].Value)));
+                                if (iniOptions.Count > 0)
+                                {
+                                    if (iniOptions[0].Value.Length > 0)
+                                        //just add the last option (Freelancer like) if aviable to prevent multiple options which should be single
+                                        editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniOptions[iniOptions.Count - 1].Value)));
+                                    else
+                                        //use '=' for options which dont have values and are simply defined when using the option key followed by a colon equal
+                                        editorOption.Values.Add(new EditorINIEntry("="));
+                                }
                             }
 
                             //add option
@@ -201,7 +215,12 @@ namespace FreelancerModStudio.Data.IO
 
                         for (int j = 0; j < block.Options[i].Values.Count; j++)
                         {
-                            newOption.Add(new INIOption(block.Options[i].Values[j].Value.ToString()));
+                            string optionValue = block.Options[i].Values[j].Value.ToString();
+                            if (optionValue == "=")
+                                //use an empty value for options which dont have values and are simply defined when using the option key followed by a colon equal
+                                newOption.Add(new INIOption(""));
+                            else
+                                newOption.Add(new INIOption(optionValue));
 
                             //add suboptions as options with defined parent
                             if (block.Options[i].Values[j].SubOptions != null)

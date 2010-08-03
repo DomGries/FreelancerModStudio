@@ -35,37 +35,40 @@ namespace FreelancerModStudio.Data.IO
                     if (commentIndex != -1)
                         line = line.Substring(0, commentIndex).Trim();
 
-                    //if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] != ']')
-                    //{
-                    //    //reset current block if block was commented out
-                    //    if (currentBlock.Key != null)
-                    //        data.Add(currentBlock.Key, currentBlock.Value);
-
-                    //    currentBlock = new KeyValuePair<string, INIOptions>();
-                    //}
-                    if (line.Length > 0 && line[0] == '[' && line[line.Length - 1] == ']')
+                    if (line.Length > 0)
                     {
-                        //new block
-                        if (currentBlock.Name != null)
-                            data.Add(currentBlock);
-
-                        string blockName = line.Substring(1, line.Length - 2).Trim();
-
-                        currentBlock = new INIBlock() { Name = blockName, Options = new INIOptions() };
-                        currentOptionIndex = 0;
-                    }
-                    else if (currentBlock.Name != null)
-                    {
-                        //new value for block
-                        int valueIndex = line.IndexOf('=');
-                        if (valueIndex != -1)
+                        if (line[0] == '[' && line[line.Length - 1] != ']')
                         {
-                            //retrieve name and value from data
-                            string optionName = line.Substring(0, valueIndex).Trim();
-                            string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
+                            //reset current block if block was commented out
+                            if (currentBlock.Name != null)
+                                data.Add(currentBlock);
 
-                            currentBlock.Options.Add(optionName, new INIOption(optionValue, currentOptionIndex));
-                            currentOptionIndex++;
+                            currentBlock = new INIBlock();
+                        }
+                        else if (line[0] == '[' && line[line.Length - 1] == ']')
+                        {
+                            //new block
+                            if (currentBlock.Name != null)
+                                data.Add(currentBlock);
+
+                            string blockName = line.Substring(1, line.Length - 2).Trim();
+
+                            currentBlock = new INIBlock() { Name = blockName, Options = new INIOptions() };
+                            currentOptionIndex = 0;
+                        }
+                        else if (currentBlock.Name != null)
+                        {
+                            //new value for block
+                            int valueIndex = line.IndexOf('=');
+                            if (valueIndex != -1)
+                            {
+                                //retrieve name and value from data
+                                string optionName = line.Substring(0, valueIndex).Trim();
+                                string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
+
+                                currentBlock.Options.Add(optionName, new INIOption(optionValue, currentOptionIndex));
+                                currentOptionIndex++;
+                            }
                         }
                     }
                 }

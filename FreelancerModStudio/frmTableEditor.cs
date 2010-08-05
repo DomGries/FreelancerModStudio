@@ -642,16 +642,14 @@ namespace FreelancerModStudio
         private void MoveBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks, bool undo)
         {
             List<TableBlock> blocks = new List<TableBlock>();
-            for (int i = 0; i < oldBlocks.Count; i++)
+            for (int i = oldBlocks.Count - 1; i >= 0; i--)
             {
-                int oldIndex = oldBlocks[i].ID - i;
-                int newIndex = newBlocks[i].ID - i;
-
-                blocks.Add(Data.Blocks[oldIndex]);
-
-                Data.Blocks.RemoveAt(oldIndex);
-                Data.Blocks.Insert(newIndex, blocks[blocks.Count - 1]);
+                blocks.Add(Data.Blocks[oldBlocks[i].ID]);
+                Data.Blocks.RemoveAt(oldBlocks[i].ID);
             }
+
+            for (int i = 0; i < oldBlocks.Count; i++)
+                Data.Blocks.Insert(newBlocks[i].ID, blocks[oldBlocks.Count - i - 1]);
 
             Data.RefreshID();
             objectListView1.SetObjects(Data.Blocks);
@@ -955,22 +953,35 @@ namespace FreelancerModStudio
             OLVDataObject o = e.DataObject as OLVDataObject;
             if (o != null)
             {
-                List<TableBlock> newBlocks = new List<TableBlock>();
-                List<TableBlock> oldBlocks = new List<TableBlock>();
-
+                List<TableBlock> blocks = new List<TableBlock>();
                 foreach (TableBlock block in o.ModelObjects)
-                {
-                    int newIndex = e.DropTargetIndex + newBlocks.Count;
-                    if (block.ID != newIndex)
-                    {
-                        newBlocks.Add(new TableBlock(newIndex));
-                        oldBlocks.Add(new TableBlock(block.ID));
-                    }
-                }
+                    blocks.Add(new TableBlock(block.ID));
 
-                if (oldBlocks.Count > 0)
-                    undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Move });
+                StartMoveBlocks(blocks, e.DropTargetIndex);
             }
+        }
+
+        private void StartMoveBlocks(List<TableBlock> blocks, int targetIndex)
+        {
+            List<TableBlock> newBlocks = new List<TableBlock>();
+
+            for (int i = blocks.Count - 1; i >= 0; i--)
+            {
+                int newIndex = targetIndex + newBlocks.Count;
+                if (blocks[i].ID != newIndex)
+                {
+                    for (int j = 0; j < blocks.Count; j++)
+                    {
+                        if (blocks[j].ID < newIndex)
+                            newIndex--;
+                    }
+
+                    newBlocks.Add(new TableBlock(newIndex));
+                }
+            }
+
+            if (blocks.Count > 0)
+                undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = blocks, Type = ChangedType.Move });
         }
     }
 }

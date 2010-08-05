@@ -99,28 +99,30 @@ namespace FreelancerModStudio.Data
         {
             get
             {
-                StringBuilder values = new StringBuilder();
-                foreach (EditorINIOption option in Block.Options)
+                if (Block != null)
                 {
-                    string append = null;
-                    if (option.Values.Count > 1)
-                        append = option.Name + " = [" + option.Values.Count.ToString() + "]";
-                    else if (option.Values.Count == 1)
-                        append = option.Name + " = " + option.Values[0].ToString();
-
-                    if (append != null)
+                    StringBuilder values = new StringBuilder();
+                    foreach (EditorINIOption option in Block.Options)
                     {
-                        if (values.Length > 0)
-                            values.Append(Environment.NewLine + append);
-                        else
-                            values.Append(append);
+                        string append = null;
+                        if (option.Values.Count > 1)
+                            append = option.Name + " = [" + option.Values.Count.ToString() + "]";
+                        else if (option.Values.Count == 1)
+                            append = option.Name + " = " + option.Values[0].ToString();
+
+                        if (append != null)
+                        {
+                            if (values.Length > 0)
+                                values.Append(Environment.NewLine + append);
+                            else
+                                values.Append(append);
+                        }
                     }
+
+                    if (values.Length > 0)
+                        return values.ToString();
                 }
-
-                if (values.Length == 0)
-                    return null;
-
-                return values.ToString();
+                return null;
             }
         }
 

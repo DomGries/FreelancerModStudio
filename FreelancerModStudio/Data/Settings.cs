@@ -91,7 +91,7 @@ namespace FreelancerModStudio.Data
 
             public General()
             {
-                SortProperties = true;
+                SortProperties = false;
                 RecentFilesCount = 4;
                 Language = LanguageType.English;
 

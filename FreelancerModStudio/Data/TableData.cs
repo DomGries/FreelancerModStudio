@@ -55,7 +55,7 @@ namespace FreelancerModStudio.Data
         public EditorINIBlock Block;
         public TableModified Modified = TableModified.Normal;
 
-        public ArchtypeInfo Archtype { get; set; }
+        public ArchetypeInfo Archetype { get; set; }
         public bool Visibility { get; set; }
 
         public TableBlock(int id)

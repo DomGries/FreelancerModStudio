@@ -218,10 +218,10 @@ namespace FreelancerModStudio
                             {
                                 if (option.Values.Count > 0)
                                 {
-                                    block.Archtype = archtypeManager.TypeOf(option.Values[0].Value.ToString());
-                                    if (block.Archtype != null)
+                                    block.Archetype = archtypeManager.TypeOf(option.Values[0].Value.ToString());
+                                    if (block.Archetype != null)
                                     {
-                                        block.ObjectType = block.Archtype.Type;
+                                        block.ObjectType = block.Archetype.Type;
                                         hasArchtype = true;
                                     }
 
@@ -463,7 +463,7 @@ namespace FreelancerModStudio
                     tableBlock.Modified = TableModified.Changed;
 
                 //set archtype of block
-                if (tableBlock.Archtype == null)
+                if (tableBlock.Archetype == null)
                     SetArchtype(tableBlock, Archtype);
 
                 bool existSingle = false;

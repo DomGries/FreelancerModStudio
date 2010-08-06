@@ -10,11 +10,11 @@ namespace FreelancerModStudio.Data
 {
     public class ArchtypeManager
     {
-        SortedList<string, ArchtypeInfo> contentTable;
+        SortedList<string, ArchetypeInfo> contentTable;
 
-        public ArchtypeInfo TypeOf(string archtype)
+        public ArchetypeInfo TypeOf(string archtype)
         {
-            ArchtypeInfo info;
+            ArchetypeInfo info;
             if (contentTable != null && contentTable.TryGetValue(archtype, out info))
                 return info;
 
@@ -48,7 +48,7 @@ namespace FreelancerModStudio.Data
         public void CreateContentTable(List<TableBlock> blocks)
         {
             CultureInfo usCulture = new CultureInfo("en-US", false);
-            contentTable = new SortedList<string, ArchtypeInfo>();
+            contentTable = new SortedList<string, ArchetypeInfo>();
 
             foreach (TableBlock block in blocks)
             {
@@ -78,7 +78,7 @@ namespace FreelancerModStudio.Data
                     }
 
                     if (name != null && type != ContentType.None)
-                        contentTable.Add(name, new ArchtypeInfo() { Type = type, Radius = radius });
+                        contentTable.Add(name, new ArchetypeInfo() { Type = type, Radius = radius });
                 }
             }
         }
@@ -140,7 +140,7 @@ namespace FreelancerModStudio.Data
     }
 
     [Serializable]
-    public class ArchtypeInfo
+    public class ArchetypeInfo
     {
         public ContentType Type { get; set; }
         public double Radius { get; set; }

@@ -100,7 +100,14 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
-                scale = new Vector3D(block.Archtype.Radius, block.Archtype.Radius, block.Archtype.Radius) / 1000;
+                if (block.Archetype != null)
+                {
+                    scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) / 1000;
+                    if (scale.X < 0.1)
+                        scale = new Vector3D(0.1, 0.1, 0.1);
+                }
+                else
+                    scale = new Vector3D(1, 1, 1);
                 rotation = ParseRotation(rotationString, false);
             }
 

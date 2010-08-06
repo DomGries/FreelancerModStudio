@@ -99,7 +99,7 @@ namespace FreelancerModStudio.SystemPresenter
 
                     if (archtypeString != null && gotoString != null)
                     {
-                        ArchtypeInfo archtypeInfo = Archtype.TypeOf(archtypeString);
+                        ArchetypeInfo archtypeInfo = Archtype.TypeOf(archtypeString);
                         if (archtypeInfo != null)
                         {
                             ConnectionPart connection = new ConnectionPart();

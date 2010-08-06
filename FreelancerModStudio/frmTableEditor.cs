@@ -76,10 +76,6 @@ namespace FreelancerModStudio
             LoadIcons();
             undoManager.DataChanged += UndoManager_DataChanged;
 
-            SimpleDropSink dropSink = objectListView1.DropSink as SimpleDropSink;
-            dropSink.CanDropBetween = true;
-            dropSink.CanDropOnItem = false;
-
             if (file != null)
             {
                 FileManager fileManager = new FileManager(file);
@@ -97,6 +93,11 @@ namespace FreelancerModStudio
 
                 SetFile("");
             }
+
+            objectListView1.CellToolTip.InitialDelay = 1000;
+            SimpleDropSink dropSink = objectListView1.DropSink as SimpleDropSink;
+            dropSink.CanDropBetween = true;
+            dropSink.CanDropOnItem = false;
 
             RefreshSettings();
         }
@@ -178,7 +179,7 @@ namespace FreelancerModStudio
 
         public void LoadArchtypes()
         {
-            int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Archtype");
+            int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Archetype");
             string archtypeFile = ArchtypeManager.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
 
             //user interaction required to get the path of the archtype file

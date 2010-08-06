@@ -404,12 +404,8 @@ namespace FreelancerModStudio
                 dockPanel1.ActiveDocumentPane.ActiveContent = dockPanel1.DocumentsToArray()[documentIndex];
             else
             {
-                try
-                {
-                    DisplayFile(file, templateIndex);
-                    AddToRecentFiles(file, templateIndex);
-                }
-                catch { }
+                DisplayFile(file, templateIndex);
+                AddToRecentFiles(file, templateIndex);
             }
         }
 

@@ -380,9 +380,9 @@
         </Block>
         <Block name="Archetype">
           <Options>
+            <Option multiple="true">solar</Option>
             <Option multiple="true">ship</Option>
             <Option multiple="true" parent="ship">simple</Option>
-            <Option multiple="true">solar</Option>
             <Option multiple="true">equipment</Option>
             <Option multiple="true">snd</Option>
             <Option multiple="true">voice</Option>
@@ -440,6 +440,7 @@
           <Options>
             <Option>nickname</Option>
             <Option>pos</Option>
+            <Option>rotate</Option>
             <Option>color</Option>
             <Option>range</Option>
             <Option>type</Option>
@@ -447,7 +448,6 @@
             <Option>atten_curve</Option>
             <Option>attenuation</Option>
             <Option>color_curve</Option>
-            <Option>rotate</Option>
           </Options>
         </Block>
         <Block name="Object" multiple="true" identifier="nickname">
@@ -458,26 +458,26 @@
             <Option>rotate</Option>
             <Option>ambient_color</Option>
             <Option>archetype</Option>
-            <Option>msg_id_prefix</Option>
-            <Option>jump_effect</Option>
             <Option>star</Option>
             <Option>spin</Option>
+            <Option>msg_id_prefix</Option>
+            <Option>jump_effect</Option>
             <Option>atmosphere_range</Option>
             <Option>burn_color</Option>
-            <Option>ids_info</Option>
-            <Option>visit</Option>
-            <Option>Ambient</Option>
-            <Option>ring</Option>
-            <Option>dock_with</Option>
-            <Option>base</Option>
             <Option>prev_ring</Option>
             <Option>next_ring</Option>
+            <Option>ids_info</Option>
+            <Option>ring</Option>
+            <Option>base</Option>
+            <Option>dock_with</Option>
+            <Option>Ambient</Option>
+            <Option>visit</Option>
             <Option>reputation</Option>
             <Option>tradelane_space_name</Option>
             <Option>behavior</Option>
-            <Option>faction</Option>
             <Option>voice</Option>
             <Option>space_costume</Option>
+            <Option>faction</Option>
             <Option>difficulty_level</Option>
             <Option>goto</Option>
             <Option>loadout</Option>
@@ -494,22 +494,21 @@
             <Option>shape</Option>
             <Option>size</Option>
             <Option>spin</Option>
-            <Option>damage</Option>
-            <Option>ids_info</Option>
             <Option>property_flags</Option>
             <Option>property_fog_color</Option>
+            <Option>damage</Option>
             <Option>visit</Option>
             <Option>spacedust</Option>
             <Option>spacedust_maxparticles</Option>
+            <Option>interference</Option>
+            <Option>edge_fraction</Option>
+            <Option>ids_info</Option>
             <Option>attack_ids</Option>
-            <Option>reputation</Option>
+            <Option>mission_type</Option>
             <Option>comment</Option>
             <Option>lane_id</Option>
             <Option>tradelane_attack</Option>
             <Option>tradelane_down</Option>
-            <Option>mission_type</Option>
-            <Option>interference</Option>
-            <Option>edge_fraction</Option>
             <Option>sort</Option>
             <Option>vignette_type</Option>
             <Option>toughness</Option>
@@ -549,8 +548,8 @@
         </Block>
         <Block name="Room">
           <Options>
-            <Option>file</Option>
             <Option>nickname</Option>
+            <Option>file</Option>
           </Options>
         </Block>
       </Blocks>
@@ -585,13 +584,13 @@
         </Block>
         <Block name="FlashlightSet" multiple="true">
           <Options>
+            <Option>icolor</Option>
+            <Option>scale</Option>
             <Option>blink</Option>
             <Option>endpause</Option>
             <Option>gap</Option>
-            <Option multiple="true">hardpoint</Option>
-            <Option>icolor</Option>
             <Option>numlights</Option>
-            <Option>scale</Option>
+            <Option multiple="true">hardpoint</Option>
           </Options>
         </Block>
         <Block name="ForSaleShipPlacement">
@@ -601,8 +600,8 @@
         </Block>
         <Block name="Hotspot" multiple="true">
           <Options>
-            <Option>behavior</Option>
             <Option>name</Option>
+            <Option>behavior</Option>
             <Option>room_switch</Option>
             <Option>set_virtual_room</Option>
             <Option>state_read</Option>
@@ -612,23 +611,23 @@
         </Block>
         <Block name="PlayerShipPlacement">
           <Options>
+            <Option>name</Option>
             <Option>landing_script</Option>
             <Option>launching_script</Option>
-            <Option>name</Option>
           </Options>
         </Block>
         <Block name="Room_Info">
           <Options>
-            <Option>animation</Option>
-            <Option>goodscart_script</Option>
-            <Option>scene</Option>
             <Option>set_script</Option>
+            <Option>goodscart_script</Option>
+            <Option>animation</Option>
+            <Option multiple="true">scene</Option>
           </Options>
         </Block>
         <Block name="Room_Sound">
           <Options>
-            <Option>ambient</Option>
             <Option>music</Option>
+            <Option>ambient</Option>
           </Options>
         </Block>
         <Block name="Spiels">
@@ -648,11 +647,11 @@
       <Blocks>
         <Block name="Shape" multiple="true">
           <Options>
-            <Option>h</Option>
             <Option>name</Option>
-            <Option>w</Option>
             <Option>x</Option>
             <Option>y</Option>
+            <Option>w</Option>
+            <Option>h</Option>
           </Options>
         </Block>
         <Block name="Texture" multiple="true">
@@ -663,7 +662,7 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Solar Asteroid Archtype">
+    <File name="Solar Asteroid Archetype">
       <Type>ini</Type>
       <Pathes>
         <Path>solar\asteroidarch.ini</Path>
@@ -671,32 +670,32 @@
       <Blocks>
         <Block name="Asteroid" multiple="true" identifier="nickname">
           <Options>
-            <Option>DA_archetype</Option>
-            <Option>explosion_arch</Option>
-            <Option>material_library</Option>
             <Option>nickname</Option>
+            <Option>DA_archetype</Option>
+            <Option>material_library</Option>
+            <Option>explosion_arch</Option>
             <Option>recharge_time</Option>
           </Options>
         </Block>
         <Block name="AsteroidMine" multiple="true" identifier="nickname">
           <Options>
+            <Option>nickname</Option>
             <Option>DA_archetype</Option>
-            <Option>detect_radius</Option>
+            <Option>material_library</Option>
             <Option>explosion_arch</Option>
             <Option>explosion_impulse</Option>
+            <Option>detect_radius</Option>
             <Option>explosion_offset</Option>
-            <Option>material_library</Option>
-            <Option>nickname</Option>
-            <Option>phantom_physics</Option>
             <Option>recharge_time</Option>
+            <Option>phantom_physics</Option>
           </Options>
         </Block>
         <Block name="DynamicAsteroid" multiple="true" identifier="nickname">
           <Options>
-            <Option>DA_archetype</Option>
-            <Option>explosion_arch</Option>
-            <Option>material_library</Option>
             <Option>nickname</Option>
+            <Option>DA_archetype</Option>
+            <Option>material_library</Option>
+            <Option>explosion_arch</Option>
             <Option>particle_effect</Option>
           </Options>
         </Block>
@@ -713,15 +712,15 @@
       <Blocks>
         <Block name="Loadout" multiple="true" identifier="nickname">
           <Options>
-            <Option>archetype</Option>
-            <Option multiple="true">cargo</Option>
-            <Option multiple="true">equip</Option>
             <Option>nickname</Option>
+            <Option>archetype</Option>
+            <Option multiple="true">equip</Option>
+            <Option multiple="true">cargo</Option>
           </Options>
         </Block>
       </Blocks>
     </File>
-    <File name="Solar Archtype">
+    <File name="Solar Archetype">
       <Type>ini</Type>
       <Pathes>
         <Path>solar\solararch.ini</Path>
@@ -729,56 +728,56 @@
       <Blocks>
         <Block name="CollisionGroup" multiple="true">
           <Options>
-            <Option>child_impulse</Option>
-            <Option>debris_type</Option>
+            <Option>obj</Option>
             <Option>dmg_hp</Option>
             <Option>dmg_obj</Option>
+            <Option>separable</Option>
+            <Option>parent_impulse</Option>
+            <Option>child_impulse</Option>
+            <Option>debris_type</Option>
+            <Option>mass</Option>
             <Option>fuse</Option>
             <Option>group_dmg_hp</Option>
             <Option>group_dmg_obj</Option>
             <Option>hit_pts</Option>
-            <Option>mass</Option>
-            <Option>obj</Option>
-            <Option>parent_impulse</Option>
             <Option>root_health_proxy</Option>
-            <Option>separable</Option>
           </Options>
         </Block>
         <Block name="Solar" multiple="true" identifier="nickname">
           <Options>
-            <Option>animated_textures</Option>
-            <Option>close_sound</Option>
-            <Option>DA_archetype</Option>
-            <Option>destructible</Option>
-            <Option>distance_render</Option>
-            <Option>docking_camera</Option>
-            <Option multiple="true">docking_sphere</Option>
-            <Option>envmap_material</Option>
-            <Option>explosion_arch</Option>
-            <Option multiple="true">fuse</Option>
-            <Option>hit_pts</Option>
-            <Option>ids_info</Option>
-            <Option>ids_name</Option>
-            <Option>jump_out_hp</Option>
-            <Option>loadout</Option>
-            <Option>LODranges</Option>
-            <Option>mass</Option>
-            <Option multiple="true">material_library</Option>
             <Option>nickname</Option>
+            <Option>ids_name</Option>
+            <Option>ids_info</Option>
+            <Option>type</Option>
+            <Option>animated_textures</Option>
+            <Option>DA_archetype</Option>
+            <Option multiple="true">material_library</Option>
+            <Option>distance_render</Option>
+            <Option>envmap_material</Option>
+            <Option>LODranges</Option>
+            <Option>surface_hit_effects</Option>
+            <Option>mass</Option>
+            <Option>loadout</Option>
             <Option>nomad</Option>
             <Option>open_anim</Option>
             <Option>open_sound</Option>
-            <Option>phantom_physics</Option>
+            <Option>close_sound</Option>
+            <Option multiple="true">docking_sphere</Option>
+            <Option>docking_camera</Option>
+            <Option>jump_out_hp</Option>
+            <Option>solar_radius</Option>
             <Option>shape_name</Option>
             <Option>shield_link</Option>
-            <Option>solar_radius</Option>
-            <Option>surface_hit_effects</Option>
-            <Option>type</Option>
+            <Option>explosion_arch</Option>
+            <Option>destructible</Option>
+            <Option>hit_pts</Option>
+            <Option multiple="true">fuse</Option>
+            <Option>phantom_physics</Option>
           </Options>
         </Block>
       </Blocks>
     </File>
-    <File name="Solar Star Archtype">
+    <File name="Solar Star Archetype">
       <Type>ini</Type>
       <Pathes>
         <Path>solar\stararch.ini</Path>
@@ -786,56 +785,56 @@
       <Blocks>
         <Block name="lens_flare" multiple="true" identifier="nickname">
           <Options>
-            <Option multiple="true">bead</Option>
-            <Option>max_radius</Option>
-            <Option>min_radius</Option>
             <Option>nickname</Option>
             <Option>shape</Option>
+            <Option>min_radius</Option>
+            <Option>max_radius</Option>
+            <Option multiple="true">bead</Option>
           </Options>
         </Block>
         <Block name="lens_glow" multiple="true" identifier="nickname">
           <Options>
+            <Option>nickname</Option>
+            <Option>shape</Option>
+            <Option>radius_scale</Option>
+            <Option>inner_color</Option>
+            <Option>outer_color</Option>
             <Option>glow_fade_in_seconds</Option>
             <Option>glow_fade_out_seconds</Option>
-            <Option>inner_color</Option>
-            <Option>nickname</Option>
-            <Option>outer_color</Option>
-            <Option>radius_scale</Option>
-            <Option>shape</Option>
           </Options>
         </Block>
         <Block name="spines" multiple="true" identifier="nickname">
           <Options>
-            <Option>max_radius</Option>
-            <Option>min_radius</Option>
             <Option>nickname</Option>
             <Option>radius_scale</Option>
             <Option>shape</Option>
+            <Option>min_radius</Option>
+            <Option>max_radius</Option>
             <Option multiple="true">spine</Option>
           </Options>
         </Block>
         <Block name="star" multiple="true" identifier="nickname">
           <Options>
-            <Option>intensity_fade_in</Option>
-            <Option>intensity_fade_out</Option>
+            <Option>nickname</Option>
+            <Option>star_glow</Option>
+            <Option>star_center</Option>
             <Option>lens_flare</Option>
             <Option>lens_glow</Option>
-            <Option>nickname</Option>
-            <Option>radius</Option>
             <Option>spines</Option>
-            <Option>star_center</Option>
-            <Option>star_glow</Option>
+            <Option>intensity_fade_in</Option>
+            <Option>intensity_fade_out</Option>
             <Option>zone_occlusion_fade_in</Option>
             <Option>zone_occlusion_fade_out</Option>
+            <Option>radius</Option>
           </Options>
         </Block>
         <Block name="star_glow" multiple="true" identifier="nickname">
           <Options>
-            <Option>inner_color</Option>
             <Option>nickname</Option>
-            <Option>outer_color</Option>
-            <Option>scale</Option>
             <Option>shape</Option>
+            <Option>scale</Option>
+            <Option>inner_color</Option>
+            <Option>outer_color</Option>
           </Options>
         </Block>
         <Block name="Texture">
@@ -846,7 +845,33 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Solar Rings">
+    <File name="Solar Ring Shapes">
+      <Type>ini</Type>
+      <Pathes>
+        <Path>solar\rings\shapes.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="Shape" multiple="true">
+          <Options>
+            <Option>x</Option>
+            <Option>y</Option>
+            <Option>w</Option>
+            <Option>h</Option>
+            <Option>name</Option>
+          </Options>
+        </Block>
+        <Block name="Texture" multiple="true">
+          <Options>
+            <Option>file</Option>
+            <Option>name</Option>
+            <Option>texture_name</Option>
+            <Option multiple="true">shape_name</Option>
+            <Option parent="true">dim</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Solar Ring">
       <Type>ini</Type>
       <Pathes>
         <Path>solar\rings\*.ini</Path>
@@ -855,48 +880,30 @@
         <Block name="Clouds">
           <Options>
             <Option>max_distance</Option>
-            <Option>near_fade_distance</Option>
+            <Option>puff_count</Option>
+            <Option>puff_radius</Option>
             <Option>puff_colora</Option>
             <Option>puff_colorb</Option>
-            <Option>puff_count</Option>
-            <Option>puff_drift</Option>
             <Option>puff_max_alpha</Option>
-            <Option>puff_radius</Option>
             <Option multiple="true">puff_shape</Option>
             <Option>puff_weights</Option>
+            <Option>puff_drift</Option>
+            <Option>near_fade_distance</Option>
           </Options>
         </Block>
         <Block name="Exterior">
           <Options>
-            <Option>color</Option>
+            <Option>shape</Option>
             <Option>detail_shape</Option>
             <Option>detail_tile</Option>
+            <Option>color</Option>
+            <Option>opacity</Option>
+            <Option>thickness_edge</Option>
             <Option>fade_range</Option>
+            <Option>outer_edge</Option>
             <Option>inner_edge</Option>
             <Option>num_segments</Option>
-            <Option>opacity</Option>
-            <Option>outer_edge</Option>
-            <Option>shape</Option>
-            <Option>thickness_edge</Option>
             <Option>transition_dist</Option>
-          </Options>
-        </Block>
-        <Block name="Shape" multiple="true">
-          <Options>
-            <Option>h</Option>
-            <Option>name</Option>
-            <Option>w</Option>
-            <Option>x</Option>
-            <Option>y</Option>
-          </Options>
-        </Block>
-        <Block name="Texture" multiple="true">
-          <Options>
-            <Option multiple="true">dim</Option>
-            <Option>file</Option>
-            <Option>name</Option>
-            <Option multiple="true">shape_name</Option>
-            <Option>texture_name</Option>
           </Options>
         </Block>
         <Block name="TexturePanels">
@@ -1224,7 +1231,7 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Ship Archtype">
+    <File name="Ship Archetype">
       <Type>ini</Type>
       <Pathes>
         <Path>ships\*shiparch.ini</Path>

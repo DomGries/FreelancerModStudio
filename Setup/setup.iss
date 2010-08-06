@@ -10,14 +10,14 @@
 [Setup]
 AppName=Freelancer Mod Studio
 AppVersion=0.9
-AppVerName=Freelancer Mod Studio 0.9.2
+AppVerName=Freelancer Mod Studio 0.9.5
 AppCopyright=Copyright © stfx 2009-2010
-VersionInfoVersion=0.9.2
+VersionInfoVersion=0.9.5
 VersionInfoCompany=stfx
 AppPublisher=stfx
 AppPublisherURL=http://code.google.com/p/freelancermodstudio
 AppUpdatesURL=http://code.google.com/p/freelancermodstudio/downloads/list
-OutputBaseFilename=FreelancerModStudio-0.9.2
+OutputBaseFilename=FreelancerModStudio-0.9.5
 DefaultGroupName=Freelancer Mod Studio
 DefaultDirName={pf}\Freelancer Mod Studio
 UninstallDisplayIcon={app}\FreelancerModStudio.exe
@@ -77,12 +77,12 @@ function InitializeSetup(): Boolean;
 begin
 	//init windows version
 	initwinversion();
-    
+
 	msi31('3.1');
-	
+
 	//install .netfx 3.5 sp1
 	dotnetfx35sp1();
-	
+
 	Result := true;
 end;
 

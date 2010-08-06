@@ -48,7 +48,7 @@ namespace FreelancerModStudio.Data
         public void CreateContentTable(List<TableBlock> blocks)
         {
             CultureInfo usCulture = new CultureInfo("en-US", false);
-            contentTable = new SortedList<string, ArchetypeInfo>();
+            contentTable = new SortedList<string, ArchetypeInfo>(StringComparer.OrdinalIgnoreCase);
 
             foreach (TableBlock block in blocks)
             {

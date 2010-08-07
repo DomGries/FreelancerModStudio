@@ -109,7 +109,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.TemplateLoadException, Properties.Resources.TemplatePath), ex));
+                    Helper.Exceptions.Show(String.Format(Properties.Strings.TemplateLoadException, Properties.Resources.TemplatePath), ex);
                     Environment.Exit(0);
                 }
             }
@@ -146,7 +146,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.SettingsSaveException, Properties.Resources.SettingsPath), ex));
+                    Helper.Exceptions.Show(String.Format(Properties.Strings.SettingsSaveException, Properties.Resources.SettingsPath), ex);
                 }
             }
 
@@ -163,7 +163,7 @@ namespace FreelancerModStudio
                     }
                     catch (Exception ex)
                     {
-                        Helper.Exceptions.Show(new Exception(String.Format(Properties.Strings.SettingsLoadException, Properties.Resources.SettingsPath), ex));
+                        Helper.Exceptions.Show(String.Format(Properties.Strings.SettingsLoadException, Properties.Resources.SettingsPath), ex);
                     }
                 }
             }

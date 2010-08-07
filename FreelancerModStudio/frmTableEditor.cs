@@ -22,7 +22,7 @@ namespace FreelancerModStudio
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
 
         public bool IsUniverse { get; set; }
-        public ArchtypeManager Archtype { get; set; }
+        public ArchetypeManager Archetype { get; set; }
 
         public delegate void DataChangedType(ChangedData data);
         public DataChangedType DataChanged;
@@ -158,11 +158,11 @@ namespace FreelancerModStudio
             objectListView1.Refresh();
         }
 
-        string ShowSolarArchtypeSelector()
+        string ShowSolarArchetypeSelector()
         {
             OpenFileDialog openFile = new OpenFileDialog();
             openFile.Title = string.Format(Properties.Strings.FileEditorOpenSolarArch, PathGetFileName(File));
-            openFile.Filter = "Solar Archtype INI|*.ini";
+            openFile.Filter = "Solar Archetype INI|*.ini";
             if (openFile.ShowDialog() == DialogResult.OK)
                 return openFile.FileName;
 
@@ -177,23 +177,23 @@ namespace FreelancerModStudio
             return System.IO.Path.GetFileName(path);
         }
 
-        public void LoadArchtypes()
+        public void LoadArchetypes()
         {
-            int archtypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Archetype");
-            string archtypeFile = ArchtypeManager.GetRelativeArchtype(File, Data.TemplateIndex, archtypeTemplate);
+            int archetypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Archetype");
+            string archetypeFile = ArchetypeManager.GetRelativeArchetype(File, Data.TemplateIndex, archetypeTemplate);
 
-            //user interaction required to get the path of the archtype file
-            if (archtypeFile == null)
-                archtypeFile = ShowSolarArchtypeSelector();
+            //user interaction required to get the path of the archetype file
+            if (archetypeFile == null)
+                archetypeFile = ShowSolarArchetypeSelector();
 
-            if (Archtype == null)
-                Archtype = new ArchtypeManager(archtypeFile, archtypeTemplate);
+            if (Archetype == null)
+                Archetype = new ArchetypeManager(archetypeFile, archetypeTemplate);
 
             foreach (TableBlock block in Data.Blocks)
-                SetArchtype(block, Archtype);
+                SetArchetype(block, Archetype);
         }
 
-        void SetArchtype(TableBlock block, ArchtypeManager archtypeManager)
+        void SetArchetype(TableBlock block, ArchetypeManager archetypeManager)
         {
             switch (block.Block.Name.ToLower())
             {
@@ -207,22 +207,22 @@ namespace FreelancerModStudio
                     block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.System;
                     break;
                 case "object":
-                    if (archtypeManager != null)
+                    if (archetypeManager != null)
                     {
-                        bool hasArchtype = false;
+                        bool hasArchetype = false;
 
-                        //get type of object based on archtype
+                        //get type of object based on archetype
                         foreach (EditorINIOption option in block.Block.Options)
                         {
                             if (option.Name.ToLower() == "archetype")
                             {
                                 if (option.Values.Count > 0)
                                 {
-                                    block.Archetype = archtypeManager.TypeOf(option.Values[0].Value.ToString());
+                                    block.Archetype = archetypeManager.TypeOf(option.Values[0].Value.ToString());
                                     if (block.Archetype != null)
                                     {
                                         block.ObjectType = block.Archetype.Type;
-                                        hasArchtype = true;
+                                        hasArchetype = true;
                                     }
 
                                     break;
@@ -230,7 +230,7 @@ namespace FreelancerModStudio
                             }
                         }
 
-                        if (!hasArchtype)
+                        if (!hasArchetype)
                             block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.None;
                     }
                     break;
@@ -245,7 +245,7 @@ namespace FreelancerModStudio
             bool isSystem = Data.TemplateIndex == Helper.Template.Data.Files.IndexOf("System");
             IsUniverse = Data.TemplateIndex == Helper.Template.Data.Files.IndexOf("Universe");
             if (isSystem || IsUniverse)
-                LoadArchtypes();
+                LoadArchetypes();
 
 #if DEBUG
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
@@ -462,9 +462,9 @@ namespace FreelancerModStudio
                 if (!undo)
                     tableBlock.Modified = TableModified.Changed;
 
-                //set archtype of block
+                //set archetype of block
                 if (tableBlock.Archetype == null)
-                    SetArchtype(tableBlock, Archtype);
+                    SetArchetype(tableBlock, Archetype);
 
                 bool existSingle = false;
 
@@ -618,7 +618,7 @@ namespace FreelancerModStudio
             }
 
             foreach (TableBlock block in newBlocks)
-                SetArchtype(block, Archtype);
+                SetArchetype(block, Archetype);
 
             undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Edit });
         }
@@ -943,7 +943,7 @@ namespace FreelancerModStudio
 
         public bool CanChangeVisibility()
         {
-            return Archtype != null;
+            return Archetype != null;
         }
 
         public void ChangeVisibility()

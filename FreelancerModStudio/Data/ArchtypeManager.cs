@@ -8,38 +8,38 @@ using FreelancerModStudio.SystemPresenter;
 
 namespace FreelancerModStudio.Data
 {
-    public class ArchtypeManager
+    public class ArchetypeManager
     {
         SortedList<string, ArchetypeInfo> contentTable;
 
-        public ArchetypeInfo TypeOf(string archtype)
+        public ArchetypeInfo TypeOf(string archetype)
         {
             ArchetypeInfo info;
-            if (contentTable != null && contentTable.TryGetValue(archtype, out info))
+            if (contentTable != null && contentTable.TryGetValue(archetype, out info))
                 return info;
 
             return null;
         }
 
-        public static string GetRelativeArchtype(string file, int fileTemplate, int archtypeTemplate)
+        public static string GetRelativeArchetype(string file, int fileTemplate, int archetypeTemplate)
         {
-            //get archtype path
+            //get archetype path
             if (fileTemplate > 0 && fileTemplate < Helper.Template.Data.Files.Count)
             {
                 string[] directories = Helper.Template.Data.Files[fileTemplate].Pathes[0].Split(new char[] { System.IO.Path.DirectorySeparatorChar });
-                StringBuilder archtypePath = new StringBuilder(file);
+                StringBuilder archetypePath = new StringBuilder(file);
                 for (int i = 0; i < directories.Length; i++)
                 {
-                    int lastIndex = archtypePath.ToString().LastIndexOf(System.IO.Path.DirectorySeparatorChar);
+                    int lastIndex = archetypePath.ToString().LastIndexOf(System.IO.Path.DirectorySeparatorChar);
                     if (lastIndex == -1)
                         break;
-                    archtypePath.Remove(lastIndex, archtypePath.Length - lastIndex);
+                    archetypePath.Remove(lastIndex, archetypePath.Length - lastIndex);
                 }
 
-                archtypePath.Append(@"\Solar\SolarArch.ini");
+                archetypePath.Append(@"\Solar\SolarArch.ini");
 
-                if (System.IO.File.Exists(archtypePath.ToString()))
-                    return archtypePath.ToString();
+                if (System.IO.File.Exists(archetypePath.ToString()))
+                    return archetypePath.ToString();
             }
 
             return null;
@@ -131,7 +131,7 @@ namespace FreelancerModStudio.Data
             return ContentType.None;
         }
 
-        public ArchtypeManager(string file, int templateIndex)
+        public ArchetypeManager(string file, int templateIndex)
         {
             if (file != null)
             {

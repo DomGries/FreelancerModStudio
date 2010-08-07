@@ -309,14 +309,14 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public void DisplayUniverse(string path, int systemTemplate, ArchtypeManager archtype)
+        public void DisplayUniverse(string path, int systemTemplate, ArchetypeManager archetype)
         {
             Analyzer analyzer = new Analyzer()
             {
                 Universe = Objects,
                 UniversePath = path,
                 SystemTemplate = systemTemplate,
-                Archtype = archtype
+                Archetype = archetype
             };
             analyzer.Analyze();
 

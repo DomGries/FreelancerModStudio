@@ -579,7 +579,7 @@ namespace FreelancerModStudio
             if (systemEditor != null)
             {
                 if (editor.IsUniverse)
-                    systemEditor.ShowData(editor.Data, editor.File, editor.Archtype);
+                    systemEditor.ShowData(editor.Data, editor.File, editor.Archetype);
                 else
                     systemEditor.ShowData(editor.Data, editor.File, null);
 

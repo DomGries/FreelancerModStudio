@@ -89,20 +89,20 @@ namespace FreelancerModStudio
             OnFileOpen(file);
         }
 
-        public void ShowData(TableData data, string file, ArchtypeManager archtype)
+        public void ShowData(TableData data, string file, ArchetypeManager archetype)
         {
             Helper.Thread.Abort(ref universeLoadingThread, false);
 
             Clear();
             systemPresenter.Add(data.Blocks);
 
-            if (archtype != null)
-                DisplayUniverse(file, archtype);
+            if (archetype != null)
+                DisplayUniverse(file, archetype);
             else
                 systemPresenter.IsUniverse = false;
         }
 
-        void DisplayUniverse(string file, ArchtypeManager archtype)
+        void DisplayUniverse(string file, ArchetypeManager archetype)
         {
             systemPresenter.IsUniverse = true;
             if (System.IO.File.Exists(file))
@@ -112,7 +112,7 @@ namespace FreelancerModStudio
                 ThreadStart threadStart = new ThreadStart(delegate
                 {
                     int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
-                    systemPresenter.DisplayUniverse(path, systemTemplate, archtype);
+                    systemPresenter.DisplayUniverse(path, systemTemplate, archetype);
                 });
 
                 Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);

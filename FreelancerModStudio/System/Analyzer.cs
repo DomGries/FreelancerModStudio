@@ -13,7 +13,7 @@ namespace FreelancerModStudio.SystemPresenter
         public Table<UniverseConnectionID, UniverseConnection> Connections { get; set; }
 
         public Table<int, ContentBase> Universe { get; set; }
-        public ArchtypeManager Archtype { get; set; }
+        public ArchetypeManager Archetype { get; set; }
         public string UniversePath { get; set; }
         public int SystemTemplate { get; set; }
 
@@ -77,7 +77,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 if (block.Name.ToLower() == "object")
                 {
-                    string archtypeString = null;
+                    string archetypeString = null;
                     string gotoString = null;
 
                     foreach (EditorINIOption option in block.Options)
@@ -88,7 +88,7 @@ namespace FreelancerModStudio.SystemPresenter
                             switch (option.Name.ToLower())
                             {
                                 case "archetype":
-                                    archtypeString = value;
+                                    archetypeString = value;
                                     break;
                                 case "goto":
                                     gotoString = value;
@@ -97,17 +97,17 @@ namespace FreelancerModStudio.SystemPresenter
                         }
                     }
 
-                    if (archtypeString != null && gotoString != null)
+                    if (archetypeString != null && gotoString != null)
                     {
-                        ArchetypeInfo archtypeInfo = Archtype.TypeOf(archtypeString);
-                        if (archtypeInfo != null)
+                        ArchetypeInfo archetypeInfo = Archetype.TypeOf(archetypeString);
+                        if (archetypeInfo != null)
                         {
                             ConnectionPart connection = new ConnectionPart();
                             connection.Content = GetContent(BeforeSeperator(gotoString, ","));
 
-                            if (archtypeInfo.Type == ContentType.JumpGate)
+                            if (archetypeInfo.Type == ContentType.JumpGate)
                                 connection.Jumpgate = true;
-                            else if (archtypeInfo.Type == ContentType.JumpHole)
+                            else if (archetypeInfo.Type == ContentType.JumpHole)
                                 connection.Jumphole = true;
 
                             ConnectionPart existingConnection;

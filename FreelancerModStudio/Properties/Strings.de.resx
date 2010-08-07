@@ -256,6 +256,6 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
     <value>Die Datei '{0}' konnte nicht geöffnet werden.</value>
   </data>
   <data name="FileEditorOpenSolarArch" xml:space="preserve">
-    <value>Solar Archtype INI öffnen ({0})</value>
+    <value>Solar Archetype INI öffnen ({0})</value>
   </data>
 </root>

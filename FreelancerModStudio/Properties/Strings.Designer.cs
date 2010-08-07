@@ -151,7 +151,7 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Open Solar Archtype INI ({0}) ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Open Solar Archetype INI ({0}) ähnelt.
         /// </summary>
         internal static string FileEditorOpenSolarArch {
             get {

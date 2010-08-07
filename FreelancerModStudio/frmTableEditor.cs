@@ -512,7 +512,7 @@ namespace FreelancerModStudio
             EnsureSelectionVisible();
         }
 
-        void AddBlock(string blockName, int templateIndex)
+        void AddNewBlock(string blockName, int templateIndex)
         {
             Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[templateIndex];
 
@@ -530,6 +530,7 @@ namespace FreelancerModStudio
                 }
             }
 
+            //add new block under selected one if it exists otherwise at the end
             int id;
             if (objectListView1.SelectedObjects.Count > 0)
                 id = ((TableBlock)objectListView1.SelectedObjects[objectListView1.SelectedObjects.Count - 1]).ID + 1;
@@ -642,6 +643,7 @@ namespace FreelancerModStudio
 
         private void MoveBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks, bool undo)
         {
+            //remove all moved blocks first because otherwise inserted index would be wrong
             List<TableBlock> blocks = new List<TableBlock>();
             for (int i = oldBlocks.Count - 1; i >= 0; i--)
             {
@@ -649,6 +651,7 @@ namespace FreelancerModStudio
                 Data.Blocks.RemoveAt(oldBlocks[i].ID);
             }
 
+            //insert blocks at new position
             for (int i = 0; i < oldBlocks.Count; i++)
                 Data.Blocks.Insert(newBlocks[i].ID, blocks[oldBlocks.Count - i - 1]);
 
@@ -739,7 +742,7 @@ namespace FreelancerModStudio
             string blockName = ((ToolStripMenuItem)sender).Text;
             int templateIndex = (int)((ToolStripMenuItem)sender).Tag;
 
-            AddBlock(blockName, templateIndex);
+            AddNewBlock(blockName, templateIndex);
         }
 
         public bool CanSave()
@@ -800,7 +803,7 @@ namespace FreelancerModStudio
 
         public void Add(int index)
         {
-            this.AddBlock(this.mnuAdd.DropDownItems[index].Text, (int)this.mnuAdd.DropDownItems[index].Tag);
+            this.AddNewBlock(this.mnuAdd.DropDownItems[index].Text, (int)this.mnuAdd.DropDownItems[index].Tag);
         }
 
         public void Delete()
@@ -844,9 +847,16 @@ namespace FreelancerModStudio
 
             if (editorData.TemplateIndex == Data.TemplateIndex)
             {
+                //add new block under selected one if it exists otherwise at the end
+                int id;
+                if (objectListView1.SelectedObjects.Count > 0)
+                    id = ((TableBlock)objectListView1.SelectedObjects[objectListView1.SelectedObjects.Count - 1]).ID + 1;
+                else
+                    id = Data.Blocks.Count;
+
                 List<TableBlock> blocks = new List<TableBlock>();
                 for (int i = 0; i < editorData.Blocks.Count; i++)
-                    blocks.Add(new TableBlock(Data.Blocks.Count, editorData.Blocks[i], Data.TemplateIndex));
+                    blocks.Add(new TableBlock(id + i, editorData.Blocks[i], Data.TemplateIndex));
 
                 undoManager.Execute(new ChangedData() { NewBlocks = blocks, Type = ChangedType.Add });
             }

@@ -238,6 +238,11 @@ namespace FreelancerModStudio
                 MessageBox.Show(Get(exception), Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            public static void Show(string errorDescription, Exception exception)
+            {
+                MessageBox.Show(errorDescription + Environment.NewLine + Environment.NewLine + Get(exception), Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
             public static string Get(Exception exception)
             {
                 System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder(exception.Message);

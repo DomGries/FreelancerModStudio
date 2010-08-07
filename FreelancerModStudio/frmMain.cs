@@ -383,7 +383,6 @@ namespace FreelancerModStudio
                     else
                         return;
                 }
-
             }
 
             try
@@ -392,8 +391,7 @@ namespace FreelancerModStudio
             }
             catch (Exception ex)
             {
-                string error = Environment.NewLine + Environment.NewLine + ex.Message;
-                MessageBox.Show(String.Format(Properties.Strings.FileErrorOpen, file, error), Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Helper.Exceptions.Show(String.Format(Properties.Strings.FileErrorOpen, file), ex);
             }
         }
 
@@ -956,8 +954,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    string error = Environment.NewLine + Environment.NewLine + ex.Message;
-                    MessageBox.Show(String.Format(Properties.Strings.FileErrorOpen, file, error), Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Helper.Exceptions.Show(String.Format(Properties.Strings.FileErrorOpen, file), ex);
                 }
             }
         }

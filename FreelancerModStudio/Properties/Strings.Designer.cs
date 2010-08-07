@@ -178,7 +178,7 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die The file &apos;{0}&apos; could not be opened.{1} ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die The file &apos;{0}&apos; could not be opened. ähnelt.
         /// </summary>
         internal static string FileErrorOpen {
             get {

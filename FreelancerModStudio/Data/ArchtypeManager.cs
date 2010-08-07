@@ -78,7 +78,12 @@ namespace FreelancerModStudio.Data
                     }
 
                     if (name != null && type != ContentType.None)
-                        contentTable.Add(name, new ArchetypeInfo() { Type = type, Radius = radius });
+                    {
+                        if (contentTable.ContainsKey(name))
+                            contentTable[name] = new ArchetypeInfo() { Type = type, Radius = radius };
+                        else
+                            contentTable.Add(name, new ArchetypeInfo() { Type = type, Radius = radius });
+                    }
                 }
             }
         }

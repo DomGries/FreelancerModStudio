@@ -167,9 +167,7 @@ namespace FreelancerModStudio.Data.IO
 
         public void Add(string key, INIOption value)
         {
-            List<INIOption> options = new List<INIOption>();
-            options.Add(value);
-            this.Add(key, options);
+            this.Add(key, new List<INIOption>() { value });
         }
     }
 

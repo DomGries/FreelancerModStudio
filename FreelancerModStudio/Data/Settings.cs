@@ -95,7 +95,7 @@ namespace FreelancerModStudio.Data
                 RecentFilesCount = 4;
                 Language = LanguageType.English;
 
-                EditorModifiedColor = Color.FromArgb(255, 255, 192);
+                EditorModifiedColor = Color.FromArgb(255, 255, 164);
                 EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
                 EditorHiddenColor = Color.FromArgb(128, 128, 128);
 

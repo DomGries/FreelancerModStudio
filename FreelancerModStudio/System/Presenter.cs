@@ -134,9 +134,11 @@ namespace FreelancerModStudio.SystemPresenter
 
         void AddContent(ContentBase content)
         {
+            //load model it was is not loaded yet
             if (content.Model == null)
                 content.LoadModel();
 
+            //only add it to viewpoint if its actually visible
             if (content.Visibility)
             {
                 Viewport.Add(content.Model);
@@ -166,20 +168,33 @@ namespace FreelancerModStudio.SystemPresenter
         public void Delete(List<TableBlock> blocks)
         {
             foreach (TableBlock block in blocks)
-            {
-                ContentBase content;
-                if (Objects.TryGetValue(block.ID, out content))
-                    Delete(content);
-            }
+                Delete(Objects[block.ID]);
         }
 
         public void Delete(ContentBase content)
         {
+            //if we delete a system also delete all universe connections to and from it
             if (IsUniverse && content is System)
                 DeleteConnections(content as System);
 
             Objects.Remove(content);
             Viewport.Remove(content.Model);
+        }
+
+        public void Move(List<TableBlock> oldBlocks)
+        {
+            List<ContentBase> contents = new List<ContentBase>();
+            foreach (TableBlock block in oldBlocks)
+            {
+                //only remove the content from the list because we have to change the ID
+                //as it wont automatically be changed due to being used in a dictionary
+                ContentBase content = Objects[block.ID];
+                contents.Add(content);
+                Objects.Remove(content);
+            }
+
+            //we can simply add them again because the contents block ID was already changed due to being a reference
+            Objects.AddRange(contents);
         }
 
         void camera_SelectionChanged(DependencyObject visual)
@@ -284,10 +299,8 @@ namespace FreelancerModStudio.SystemPresenter
                 content.Visibility = visibility;
 
                 if (visibility)
-                {
                     //show model
                     Viewport.Add(content.Model);
-                }
                 else
                     //hide model
                     Viewport.Remove(content.Model);
@@ -465,7 +478,6 @@ namespace FreelancerModStudio.SystemPresenter
                 return null;
 
             content.Visibility = block.Visibility;
-            content.ID = block.ID;
             SetValues(content, block);
 
             content.Block = block;

@@ -188,6 +188,11 @@ namespace FreelancerModStudio
             systemPresenter.Delete(blocks);
         }
 
+        public void Move(List<TableBlock> oldBlocks)
+        {
+            systemPresenter.Move(oldBlocks);
+        }
+
         //void PositionUpdater_Tick(object sender, EventArgs e)
         //{
         //    Vector3D position = (systemPresenter.Viewport.Camera.Position.ToVector3D() * 1000);

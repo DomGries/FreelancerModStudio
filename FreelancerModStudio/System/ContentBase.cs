@@ -10,7 +10,6 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public abstract class ContentBase : IComparable<ContentBase>, ITableRow<int>
     {
-        public int ID { get; set; }
         public TableBlock Block { get; set; }
         public ModelVisual3D Model { get; set; }
         public bool Visibility { get; set; }
@@ -18,6 +17,14 @@ namespace FreelancerModStudio.SystemPresenter
         public Vector3D Position { get; set; }
         public Rotation3D Rotation { get; set; }
         public Vector3D Scale { get; set; }
+
+        public int ID
+        {
+            get
+            {
+                return Block.ID;
+            }
+        }
 
         public void SetDisplay(Vector3D position, Rotation3D rotation, Vector3D scale)
         {

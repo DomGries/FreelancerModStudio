@@ -151,8 +151,10 @@ namespace FreelancerModStudio
                     systemEditor.Add(data.NewBlocks);
                 else if (data.Type == ChangedType.Delete)
                     systemEditor.Delete(data.NewBlocks);
-                else
+                else if (data.Type == ChangedType.Edit)
                     systemEditor.SetValues(data.NewBlocks);
+                else if (data.Type == ChangedType.Move)
+                    systemEditor.Move(data.OldBlocks);
             }
         }
 

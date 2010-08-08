@@ -52,14 +52,7 @@ namespace FreelancerModStudio.SystemPresenter
                     To = new ConnectionPart() { Content = connectionPart.Content }
                 };
 
-                UniverseConnection existingConnection;
-                if (Connections.TryGetValue(connection.ID, out existingConnection))
-                {
-                    existingConnection.To.Jumpgate = connection.From.Jumpgate;
-                    existingConnection.To.Jumphole = connection.From.Jumphole;
-                }
-                else
-                    Connections.Add(connection);
+                Connections[connection.ID] = connection;
             }
         }
 

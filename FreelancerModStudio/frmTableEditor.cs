@@ -253,8 +253,6 @@ namespace FreelancerModStudio
 #endif
             AddColumns(isSystem);
 
-            //sort by type and name
-            //Data.Blocks.Sort();
             objectListView1.SetObjects(Data.Blocks);
 
             //add block types to add menu
@@ -504,8 +502,7 @@ namespace FreelancerModStudio
                 selectedData.Add(tableBlock);
             }
 
-            //Data.Blocks.Sort();
-            Data.RefreshID();
+            Data.RefreshID(blocks[0].ID);
 
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.SelectedObjects = selectedData;
@@ -532,13 +529,13 @@ namespace FreelancerModStudio
 
             //add new block under selected one if it exists otherwise at the end
             int id;
-            if (objectListView1.SelectedObjects.Count > 0)
-                id = ((TableBlock)objectListView1.SelectedObjects[objectListView1.SelectedObjects.Count - 1]).ID + 1;
+            if (objectListView1.SelectedIndices.Count > 0)
+                id = objectListView1.SelectedIndices[objectListView1.SelectedIndices.Count - 1] + 1;
             else
                 id = Data.Blocks.Count;
 
             //add actual block
-            undoManager.Execute(new ChangedData() { NewBlocks = new List<TableBlock> { new TableBlock(id, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
+            undoManager.Execute(new ChangedData() { NewBlocks = new List<TableBlock> { new TableBlock(id, Data.MaxID++, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
         }
 
         public List<TableBlock> GetSelectedBlocks()
@@ -631,8 +628,6 @@ namespace FreelancerModStudio
                 Data.Blocks[index] = newBlocks[i];
             }
 
-            //Data.Blocks.Sort();
-            Data.RefreshID();
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.RefreshObjects(Data.Blocks);
 
@@ -655,7 +650,7 @@ namespace FreelancerModStudio
             for (int i = 0; i < oldBlocks.Count; i++)
                 Data.Blocks.Insert(newBlocks[i].ID, blocks[oldBlocks.Count - i - 1]);
 
-            Data.RefreshID();
+            Data.RefreshID(Math.Min(oldBlocks[0].ID, newBlocks[0].ID));
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.RefreshObjects(Data.Blocks);
 
@@ -671,7 +666,7 @@ namespace FreelancerModStudio
             foreach (TableBlock tableBlock in blocks)
                 Data.Blocks.Remove(tableBlock);
 
-            Data.RefreshID();
+            Data.RefreshID(blocks[0].ID);
             objectListView1.RemoveObjects(blocks);
 
             //select objects which were selected before
@@ -849,14 +844,14 @@ namespace FreelancerModStudio
             {
                 //add new block under selected one if it exists otherwise at the end
                 int id;
-                if (objectListView1.SelectedObjects.Count > 0)
-                    id = ((TableBlock)objectListView1.SelectedObjects[objectListView1.SelectedObjects.Count - 1]).ID + 1;
+                if (objectListView1.SelectedIndices.Count > 0)
+                    id = objectListView1.SelectedIndices[objectListView1.SelectedIndices.Count - 1] + 1;
                 else
                     id = Data.Blocks.Count;
 
                 List<TableBlock> blocks = new List<TableBlock>();
                 for (int i = 0; i < editorData.Blocks.Count; i++)
-                    blocks.Add(new TableBlock(id + i, editorData.Blocks[i], Data.TemplateIndex));
+                    blocks.Add(new TableBlock(id + i, Data.MaxID++, editorData.Blocks[i], Data.TemplateIndex));
 
                 undoManager.Execute(new ChangedData() { NewBlocks = blocks, Type = ChangedType.Add });
             }
@@ -992,8 +987,8 @@ namespace FreelancerModStudio
                 //skip block if the id was not changed
                 if (blocks[i].ID != newIndex)
                 {
-                    newBlocks.Add(new TableBlock(newIndex));
-                    oldBlocks.Add(new TableBlock(blocks[i].ID));
+                    newBlocks.Add(new TableBlock(newIndex, 0));
+                    oldBlocks.Add(new TableBlock(blocks[i].ID, 0));
                 }
             }
 

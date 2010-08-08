@@ -153,8 +153,6 @@ namespace FreelancerModStudio
                     systemEditor.Delete(data.NewBlocks);
                 else if (data.Type == ChangedType.Edit)
                     systemEditor.SetValues(data.NewBlocks);
-                else if (data.Type == ChangedType.Move)
-                    systemEditor.Move(data.OldBlocks);
             }
         }
 
@@ -164,7 +162,7 @@ namespace FreelancerModStudio
             {
                 propertiesForm.ShowData(data, templateIndex);
                 if (systemEditor != null)
-                    systemEditor.Select(data[0].ID);
+                    systemEditor.Select(data[0].UniqueID);
             }
             else
             {
@@ -178,7 +176,7 @@ namespace FreelancerModStudio
         void DefaultEditor_DataVisibilityChanged(TableBlock block, bool visible)
         {
             if (systemEditor != null)
-                systemEditor.SetVisibility(block.ID, visible);
+                systemEditor.SetVisibility(block.UniqueID, visible);
         }
 
         void Properties_OptionsChanged(PropertyBlock[] blocks)
@@ -588,7 +586,7 @@ namespace FreelancerModStudio
                 //select initially
                 List<TableBlock> blocks = editor.GetSelectedBlocks();
                 if (blocks != null)
-                    systemEditor.Select(blocks[0].ID);
+                    systemEditor.Select(blocks[0].UniqueID);
             }
         }
 

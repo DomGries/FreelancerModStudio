@@ -11,7 +11,7 @@ namespace FreelancerModStudio.Data
     {
         public List<TableBlock> Blocks { get; set; }
         public int TemplateIndex { get; set; }
-        //public int MaxID { get; set; }
+        public int MaxID { get; set; }
 
         public TableData()
         {
@@ -23,8 +23,10 @@ namespace FreelancerModStudio.Data
             Blocks = new List<TableBlock>();
             TemplateIndex = data.TemplateIndex;
 
-            for (int i = 0; i < data.Blocks.Count; i++)
-                Blocks.Add(new TableBlock(i, data.Blocks[i], TemplateIndex));
+            MaxID = data.Blocks.Count;
+
+            for (int i = 0; i < MaxID; i++)
+                Blocks.Add(new TableBlock(i, i, data.Blocks[i], TemplateIndex));
         }
 
         public EditorINIData GetEditorData()
@@ -37,9 +39,9 @@ namespace FreelancerModStudio.Data
             return data;
         }
 
-        public void RefreshID()
+        public void RefreshID(int index)
         {
-            for (int i = 0; i < Blocks.Count; i++)
+            for (int i = index; i < Blocks.Count; i++)
                 Blocks[i].ID = i;
         }
     }
@@ -48,6 +50,7 @@ namespace FreelancerModStudio.Data
     public class TableBlock : IComparable<TableBlock>
     {
         public int ID { get; set; }
+        public int UniqueID { get; set; }
         public string Name { get; set; }
         public string Group { get; set; }
         public ContentType ObjectType { get; set; }
@@ -58,15 +61,17 @@ namespace FreelancerModStudio.Data
         public ArchetypeInfo Archetype { get; set; }
         public bool Visibility { get; set; }
 
-        public TableBlock(int id)
+        public TableBlock(int id, int uid)
         {
             ID = id;
+            UniqueID = uid;
             ObjectType = ContentType.None;
         }
 
-        public TableBlock(int id, EditorINIBlock block, int templateIndex)
+        public TableBlock(int id, int uid, EditorINIBlock block, int templateIndex)
         {
             ID = id;
+            UniqueID = uid;
             ObjectType = ContentType.None;
 
             //name of block

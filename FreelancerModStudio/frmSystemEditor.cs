@@ -168,7 +168,7 @@ namespace FreelancerModStudio
             foreach (TableBlock block in blocks)
             {
                 ContentBase content;
-                if (systemPresenter.Objects.TryGetValue(block.ID, out content))
+                if (systemPresenter.Objects.TryGetValue(block.UniqueID, out content))
                     systemPresenter.ChangeValues(content, block);
                 else
                     newBlocks.Add(block);
@@ -186,11 +186,6 @@ namespace FreelancerModStudio
         public void Delete(List<TableBlock> blocks)
         {
             systemPresenter.Delete(blocks);
-        }
-
-        public void Move(List<TableBlock> oldBlocks)
-        {
-            systemPresenter.Move(oldBlocks);
         }
 
         //void PositionUpdater_Tick(object sender, EventArgs e)

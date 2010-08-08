@@ -168,7 +168,11 @@ namespace FreelancerModStudio.SystemPresenter
         public void Delete(List<TableBlock> blocks)
         {
             foreach (TableBlock block in blocks)
-                Delete(Objects[block.ID]);
+            {
+                ContentBase content;
+                if (Objects.TryGetValue(block.UniqueID, out content))
+                    Delete(content);
+            }
         }
 
         public void Delete(ContentBase content)
@@ -179,22 +183,6 @@ namespace FreelancerModStudio.SystemPresenter
 
             Objects.Remove(content);
             Viewport.Remove(content.Model);
-        }
-
-        public void Move(List<TableBlock> oldBlocks)
-        {
-            List<ContentBase> contents = new List<ContentBase>();
-            foreach (TableBlock block in oldBlocks)
-            {
-                //only remove the content from the list because we have to change the ID
-                //as it wont automatically be changed due to being used in a dictionary
-                ContentBase content = Objects[block.ID];
-                contents.Add(content);
-                Objects.Remove(content);
-            }
-
-            //we can simply add them again because the contents block ID was already changed due to being a reference
-            Objects.AddRange(contents);
         }
 
         void camera_SelectionChanged(DependencyObject visual)

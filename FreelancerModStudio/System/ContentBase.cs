@@ -22,7 +22,7 @@ namespace FreelancerModStudio.SystemPresenter
         {
             get
             {
-                return Block.ID;
+                return Block.UniqueID;
             }
         }
 

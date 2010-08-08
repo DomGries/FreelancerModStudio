@@ -966,7 +966,7 @@ namespace FreelancerModStudio
             {
                 List<TableBlock> blocks = new List<TableBlock>();
                 foreach (TableBlock block in o.ModelObjects)
-                    blocks.Add(new TableBlock(block.ID));
+                    blocks.Add(block);
 
                 StartMoveBlocks(blocks, e.DropTargetIndex);
             }
@@ -974,25 +974,31 @@ namespace FreelancerModStudio
 
         private void StartMoveBlocks(List<TableBlock> blocks, int targetIndex)
         {
+            List<TableBlock> oldBlocks = new List<TableBlock>();
             List<TableBlock> newBlocks = new List<TableBlock>();
 
-            for (int i = blocks.Count - 1; i >= 0; i--)
+            for (int i = 0; i < blocks.Count; i++)
             {
-                int newIndex = targetIndex + newBlocks.Count;
+                //calculate correct insert position
+                int newIndex = targetIndex + i;
+
+                //decrease index if old blocks id is lower than the new index because they will be deleted first
+                for (int j = i - newBlocks.Count; j < blocks.Count; j++)
+                {
+                    if (blocks[j].ID < newIndex)
+                        newIndex--;
+                }
+
+                //skip block if the id was not changed
                 if (blocks[i].ID != newIndex)
                 {
-                    for (int j = 0; j < blocks.Count; j++)
-                    {
-                        if (blocks[j].ID < newIndex)
-                            newIndex--;
-                    }
-
                     newBlocks.Add(new TableBlock(newIndex));
+                    oldBlocks.Add(new TableBlock(blocks[i].ID));
                 }
             }
 
-            if (blocks.Count > 0)
-                undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = blocks, Type = ChangedType.Move });
+            if (oldBlocks.Count > 0)
+                undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Move });
         }
     }
 }

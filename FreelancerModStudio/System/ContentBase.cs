@@ -8,23 +8,17 @@ using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public abstract class ContentBase : IComparable<ContentBase>, ITableRow<int>
+    public abstract class ContentBase : ITableRow<int>
     {
-        public TableBlock Block { get; set; }
-        public ModelVisual3D Model { get; set; }
-        public bool Visibility { get; set; }
+        public int ID { get; set; }
 
+        public ModelVisual3D Model { get; set; }
         public Vector3D Position { get; set; }
         public Rotation3D Rotation { get; set; }
         public Vector3D Scale { get; set; }
 
-        public int ID
-        {
-            get
-            {
-                return Block.UniqueID;
-            }
-        }
+        public string Title { get; set; }
+        public bool Visibility { get; set; }
 
         public void SetDisplay(Vector3D position, Rotation3D rotation, Vector3D scale)
         {
@@ -63,16 +57,6 @@ namespace FreelancerModStudio.SystemPresenter
         {
             Model = new ModelVisual3D() { Content = GetGeometry() };
             SetDisplay(Position, Rotation, Scale);
-        }
-
-        public int CompareTo(ContentBase other)
-        {
-            //sort by object type, scale
-            int objectTypeComparison = this.Block.ObjectType.CompareTo(other.Block.ObjectType);
-            if (objectTypeComparison == 0)
-                return this.Scale.CompareTo(other.Scale);
-
-            return objectTypeComparison;
         }
     }
 }

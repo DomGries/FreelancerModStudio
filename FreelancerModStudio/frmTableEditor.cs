@@ -905,9 +905,9 @@ namespace FreelancerModStudio
             OnDocumentChanged((DocumentInterface)this);
         }
 
-        public void Select(TableBlock block)
+        public void Select(int id)
         {
-            objectListView1.SelectedObjects = new List<TableBlock> { block };
+            objectListView1.SelectedIndex = id;
             EnsureSelectionVisible();
         }
 

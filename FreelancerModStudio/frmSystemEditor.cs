@@ -23,13 +23,13 @@ namespace FreelancerModStudio
         SystemPresenter.Presenter systemPresenter = null;
         Thread universeLoadingThread = null;
 
-        public delegate void SelectionChangedType(TableBlock block);
+        public delegate void SelectionChangedType(int id);
         public SelectionChangedType SelectionChanged;
 
-        void OnSelectionChanged(TableBlock block)
+        void OnSelectionChanged(int id)
         {
             if (this.SelectionChanged != null)
-                this.SelectionChanged(block);
+                this.SelectionChanged(id);
         }
 
         public FreelancerModStudio.SystemPresenter.Presenter.FileOpenType FileOpen;
@@ -81,7 +81,7 @@ namespace FreelancerModStudio
 
         void systemPresenter_SelectionChanged(ContentBase content)
         {
-            OnSelectionChanged(content.Block);
+            OnSelectionChanged(content.ID);
         }
 
         void systemPresenter_FileOpen(string file)
@@ -97,12 +97,12 @@ namespace FreelancerModStudio
             systemPresenter.Add(data.Blocks);
 
             if (archetype != null)
-                DisplayUniverse(file, archetype);
+                DisplayUniverse(file, data.Blocks, archetype);
             else
                 systemPresenter.IsUniverse = false;
         }
 
-        void DisplayUniverse(string file, ArchetypeManager archetype)
+        void DisplayUniverse(string file, List<TableBlock> blocks, ArchetypeManager archetype)
         {
             systemPresenter.IsUniverse = true;
             if (System.IO.File.Exists(file))
@@ -112,7 +112,7 @@ namespace FreelancerModStudio
                 ThreadStart threadStart = new ThreadStart(delegate
                 {
                     int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
-                    systemPresenter.DisplayUniverse(path, systemTemplate, archetype);
+                    systemPresenter.DisplayUniverse(path, systemTemplate, blocks, archetype);
                 });
 
                 Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);

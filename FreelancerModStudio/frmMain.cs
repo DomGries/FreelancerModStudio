@@ -959,10 +959,10 @@ namespace FreelancerModStudio
             }
         }
 
-        void systemEditor_SelectionChanged(TableBlock block)
+        void systemEditor_SelectionChanged(int id)
         {
             if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
-                ((frmTableEditor)dockPanel1.ActiveDocument).Select(block);
+                ((frmTableEditor)dockPanel1.ActiveDocument).Select(id);
         }
     }
 }

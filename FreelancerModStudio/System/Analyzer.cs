@@ -12,7 +12,7 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public Table<UniverseConnectionID, UniverseConnection> Connections { get; set; }
 
-        public Table<int, ContentBase> Universe { get; set; }
+        public List<TableBlock> Universe { get; set; }
         public ArchetypeManager Archetype { get; set; }
         public string UniversePath { get; set; }
         public int SystemTemplate { get; set; }
@@ -26,15 +26,15 @@ namespace FreelancerModStudio.SystemPresenter
         {
             Connections = new Table<UniverseConnectionID, UniverseConnection>();
 
-            foreach (ContentBase content in Universe)
+            foreach (TableBlock block in Universe)
             {
-                foreach (EditorINIOption option in content.Block.Block.Options)
+                foreach (EditorINIOption option in block.Block.Options)
                 {
                     if (option.Name.ToLower() == "file" && option.Values.Count > 0)
                     {
-                        Table<int, ConnectionPart> systemConnections = GetConnections(content, IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()));
+                        Table<int, ConnectionPart> systemConnections = GetConnections(block.UniqueID, IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()));
                         if (systemConnections != null)
-                            AddConnections(content, systemConnections);
+                            AddConnections(block.UniqueID, systemConnections);
 
                         break;
                     }
@@ -42,21 +42,28 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void AddConnections(ContentBase content, Table<int, ConnectionPart> connections)
+        void AddConnections(int id, Table<int, ConnectionPart> connections)
         {
             foreach (ConnectionPart connectionPart in connections)
             {
                 UniverseConnection connection = new UniverseConnection()
                 {
-                    From = new ConnectionPart() { Content = content, Jumpgate = connectionPart.Jumpgate, Jumphole = connectionPart.Jumphole },
-                    To = new ConnectionPart() { Content = connectionPart.Content }
+                    From = new ConnectionPart() { ID = id, Jumpgate = connectionPart.Jumpgate, Jumphole = connectionPart.Jumphole },
+                    To = new ConnectionPart() { ID = connectionPart.ID }
                 };
 
-                Connections[connection.ID] = connection;
+                UniverseConnection existingConnection;
+                if (Connections.TryGetValue(connection.ID, out existingConnection))
+                {
+                    existingConnection.To.Jumpgate = connection.From.Jumpgate;
+                    existingConnection.To.Jumphole = connection.From.Jumphole;
+                }
+                else
+                    Connections.Add(connection);
             }
         }
 
-        Table<int, ConnectionPart> GetConnections(ContentBase content, string file)
+        Table<int, ConnectionPart> GetConnections(int id, string file)
         {
             if (!IO.File.Exists(file))
                 return null;
@@ -96,7 +103,7 @@ namespace FreelancerModStudio.SystemPresenter
                         if (archetypeInfo != null)
                         {
                             ConnectionPart connection = new ConnectionPart();
-                            connection.Content = GetContent(BeforeSeperator(gotoString, ","));
+                            connection.ID = GetConnectionID(BeforeSeperator(gotoString, ","));
 
                             if (archetypeInfo.Type == ContentType.JumpGate)
                                 connection.Jumpgate = true;
@@ -112,7 +119,7 @@ namespace FreelancerModStudio.SystemPresenter
                                 if (connection.Jumphole)
                                     existingConnection.Jumphole = true;
                             }
-                            else if (content.ID != connection.ID && connection.ID != -1)
+                            else if (id != connection.ID && connection.ID != -1)
                                 connections.Add(connection);
                         }
                     }
@@ -131,14 +138,15 @@ namespace FreelancerModStudio.SystemPresenter
             return value.Substring(0, index);
         }
 
-        ContentBase GetContent(string name)
+        int GetConnectionID(string blockName)
         {
-            foreach (ContentBase content in Universe)
+            blockName = blockName.ToLower();
+            foreach (TableBlock block in Universe)
             {
-                if (content.Block.Name.ToLower() == name.ToLower())
-                    return content;
+                if (block.Name.ToLower() == blockName)
+                    return block.UniqueID;
             }
-            return null;
+            return -1;
         }
     }
 
@@ -149,7 +157,7 @@ namespace FreelancerModStudio.SystemPresenter
             get
             {
                 if (From != null && To != null)
-                    return new UniverseConnectionID() { From = From.Content.ID, To = To.Content.ID };
+                    return new UniverseConnectionID() { From = From.ID, To = To.ID };
                 else
                     return null;
             }
@@ -157,11 +165,6 @@ namespace FreelancerModStudio.SystemPresenter
 
         public ConnectionPart From { get; set; }
         public ConnectionPart To { get; set; }
-
-        public override string ToString()
-        {
-            return From.Content.Block.Name + " - " + To.Content.Block.Name;
-        }
     }
 
     public class UniverseConnectionID : IComparable<UniverseConnectionID>
@@ -185,24 +188,8 @@ namespace FreelancerModStudio.SystemPresenter
 
     public class ConnectionPart : ITableRow<int>
     {
-        public int ID
-        {
-            get
-            {
-                if (Content != null)
-                    return Content.ID;
-                else
-                    return -1;
-            }
-        }
-
-        public ContentBase Content { get; set; }
+        public int ID { get; set; }
         public bool Jumpgate { get; set; }
         public bool Jumphole { get; set; }
-
-        public override string ToString()
-        {
-            return Content.Block.Name;
-        }
     }
 }

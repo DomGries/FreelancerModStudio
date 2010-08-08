@@ -122,8 +122,7 @@ namespace FreelancerModStudio.SystemPresenter
                 //select content visually
                 Selection = GetSelectionBox(content);
 
-                if (content.Block != null)
-                    Viewport.Title = GetTitle(content.Block.Block);
+                Viewport.Title = content.Title;
             }
             else
             {
@@ -270,16 +269,6 @@ namespace FreelancerModStudio.SystemPresenter
             return new WireLines() { Lines = points, Color = Colors.Yellow, Thickness = 2 };
         }
 
-        string GetTitle(EditorINIBlock block)
-        {
-            if (block.Options.Count > block.MainOptionIndex)
-            {
-                if (block.Options[block.MainOptionIndex].Values.Count > 0)
-                    return block.Options[block.MainOptionIndex].Values[0].Value.ToString();
-            }
-            return block.Name;
-        }
-
         public void SetVisibility(ContentBase content, bool visibility)
         {
             if (content.Visibility != visibility)
@@ -310,11 +299,19 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public void DisplayUniverse(string path, int systemTemplate, ArchetypeManager archetype)
+        public void DisplayUniverse(string path, int systemTemplate, List<TableBlock> blocks, ArchetypeManager archetype)
         {
+            //filter the systems to improve speed as we need to loop them often in the analyzer
+            List<TableBlock> systems = new List<TableBlock>();
+            foreach (TableBlock block in blocks)
+            {
+                if (block.ObjectType == ContentType.System)
+                    systems.Add(block);
+            }
+
             Analyzer analyzer = new Analyzer()
             {
-                Universe = Objects,
+                Universe = systems,
                 UniversePath = path,
                 SystemTemplate = systemTemplate,
                 Archetype = archetype
@@ -356,13 +353,13 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetConnection(Connection line, UniverseConnection connection)
         {
-            line.From = connection.From.Content;
-            line.To = connection.To.Content;
+            line.From = Objects[connection.From.ID];
+            line.To = Objects[connection.To.ID];
             line.FromType = GetConnectionType(connection.From.Jumpgate, connection.From.Jumphole);
             line.ToType = GetConnectionType(connection.To.Jumpgate, connection.To.Jumphole);
 
-            ((System)connection.From.Content).Connections.Add(line);
-            ((System)connection.To.Content).Connections.Add(line);
+            ((System)line.From).Connections.Add(line);
+            ((System)line.To).Connections.Add(line);
 
             SetConnection(line);
         }
@@ -424,16 +421,14 @@ namespace FreelancerModStudio.SystemPresenter
                     SelectedContent = null;
             }
             else
-            {
-                content.Block = block;
                 SetValues(content, block);
-            }
         }
 
         void SetValues(ContentBase content, TableBlock block)
         {
             Parser parser = new Parser();
             parser.SetValues(content, block);
+            content.Title = block.Name;
 
             if (parser.ModelChanged && content.Model != null)
                 ReloadModel(content);
@@ -468,7 +463,7 @@ namespace FreelancerModStudio.SystemPresenter
             content.Visibility = block.Visibility;
             SetValues(content, block);
 
-            content.Block = block;
+            content.ID = block.UniqueID;
             return content;
         }
 

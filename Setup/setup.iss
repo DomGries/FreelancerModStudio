@@ -9,15 +9,15 @@
 
 [Setup]
 AppName=Freelancer Mod Studio
-AppVersion=0.9
-AppVerName=Freelancer Mod Studio 0.9.5.1
+AppVersion=0.9.6
+AppVerName=Freelancer Mod Studio 0.9.6
 AppCopyright=Copyright © stfx 2009-2010
-VersionInfoVersion=0.9.5.1
+VersionInfoVersion=0.9.6
 VersionInfoCompany=stfx
 AppPublisher=stfx
 AppPublisherURL=http://code.google.com/p/freelancermodstudio
 AppUpdatesURL=http://code.google.com/p/freelancermodstudio/downloads/list
-OutputBaseFilename=FreelancerModStudio-0.9.5.1
+OutputBaseFilename=FreelancerModStudio-0.9.6
 DefaultGroupName=Freelancer Mod Studio
 DefaultDirName={pf}\Freelancer Mod Studio
 UninstallDisplayIcon={app}\FreelancerModStudio.exe

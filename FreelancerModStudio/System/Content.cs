@@ -186,10 +186,12 @@ namespace FreelancerModStudio.SystemPresenter
                 return SharedGeometries.ZoneVignette;
             else if (Type == ZoneType.Exclusion)
             {
-                if (Shape == ZoneShape.Sphere || Shape == ZoneShape.Ellipsoid)
-                    return SharedGeometries.ZoneExclusionSphere;
-                else
+                if (Shape == ZoneShape.Box)
                     return SharedGeometries.ZoneExclusionBox;
+                else if (Shape == ZoneShape.Cylinder)
+                    return SharedGeometries.ZoneExclusionCylinder;
+                else
+                    return SharedGeometries.ZoneExclusionSphere;
             }
 
             if (Shape == ZoneShape.Box)

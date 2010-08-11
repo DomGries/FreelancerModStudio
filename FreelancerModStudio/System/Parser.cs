@@ -103,8 +103,13 @@ namespace FreelancerModStudio.SystemPresenter
                 if (block.Archetype != null)
                 {
                     scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) / 1000;
-                    if (scale.X < 0.1)
-                        scale = new Vector3D(0.1, 0.1, 0.1);
+                    if (block.ObjectType != ContentType.Planet && block.ObjectType != ContentType.Sun)
+                    {
+                        if (scale.X < 0.1)
+                            scale = new Vector3D(0.1, 0.1, 0.1);
+                        else if (scale.X > 1)
+                            scale = new Vector3D(1, 1, 1);
+                    }
                 }
                 else
                     scale = new Vector3D(1, 1, 1);

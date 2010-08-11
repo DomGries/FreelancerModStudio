@@ -147,11 +147,14 @@ namespace FreelancerModStudio.SystemPresenter
         public static GeometryModel3D ZoneVignette =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.ZoneVignette);
 
+        public static GeometryModel3D ZoneExclusionBox =
+            GetGeometry(SharedMeshes.Box, SharedMaterials.ZoneExclusion);
+
         public static GeometryModel3D ZoneExclusionSphere =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.ZoneExclusion);
 
-        public static GeometryModel3D ZoneExclusionBox =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.ZoneExclusion);
+        public static GeometryModel3D ZoneExclusionCylinder =
+            GetGeometry(SharedMeshes.Cylinder, SharedMaterials.ZoneExclusion);
 
         public static GeometryModel3D System =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.System);

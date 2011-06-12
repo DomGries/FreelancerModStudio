@@ -47,11 +47,20 @@ namespace FreelancerModStudio
         public object Value;
 
         [Browsable(false)]
+        public string Category;
+
+        [Browsable(false)]
+        public string Comment;
+
+        [Browsable(false)]
         public Attribute[] Attributes;
 
         public PropertyOption(List<EditorINIEntry> options, Template.Option templateOption, bool children)
         {
             this.Name = templateOption.Name;
+
+            this.Category = templateOption.Category;
+            this.Comment = templateOption.Comment;
 
             if (templateOption.Multiple)
             {
@@ -227,9 +236,14 @@ namespace FreelancerModStudio
             get { return this.PropertyOption.Name; }
         }
 
+        public override string Category
+        {
+            get { return this.PropertyOption.Category; }
+        }
+
         public override string Description
         {
-            get { return ""; }
+            get { return this.PropertyOption.Comment; }
         }
 
         public override object GetValue(object component)

@@ -257,7 +257,7 @@ namespace FreelancerModStudio.SystemPresenter
                 material = MaterialHelper.CreateEmissiveMaterial(new LinearGradientBrush(startColor, endColor, 90));
             }
 
-            return SharedGeometries.GetGeometry(SharedMeshes.Box, material);
+            return SharedGeometries.GetGeometry(GetMesh(), material);
         }
 
         Color GetColor(ConnectionType type)
@@ -274,7 +274,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Box;
+            return SharedMeshes.Surface2Sided;
         }
     }
 

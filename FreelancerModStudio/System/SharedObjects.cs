@@ -43,8 +43,8 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material Zone = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 20, 20));
         public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 20, 10));
         public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 10, 0));
-
         public static Material System = MaterialHelper.CreateEmissiveMaterial(Brushes.Silver);
+
         public static Color ConnectionJumphole = Colors.OrangeRed;
         public static Color ConnectionJumpgate = Colors.Yellow;
         public static Color ConnectionBoth = Colors.DodgerBlue;
@@ -85,6 +85,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static MeshGeometry3D Pyramid = GetMesh(new PyramidMesh());
         public static MeshGeometry3D Box = GetMesh(new BoxMesh());
+        public static MeshGeometry3D Surface2Sided = GetMesh(new Surface2SidedMesh());
 
         static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
         {

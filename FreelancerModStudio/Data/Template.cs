@@ -83,11 +83,11 @@ namespace FreelancerModStudio.Data
             [XmlAttribute("type")]
             public OptionType Type = OptionType.String;
 
-            [XmlAttribute("enum")]
-            public string EnumName;
+            //[XmlAttribute("enum")]
+            //public string EnumName;
 
             [XmlAttribute("category")]
-            public int Category = 0;
+            public string Category;
 
             [XmlAttribute("comment")]
             public string Comment;

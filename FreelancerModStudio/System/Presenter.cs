@@ -21,7 +21,24 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public Table<int, ContentBase> Objects { get; set; }
         public HelixView3D Viewport { get; set; }
-        public bool IsUniverse { get; set; }
+
+        public bool isUniverse { get; set; }
+        public bool IsUniverse
+        {
+            get
+            {
+                return isUniverse;
+            }
+            set
+            {
+                if (value)
+                    Lightning = new DefaultLightsVisual3D();
+                else
+                    Lightning = null;
+
+                isUniverse = value;
+            }
+        }
 
         ModelVisual3D lightning;
         public ModelVisual3D Lightning
@@ -40,7 +57,7 @@ namespace FreelancerModStudio.SystemPresenter
                     else
                         Viewport.Children.RemoveAt(index);
                 }
-                else
+                else if (value != null)
                     Viewport.Children.Insert(0, value);
 
                 lightning = value;

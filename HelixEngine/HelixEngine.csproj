@@ -82,12 +82,12 @@
     <Compile Include="Visuals\Meshes\CylindricalMeshBase.cs" />
     <Compile Include="Visuals\Meshes\FlatSurfaceMeshBase.cs" />
     <Compile Include="Visuals\Meshes\HollowCylinderMesh.cs" />
+    <Compile Include="Visuals\Meshes\SurfaceMesh.cs" />
     <Compile Include="Visuals\Meshes\MeshElement3D.cs" />
     <Compile Include="Visuals\Meshes\MeshGeneratorBase.cs" />
     <Compile Include="Visuals\Meshes\MyModelUIElement3D.cs" />
     <Compile Include="Visuals\Meshes\PieSliceVisual3D.cs" />
     <Compile Include="Visuals\Meshes\Polyhedra\CubeMesh.cs" />
-    <Compile Include="Visuals\Meshes\SurfaceMesh.cs" />
     <Compile Include="Visuals\Meshes\Polyhedra\OctahedronMesh.cs" />
     <Compile Include="Visuals\Meshes\Polyhedra\PolyhedronMeshBase.cs" />
     <Compile Include="Visuals\Meshes\SphereMesh.cs" />

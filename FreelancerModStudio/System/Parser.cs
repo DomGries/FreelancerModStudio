@@ -157,11 +157,6 @@ namespace FreelancerModStudio.SystemPresenter
         Rotation3D ParseRotation(string vector, bool localTransform)
         {
             Vector3D tempRotation = ParseVector(vector);
-            Vector3D factor = new Vector3D(GetFactor(tempRotation.X), GetFactor(tempRotation.Y), GetFactor(tempRotation.Z));
-
-            tempRotation.X = GetPositive(tempRotation.X);
-            tempRotation.Y = GetPositive(tempRotation.Y);
-            tempRotation.Z = GetPositive(tempRotation.Z);
 
             if (localTransform)
             {
@@ -169,10 +164,15 @@ namespace FreelancerModStudio.SystemPresenter
                 if (rotationZ == 0)
                     rotationZ = 1;
 
-                return new AxisAngleRotation3D(new Vector3D(0, 0, tempRotation.Y * factor.Y * rotationZ), tempRotation.Y);
+                return new AxisAngleRotation3D(new Vector3D(0, 0, GetPositive(tempRotation.Y) * rotationZ), tempRotation.Y);
             }
             else
             {
+                Vector3D factor = new Vector3D(GetFactor(tempRotation.X), GetFactor(tempRotation.Y), GetFactor(tempRotation.Z));
+                tempRotation.X = GetPositive(tempRotation.X);
+                tempRotation.Y = GetPositive(tempRotation.Y);
+                tempRotation.Z = GetPositive(tempRotation.Z);
+
                 double max = Math.Max(Math.Max(tempRotation.X, tempRotation.Y), tempRotation.Z);
                 if (max != 0)
                 {

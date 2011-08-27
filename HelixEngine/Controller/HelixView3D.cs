@@ -317,19 +317,19 @@ namespace HelixEngine
             // CameraController.ZoomToFit();
         }
 
-        public Visual3D FindNearestVisual(Point pt)
+        public Visual3D FindNearestVisual(Point pt, bool farest)
         {
-            return Viewport3DHelper.FindNearestVisual(Viewport, pt);
+            return Viewport3DHelper.FindVisual(Viewport, pt, farest);
         }
 
-        public Point3D? FindNearestPoint(Point pt)
+        public Point3D? FindPoint(Point pt, bool farest)
         {
-            return Viewport3DHelper.FindNearestPoint(Viewport, pt);
+            return Viewport3DHelper.FindPoint(Viewport, pt, farest);
         }
 
-        public bool FindNearest(Point pt, out Point3D pos, out Vector3D normal, out DependencyObject obj)
+        public bool Find(Point pt, out Point3D pos, bool farest, out Vector3D normal, out DependencyObject obj)
         {
-            return Viewport3DHelper.FindNearest(Viewport, pt, out pos, out normal, out obj);
+            return Viewport3DHelper.Find(Viewport, pt, farest, out pos, out normal, out obj);
         }
 
     }

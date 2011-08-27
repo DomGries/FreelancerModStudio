@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 using System.Xml;
-using Path=System.IO.Path;
+using Path = System.IO.Path;
 
 namespace HelixEngine
 {
@@ -52,7 +52,7 @@ namespace HelixEngine
                 xAxis.Normalize();
 
                 Vector3D yAxis = Vector3D.CrossProduct(zAxis, xAxis);
-                var pos = (Vector3D) projcam.Position;
+                var pos = (Vector3D)projcam.Position;
 
                 return new Matrix3D(
                     xAxis.X, yAxis.X, zAxis.X, 0,
@@ -88,8 +88,8 @@ namespace HelixEngine
             {
                 var orthocam = camera as OrthographicCamera;
 
-                double xScale = 2/orthocam.Width;
-                double yScale = xScale*aspectRatio;
+                double xScale = 2 / orthocam.Width;
+                double yScale = xScale * aspectRatio;
                 double zNear = orthocam.NearPlaneDistance;
                 double zFar = orthocam.FarPlaneDistance;
 
@@ -99,8 +99,8 @@ namespace HelixEngine
 
                 return new Matrix3D(xScale, 0, 0, 0,
                                     0, yScale, 0, 0,
-                                    0, 0, 1/(zNear - zFar), 0,
-                                    0, 0, zNear/(zNear - zFar), 1);
+                                    0, 0, 1 / (zNear - zFar), 0,
+                                    0, 0, zNear / (zNear - zFar), 1);
             }
 
             if (camera is PerspectiveCamera)
@@ -109,12 +109,12 @@ namespace HelixEngine
 
                 // The angle-to-radian formula is a little off because only
                 // half the angle enters the calculation.
-                double xScale = 1/Math.Tan(Math.PI*perscam.FieldOfView/360);
-                double yScale = xScale*aspectRatio;
+                double xScale = 1 / Math.Tan(Math.PI * perscam.FieldOfView / 360);
+                double yScale = xScale * aspectRatio;
                 double zNear = perscam.NearPlaneDistance;
                 double zFar = perscam.FarPlaneDistance;
-                double zScale = (zFar == double.PositiveInfinity ? -1 : (zFar/(zNear - zFar)));
-                double zOffset = zNear*zScale;
+                double zScale = (zFar == double.PositiveInfinity ? -1 : (zFar / (zNear - zFar)));
+                double zOffset = zNear * zScale;
 
                 return new Matrix3D(xScale, 0, 0, 0,
                                     0, yScale, 0, 0,
@@ -192,31 +192,31 @@ namespace HelixEngine
         public static Matrix3D GetCameraTransform(Viewport3DVisual vis)
         {
             return GetTotalTransform(vis.Camera,
-                                     vis.Viewport.Size.Width/vis.Viewport.Size.Height);
+                                     vis.Viewport.Size.Width / vis.Viewport.Size.Height);
         }
 
         public static Matrix3D GetCameraTransform(Viewport3D viewport)
         {
             return GetTotalTransform(viewport.Camera,
-                                     viewport.ActualWidth/viewport.ActualHeight);
+                                     viewport.ActualWidth / viewport.ActualHeight);
         }
 
         public static Matrix3D GetViewportTransform(Viewport3DVisual vis)
         {
-            return new Matrix3D(vis.Viewport.Width/2, 0, 0, 0,
-                                0, -vis.Viewport.Height/2, 0, 0,
+            return new Matrix3D(vis.Viewport.Width / 2, 0, 0, 0,
+                                0, -vis.Viewport.Height / 2, 0, 0,
                                 0, 0, 1, 0,
-                                vis.Viewport.X + vis.Viewport.Width/2,
-                                vis.Viewport.Y + vis.Viewport.Height/2, 0, 1);
+                                vis.Viewport.X + vis.Viewport.Width / 2,
+                                vis.Viewport.Y + vis.Viewport.Height / 2, 0, 1);
         }
 
         public static Matrix3D GetViewportTransform(Viewport3D viewport)
         {
-            return new Matrix3D(viewport.ActualWidth/2, 0, 0, 0,
-                                0, -viewport.ActualHeight/2, 0, 0,
+            return new Matrix3D(viewport.ActualWidth / 2, 0, 0, 0,
+                                0, -viewport.ActualHeight / 2, 0, 0,
                                 0, 0, 1, 0,
-                                viewport.ActualWidth/2,
-                                viewport.ActualHeight/2, 0, 1);
+                                viewport.ActualWidth / 2,
+                                viewport.ActualHeight / 2, 0, 1);
         }
 
 
@@ -323,7 +323,7 @@ namespace HelixEngine
         public static RenderTargetBitmap RenderBitmap(Viewport3D view, Brush background)
         {
             var bmp = new RenderTargetBitmap(
-                (int) view.ActualWidth, (int) view.ActualHeight, 96, 96,
+                (int)view.ActualWidth, (int)view.ActualHeight, 96, 96,
                 PixelFormats.Pbgra32);
 
             // erase background
@@ -345,24 +345,24 @@ namespace HelixEngine
             double w = view.Width;
             double h = view.Height;
             ResizeAndArrange(view, width, height);
-            RenderTargetBitmap rtb = RenderBitmap(view,background);
+            RenderTargetBitmap rtb = RenderBitmap(view, background);
             ResizeAndArrange(view, w, h);
             return rtb;
         }
 
         public static void Copy(Viewport3D view)
         {
-            Clipboard.SetImage(RenderBitmap(view,Brushes.White));
+            Clipboard.SetImage(RenderBitmap(view, Brushes.White));
         }
 
-        public static void Copy(Viewport3D view, double width, double height,Brush background)
+        public static void Copy(Viewport3D view, double width, double height, Brush background)
         {
-            Clipboard.SetImage(RenderBitmap(view, width, height,background));
+            Clipboard.SetImage(RenderBitmap(view, width, height, background));
         }
 
         public static void Save(Viewport3D view, string fileName)
         {
-            RenderTargetBitmap bmp = RenderBitmap(view,Brushes.White);
+            RenderTargetBitmap bmp = RenderBitmap(view, Brushes.White);
             string ext = Path.GetExtension(fileName).ToLower();
             BitmapEncoder enc;
             switch (ext)
@@ -404,7 +404,7 @@ namespace HelixEngine
         {
             var sb = new StringBuilder();
             var tw = new StringWriter(sb);
-            var xw = new XmlTextWriter(tw) {Formatting = Formatting.Indented};
+            var xw = new XmlTextWriter(tw) { Formatting = Formatting.Indented };
             XamlWriter.Save(view, xw);
             xw.Close();
             string xaml = sb.ToString();
@@ -555,7 +555,7 @@ namespace HelixEngine
         public static List<Model3D> SearchFor<T>(IEnumerable<Visual3D> collection)
         {
             var output = new List<Model3D>();
-            SearchFor(collection, typeof (T), output);
+            SearchFor(collection, typeof(T), output);
             return output;
         }
 
@@ -602,12 +602,12 @@ namespace HelixEngine
         /// <param name="viewport"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public static Visual3D FindNearestVisual(Viewport3D viewport, Point position)
+        public static Visual3D FindVisual(Viewport3D viewport, Point position, bool farest)
         {
             Point3D p;
             Vector3D n;
             DependencyObject obj;
-            if (FindNearest(viewport, position, out p, out n, out obj))
+            if (Find(viewport, position, farest, out p, out n, out obj))
                 return obj as Visual3D;
 
             return null;
@@ -619,18 +619,18 @@ namespace HelixEngine
         /// <param name="viewport"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public static Point3D? FindNearestPoint(Viewport3D viewport, Point position)
+        public static Point3D? FindPoint(Viewport3D viewport, Point position, bool farest)
         {
             Point3D p;
             Vector3D n;
             DependencyObject obj;
-            if (FindNearest(viewport, position, out p, out n, out obj))
+            if (Find(viewport, position, farest, out p, out n, out obj))
                 return p;
 
             return null;
         }
 
-        public static bool FindNearest(Viewport3D viewport, Point position, out Point3D point, out Vector3D normal,
+        public static bool Find(Viewport3D viewport, Point position, bool farest, out Point3D point, out Vector3D normal,
                                        out DependencyObject visual)
         {
             var camera = viewport.Camera as PerspectiveCamera;
@@ -644,7 +644,7 @@ namespace HelixEngine
 
             var hitParams = new PointHitTestParameters(position);
 
-            double minimumDistance = double.MaxValue;
+            double minimumDistance = farest ? 0 : double.MaxValue;
             var nearestPoint = new Point3D();
             var nearestNormal = new Vector3D();
             DependencyObject nearestObject = null;
@@ -660,15 +660,15 @@ namespace HelixEngine
                                                                      Point3D p1 = mesh.Positions[rayHit.VertexIndex1];
                                                                      Point3D p2 = mesh.Positions[rayHit.VertexIndex2];
                                                                      Point3D p3 = mesh.Positions[rayHit.VertexIndex3];
-                                                                     double x = p1.X*rayHit.VertexWeight1 +
-                                                                                p2.X*rayHit.VertexWeight2 +
-                                                                                p3.X*rayHit.VertexWeight3;
-                                                                     double y = p1.Y*rayHit.VertexWeight1 +
-                                                                                p2.Y*rayHit.VertexWeight2 +
-                                                                                p3.Y*rayHit.VertexWeight3;
-                                                                     double z = p1.Z*rayHit.VertexWeight1 +
-                                                                                p2.Z*rayHit.VertexWeight2 +
-                                                                                p3.Z*rayHit.VertexWeight3;
+                                                                     double x = p1.X * rayHit.VertexWeight1 +
+                                                                                p2.X * rayHit.VertexWeight2 +
+                                                                                p3.X * rayHit.VertexWeight3;
+                                                                     double y = p1.Y * rayHit.VertexWeight1 +
+                                                                                p2.Y * rayHit.VertexWeight2 +
+                                                                                p3.Y * rayHit.VertexWeight3;
+                                                                     double z = p1.Z * rayHit.VertexWeight1 +
+                                                                                p2.Z * rayHit.VertexWeight2 +
+                                                                                p3.Z * rayHit.VertexWeight3;
 
                                                                      // point in local coordinates
                                                                      var p = new Point3D(x, y, z);
@@ -681,7 +681,7 @@ namespace HelixEngine
 
                                                                      double distance =
                                                                          (camera.Position - p).LengthSquared;
-                                                                     if (distance < minimumDistance)
+                                                                     if (farest ? distance > minimumDistance : distance < minimumDistance)
                                                                      {
                                                                          minimumDistance = distance;
                                                                          nearestPoint = p;

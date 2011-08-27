@@ -40,10 +40,10 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material JumpHole = MaterialHelper.CreateEmissiveMaterial(Brushes.DarkGreen);
         public static Material JumpGate = MaterialHelper.CreateEmissiveMaterial(Brushes.DarkGreen);
         public static Material DockingRing = MaterialHelper.CreateEmissiveMaterial(Brushes.Firebrick);
-        public static Material Zone = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 20, 20));
-        public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 20, 10));
-        public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(20, 10, 0));
-        public static Material System = MaterialHelper.CreateEmissiveMaterial(Brushes.Silver);
+        public static Material Zone = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 30, 30));
+        public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 30, 15));
+        public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 15, 0));
+        public static Material System = MaterialHelper.CreateMaterial(Brushes.White);
 
         public static Color ConnectionJumphole = Colors.OrangeRed;
         public static Color ConnectionJumpgate = Colors.Yellow;
@@ -85,7 +85,11 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static MeshGeometry3D Pyramid = GetMesh(new PyramidMesh());
         public static MeshGeometry3D Box = GetMesh(new BoxMesh());
-        public static MeshGeometry3D Surface2Sided = GetMesh(new Surface2SidedMesh());
+        public static MeshGeometry3D Surface2Sided = GetMesh(new SurfaceMesh());
+        public static MeshGeometry3D Path = GetMesh(new SurfaceMesh()
+        {
+            Width = 2
+        });
 
         static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
         {
@@ -143,7 +147,7 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneCylinder =
-            GetGeometry(SharedMeshes.Cylinder, SharedMaterials.Zone);
+            GetGeometry(SharedMeshes.Path, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneVignette =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.ZoneVignette);

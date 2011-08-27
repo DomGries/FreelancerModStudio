@@ -19,7 +19,8 @@ namespace HelixEngine
         ShowContextMenu,
         ResetCamera,
         ChangeLookAt,
-        Select
+        Select,
+        SelectFarest
     }
 
     // http://en.wikipedia.org/wiki/Virtual_camera_system
@@ -93,6 +94,7 @@ namespace HelixEngine
             MiddleDoubleClickAction = MouseAction.ResetCamera;
             RightDoubleClickAction = MouseAction.ChangeLookAt;
             LeftButtonAction = MouseAction.Select;
+            ShiftLeftButtonAction = MouseAction.SelectFarest;
 
             Background = Brushes.Transparent;
             EventSurface = this;
@@ -407,7 +409,8 @@ namespace HelixEngine
             Point3D point;
             Vector3D normal;
             DependencyObject visual;
-            if (Viewport3DHelper.FindNearest(Viewport, _mouseDownPosition, out point, out normal, out visual))
+            bool farest = Keyboard.IsKeyDown(Key.LeftShift);
+            if (Viewport3DHelper.Find(Viewport, _mouseDownPosition, farest, out point, out normal, out visual))
                 _mouseDownPoint3D = point;
             else
                 _mouseDownPoint3D = null;
@@ -415,7 +418,7 @@ namespace HelixEngine
             _lastPoint3D = UnProject(_mouseDownPosition, CameraTarget(), Camera.LookDirection);
 
             // select object
-            if (CheckButton(e, MouseAction.Select) && visual != null)
+            if ((CheckButton(e, MouseAction.Select) || CheckButton(e, MouseAction.SelectFarest)) && visual != null)
                 OnSelectionChanged(visual);
 
             // change the 'lookat' point

@@ -424,6 +424,9 @@ namespace FreelancerModStudio
 
         void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (e.Cancel)
+                return;
+
             if (this.CancelModClose())
                 e.Cancel = true;
             else

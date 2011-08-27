@@ -147,6 +147,9 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneCylinder =
+            GetGeometry(SharedMeshes.Cylinder, SharedMaterials.Zone);
+
+        public static GeometryModel3D ZonePath =
             GetGeometry(SharedMeshes.Path, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneVignette =

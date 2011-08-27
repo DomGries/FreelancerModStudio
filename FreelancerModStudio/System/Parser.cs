@@ -19,6 +19,7 @@ namespace FreelancerModStudio.SystemPresenter
             string rotationString = "0,0,0";
             string shapeString = "box";
             string scaleString = "1,1,1";
+            string usageString = "";
             string vignetteString = "";
             string flagsString = "";
             string fileString = "";
@@ -43,11 +44,14 @@ namespace FreelancerModStudio.SystemPresenter
                         case "size":
                             scaleString = value;
                             break;
+                        case "usage":
+                            usageString = value.ToLower();
+                            break;
                         case "vignette_type":
-                            vignetteString = value;
+                            vignetteString = value.ToLower();
                             break;
                         case "property_flags":
-                            flagsString = value.ToLower();
+                            flagsString = value;
                             break;
                         case "file":
                             fileString = value;
@@ -74,7 +78,9 @@ namespace FreelancerModStudio.SystemPresenter
 
                 zone.Shape = shape;
 
-                if (vignetteString == "open" || vignetteString == "field" || vignetteString == "exclusion")
+                if (usageString == "trade" || usageString == "patrol")
+                    zone.Type = ZoneType.Path;
+                else if (vignetteString == "open" || vignetteString == "field" || vignetteString == "exclusion")
                     zone.Type = ZoneType.Vignette;
                 else if (flagsString == "131072")
                     zone.Type = ZoneType.Exclusion;

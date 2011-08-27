@@ -7,21 +7,24 @@
 #include "scripts\products\msi31.iss"
 #include "scripts\products\dotnetfx35sp1.iss"
 
+#define MyAppSetupName 'Freelancer Mod Studio'
+#define MyAppVersion '0.9.7'
+
 [Setup]
-AppName=Freelancer Mod Studio
-AppVersion=0.9.6
-AppVerName=Freelancer Mod Studio 0.9.6
-AppCopyright=Copyright © stfx 2009-2010
-VersionInfoVersion=0.9.6
+AppName={#MyAppSetupName}
+AppVersion={#MyAppVersion}
+AppVerName={#MyAppSetupName} {#MyAppVersion}
+AppCopyright=Copyright © stfx 2009-2011
+VersionInfoVersion={#MyAppVersion}
 VersionInfoCompany=stfx
 AppPublisher=stfx
 AppPublisherURL=http://code.google.com/p/freelancermodstudio
 AppUpdatesURL=http://code.google.com/p/freelancermodstudio/downloads/list
-OutputBaseFilename=FreelancerModStudio-0.9.6
-DefaultGroupName=Freelancer Mod Studio
-DefaultDirName={pf}\Freelancer Mod Studio
+OutputBaseFilename=FreelancerModStudio-{#MyAppVersion}
+DefaultGroupName={#MyAppSetupName}
+DefaultDirName={pf}\{#MyAppSetupName}
 UninstallDisplayIcon={app}\FreelancerModStudio.exe
-UninstallDisplayName=Freelancer Mod Studio
+UninstallDisplayName={#MyAppSetupName}
 Uninstallable=yes
 CreateUninstallRegKey=yes
 UpdateUninstallLogAppName=yes
@@ -73,7 +76,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\FreelancerModStudi
 Filename: "{app}\FreelancerModStudio.exe"; Description: "{cm:LaunchProgram,FreelancerModStudio}"; Flags: nowait postinstall skipifsilent
 
 [Code]
-function InitializeSetup(): Boolean;
+function InitializeSetup(): boolean;
 begin
 	//init windows version
 	initwinversion();
@@ -85,5 +88,3 @@ begin
 
 	Result := true;
 end;
-
-

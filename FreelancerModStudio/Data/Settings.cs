@@ -38,31 +38,37 @@ namespace FreelancerModStudio.Data
             public Forms Forms = new Forms();
         }
 
+        [DisplayName("General")]
         public class General
         {
-            [CategoryAttribute("General"),
-                DisplayName("Display options sorted")]
-            public bool SortProperties { get; set; }
+            [CategoryAttribute("Properties"),
+                DisplayName("Sort Type")]
+            public System.Windows.Forms.PropertySort PropertySort { get; set; }
+
+            [CategoryAttribute("Properties"),
+                DisplayName("Show description")]
+            public bool ShowHelp { get; set; }
 
             [CategoryAttribute("General"),
                 DisplayName("Display recent files")]
             public ushort RecentFilesCount { get; set; }
 
-            [CategoryAttribute("General")]
+            [CategoryAttribute("General"),
+                DisplayName("Language")]
             public LanguageType Language { get; set; }
 
             [XmlIgnore,
-                CategoryAttribute("Editor"),
+                CategoryAttribute("INI Editor"),
                 DisplayName("Modified row color")]
             public Color EditorModifiedColor { get; set; }
 
             [XmlIgnore,
-                CategoryAttribute("Editor"),
+                CategoryAttribute("INI Editor"),
                 DisplayName("Saved row color")]
             public Color EditorModifiedSavedColor { get; set; }
 
             [XmlIgnore,
-                CategoryAttribute("Editor"),
+                CategoryAttribute("INI Editor"),
                 DisplayName("Hidden row color")]
             public Color EditorHiddenColor { get; set; }
 
@@ -91,7 +97,9 @@ namespace FreelancerModStudio.Data
 
             public General()
             {
-                SortProperties = false;
+                PropertySort = System.Windows.Forms.PropertySort.NoSort;
+                ShowHelp = false;
+
                 RecentFilesCount = 4;
                 Language = LanguageType.English;
 
@@ -190,7 +198,7 @@ namespace FreelancerModStudio.Data
             public string File;
             public int TemplateIndex = -1;
 
-            public RecentFile() {}
+            public RecentFile() { }
             public RecentFile(string file, int templateIndex)
             {
                 File = file;

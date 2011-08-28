@@ -217,8 +217,6 @@ namespace FreelancerModStudio
                 Helper.Settings.Data.Data.Forms.Main.Location = this.Location;
                 Helper.Settings.Data.Data.Forms.Main.Size = this.Size;
             }
-
-            Helper.Settings.SetShortLanguage(Application.CurrentCulture.TwoLetterISOLanguageName);
         }
 
         void GetSettings()

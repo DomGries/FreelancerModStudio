@@ -21,24 +21,7 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public Table<int, ContentBase> Objects { get; set; }
         public HelixView3D Viewport { get; set; }
-
-        public bool isUniverse { get; set; }
-        public bool IsUniverse
-        {
-            get
-            {
-                return isUniverse;
-            }
-            set
-            {
-                if (value)
-                    Lightning = new DefaultLightsVisual3D();
-                else
-                    Lightning = null;
-
-                isUniverse = value;
-            }
-        }
+        public bool IsUniverse { get; set; }
 
         ModelVisual3D lightning;
         public ModelVisual3D Lightning
@@ -125,6 +108,7 @@ namespace FreelancerModStudio.SystemPresenter
             Objects = new Table<int, ContentBase>();
             Viewport = viewport;
             Viewport.SelectionChanged += camera_SelectionChanged;
+            Lightning = new SystemLightsVisual3D();
         }
 
         void SetSelectedContent(ContentBase content, bool lookAt)

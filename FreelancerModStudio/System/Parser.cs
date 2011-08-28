@@ -166,7 +166,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (localTransform)
             {
-                double rotationZ = -(tempRotation.Z / 180);
+                double rotationZ = -tempRotation.Z / 180;
                 if (rotationZ == 0)
                     rotationZ = 1;
 
@@ -174,16 +174,11 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
-                Vector3D factor = new Vector3D(GetFactor(tempRotation.X), GetFactor(tempRotation.Y), GetFactor(tempRotation.Z));
-                tempRotation.X = GetPositive(tempRotation.X);
-                tempRotation.Y = GetPositive(tempRotation.Y);
-                tempRotation.Z = GetPositive(tempRotation.Z);
-
-                double max = Math.Max(Math.Max(tempRotation.X, tempRotation.Y), tempRotation.Z);
+                double max = Math.Max(Math.Max(GetPositive(tempRotation.X), GetPositive(tempRotation.Y)), GetPositive(tempRotation.Z));
                 if (max != 0)
                 {
                     tempRotation = tempRotation / max;
-                    return new AxisAngleRotation3D(new Vector3D(tempRotation.X * factor.X, tempRotation.Z * factor.Z, tempRotation.Y * factor.Y), max);
+                    return new AxisAngleRotation3D(new Vector3D(tempRotation.X, -tempRotation.Z, tempRotation.Y), max);
                 }
             }
 

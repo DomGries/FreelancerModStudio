@@ -28,26 +28,26 @@ namespace FreelancerModStudio.SystemPresenter
     public static class SharedMaterials
     {
         public static Material LightSource = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(120, 120, 0));
-        public static Material Sun = MaterialHelper.CreateEmissiveMaterial(Brushes.Orange);
-        public static Material Planet = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 60, 120));
-        public static Material Station = MaterialHelper.CreateEmissiveMaterial(Brushes.OrangeRed);
-        public static Material Satellite = MaterialHelper.CreateEmissiveMaterial(Brushes.BlueViolet);
-        public static Material Construct = MaterialHelper.CreateEmissiveMaterial(Brushes.Fuchsia);
-        public static Material Depot = MaterialHelper.CreateEmissiveMaterial(Brushes.SlateGray);
-        public static Material Ship = MaterialHelper.CreateEmissiveMaterial(Brushes.Gold);
-        public static Material WeaponsPlatform = MaterialHelper.CreateEmissiveMaterial(Brushes.BurlyWood);
-        public static Material TradeLane = MaterialHelper.CreateEmissiveMaterial(Brushes.Cyan);
-        public static Material JumpHole = MaterialHelper.CreateEmissiveMaterial(Brushes.DarkGreen);
-        public static Material JumpGate = MaterialHelper.CreateEmissiveMaterial(Brushes.DarkGreen);
-        public static Material DockingRing = MaterialHelper.CreateEmissiveMaterial(Brushes.Firebrick);
+        public static Material Sun = MaterialHelper.CreateMaterial(Brushes.Orange);
+        public static Material Planet = MaterialHelper.CreateMaterial(Color.FromRgb(0, 60, 120));
+        public static Material Station = MaterialHelper.CreateMaterial(Brushes.OrangeRed);
+        public static Material Satellite = MaterialHelper.CreateMaterial(Brushes.BlueViolet);
+        public static Material Construct = MaterialHelper.CreateMaterial(Brushes.Fuchsia);
+        public static Material Depot = MaterialHelper.CreateMaterial(Brushes.SlateGray);
+        public static Material Ship = MaterialHelper.CreateMaterial(Brushes.Gold);
+        public static Material WeaponsPlatform = MaterialHelper.CreateMaterial(Brushes.BurlyWood);
+        public static Material TradeLane = MaterialHelper.CreateMaterial(Brushes.Cyan);
+        public static Material JumpHole = MaterialHelper.CreateMaterial(Brushes.DarkGreen);
+        public static Material JumpGate = MaterialHelper.CreateMaterial(Brushes.DarkGreen);
+        public static Material DockingRing = MaterialHelper.CreateMaterial(Brushes.Firebrick);
         public static Material Zone = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 30, 30));
         public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 30, 15));
         public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 15, 0));
         public static Material System = MaterialHelper.CreateMaterial(Brushes.White);
 
         public static Color ConnectionJumphole = Colors.OrangeRed;
-        public static Color ConnectionJumpgate = Colors.Yellow;
-        public static Color ConnectionBoth = Colors.DodgerBlue;
+        public static Color ConnectionJumpgate = Colors.Gray;
+        public static Color ConnectionBoth = Colors.White;
         public static Color ConnectionNone = Colors.Black;
     }
 

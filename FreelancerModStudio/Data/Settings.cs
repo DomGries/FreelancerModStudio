@@ -41,14 +41,6 @@ namespace FreelancerModStudio.Data
         [DisplayName("General")]
         public class General
         {
-            [CategoryAttribute("Properties"),
-                DisplayName("Sort Type")]
-            public System.Windows.Forms.PropertySort PropertySort { get; set; }
-
-            [CategoryAttribute("Properties"),
-                DisplayName("Show description")]
-            public bool ShowHelp { get; set; }
-
             [CategoryAttribute("General"),
                 DisplayName("Display recent files")]
             public ushort RecentFilesCount { get; set; }
@@ -56,6 +48,14 @@ namespace FreelancerModStudio.Data
             [CategoryAttribute("General"),
                 DisplayName("Language")]
             public LanguageType Language { get; set; }
+
+            [CategoryAttribute("Properties"),
+                DisplayName("Sort type")]
+            public System.Windows.Forms.PropertySort PropertiesSortType { get; set; }
+
+            [CategoryAttribute("Properties"),
+                DisplayName("Show description")]
+            public bool PropertiesShowHelp { get; set; }
 
             [XmlIgnore,
                 CategoryAttribute("INI Editor"),
@@ -97,11 +97,11 @@ namespace FreelancerModStudio.Data
 
             public General()
             {
-                PropertySort = System.Windows.Forms.PropertySort.NoSort;
-                ShowHelp = false;
-
                 RecentFilesCount = 4;
                 Language = LanguageType.English;
+
+                PropertiesSortType = System.Windows.Forms.PropertySort.NoSort;
+                PropertiesShowHelp = false;
 
                 EditorModifiedColor = Color.FromArgb(255, 255, 164);
                 EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
@@ -133,7 +133,7 @@ namespace FreelancerModStudio.Data
             public AutoUpdate()
             {
                 Enabled = true;
-                CheckInterval = 1;
+                CheckInterval = 14;
                 SilentDownload = true;
                 UpdateFile = @"http://freelancermodstudio.googlecode.com/files/updates.txt";
                 Proxy = new Proxy();

@@ -87,14 +87,20 @@ namespace HelixEngine
 
         public CameraController()
         {
-            ControlRightButtonAction = MouseAction.Zoom;
-            ShiftRightButtonAction = MouseAction.Pan;
-            MiddleButtonAction = MouseAction.Pan;
-            RightButtonAction = MouseAction.Rotate;
-            MiddleDoubleClickAction = MouseAction.ResetCamera;
-            RightDoubleClickAction = MouseAction.ChangeLookAt;
             LeftButtonAction = MouseAction.Select;
+            LeftDoubleClickAction = MouseAction.Select;
             ShiftLeftButtonAction = MouseAction.SelectFarest;
+            ControlLeftButtonAction = MouseAction.Select;
+
+            RightButtonAction = MouseAction.Rotate;
+            RightDoubleClickAction = MouseAction.ChangeLookAt;
+            ShiftRightButtonAction = MouseAction.Pan;
+            ControlRightButtonAction = MouseAction.Zoom;
+
+            MiddleButtonAction = MouseAction.Pan;
+            MiddleDoubleClickAction = MouseAction.ResetCamera;
+            ShiftMiddleButtonAction = MouseAction.Pan;
+            ControlMiddleButtonAction = MouseAction.Pan;
 
             Background = Brushes.Transparent;
             EventSurface = this;
@@ -409,7 +415,7 @@ namespace HelixEngine
             Point3D point;
             Vector3D normal;
             DependencyObject visual;
-            bool farest = Keyboard.IsKeyDown(Key.LeftShift);
+            bool farest = CheckButton(e, MouseAction.SelectFarest);
             if (Viewport3DHelper.Find(Viewport, _mouseDownPosition, farest, out point, out normal, out visual))
                 _mouseDownPoint3D = point;
             else
@@ -418,7 +424,7 @@ namespace HelixEngine
             _lastPoint3D = UnProject(_mouseDownPosition, CameraTarget(), Camera.LookDirection);
 
             // select object
-            if ((CheckButton(e, MouseAction.Select) || CheckButton(e, MouseAction.SelectFarest)) && visual != null)
+            if ((CheckButton(e, MouseAction.Select) || farest) && visual != null)
                 OnSelectionChanged(visual);
 
             // change the 'lookat' point

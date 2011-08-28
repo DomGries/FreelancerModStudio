@@ -98,7 +98,7 @@ namespace FreelancerModStudio.SystemPresenter
             set
             {
                 if (selectedContent != value)
-                    SetSelectedContent(value);
+                    SetSelectedContent(value, true);
             }
         }
 
@@ -127,14 +127,15 @@ namespace FreelancerModStudio.SystemPresenter
             Viewport.SelectionChanged += camera_SelectionChanged;
         }
 
-        void SetSelectedContent(ContentBase content)
+        void SetSelectedContent(ContentBase content, bool lookAt)
         {
             selectedContent = content;
 
             if (content != null)
             {
                 //goto content
-                Viewport.LookAt(content.Position.ToPoint3D(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
+                if (lookAt)
+                    LookAt(content);
 
                 //select content visually
                 Selection = GetSelectionBox(content);
@@ -146,6 +147,11 @@ namespace FreelancerModStudio.SystemPresenter
                 Selection = null;
                 Viewport.Title = string.Empty;
             }
+        }
+
+        public void LookAt(ContentBase content)
+        {
+            Viewport.LookAt(content.Position.ToPoint3D(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
         }
 
         void AddContent(ContentBase content)
@@ -208,12 +214,17 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 if (content.Model == model)
                 {
-                    if (SelectedContent == content && IsUniverse && content is System)
-                        DisplayContextMenu(((System)content).Path);
+                    if (SelectedContent == content)
+                    {
+                        if (IsUniverse && content is System)
+                            DisplayContextMenu(((System)content).Path);
+                        else
+                            LookAt(content);
+                    }
+                    else
+                        SetSelectedContent(content, false);
 
-                    SelectedContent = content;
                     OnSelectionChanged(content);
-
                     return;
                 }
             }
@@ -456,7 +467,7 @@ namespace FreelancerModStudio.SystemPresenter
             if (selectedContent == content)
             {
                 //update selection if changed content is selected
-                SetSelectedContent(content);
+                SetSelectedContent(content, true);
             }
         }
 

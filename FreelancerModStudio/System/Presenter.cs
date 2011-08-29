@@ -202,8 +202,6 @@ namespace FreelancerModStudio.SystemPresenter
                     {
                         if (IsUniverse && content is System)
                             DisplayContextMenu(((System)content).Path);
-                        else
-                            LookAt(content);
                     }
                     else
                         SetSelectedContent(content, false);

@@ -817,6 +817,12 @@ namespace FreelancerModStudio
                 content.SelectAll();
         }
 
+        private void mnuFocusSelected_Click(object sender, EventArgs e)
+        {
+            if (systemEditor != null)
+                systemEditor.FocusSelected();
+        }
+
         private void mnuChangeVisibility_Click(object sender, EventArgs e)
         {
             DocumentInterface content = GetDocument();
@@ -881,7 +887,8 @@ namespace FreelancerModStudio
 
             this.mnuUndo.Enabled = document.CanUndo();
             this.mnuRedo.Enabled = document.CanRedo();
-            this.mnuChangeVisibility.Visible = this.mnuChangeVisibility.Enabled = document.CanChangeVisibility();
+            this.mnuChangeVisibility.Visible = document.CanChangeVisibility();
+            this.mnuFocusSelected.Visible = document.CanChangeVisibility();
         }
 
         void Content_DisplayChanged(ContentInterface content)
@@ -895,6 +902,7 @@ namespace FreelancerModStudio
                 this.mnuDelete.Enabled = false;
                 this.mnuSelectAll.Enabled = false;
                 this.mnuChangeVisibility.Enabled = false;
+                this.mnuFocusSelected.Enabled = false;
 
                 this.mnuAdd.Click -= this.mnuAdd_Click;
                 this.mnuAdd.DropDown = new ToolStripDropDown();
@@ -907,7 +915,8 @@ namespace FreelancerModStudio
                 this.mnuAdd.Enabled = content.CanAdd();
                 this.mnuDelete.Enabled = content.CanDelete();
                 this.mnuSelectAll.Enabled = content.CanSelectAll();
-                this.mnuChangeVisibility.Enabled = true;
+                this.mnuChangeVisibility.Enabled = content.CanDelete();
+                this.mnuFocusSelected.Enabled = content.CanDelete();
 
                 this.mnuAdd.Click -= this.mnuAdd_Click;
 

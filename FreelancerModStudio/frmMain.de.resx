@@ -250,6 +250,12 @@
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
     <value>217, 6</value>
   </data>
+  <data name="mnuFocusSelected.Size" type="System.Drawing.Size, System.Drawing">
+    <value>220, 22</value>
+  </data>
+  <data name="mnuFocusSelected.Text" xml:space="preserve">
+    <value>Auswahl &amp;fokusieren</value>
+  </data>
   <data name="mnuChangeVisibility.Size" type="System.Drawing.Size, System.Drawing">
     <value>220, 22</value>
   </data>

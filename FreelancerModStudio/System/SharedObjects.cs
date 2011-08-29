@@ -59,12 +59,7 @@ namespace FreelancerModStudio.SystemPresenter
             Stacks = 9
         });
 
-        public static MeshGeometry3D SphereLightSource = GetMesh(new OctahedronMesh()
-        {
-            //Radius = 0.4,
-            //Slices = 18,
-            //Stacks = 9
-        });
+        public static MeshGeometry3D SphereLightSource = GetMesh(new OctahedronMesh{});
 
         public static MeshGeometry3D BoxTradeLane = GetMesh(new BoxMesh()
         {

@@ -201,6 +201,12 @@ namespace FreelancerModStudio
             return true;
         }
 
+        public void FocusSelected()
+        {
+            if (systemPresenter.SelectedContent != null)
+                systemPresenter.LookAt(systemPresenter.SelectedContent);
+        }
+
         #region ContentInterface Members
 
         public bool CanCopy()

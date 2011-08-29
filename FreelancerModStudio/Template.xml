@@ -262,7 +262,7 @@
             <Option>spin</Option>
           </Options>
         </Block>
-        <Block name="Shape" multiple="true">
+        <Block name="Shape" multiple="true" identifier="name">
           <Options>
             <Option>h</Option>
             <Option>name</Option>
@@ -300,7 +300,7 @@
         <Path>universe\missioncreatedsolars.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="MissionCreatedSolar" multiple="true">
+        <Block name="MissionCreatedSolar" multiple="true" identifier="base">
           <Options>
             <Option>base</Option>
             <Option>ids_info</Option>
@@ -598,7 +598,7 @@
             <Option>name</Option>
           </Options>
         </Block>
-        <Block name="Hotspot" multiple="true">
+        <Block name="Hotspot" multiple="true" identifier="name">
           <Options>
             <Option>name</Option>
             <Option>behavior</Option>
@@ -645,7 +645,7 @@
         <Path>universe\heavens\shapes.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="Shape" multiple="true">
+        <Block name="Shape" multiple="true" identifier="name">
           <Options>
             <Option>name</Option>
             <Option>x</Option>
@@ -654,7 +654,7 @@
             <Option>h</Option>
           </Options>
         </Block>
-        <Block name="Texture" multiple="true">
+        <Block name="Texture" multiple="true" identifier="name">
           <Options>
             <Option>file</Option>
             <Option>name</Option>
@@ -726,7 +726,7 @@
         <Path>solar\solararch.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="CollisionGroup" multiple="true">
+        <Block name="CollisionGroup" multiple="true" identifier="obj">
           <Options>
             <Option>obj</Option>
             <Option>dmg_hp</Option>
@@ -851,7 +851,7 @@
         <Path>solar\rings\shapes.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="Shape" multiple="true">
+        <Block name="Shape" multiple="true" identifier="name">
           <Options>
             <Option>x</Option>
             <Option>y</Option>
@@ -860,13 +860,13 @@
             <Option>name</Option>
           </Options>
         </Block>
-        <Block name="Texture" multiple="true">
+        <Block name="Texture" multiple="true" identifier="name">
           <Options>
             <Option>file</Option>
             <Option>name</Option>
             <Option>texture_name</Option>
             <Option multiple="true">shape_name</Option>
-            <Option parent="true">dim</Option>
+            <Option parent="shape_name">dim</Option>
           </Options>
         </Block>
       </Blocks>
@@ -1000,11 +1000,11 @@
         </Block>
         <Block name="Texture" multiple="true">
           <Options>
-            <Option multiple="true">dim</Option>
             <Option>file</Option>
-            <Option multiple="true">shape_name</Option>
-            <Option>tex_shape</Option>
             <Option multiple="true">texture_name</Option>
+            <Option multiple="true">shape_name</Option>
+            <Option multiple="true" parent="shape_name">dim</Option>
+            <Option>tex_shape</Option>
           </Options>
         </Block>
         <Block name="TexturePanels">
@@ -1073,7 +1073,7 @@
             <Option>opacity</Option>
           </Options>
         </Block>
-        <Block name="Shape" multiple="true">
+        <Block name="Shape" multiple="true" identifier="name">
           <Options>
             <Option>h</Option>
             <Option>name</Option>
@@ -1088,7 +1088,7 @@
             <Option>flash</Option>
           </Options>
         </Block>
-        <Block name="Texture" multiple="true">
+        <Block name="Texture" multiple="true" identifier="name">
           <Options>
             <Option>file</Option>
             <Option>name</Option>
@@ -1206,7 +1206,7 @@
             <Option multiple="true">flag</Option>
           </Options>
         </Block>
-        <Block name="Shape" multiple="true">
+        <Block name="Shape" multiple="true" identifier="name">
           <Options>
             <Option>h</Option>
             <Option>name</Option>
@@ -1215,7 +1215,7 @@
             <Option>y</Option>
           </Options>
         </Block>
-        <Block name="Texture" multiple="true">
+        <Block name="Texture" multiple="true" identifier="name">
           <Options>
             <Option>file</Option>
             <Option>name</Option>
@@ -1237,7 +1237,7 @@
         <Path>ships\*shiparch.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="CollisionGroup" multiple="true">
+        <Block name="CollisionGroup" multiple="true" identifier="obj">
           <Options>
             <Option>child_impulse</Option>
             <Option>debris_type</Option>
@@ -1424,7 +1424,7 @@
             <Option>BonusLootDropChance</Option>
           </Options>
         </Block>
-        <Block name="RMBonusLoot" multiple="true">
+        <Block name="RMBonusLoot" multiple="true" identifier="archetype">
           <Options>
             <Option>archetype</Option>
             <Option>difficulty_range</Option>
@@ -1456,7 +1456,7 @@
         <Path>randommissions\vignettecriticalloot.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="critical_loot" multiple="true">
+        <Block name="critical_loot" multiple="true" identifier="archetype">
           <Options>
             <Option>archetype</Option>
             <Option>faction</Option>
@@ -1496,7 +1496,7 @@
             <Option>node_id</Option>
           </Options>
         </Block>
-        <Block name="DocumentationNode" multiple="true">
+        <Block name="DocumentationNode" multiple="true" identifier="documentation">
           <Options>
             <Option>child_node</Option>
             <Option>documentation</Option>
@@ -1511,11 +1511,11 @@
         <Path>missions\empathy.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="RepChangeEffects" multiple="true">
+        <Block name="RepChangeEffects" multiple="true" identifier="group">
           <Options>
-            <Option multiple="true">empathy_rate</Option>
-            <Option multiple="true">event</Option>
             <Option>group</Option>
+            <Option multiple="true">event</Option>
+            <Option multiple="true">empathy_rate</Option>
           </Options>
         </Block>
       </Blocks>
@@ -1526,7 +1526,7 @@
         <Path>missions\faction_prop.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="FactionProps" multiple="true">
+        <Block name="FactionProps" multiple="true" identifier="affiliation">
           <Options>
             <Option>affiliation</Option>
             <Option>firstname_female</Option>
@@ -1595,7 +1595,7 @@
         <Path>missions\mbases.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="BaseFaction" multiple="true">
+        <Block name="BaseFaction" multiple="true" identifier="faction">
           <Options>
             <Option>faction</Option>
             <Option>mission_type</Option>
@@ -1654,7 +1654,7 @@
         <Path>missions\mshipprops.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="mShipProps" multiple="true">
+        <Block name="mShipProps" multiple="true" identifier="archetype_id">
           <Options>
             <Option>archetype_id</Option>
             <Option>prop</Option>
@@ -2134,10 +2134,10 @@
         <Path>missions\voice_properties.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="mVoiceProp" multiple="true">
+        <Block name="mVoiceProp" multiple="true" identifier="voice">
           <Options>
-            <Option multiple="true">permutation_count</Option>
             <Option>voice</Option>
+            <Option multiple="true">permutation_count</Option>
           </Options>
         </Block>
       </Blocks>
@@ -2688,7 +2688,7 @@
             <Option>name</Option>
           </Options>
         </Block>
-        <Block name="key" multiple="true">
+        <Block name="key" multiple="true" identifier="id">
           <Options>
             <Option>id</Option>
           </Options>
@@ -3214,7 +3214,7 @@
         <Path>fx\fuse*.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="damage_group" multiple="true">
+        <Block name="damage_group" multiple="true" identifier="group_name">
           <Options>
             <Option>at_t</Option>
             <Option>damage_type</Option>
@@ -3229,14 +3229,14 @@
             <Option>hitpoints</Option>
           </Options>
         </Block>
-        <Block name="destroy_group" multiple="true">
+        <Block name="destroy_group" multiple="true" identifier="group_name">
           <Options>
             <Option>at_t</Option>
             <Option>fate</Option>
             <Option>group_name</Option>
           </Options>
         </Block>
-        <Block name="destroy_hp_attachment" multiple="true">
+        <Block name="destroy_hp_attachment" multiple="true" identifier="hardpoint">
           <Options>
             <Option>at_t</Option>
             <Option>fate</Option>
@@ -3254,21 +3254,21 @@
             <Option>origin_hardpoint</Option>
           </Options>
         </Block>
-        <Block name="fuse" multiple="true">
+        <Block name="fuse" multiple="true" identifier="name">
           <Options>
             <Option>death_fuse</Option>
             <Option>lifetime</Option>
             <Option>name</Option>
           </Options>
         </Block>
-        <Block name="ignite_fuse" multiple="true">
+        <Block name="ignite_fuse" multiple="true" identifier="fuse">
           <Options>
             <Option>at_t</Option>
             <Option>fuse</Option>
             <Option>fuse_t</Option>
           </Options>
         </Block>
-        <Block name="impulse">
+        <Block name="impulse" multiple="true">
           <Options>
             <Option>at_t</Option>
             <Option>damage</Option>
@@ -3283,7 +3283,7 @@
             <Option>turn_on</Option>
           </Options>
         </Block>
-        <Block name="start_cam_particles" multiple="true">
+        <Block name="start_cam_particles" multiple="true" identifier="effect">
           <Options>
             <Option>at_t</Option>
             <Option>effect</Option>
@@ -3291,7 +3291,7 @@
             <Option>pos_offset</Option>
           </Options>
         </Block>
-        <Block name="start_effect" multiple="true">
+        <Block name="start_effect" multiple="true" identifier="effect">
           <Options>
             <Option>at_t</Option>
             <Option>attached</Option>
@@ -3398,7 +3398,7 @@
         <Path>fx\lightanim.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="LightAnim" multiple="true">
+        <Block name="LightAnim" multiple="true" identifier="name">
           <Options>
             <Option multiple="true">frame</Option>
             <Option>name</Option>
@@ -3443,7 +3443,7 @@
         <Path>fonts\rich_fonts.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="Style" multiple="true">
+        <Block name="Style" multiple="true" identifier="name">
           <Options>
             <Option>bold</Option>
             <Option>color</Option>
@@ -3467,7 +3467,7 @@
         <Path>equipment\commodities_per_faction.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="FactionGood" multiple="true">
+        <Block name="FactionGood" multiple="true" identifier="faction">
           <Options>
             <Option>faction</Option>
             <Option multiple="true">MarketGood</Option>
@@ -3857,7 +3857,7 @@
             <Option>volume</Option>
           </Options>
         </Block>
-        <Block name="LOD" multiple="true">
+        <Block name="LOD" multiple="true" identifier="obj">
           <Options>
             <Option>LODranges</Option>
             <Option>obj</Option>
@@ -3998,7 +3998,7 @@
         <Path>equipment\market*.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="BaseGood" multiple="true">
+        <Block name="BaseGood" multiple="true" identifier="base">
           <Options>
             <Option>base</Option>
             <Option multiple="true">MarketGood</Option>
@@ -4174,11 +4174,11 @@
         <Path>audio\*sounds.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="mVoiceProp" multiple="true">
+        <Block name="mVoiceProp" multiple="true" identifier="Voice">
           <Options>
+            <Option>Voice</Option>
             <Option>gender</Option>
             <Option>supports_roles</Option>
-            <Option>Voice</Option>
           </Options>
         </Block>
         <Block name="Sound" multiple="true" identifier="nickname">

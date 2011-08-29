@@ -72,6 +72,14 @@ namespace FreelancerModStudio.Data
                 DisplayName("Hidden row color")]
             public Color EditorHiddenColor { get; set; }
 
+            [CategoryAttribute("INI Formatting"),
+                DisplayName("Spaces around equal sign")]
+            public bool FormattingSpaces { get; set; }
+
+            [CategoryAttribute("INI Formatting"),
+                DisplayName("Empty line between sections")]
+            public bool FormattingEmptyLine { get; set; }
+
             [Browsable(false)]
             public string EditorModifiedSavedColorXML
             {
@@ -106,6 +114,9 @@ namespace FreelancerModStudio.Data
                 EditorModifiedColor = Color.FromArgb(255, 255, 164);
                 EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
                 EditorHiddenColor = Color.FromArgb(128, 128, 128);
+
+                FormattingSpaces = true;
+                FormattingEmptyLine = true;
 
                 AutoUpdate = new AutoUpdate();
             }

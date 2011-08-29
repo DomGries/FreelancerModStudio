@@ -7,6 +7,8 @@ namespace FreelancerModStudio.Data.IO
     {
         public string File { get; set; }
         public bool IsBini { get; set; }
+        public bool WriteSpaces { get; set; }
+        public bool WriteEmptyLine { get; set; }
 
         public FileManager(string file, bool isBINI)
         {
@@ -247,6 +249,8 @@ namespace FreelancerModStudio.Data.IO
                 //else
                 //{
                 INIManager iniManager = new INIManager(File);
+                iniManager.WriteSpaces = WriteSpaces;
+                iniManager.WriteEmptyLine = WriteEmptyLine;
                 iniManager.Write(newData);
                 //}
             }

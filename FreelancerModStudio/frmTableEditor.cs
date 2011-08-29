@@ -364,6 +364,8 @@ namespace FreelancerModStudio
         void Save(string file)
         {
             FileManager fileManager = new FileManager(file, IsBINI);
+            fileManager.WriteSpaces = Helper.Settings.Data.Data.General.FormattingSpaces;
+            fileManager.WriteEmptyLine = Helper.Settings.Data.Data.General.FormattingEmptyLine;
             fileManager.Write(Data.GetEditorData());
 
             Modified = false;

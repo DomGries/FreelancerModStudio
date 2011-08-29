@@ -387,16 +387,21 @@ namespace FreelancerModStudio.SystemPresenter
             double a = Difference(v2.X, v1.X);
             double b = Difference(v2.Y, v1.Y);
             double factor = 1;
+            double angleOffset = 90;
+
             if (v2.X < v1.X)
                 factor = -1;
 
             if (v2.Y < v1.Y)
+            {
+                angleOffset = -90;
                 factor *= -1;
+            }
 
             double c = Math.Sqrt(a * a + b * b);
             double angle = Math.Acos(a / c) * 180 / Math.PI;
 
-            Rotation3D rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + 90);
+            Rotation3D rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + angleOffset);
 
             line.SetDisplay(position, rotation, scale);
         }

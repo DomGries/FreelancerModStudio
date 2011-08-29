@@ -8,6 +8,8 @@ namespace FreelancerModStudio.Data.IO
     public class INIManager
     {
         public string File { get; set; }
+        public bool WriteSpaces { get; set; }
+        public bool WriteEmptyLine { get; set; }
 
         public INIManager(string file)
         {
@@ -100,7 +102,11 @@ namespace FreelancerModStudio.Data.IO
                 foreach (INIBlock block in data)
                 {
                     if (i > 0)
-                        streamWriter.Write(Environment.NewLine + Environment.NewLine);
+                    {
+                        streamWriter.WriteLine();
+                        if (WriteEmptyLine)
+                            streamWriter.WriteLine();
+                    }
 
                     streamWriter.WriteLine("[" + block.Name + "]");
 
@@ -116,7 +122,10 @@ namespace FreelancerModStudio.Data.IO
                             else
                                 key = option.Value[h].Parent;
 
-                            streamWriter.Write(key + " = " + option.Value[h].Value);
+                            if (WriteSpaces)
+                                streamWriter.Write(key + " = " + option.Value[h].Value);
+                            else
+                                streamWriter.Write(key + "=" + option.Value[h].Value);
 
                             if (h < option.Value.Count - 1)
                                 streamWriter.Write(Environment.NewLine);

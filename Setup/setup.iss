@@ -52,18 +52,19 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\FreelancerModStudio\bin\Release\FreelancerModStudio.exe"; DestDir: "{app}"
-Source: "..\FreelancerModStudio\bin\Release\FreelancerModStudio.XmlSerializers.dll"; DestDir: "{app}"
-Source: "..\FreelancerModStudio\bin\Release\HelixEngine.dll"; DestDir: "{app}"
-Source: "..\FreelancerModStudio\bin\Release\ObjectListView.dll"; DestDir: "{app}"
-Source: "..\FreelancerModStudio\bin\Release\WeifenLuo.WinFormsUI.Docking.dll"; DestDir: "{app}"
-Source: "..\FreelancerModStudio\bin\Release\de\FreelancerModStudio.resources.dll"; DestDir: "{app}\de"
-Source: "..\FreelancerModStudio\bin\Release\Template.xml"; DestDir: "{app}"
+Source: "..\FreelancerModStudio\bin\Release\FreelancerModStudio.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\FreelancerModStudio\bin\Release\FreelancerModStudio.XmlSerializers.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\FreelancerModStudio\bin\Release\HelixEngine.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\FreelancerModStudio\bin\Release\ObjectListView.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\FreelancerModStudio\bin\Release\WeifenLuo.WinFormsUI.Docking.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\FreelancerModStudio\bin\Release\de\FreelancerModStudio.resources.dll"; DestDir: "{app}\de"; Flags: ignoreversion
+Source: "..\FreelancerModStudio\bin\Release\Template.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "src\Settings_en.xml"; DestName: "FreelancerModStudio.xml"; DestDir: "{userappdata}\Freelancer Mod Studio"; Languages: en; Flags: onlyifdoesntexist
 Source: "src\Settings_de.xml"; DestName: "FreelancerModStudio.xml"; DestDir: "{userappdata}\Freelancer Mod Studio"; Languages: de; Flags: onlyifdoesntexist
 
 [UninstallDelete]
 Name: "{userappdata}\Freelancer Mod Studio\FreelancerModStudio.Layout.xml"; Type: files
+Name: "{userappdata}\Freelancer Mod Studio\FreelancerModStudio.xml"; Type: files
 Name: "{userappdata}\Freelancer Mod Studio"; Type: dirifempty
 
 [Icons]

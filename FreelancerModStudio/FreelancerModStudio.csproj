@@ -223,7 +223,7 @@
     <Compile Include="System\Animator.cs" />
     <Compile Include="System\ContentBase.cs" />
     <Compile Include="System\DefaultLightsVisual3D.cs" />
-    <Compile Include="System\MatrixAnimation.cs" />
+    <Compile Include="System\Matrix3DAnimation.cs" />
     <Compile Include="System\SharedObjects.cs" />
     <Compile Include="System\Parser.cs" />
     <Compile Include="System\Analyzer.cs" />

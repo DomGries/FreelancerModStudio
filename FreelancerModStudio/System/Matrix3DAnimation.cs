@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-//using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
 
@@ -75,24 +74,15 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override object GetCurrentValue(object defaultOriginValue, object defaultDestinationValue, AnimationClock animationClock)
         {
-            Matrix3D fromVal = ((Matrix3D)GetValue(Matrix3DAnimation.FromProperty));
-            Matrix3D toVal = ((Matrix3D)GetValue(Matrix3DAnimation.ToProperty));
-            return GetCurrentValueCore(fromVal, toVal, animationClock);
-        }
-
-        Matrix3D GetCurrentValueCore(Matrix3D defaultOriginValue, Matrix3D defaultDestinationValue, AnimationClock animationClock)
-        {
             if (animationClock.CurrentProgress == null)
-            {
                 return Matrix3D.Identity;
-            }
 
-            var normalizedTime = animationClock.CurrentProgress.Value;
+            double normalizedTime = animationClock.CurrentProgress.Value;
 
-            var from = From ?? defaultOriginValue;
-            var to = To ?? defaultDestinationValue;
+            Matrix3D from = From ?? (Matrix3D)defaultOriginValue;
+            Matrix3D to = To ?? (Matrix3D)defaultDestinationValue;
 
-            var newMatrix = new Matrix3D(
+            Matrix3D newMatrix = new Matrix3D(
                     ((to.M11 - from.M11) * normalizedTime) + from.M11,
                     ((to.M12 - from.M12) * normalizedTime) + from.M12,
                     ((to.M13 - from.M13) * normalizedTime) + from.M13,

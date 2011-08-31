@@ -193,6 +193,8 @@ namespace FreelancerModStudio.SystemPresenter
                     return SharedGeometries.ZoneExclusionBox;
                 else if (Shape == ZoneShape.Cylinder)
                     return SharedGeometries.ZoneExclusionCylinder;
+                else if (Shape == ZoneShape.Ring)
+                    return SharedGeometries.ZoneExclusionRing;
                 else
                     return SharedGeometries.ZoneExclusionSphere;
             }
@@ -201,6 +203,8 @@ namespace FreelancerModStudio.SystemPresenter
                 return SharedGeometries.ZoneBox;
             else if (Shape == ZoneShape.Cylinder)
                 return SharedGeometries.ZoneCylinder;
+            else if (Shape == ZoneShape.Ring)
+                return SharedGeometries.ZoneRing;
             else
                 return SharedGeometries.ZoneSphere;
         }
@@ -286,7 +290,8 @@ namespace FreelancerModStudio.SystemPresenter
         Box,
         Sphere,
         Cylinder,
-        Ellipsoid
+        Ellipsoid,
+        Ring
     }
 
     public enum ZoneType

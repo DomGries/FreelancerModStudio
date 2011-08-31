@@ -86,6 +86,11 @@ namespace FreelancerModStudio.SystemPresenter
             Width = 2
         });
 
+        public static MeshGeometry3D Ring = GetMesh(new CylinderMesh()
+        {
+            Length = 2,
+        });
+
         static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
         {
             MeshGeometry3D geometry = mesh.Geometry;
@@ -144,6 +149,9 @@ namespace FreelancerModStudio.SystemPresenter
         public static GeometryModel3D ZoneCylinder =
             GetGeometry(SharedMeshes.Cylinder, SharedMaterials.Zone);
 
+        public static GeometryModel3D ZoneRing =
+            GetGeometry(SharedMeshes.Ring, SharedMaterials.Zone);
+
         public static GeometryModel3D ZonePath =
             GetGeometry(SharedMeshes.Path, SharedMaterials.Zone);
 
@@ -158,6 +166,9 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static GeometryModel3D ZoneExclusionCylinder =
             GetGeometry(SharedMeshes.Cylinder, SharedMaterials.ZoneExclusion);
+
+        public static GeometryModel3D ZoneExclusionRing =
+            GetGeometry(SharedMeshes.Ring, SharedMaterials.ZoneExclusion);
 
         public static GeometryModel3D System =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.System);

@@ -194,6 +194,8 @@ namespace FreelancerModStudio.SystemPresenter
                 return ZoneShape.Sphere;
             else if (shape == "cylinder")
                 return ZoneShape.Cylinder;
+            else if (shape == "ring")
+                return ZoneShape.Ring;
             else
                 return ZoneShape.Ellipsoid;
         }

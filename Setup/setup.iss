@@ -1,14 +1,16 @@
 #include "scripts\products.iss"
 
+#include "scripts\products\stringversion.iss"
 #include "scripts\products\winversion.iss"
 #include "scripts\products\fileversion.iss"
+#include "scripts\products\dotnetfxversion.iss"
 
 #include "scripts\products\ngen.iss"
 #include "scripts\products\msi31.iss"
 #include "scripts\products\dotnetfx35sp1.iss"
 
 #define MyAppSetupName 'Freelancer Mod Studio'
-#define MyAppVersion '0.9.7'
+#define MyAppVersion '0.9.8'
 
 [Setup]
 AppName={#MyAppSetupName}

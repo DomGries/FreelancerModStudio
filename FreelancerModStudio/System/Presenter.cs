@@ -135,7 +135,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void LookAt(ContentBase content)
         {
-            Viewport.LookAt(content.GetPosition().ToPoint3D(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
+            Viewport.LookAt(content.GetPositionPoint(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
         }
 
         void AddContent(ContentBase content)

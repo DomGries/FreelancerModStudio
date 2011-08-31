@@ -73,5 +73,10 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return new Vector3D(Matrix.OffsetX, Matrix.OffsetY, Matrix.OffsetZ);
         }
+
+        public Point3D GetPositionPoint()
+        {
+            return new Point3D(Matrix.OffsetX, Matrix.OffsetY, Matrix.OffsetZ);
+        }
     }
 }

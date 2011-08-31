@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using System.Windows.Controls;
+using System.Windows.Threading;
+using FreelancerModStudio.Data;
+using FreelancerModStudio.Data.IO;
 using HelixEngine;
 using HelixEngine.Meshes;
-using FreelancerModStudio.Data;
-using System.Globalization;
-using System.Windows;
-using FreelancerModStudio.Data.IO;
 using HelixEngine.Wires;
-using System.Windows.Threading;
 using IO = System.IO;
 
 namespace FreelancerModStudio.SystemPresenter
@@ -135,7 +135,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void LookAt(ContentBase content)
         {
-            Viewport.LookAt(content.Position.ToPoint3D(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
+            Viewport.LookAt(content.GetPosition().ToPoint3D(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
         }
 
         void AddContent(ContentBase content)
@@ -376,13 +376,14 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetConnection(Connection line)
         {
-            Vector3D position = (line.From.Position + line.To.Position) / 2;
-            //line.Position = newPos - (globalConnection.Content.Position - newPos) / 2;
-            //line.Scale = new Vector3D(1, (globalConnection.Content.Position - connection.Connection.Position).Length / 2, 1);
-            Vector3D scale = new Vector3D(1, (line.From.Position - line.To.Position).Length, 1);
+            Vector3D fromPosition = line.From.GetPosition();
+            Vector3D toPosition = line.To.GetPosition();
 
-            Vector v1 = new Vector(line.From.Position.X, line.From.Position.Y);
-            Vector v2 = new Vector(line.To.Position.X, line.To.Position.Y);
+            Vector3D position = (fromPosition + toPosition) / 2;
+            Vector3D scale = new Vector3D(1, (fromPosition - toPosition).Length, 1);
+
+            Vector v1 = new Vector(fromPosition.X, fromPosition.Y);
+            Vector v2 = new Vector(toPosition.X, toPosition.Y);
 
             double a = Difference(v2.X, v1.X);
             double b = Difference(v2.Y, v1.Y);
@@ -401,7 +402,7 @@ namespace FreelancerModStudio.SystemPresenter
             double c = Math.Sqrt(a * a + b * b);
             double angle = Math.Acos(a / c) * 180 / Math.PI;
 
-            Rotation3D rotation = new AxisAngleRotation3D(new Vector3D(0, 0, factor), angle + angleOffset);
+            Vector3D rotation = new Vector3D(0, 0, (angle + angleOffset) * factor);
 
             line.SetDisplay(position, rotation, scale);
         }

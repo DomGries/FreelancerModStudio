@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
-using FreelancerModStudio.Data;
 using System.Windows.Media.Media3D;
-using System.Globalization;
+using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio.SystemPresenter
@@ -61,7 +61,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             Vector3D position = ParsePosition(positionString);
-            Rotation3D rotation;
+            Vector3D rotation;
             Vector3D scale;
 
             //set content values
@@ -119,6 +119,7 @@ namespace FreelancerModStudio.SystemPresenter
                 }
                 else
                     scale = new Vector3D(1, 1, 1);
+
                 rotation = ParseRotation(rotationString, false);
             }
 
@@ -160,29 +161,17 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(1, 1, 1);
         }
 
-        Rotation3D ParseRotation(string vector, bool localTransform)
+        Vector3D ParseRotation(string vector, bool pathRotation)
         {
             Vector3D tempRotation = ParseVector(vector);
 
-            if (localTransform)
+            if (pathRotation)
             {
-                double rotationZ = -tempRotation.Z / 180;
-                if (rotationZ == 0)
-                    rotationZ = 1;
-
-                return new AxisAngleRotation3D(new Vector3D(0, 0, GetPositive(tempRotation.Y) * rotationZ), tempRotation.Y);
-            }
-            else
-            {
-                double max = Math.Max(Math.Max(GetPositive(tempRotation.X), GetPositive(tempRotation.Y)), GetPositive(tempRotation.Z));
-                if (max != 0)
-                {
-                    tempRotation = tempRotation / max;
-                    return new AxisAngleRotation3D(new Vector3D(tempRotation.X, -tempRotation.Z, tempRotation.Y), max);
-                }
+                tempRotation.X += 90;
+                tempRotation.Z *= 2;
             }
 
-            return new AxisAngleRotation3D(new Vector3D(0, 0, 0), 0);
+            return new Vector3D(tempRotation.X, tempRotation.Z, tempRotation.Y);
         }
 
         ZoneShape ParseShape(string shape)

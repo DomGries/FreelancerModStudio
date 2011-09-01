@@ -735,6 +735,9 @@
   <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
     <value>toolStripSeparator2</value>
   </data>
+  <data name="mnu3dEditor.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="mnuExit.Size" type="System.Drawing.Size, System.Drawing">
     <value>255, 22</value>
   </data>

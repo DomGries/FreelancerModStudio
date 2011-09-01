@@ -17,6 +17,11 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return SharedMeshes.Octahedron;
         }
+
+        public override bool IsEmissive()
+        {
+            return true;
+        }
     }
 
     public class Sun : ContentBase
@@ -29,6 +34,11 @@ namespace FreelancerModStudio.SystemPresenter
         public override MeshGeometry3D GetMesh()
         {
             return SharedMeshes.Sphere;
+        }
+
+        public override bool IsEmissive()
+        {
+            return false;
         }
     }
 
@@ -43,6 +53,11 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return SharedMeshes.Sphere;
         }
+
+        public override bool IsEmissive()
+        {
+            return false;
+        }
     }
 
     public class Station : ContentBase
@@ -55,6 +70,11 @@ namespace FreelancerModStudio.SystemPresenter
         public override MeshGeometry3D GetMesh()
         {
             return SharedMeshes.Box;
+        }
+
+        public override bool IsEmissive()
+        {
+            return false;
         }
     }
 
@@ -69,6 +89,11 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return SharedMeshes.Box;
         }
+
+        public override bool IsEmissive()
+        {
+            return false;
+        }
     }
 
     public class Construct : ContentBase
@@ -81,6 +106,11 @@ namespace FreelancerModStudio.SystemPresenter
         public override MeshGeometry3D GetMesh()
         {
             return SharedMeshes.Box;
+        }
+
+        public override bool IsEmissive()
+        {
+            return false;
         }
     }
 
@@ -95,6 +125,11 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return SharedMeshes.Box;
         }
+
+        public override bool IsEmissive()
+        {
+            return false;
+        }
     }
 
     public class Ship : ContentBase
@@ -107,6 +142,11 @@ namespace FreelancerModStudio.SystemPresenter
         public override MeshGeometry3D GetMesh()
         {
             return SharedMeshes.Pyramid;
+        }
+
+        public override bool IsEmissive()
+        {
+            return false;
         }
     }
 
@@ -121,6 +161,11 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return SharedMeshes.Box;
         }
+
+        public override bool IsEmissive()
+        {
+            return false;
+        }
     }
 
     public class TradeLane : ContentBase
@@ -133,6 +178,11 @@ namespace FreelancerModStudio.SystemPresenter
         public override MeshGeometry3D GetMesh()
         {
             return SharedMeshes.BoxTradeLane;
+        }
+
+        public override bool IsEmissive()
+        {
+            return false;
         }
     }
 
@@ -147,6 +197,11 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return SharedMeshes.CylinderRing;
         }
+
+        public override bool IsEmissive()
+        {
+            return false;
+        }
     }
 
     public class JumpGate : ContentBase
@@ -160,6 +215,11 @@ namespace FreelancerModStudio.SystemPresenter
         {
             return SharedMeshes.Pyramid;
         }
+
+        public override bool IsEmissive()
+        {
+            return false;
+        }
     }
 
     public class DockingRing : ContentBase
@@ -172,6 +232,11 @@ namespace FreelancerModStudio.SystemPresenter
         public override MeshGeometry3D GetMesh()
         {
             return SharedMeshes.CylinderRing;
+        }
+
+        public override bool IsEmissive()
+        {
+            return false;
         }
     }
 
@@ -218,6 +283,11 @@ namespace FreelancerModStudio.SystemPresenter
             else
                 return SharedMeshes.Sphere;
         }
+
+        public override bool IsEmissive()
+        {
+            return true;
+        }
     }
 
     public class System : ContentBase
@@ -238,6 +308,11 @@ namespace FreelancerModStudio.SystemPresenter
         public override MeshGeometry3D GetMesh()
         {
             return SharedMeshes.Sphere;
+        }
+
+        public override bool IsEmissive()
+        {
+            return false;
         }
     }
 
@@ -282,6 +357,11 @@ namespace FreelancerModStudio.SystemPresenter
         public override MeshGeometry3D GetMesh()
         {
             return SharedMeshes.Surface;
+        }
+
+        public override bool IsEmissive()
+        {
+            return true;
         }
     }
 

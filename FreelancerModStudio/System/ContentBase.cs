@@ -62,6 +62,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         protected abstract GeometryModel3D GetGeometry();
         public abstract MeshGeometry3D GetMesh();
+        public abstract bool IsEmissive();
 
         public void LoadModel()
         {

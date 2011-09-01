@@ -41,7 +41,10 @@ namespace FreelancerModStudio.SystemPresenter
                         Viewport.Children.RemoveAt(index);
                 }
                 else if (value != null)
+                {
                     Viewport.Children.Insert(0, value);
+                    secondLayerID++;
+                }
 
                 lightning = value;
             }
@@ -103,6 +106,8 @@ namespace FreelancerModStudio.SystemPresenter
                 this.FileOpen(file);
         }
 
+        int secondLayerID = 0;
+
         public Presenter(HelixView3D viewport)
         {
             Objects = new Table<int, ContentBase>();
@@ -147,7 +152,7 @@ namespace FreelancerModStudio.SystemPresenter
             //only add it to viewpoint if its actually visible
             if (content.Visibility)
             {
-                Viewport.Add(content.Model);
+                AddModel(content);
 
                 if (content == SelectedContent)
                     Selection = GetSelectionBox(content);
@@ -171,6 +176,17 @@ namespace FreelancerModStudio.SystemPresenter
             Animator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
+        void AddModel(ContentBase content)
+        {
+            if (content.IsEmissive())
+                Viewport.Add(content.Model);
+            else
+            {
+                Viewport.Insert(secondLayerID, content.Model);
+                secondLayerID++;
+            }
+        }
+
         public void Delete(List<TableBlock> blocks)
         {
             foreach (TableBlock block in blocks)
@@ -188,7 +204,15 @@ namespace FreelancerModStudio.SystemPresenter
                 DeleteConnections(content as System);
 
             Objects.Remove(content);
+            RemoveModel(content);
+        }
+
+        void RemoveModel(ContentBase content)
+        {
             Viewport.Remove(content.Model);
+
+            if (!content.IsEmissive())
+                secondLayerID--;
         }
 
         void camera_SelectionChanged(DependencyObject visual)
@@ -287,25 +311,31 @@ namespace FreelancerModStudio.SystemPresenter
 
                 if (visibility)
                     //show model
-                    Viewport.Add(content.Model);
+                    AddModel(content);
                 else
                     //hide model
-                    Viewport.Remove(content.Model);
+                    RemoveModel(content);
             }
         }
 
         public void ClearDisplay(bool light)
         {
             if (light || Lightning == null)
+            {
                 Viewport.Children.Clear();
+                secondLayerID = 0;
+            }
             else
             {
+                //remove all but the first one which is the light
                 for (int i = Viewport.Children.Count - 1; i >= 0; i--)
                 {
                     ModelVisual3D model = (ModelVisual3D)Viewport.Children[i];
                     if (model != Lightning)
                         Viewport.Remove(model);
                 }
+
+                secondLayerID = 1;
             }
         }
 

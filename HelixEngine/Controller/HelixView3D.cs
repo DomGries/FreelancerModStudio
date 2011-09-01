@@ -290,6 +290,12 @@ namespace HelixEngine
                 Viewport.Children.Add(v);
         }
 
+        public void Insert(int index, Visual3D v)
+        {
+            if (!Viewport.Children.Contains(v))
+                Viewport.Children.Insert(index, v);
+        }
+
         public void Remove(Visual3D v)
         {
             if (Viewport.Children.Contains(v))

@@ -13,8 +13,8 @@ namespace FreelancerModStudio
     {
         public frmSolutionExplorer()
         {
-			InitializeComponent();
-			this.Icon = Properties.Resources.SolutionExplorer;
+            InitializeComponent();
+            this.Icon = Properties.Resources.SolutionExplorer;
 
             ImageList imageList = new ImageList();
             imageList.ColorDepth = ColorDepth.Depth24Bit;
@@ -32,6 +32,8 @@ namespace FreelancerModStudio
 
             treeView1.ImageList = imageList;
             //this.BuildList();
+
+            RefreshSettings();
         }
 
         public void RefreshSettings()

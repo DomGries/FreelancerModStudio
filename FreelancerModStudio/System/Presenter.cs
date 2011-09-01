@@ -382,6 +382,9 @@ namespace FreelancerModStudio.SystemPresenter
             Vector3D position = (fromPosition + toPosition) / 2;
             Vector3D scale = new Vector3D(1, (fromPosition - toPosition).Length, 1);
 
+            if (line.FromType == ConnectionType.Jumphole || line.ToType == ConnectionType.Jumphole)
+                scale.X = 0.5;
+
             Vector v1 = new Vector(fromPosition.X, fromPosition.Y);
             Vector v2 = new Vector(toPosition.X, toPosition.Y);
 

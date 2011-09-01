@@ -16,8 +16,8 @@ namespace FreelancerModStudio
         Mod mod;
         bool modChanged = false;
 
-        frmProperties propertiesForm = new frmProperties();
-        frmSolutionExplorer solutionExplorerForm = new frmSolutionExplorer();
+        frmProperties propertiesForm = null;
+        //frmSolutionExplorer solutionExplorerForm = null;
         frmSystemEditor systemEditor = null;
 
         public frmMain()
@@ -27,8 +27,8 @@ namespace FreelancerModStudio
 
             this.GetSettings();
 
-            this.propertiesForm.OptionsChanged += Properties_OptionsChanged;
-            this.propertiesForm.ContentChanged += Content_DisplayChanged;
+            //initialize content windows after language was set
+            InitContentWindows();
 
             //register event to restart app if update was downloaded and button 'Install' pressed
             Helper.Update.AutoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
@@ -65,6 +65,15 @@ namespace FreelancerModStudio
 
             if (this.dockPanel1.DocumentsCount == 0)
                 SetDocumentMenus(false);
+        }
+
+        void InitContentWindows()
+        {
+            propertiesForm = new frmProperties();
+            //solutionExplorerForm = new frmSolutionExplorer();
+
+            propertiesForm.OptionsChanged += Properties_OptionsChanged;
+            propertiesForm.ContentChanged += Content_DisplayChanged;
         }
 
         IDockContent GetContentFromPersistString(string persistString)
@@ -463,7 +472,7 @@ namespace FreelancerModStudio
                 System.IO.Directory.CreateDirectory(path);
 
             this.mod.Save(System.IO.Path.Combine(path, about.Name + Properties.Resources.ModExtension));
-            this.solutionExplorerForm.ShowProject(this.mod);
+            //this.solutionExplorerForm.ShowProject(this.mod);
 
             this.modChanged = false;
         }
@@ -640,8 +649,8 @@ namespace FreelancerModStudio
             if (propertiesForm != null)
                 propertiesForm.RefreshSettings();
 
-            if (solutionExplorerForm != null)
-                solutionExplorerForm.RefreshSettings();
+            //if (solutionExplorerForm != null)
+            //    solutionExplorerForm.RefreshSettings();
 
             IDockContent activeDocument = dockPanel1.ActiveDocument;
             if (activeDocument != null)
@@ -696,7 +705,7 @@ namespace FreelancerModStudio
 
         void mnuSolutionExplorer_Click(object sender, EventArgs e)
         {
-            solutionExplorerForm.Show(dockPanel1);
+            //solutionExplorerForm.Show(dockPanel1);
         }
 
         void mnuProperties_Click(object sender, EventArgs e)

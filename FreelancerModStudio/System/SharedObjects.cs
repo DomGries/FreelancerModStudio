@@ -45,7 +45,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 15, 0));
         public static Material System = MaterialHelper.CreateMaterial(Brushes.White);
 
-        public static Color ConnectionJumphole = Colors.OrangeRed;
+        public static Color ConnectionJumphole = Colors.BurlyWood;
         public static Color ConnectionJumpgate = Colors.Gray;
         public static Color ConnectionBoth = Colors.White;
         public static Color ConnectionNone = Colors.Black;

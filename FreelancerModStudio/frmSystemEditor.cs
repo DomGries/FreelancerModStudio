@@ -111,8 +111,7 @@ namespace FreelancerModStudio
 
                 ThreadStart threadStart = new ThreadStart(delegate
                 {
-                    int systemTemplate = Helper.Template.Data.Files.IndexOf("System");
-                    systemPresenter.DisplayUniverse(path, systemTemplate, blocks, archetype);
+                    systemPresenter.DisplayUniverse(path, Helper.Template.Data.SystemFile, blocks, archetype);
                 });
 
                 Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);

@@ -60,24 +60,31 @@ namespace FreelancerModStudio.SystemPresenter
         });
 
         public static MeshGeometry3D Box = GetMesh(new BoxMesh());
-        public static MeshGeometry3D Cylinder = GetMesh(new CylinderMesh());
-        public static MeshGeometry3D Pyramid = GetMesh(new PyramidMesh());
-        public static MeshGeometry3D Octahedron = GetMesh(new OctahedronMesh());
 
         public static MeshGeometry3D BoxTradeLane = GetMesh(new BoxMesh()
         {
             Height = 0.3,
         });
 
+        public static MeshGeometry3D Cylinder = GetMesh(new CylinderMesh()
+        {
+            Slices = 18,
+        });
+
         public static MeshGeometry3D CylinderRing = GetMesh(new CylinderMesh()
         {
             Radius = 0.5,
             Length = 0.25,
+            Slices = 12,
         });
+
+        public static MeshGeometry3D Pyramid = GetMesh(new PyramidMesh());
+
+        public static MeshGeometry3D Octahedron = GetMesh(new OctahedronMesh());
 
         public static MeshGeometry3D Surface = GetMesh(new SurfaceMesh()
         {
-            //Width = 2
+            Width = 2
         });
 
         static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)

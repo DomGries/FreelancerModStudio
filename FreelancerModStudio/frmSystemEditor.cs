@@ -210,72 +210,66 @@ namespace FreelancerModStudio
 
         public bool CanCopy()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool CanCut()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool CanPaste()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool CanAdd()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool CanAddMultiple()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool CanDelete()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool CanSelectAll()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public ToolStripDropDown MultipleAddDropDown()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public void Add(int index)
         {
-            throw new NotImplementedException();
         }
 
         public void Copy()
         {
-            throw new NotImplementedException();
         }
 
         public void Cut()
         {
-            throw new NotImplementedException();
         }
 
         public void Paste()
         {
-            throw new NotImplementedException();
         }
 
         public void Delete()
         {
-            throw new NotImplementedException();
         }
 
         public void SelectAll()
         {
-            throw new NotImplementedException();
         }
 
         #endregion

@@ -380,9 +380,9 @@ namespace FreelancerModStudio.SystemPresenter
             Vector3D toPosition = line.To.GetPosition();
 
             Vector3D position = (fromPosition + toPosition) / 2;
-            Vector3D scale = new Vector3D(1, (fromPosition - toPosition).Length, 1);
+            Vector3D scale = new Vector3D(0.25, (fromPosition - toPosition).Length, 1);
 
-            if (line.FromType == ConnectionType.Jumphole || line.ToType == ConnectionType.Jumphole)
+            if (line.FromType == ConnectionType.Both || line.ToType == ConnectionType.Both)
                 scale.X = 0.5;
 
             Vector v1 = new Vector(fromPosition.X, fromPosition.Y);

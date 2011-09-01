@@ -74,14 +74,25 @@ namespace FreelancerModStudio
 
             propertiesForm.OptionsChanged += Properties_OptionsChanged;
             propertiesForm.ContentChanged += Content_DisplayChanged;
+
+            InitSystemEditor();
+        }
+
+        void InitSystemEditor()
+        {
+            systemEditor = new frmSystemEditor();
+            systemEditor.SelectionChanged += systemEditor_SelectionChanged;
+            systemEditor.FileOpen += systemEditor_FileOpen;
         }
 
         IDockContent GetContentFromPersistString(string persistString)
         {
             if (persistString == typeof(frmProperties).ToString())
                 return propertiesForm;
-            else if (persistString == typeof(frmSolutionExplorer).ToString())
-                return propertiesForm;
+            //else if (persistString == typeof(frmSolutionExplorer).ToString())
+            //    return solutionExplorerForm;
+            else if (persistString == typeof(frmSystemEditor).ToString())
+                return systemEditor;
             else
             {
                 string[] parsedStrings = persistString.Split(new char[] { ',' });
@@ -588,7 +599,7 @@ namespace FreelancerModStudio
         {
             if (systemEditor != null)
             {
-                if (editor.IsUniverse)
+                if (editor.ViewerType == ViewerType.Universe)
                     systemEditor.ShowData(editor.Data, editor.File, editor.Archetype);
                 else
                     systemEditor.ShowData(editor.Data, editor.File, null);
@@ -710,7 +721,7 @@ namespace FreelancerModStudio
 
         void mnuProperties_Click(object sender, EventArgs e)
         {
-            propertiesForm.Show(dockPanel1, DockState.DockLeft);
+            propertiesForm.Show(dockPanel1, DockState.DockRight);
         }
 
         void mnuNewFile_Click(object sender, EventArgs e)
@@ -844,6 +855,13 @@ namespace FreelancerModStudio
 
         }
 
+        void CloseSystemEditor()
+        {
+            //dispose system editor
+            systemEditor.Dispose();
+            systemEditor = null;
+        }
+
         void dockPanel1_ContentAdded(object sender, DockContentEventArgs e)
         {
             if (e.Content is frmTableEditor)
@@ -853,11 +871,7 @@ namespace FreelancerModStudio
         void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
         {
             if (e.Content is frmSystemEditor)
-            {
-                //dispose system editor
-                systemEditor.Dispose();
-                systemEditor = null;
-            }
+                CloseSystemEditor();
             else if (e.Content is frmTableEditor)
             {
                 foreach (IDockContent document in dockPanel1.Documents)
@@ -894,10 +908,14 @@ namespace FreelancerModStudio
                 this.mnuSaveAs.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSaveAs, document.GetTitle());
             }
 
+            if (!document.CanDisplay3DViewer() && systemEditor != null)
+                CloseSystemEditor();
+
             this.mnuUndo.Enabled = document.CanUndo();
             this.mnuRedo.Enabled = document.CanRedo();
             this.mnuChangeVisibility.Visible = document.CanChangeVisibility();
             this.mnuFocusSelected.Visible = document.CanChangeVisibility();
+            this.mnu3dEditor.Enabled = document.CanDisplay3DViewer();
         }
 
         void Content_DisplayChanged(ContentInterface content)
@@ -942,15 +960,9 @@ namespace FreelancerModStudio
         void mnu3dEditor_Click(object sender, EventArgs e)
         {
             if (systemEditor == null)
-            {
-                systemEditor = new frmSystemEditor();
-                systemEditor.SelectionChanged += systemEditor_SelectionChanged;
-                systemEditor.FileOpen += systemEditor_FileOpen;
+                InitSystemEditor();
 
-                systemEditor.Show(dockPanel1);
-            }
-            else
-                systemEditor.Show();
+            systemEditor.Show(dockPanel1);
 
             if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
                 ShowSystemEditor((frmTableEditor)dockPanel1.ActiveDocument);

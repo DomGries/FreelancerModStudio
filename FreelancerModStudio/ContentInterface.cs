@@ -32,6 +32,7 @@ namespace FreelancerModStudio
         bool CanUndo();
         bool CanRedo();
         bool CanChangeVisibility();
+        bool CanDisplay3DViewer();
 
         string GetTitle();
 

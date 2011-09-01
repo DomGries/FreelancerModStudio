@@ -21,7 +21,7 @@ namespace FreelancerModStudio
         bool modified = false;
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
 
-        public bool IsUniverse { get; set; }
+        public ViewerType ViewerType { get; set; }
         public ArchetypeManager Archetype { get; set; }
 
         public delegate void DataChangedType(ChangedData data);
@@ -242,16 +242,21 @@ namespace FreelancerModStudio
 
         public void ShowData()
         {
-            bool isSystem = Data.TemplateIndex == Helper.Template.Data.SystemFile;
-            IsUniverse = Data.TemplateIndex == Helper.Template.Data.UniverseFile;
-            if (isSystem || IsUniverse)
+            if (Data.TemplateIndex == Helper.Template.Data.SystemFile)
+                ViewerType = ViewerType.System;
+            else if (Data.TemplateIndex == Helper.Template.Data.UniverseFile)
+                ViewerType = ViewerType.Universe;
+            else
+                ViewerType = ViewerType.None;
+
+            if (ViewerType != ViewerType.None)
                 LoadArchetypes();
 
 #if DEBUG
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
             st.Start();
 #endif
-            AddColumns(isSystem);
+            AddColumns();
 
             objectListView1.SetObjects(Data.Blocks);
 
@@ -270,12 +275,12 @@ namespace FreelancerModStudio
 #endif
         }
 
-        void AddColumns(bool isSystem)
+        void AddColumns()
         {
             //clear all items and columns
             objectListView1.Clear();
 
-            objectListView1.CheckBoxes = isSystem;
+            objectListView1.CheckBoxes = ViewerType == ViewerType.System;
 
             OLVColumn[] cols =
             {
@@ -289,7 +294,7 @@ namespace FreelancerModStudio
             cols[2].MinimumWidth = 120;
             cols[2].FillsFreeSpace = true;
 
-            if (isSystem)
+            if (ViewerType == ViewerType.System)
             {
                 //legend icons in system editor
                 cols[0].AspectGetter = delegate(object x)
@@ -884,6 +889,11 @@ namespace FreelancerModStudio
             undoManager.Redo(1);
         }
 
+        public bool CanDisplay3DViewer()
+        {
+            return ViewerType != ViewerType.None;
+        }
+
         void ExecuteDataChanged(ChangedData data, int undoBlock, bool undo)
         {
             if (data.Type == ChangedType.Add)
@@ -997,5 +1007,12 @@ namespace FreelancerModStudio
             if (oldBlocks.Count > 0)
                 undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Move });
         }
+    }
+
+    public enum ViewerType
+    {
+        System,
+        Universe,
+        None
     }
 }

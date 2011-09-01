@@ -417,7 +417,7 @@ namespace FreelancerModStudio
         {
             int documentIndex = FileOpened(file);
             if (documentIndex != -1)
-                dockPanel1.ActiveDocumentPane.ActiveContent = dockPanel1.DocumentsToArray()[documentIndex];
+                dockPanel1.DocumentsToArray()[documentIndex].DockHandler.Show();
             else
             {
                 DisplayFile(file, templateIndex);
@@ -586,13 +586,22 @@ namespace FreelancerModStudio
             if (activeDocument != null && activeDocument is frmTableEditor)
             {
                 frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-                ShowSystemEditor(defaultEditor);
+
+                if (!defaultEditor.CanDisplay3DViewer() && systemEditor != null)
+                    CloseSystemEditor();
+                else
+                    ShowSystemEditor(defaultEditor);
 
                 DefaultEditor_SelectionChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
                 Document_DisplayChanged((DocumentInterface)activeDocument);
             }
             else
+            {
                 DefaultEditor_SelectionChanged(null, 0);
+
+                if (systemEditor != null)
+                    CloseSystemEditor();
+            }
         }
 
         private void ShowSystemEditor(frmTableEditor editor)
@@ -682,6 +691,13 @@ namespace FreelancerModStudio
             mnuSaveAll.Enabled = value;
             mnuClose.Enabled = value;
             mnuCloseAllDocuments.Enabled = value;
+
+            if (!value)
+            {
+                mnuChangeVisibility.Visible = value;
+                mnuFocusSelected.Visible = value;
+                mnu3dEditor.Enabled = value;
+            }
         }
 
         int FileOpened(string file)
@@ -908,11 +924,9 @@ namespace FreelancerModStudio
                 this.mnuSaveAs.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSaveAs, document.GetTitle());
             }
 
-            if (!document.CanDisplay3DViewer() && systemEditor != null)
-                CloseSystemEditor();
-
             this.mnuUndo.Enabled = document.CanUndo();
             this.mnuRedo.Enabled = document.CanRedo();
+
             this.mnuChangeVisibility.Visible = document.CanChangeVisibility();
             this.mnuFocusSelected.Visible = document.CanChangeVisibility();
             this.mnu3dEditor.Enabled = document.CanDisplay3DViewer();
@@ -993,7 +1007,7 @@ namespace FreelancerModStudio
         void systemEditor_SelectionChanged(int id)
         {
             if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
-                ((frmTableEditor)dockPanel1.ActiveDocument).Select(id);
+                ((frmTableEditor)dockPanel1.ActiveDocument).SelectByUID(id);
         }
     }
 }

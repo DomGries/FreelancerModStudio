@@ -923,6 +923,18 @@ namespace FreelancerModStudio
             EnsureSelectionVisible();
         }
 
+        public void SelectByUID(int id)
+        {
+            foreach (TableBlock block in Data.Blocks)
+            {
+                if (block.UniqueID == id)
+                {
+                    Select(block.ID);
+                    return;
+                }
+            }
+        }
+
         //overwrite to add extra information to layout.xml
         protected override string GetPersistString()
         {

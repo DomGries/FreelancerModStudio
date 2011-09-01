@@ -145,10 +145,10 @@ namespace FreelancerModStudio
             };
 
             //refresh column text
-            if (objectListView1.Columns.Count > 0)
+            if (objectListView1.Columns.Count > 2)
             {
                 objectListView1.Columns[0].Text = Properties.Strings.FileEditorColumnName;
-                objectListView1.Columns[1].Text = Properties.Strings.FileEditorColumnType;
+                objectListView1.Columns[2].Text = Properties.Strings.FileEditorColumnType;
             }
 
             //update 'New file' to new language

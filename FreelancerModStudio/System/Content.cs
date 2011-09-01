@@ -15,7 +15,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.SphereLightSource;
+            return SharedMeshes.Octahedron;
         }
     }
 
@@ -281,7 +281,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Surface2Sided;
+            return SharedMeshes.Surface;
         }
     }
 

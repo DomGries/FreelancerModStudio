@@ -276,7 +276,7 @@ namespace FreelancerModStudio.SystemPresenter
             points.Add(new Point3D(-bounds.X, bounds.Y, -bounds.Z));
             points.Add(new Point3D(-bounds.X, -bounds.Y, -bounds.Z));
 
-            return new WireLines() { Lines = points, Color = Colors.Yellow, Thickness = 2 };
+            return new WireLines() { Lines = points, Color = Colors.Yellow };
         }
 
         public void SetVisibility(ContentBase content, bool visibility)

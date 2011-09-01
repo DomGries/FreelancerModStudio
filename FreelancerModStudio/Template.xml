@@ -546,7 +546,7 @@
             <Option>start_room</Option>
           </Options>
         </Block>
-        <Block name="Room">
+        <Block name="Room" multiple="true" identifier="nickname">
           <Options>
             <Option>nickname</Option>
             <Option>file</Option>

@@ -69,14 +69,10 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 Zone zone = (Zone)content;
 
-                ZoneShape shape = ParseShape(shapeString);
-                scale = ParseScale(scaleString, shape);
-                rotation = ParseRotation(rotationString, shape == ZoneShape.Cylinder);
-
                 ZoneShape oldShape = zone.Shape;
                 ZoneType oldType = zone.Type;
 
-                zone.Shape = shape;
+                zone.Shape = ParseShape(shapeString);
 
                 if (usageString == "trade" || usageString == "patrol")
                     zone.Type = ZoneType.Path;
@@ -86,6 +82,9 @@ namespace FreelancerModStudio.SystemPresenter
                     zone.Type = ZoneType.Exclusion;
                 else
                     zone.Type = ZoneType.Zone;
+
+                rotation = ParseRotation(rotationString, zone.Type == ZoneType.Path);
+                scale = ParseScale(scaleString, zone.Shape);
 
                 if (zone.Shape != oldShape || zone.Type != oldType)
                     ModelChanged = true;
@@ -111,6 +110,7 @@ namespace FreelancerModStudio.SystemPresenter
                     scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) / 1000;
                     if (block.ObjectType != ContentType.Planet && block.ObjectType != ContentType.Sun)
                     {
+                        //clamp scale of objects which size is actually not being defined by archetype radius
                         if (scale.X < 0.1)
                             scale = new Vector3D(0.1, 0.1, 0.1);
                         else if (scale.X > 1)

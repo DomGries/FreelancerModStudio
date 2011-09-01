@@ -179,7 +179,7 @@ namespace FreelancerModStudio
 
         public void LoadArchetypes()
         {
-            int archetypeTemplate = Helper.Template.Data.Files.IndexOf("Solar Archetype");
+            int archetypeTemplate = Helper.Template.Data.SolarArchetypeFile;
             string archetypeFile = ArchetypeManager.GetRelativeArchetype(File, Data.TemplateIndex, archetypeTemplate);
 
             //user interaction required to get the path of the archetype file
@@ -242,8 +242,8 @@ namespace FreelancerModStudio
 
         public void ShowData()
         {
-            bool isSystem = Data.TemplateIndex == Helper.Template.Data.Files.IndexOf("System");
-            IsUniverse = Data.TemplateIndex == Helper.Template.Data.Files.IndexOf("Universe");
+            bool isSystem = Data.TemplateIndex == Helper.Template.Data.SystemFile;
+            IsUniverse = Data.TemplateIndex == Helper.Template.Data.UniverseFile;
             if (isSystem || IsUniverse)
                 LoadArchetypes();
 

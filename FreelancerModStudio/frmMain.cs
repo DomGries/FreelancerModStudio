@@ -967,7 +967,7 @@ namespace FreelancerModStudio
                 {
                     file = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(editor.File), path);
                     if (System.IO.File.Exists(file))
-                        OpenFile(file, Helper.Template.Data.Files.IndexOf("System"));
+                        OpenFile(file, Helper.Template.Data.SystemFile);
                     else
                         throw new FileNotFoundException();
                 }

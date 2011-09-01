@@ -106,6 +106,7 @@ namespace FreelancerModStudio
                 try
                 {
                     data.Load(File);
+                    Data.SetSpecialFiles();
                 }
                 catch (Exception ex)
                 {
@@ -116,6 +117,10 @@ namespace FreelancerModStudio
 
             public struct Data
             {
+                public static int SystemFile { get; set; }
+                public static int UniverseFile { get; set; }
+                public static int SolarArchetypeFile { get; set; }
+
                 public static FreelancerModStudio.Data.Template.Files Files
                 {
                     get { return data.Data.Files; }
@@ -127,6 +132,30 @@ namespace FreelancerModStudio
                 //    get { return data.Data.CostumTypes; }
                 //    set { data.Data.CostumTypes = value; }
                 //}
+
+                public static void SetSpecialFiles()
+                {
+                    int count = 3;
+
+                    for (int i = 0; i < Files.Count && count > 0; i++)
+                    {
+                        switch (Files[i].Name.ToLower())
+                        {
+                            case "system":
+                                SystemFile = i;
+                                count--;
+                                break;
+                            case "universe":
+                                UniverseFile = i;
+                                count--;
+                                break;
+                            case "solar archetype":
+                                SolarArchetypeFile = i;
+                                count--;
+                                break;
+                        }
+                    }
+                }
             }
         }
 

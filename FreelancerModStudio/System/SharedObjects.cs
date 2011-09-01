@@ -59,7 +59,10 @@ namespace FreelancerModStudio.SystemPresenter
             Stacks = 9
         });
 
-        public static MeshGeometry3D SphereLightSource = GetMesh(new OctahedronMesh{});
+        public static MeshGeometry3D Box = GetMesh(new BoxMesh());
+        public static MeshGeometry3D Cylinder = GetMesh(new CylinderMesh());
+        public static MeshGeometry3D Pyramid = GetMesh(new PyramidMesh());
+        public static MeshGeometry3D Octahedron = GetMesh(new OctahedronMesh());
 
         public static MeshGeometry3D BoxTradeLane = GetMesh(new BoxMesh()
         {
@@ -72,23 +75,9 @@ namespace FreelancerModStudio.SystemPresenter
             Length = 0.25,
         });
 
-        public static MeshGeometry3D Cylinder = GetMesh(new BoxMesh()
+        public static MeshGeometry3D Surface = GetMesh(new SurfaceMesh()
         {
-            Depth = 2,
-            Width = 2
-        });
-
-        public static MeshGeometry3D Pyramid = GetMesh(new PyramidMesh());
-        public static MeshGeometry3D Box = GetMesh(new BoxMesh());
-        public static MeshGeometry3D Surface2Sided = GetMesh(new SurfaceMesh());
-        public static MeshGeometry3D Path = GetMesh(new SurfaceMesh()
-        {
-            Width = 2
-        });
-
-        public static MeshGeometry3D Ring = GetMesh(new CylinderMesh()
-        {
-            Length = 2,
+            //Width = 2
         });
 
         static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
@@ -102,7 +91,7 @@ namespace FreelancerModStudio.SystemPresenter
     public static class SharedGeometries
     {
         public static GeometryModel3D LightSource =
-            GetGeometry(SharedMeshes.SphereLightSource, SharedMaterials.LightSource);
+            GetGeometry(SharedMeshes.Octahedron, SharedMaterials.LightSource);
 
         public static GeometryModel3D Sun =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.Sun);
@@ -150,10 +139,10 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Cylinder, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneRing =
-            GetGeometry(SharedMeshes.Ring, SharedMaterials.Zone);
+            GetGeometry(SharedMeshes.Cylinder, SharedMaterials.Zone);
 
         public static GeometryModel3D ZonePath =
-            GetGeometry(SharedMeshes.Path, SharedMaterials.Zone);
+            GetGeometry(SharedMeshes.Surface, SharedMaterials.Zone);
 
         public static GeometryModel3D ZoneVignette =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.ZoneVignette);
@@ -168,7 +157,7 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Cylinder, SharedMaterials.ZoneExclusion);
 
         public static GeometryModel3D ZoneExclusionRing =
-            GetGeometry(SharedMeshes.Ring, SharedMaterials.ZoneExclusion);
+            GetGeometry(SharedMeshes.Cylinder, SharedMaterials.ZoneExclusion);
 
         public static GeometryModel3D System =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.System);

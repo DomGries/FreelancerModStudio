@@ -410,10 +410,10 @@ namespace FreelancerModStudio.SystemPresenter
             Vector3D toPosition = line.To.GetPosition();
 
             Vector3D position = (fromPosition + toPosition) / 2;
-            Vector3D scale = new Vector3D(0.25, (fromPosition - toPosition).Length, 1);
+            Vector3D scale = new Vector3D(0.4, (fromPosition - toPosition).Length, 1);
 
             if (line.FromType == ConnectionType.Both || line.ToType == ConnectionType.Both)
-                scale.X = 0.5;
+                scale.X = 0.7;
 
             Vector v1 = new Vector(fromPosition.X, fromPosition.Y);
             Vector v2 = new Vector(toPosition.X, toPosition.Y);

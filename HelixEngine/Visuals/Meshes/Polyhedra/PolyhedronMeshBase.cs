@@ -68,7 +68,7 @@ namespace HelixEngine.Meshes
                     for (int i = 0; i < 3; i++)
                     {
                         vertices.Add(faces[face, i]);
-                        normals.Add(normal);
+                        normals.Add(normal * -1);
                         indices.Add(indexBase + i);
 
                         if (texturesBase != null && texturesBase.Count > 0)

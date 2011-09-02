@@ -44,6 +44,7 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"
 
 [Tasks]
+Name: "assocfileextension"; Description: "{cm:AssocFileExtension,{#MyAppSetupName},.ini}"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
@@ -66,11 +67,17 @@ Name: "{userappdata}\Freelancer Mod Studio"; Type: dirifempty
 [Icons]
 Name: "{group}\Freelancer Mod Studio"; Filename: "{app}\FreelancerModStudio"
 Name: "{group}\{cm:UninstallProgram,Freelancer Mod Studio}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\Freelancer Mod Studio"; Filename: "{app}\FreelancerModStudio.exe"; Tasks: desktopicon
+Name: "{commondesktop}\{#MyAppSetupName}"; Filename: "{app}\FreelancerModStudio.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\FreelancerModStudio"; Filename: "{app}\FreelancerModStudio.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{app}\FreelancerModStudio.exe"; Description: "{cm:LaunchProgram,FreelancerModStudio}"; Flags: nowait postinstall skipifsilent
+
+[Registry]
+Root: HKCR; Subkey: ".ini"; ValueType: string; ValueName: ""; ValueData: "FreelancerModStudio"; Flags: uninsdeletevalue; Tasks: assocfileextension
+Root: HKCR; Subkey: "FreelancerModStudio"; ValueType: string; ValueName: ""; ValueData: "{#MyAppSetupName}"; Flags: uninsdeletekey; Tasks: assocfileextension
+Root: HKCR; Subkey: "FreelancerModStudio\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\FreelancerModStudio.exe,0"; Tasks: assocfileextension
+Root: HKCR; Subkey: "FreelancerModStudio\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\FreelancerModStudio.exe"" ""%1"""; Tasks: assocfileextension
 
 [Code]
 function InitializeSetup(): boolean;

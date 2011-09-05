@@ -47,7 +47,6 @@ namespace FreelancerModStudio.Data
 
         public void CreateContentTable(List<TableBlock> blocks)
         {
-            CultureInfo usCulture = new CultureInfo("en-US", false);
             contentTable = new SortedList<string, ArchetypeInfo>(StringComparer.OrdinalIgnoreCase);
 
             foreach (TableBlock block in blocks)
@@ -68,10 +67,10 @@ namespace FreelancerModStudio.Data
                                     name = option.Values[0].Value.ToString();
                                     break;
                                 case "solar_radius":
-                                    radius = ParseRadius(option.Values[0].Value.ToString());
+                                    radius = Parser.ParseDouble(option.Values[0].Value.ToString(), 1);
                                     break;
                                 case "type":
-                                    type = ParseType(option.Values[0].Value.ToString());
+                                    type = Parser.ParseContentType(option.Values[0].Value.ToString());
                                     break;
                             }
                         }
@@ -81,49 +80,6 @@ namespace FreelancerModStudio.Data
                         contentTable[name] = new ArchetypeInfo() { Type = type, Radius = radius };
                 }
             }
-        }
-
-        double ParseRadius(string radius)
-        {
-            double value;
-            if (double.TryParse(radius, NumberStyles.Any, new CultureInfo("en-US", false), out value))
-                return value;
-
-            return 1;
-        }
-
-        ContentType ParseType(string type)
-        {
-            type = type.ToLower();
-
-            if (type == "jump_hole")
-                return ContentType.JumpHole;
-            else if (type == "jump_gate")
-                return ContentType.JumpGate;
-            else if (type == "sun")
-                return ContentType.Sun;
-            else if (type == "planet")
-                return ContentType.Planet;
-            else if (type == "station")
-                return ContentType.Station;
-            else if (type == "destroyable_depot")
-                return ContentType.Depot;
-            else if (type == "satellite")
-                return ContentType.Satellite;
-            else if (type == "mission_satellite")
-                return ContentType.Ship;
-            else if (type == "weapons_platform")
-                return ContentType.WeaponsPlatform;
-            else if (type == "docking_ring")
-                return ContentType.DockingRing;
-            else if (type == "tradelane_ring")
-                return ContentType.TradeLane;
-            else if (type == "non_targetable")
-                return ContentType.Construct;
-            else if (type == "airlock_gate")
-                return ContentType.JumpGate;
-
-            return ContentType.None;
         }
 
         public ArchetypeManager(string file, int templateIndex)

@@ -475,7 +475,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetValues(ContentBase content, TableBlock block)
         {
-            Parser parser = new Parser();
+            SystemParser parser = new SystemParser();
             parser.SetValues(content, block);
             content.Title = block.Name;
 
@@ -505,7 +505,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         ContentBase GetContent(TableBlock block)
         {
-            ContentBase content = GetContentFromType(block.ObjectType);
+            ContentBase content = Parser.ParseContentBase(block.ObjectType);
             if (content == null)
                 return null;
 
@@ -514,42 +514,6 @@ namespace FreelancerModStudio.SystemPresenter
 
             content.ID = block.UniqueID;
             return content;
-        }
-
-        ContentBase GetContentFromType(ContentType type)
-        {
-            if (type == ContentType.LightSource)
-                return new LightSource();
-            else if (type == ContentType.Sun)
-                return new Sun();
-            else if (type == ContentType.Planet)
-                return new Planet();
-            else if (type == ContentType.Station)
-                return new Station();
-            else if (type == ContentType.Satellite)
-                return new Satellite();
-            else if (type == ContentType.Construct)
-                return new Construct();
-            else if (type == ContentType.Depot)
-                return new Depot();
-            else if (type == ContentType.Ship)
-                return new Ship();
-            else if (type == ContentType.WeaponsPlatform)
-                return new WeaponsPlatform();
-            else if (type == ContentType.DockingRing)
-                return new DockingRing();
-            else if (type == ContentType.JumpHole)
-                return new JumpHole();
-            else if (type == ContentType.JumpGate)
-                return new JumpGate();
-            else if (type == ContentType.TradeLane)
-                return new TradeLane();
-            else if (type == ContentType.Zone)
-                return new Zone();
-            else if (type == ContentType.System)
-                return new System();
-
-            return null;
         }
     }
 }

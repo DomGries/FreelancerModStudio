@@ -9,7 +9,7 @@ using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public class Parser
+    public class SystemParser
     {
         public bool ModelChanged { get; set; }
 
@@ -24,7 +24,7 @@ namespace FreelancerModStudio.SystemPresenter
             string flagsString = "";
             string fileString = "";
 
-            //get transformation of content
+            //get properties of content
             foreach (EditorINIOption option in block.Block.Options)
             {
                 if (option.Values.Count > 0)
@@ -60,7 +60,7 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
-            Vector3D position = ParsePosition(positionString);
+            Vector3D position = Parser.ParsePosition(positionString);
             Vector3D rotation;
             Vector3D scale;
 
@@ -72,7 +72,7 @@ namespace FreelancerModStudio.SystemPresenter
                 ZoneShape oldShape = zone.Shape;
                 ZoneType oldType = zone.Type;
 
-                zone.Shape = ParseShape(shapeString);
+                zone.Shape = Parser.ParseShape(shapeString);
 
                 if (usageString == "trade" || usageString == "patrol")
                     zone.Type = ZoneType.Path;
@@ -83,8 +83,8 @@ namespace FreelancerModStudio.SystemPresenter
                 else
                     zone.Type = ZoneType.Zone;
 
-                rotation = ParseRotation(rotationString, zone.Type == ZoneType.Path);
-                scale = ParseScale(scaleString, zone.Shape);
+                rotation = Parser.ParseRotation(rotationString, zone.Type == ZoneType.Path);
+                scale = Parser.ParseScale(scaleString, zone.Shape);
 
                 if (zone.Shape != oldShape || zone.Type != oldType)
                     ModelChanged = true;
@@ -92,13 +92,13 @@ namespace FreelancerModStudio.SystemPresenter
             else if (block.ObjectType == ContentType.LightSource)
             {
                 scale = new Vector3D(1, 1, 1);
-                rotation = ParseRotation(rotationString, false);
+                rotation = Parser.ParseRotation(rotationString, false);
             }
             else if (block.ObjectType == ContentType.System)
             {
-                position = ParseUniverseVector(positionString);
+                position = Parser.ParseUniverseVector(positionString);
                 scale = new Vector3D(2, 2, 2);
-                rotation = ParseRotation(rotationString, false);
+                rotation = Parser.ParseRotation(rotationString, false);
 
                 System system = (System)content;
                 system.Path = fileString;
@@ -120,22 +120,25 @@ namespace FreelancerModStudio.SystemPresenter
                 else
                     scale = new Vector3D(1, 1, 1);
 
-                rotation = ParseRotation(rotationString, false);
+                rotation = Parser.ParseRotation(rotationString, false);
             }
 
             content.SetDisplay(position, rotation, scale);
         }
+    }
 
-        double ParseDouble(string text, double defaultValue)
+    public static class Parser
+    {
+        public static double ParseDouble(string text, double defaultValue)
         {
             double value;
-            if (double.TryParse(text, NumberStyles.Any, new CultureInfo("en-US", false), out value))
+            if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                 return value;
 
             return defaultValue;
         }
 
-        Vector3D ParseScale(string scale, ZoneShape shape)
+        public static Vector3D ParseScale(string scale, ZoneShape shape)
         {
             string[] values = scale.Split(new char[] { ',' });
 
@@ -161,7 +164,7 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(1, 1, 1);
         }
 
-        Vector3D ParseRotation(string vector, bool pathRotation)
+        public static Vector3D ParseRotation(string vector, bool pathRotation)
         {
             Vector3D tempRotation = ParseVector(vector);
 
@@ -174,7 +177,7 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(tempRotation.X, tempRotation.Z, tempRotation.Y);
         }
 
-        ZoneShape ParseShape(string shape)
+        public static ZoneShape ParseShape(string shape)
         {
             shape = shape.ToLower();
             if (shape == "box")
@@ -189,7 +192,7 @@ namespace FreelancerModStudio.SystemPresenter
                 return ZoneShape.Ellipsoid;
         }
 
-        Vector3D ParseUniverseVector(string vector)
+        public static Vector3D ParseUniverseVector(string vector)
         {
             //Use Point.Parse after implementation of type handling
             string[] values = vector.Split(new char[] { ',' });
@@ -202,7 +205,7 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(0, 0, 0);
         }
 
-        Vector3D ParseVector(string vector)
+        public static Vector3D ParseVector(string vector)
         {
             //Use Vector3D.Parse after implementation of type handling
             string[] values = vector.Split(new char[] { ',' });
@@ -216,7 +219,7 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(0, 0, 0);
         }
 
-        Vector3D ParsePosition(string vector)
+        public static Vector3D ParsePosition(string vector)
         {
             Vector3D tempVector = ParseVector(vector);
             return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y) / 1000;
@@ -234,6 +237,76 @@ namespace FreelancerModStudio.SystemPresenter
             if (number < 0)
                 return number * -1;
             return number;
+        }
+
+        public static ContentBase ParseContentBase(ContentType type)
+        {
+            if (type == ContentType.LightSource)
+                return new LightSource();
+            else if (type == ContentType.Sun)
+                return new Sun();
+            else if (type == ContentType.Planet)
+                return new Planet();
+            else if (type == ContentType.Station)
+                return new Station();
+            else if (type == ContentType.Satellite)
+                return new Satellite();
+            else if (type == ContentType.Construct)
+                return new Construct();
+            else if (type == ContentType.Depot)
+                return new Depot();
+            else if (type == ContentType.Ship)
+                return new Ship();
+            else if (type == ContentType.WeaponsPlatform)
+                return new WeaponsPlatform();
+            else if (type == ContentType.DockingRing)
+                return new DockingRing();
+            else if (type == ContentType.JumpHole)
+                return new JumpHole();
+            else if (type == ContentType.JumpGate)
+                return new JumpGate();
+            else if (type == ContentType.TradeLane)
+                return new TradeLane();
+            else if (type == ContentType.Zone)
+                return new Zone();
+            else if (type == ContentType.System)
+                return new System();
+
+            return null;
+        }
+
+        public static ContentType ParseContentType(string type)
+        {
+            type = type.ToLower();
+
+            if (type == "jump_hole")
+                return ContentType.JumpHole;
+            else if (type == "jump_gate")
+                return ContentType.JumpGate;
+            else if (type == "sun")
+                return ContentType.Sun;
+            else if (type == "planet")
+                return ContentType.Planet;
+            else if (type == "station")
+                return ContentType.Station;
+            else if (type == "destroyable_depot")
+                return ContentType.Depot;
+            else if (type == "satellite")
+                return ContentType.Satellite;
+            else if (type == "mission_satellite")
+                return ContentType.Ship;
+            else if (type == "weapons_platform")
+                return ContentType.WeaponsPlatform;
+            else if (type == "docking_ring")
+                return ContentType.DockingRing;
+            else if (type == "tradelane_ring")
+                return ContentType.TradeLane;
+            else if (type == "non_targetable")
+                return ContentType.Construct;
+            else if (type == "airlock_gate")
+                return ContentType.JumpGate;
+
+            return ContentType.None;
         }
     }
 }

@@ -40,6 +40,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material JumpHoleAndGate = MaterialHelper.CreateMaterial(Brushes.DarkGreen);
         public static Material DockingRing = MaterialHelper.CreateMaterial(Brushes.Firebrick);
         public static Material Zone = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 30, 30));
+        public static Material ZonePathTrade = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(10, 15, 30));
         public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 30, 15));
         public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 15, 0));
         public static Material System = MaterialHelper.CreateMaterial(Brushes.White);
@@ -147,8 +148,11 @@ namespace FreelancerModStudio.SystemPresenter
         public static GeometryModel3D ZoneRing =
             GetGeometry(SharedMeshes.Cylinder, SharedMaterials.Zone);
 
-        public static GeometryModel3D ZonePath =
+        public static GeometryModel3D ZonePathPatrol =
             GetGeometry(SharedMeshes.Surface, SharedMaterials.Zone);
+
+        public static GeometryModel3D ZonePathTrade =
+            GetGeometry(SharedMeshes.Surface, SharedMaterials.ZonePathTrade);
 
         public static GeometryModel3D ZoneVignette =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.ZoneVignette);

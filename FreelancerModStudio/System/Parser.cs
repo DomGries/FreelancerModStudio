@@ -74,8 +74,10 @@ namespace FreelancerModStudio.SystemPresenter
 
                 zone.Shape = Parser.ParseShape(shapeString);
 
-                if (usageString == "trade" || usageString == "patrol")
-                    zone.Type = ZoneType.Path;
+                if (usageString == "trade")
+                    zone.Type = ZoneType.PathTrade;
+                else if (usageString == "patrol")
+                    zone.Type = ZoneType.PathPatrol;
                 else if (vignetteString == "open" || vignetteString == "field" || vignetteString == "exclusion")
                     zone.Type = ZoneType.Vignette;
                 else if (flagsString == "131072")
@@ -83,7 +85,7 @@ namespace FreelancerModStudio.SystemPresenter
                 else
                     zone.Type = ZoneType.Zone;
 
-                rotation = Parser.ParseRotation(rotationString, zone.Type == ZoneType.Path);
+                rotation = Parser.ParseRotation(rotationString, zone.Type == ZoneType.PathPatrol || zone.Type == ZoneType.PathTrade);
                 scale = Parser.ParseScale(scaleString, zone.Shape);
 
                 if (zone.Shape != oldShape || zone.Type != oldType)

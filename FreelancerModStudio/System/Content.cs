@@ -108,8 +108,10 @@ namespace FreelancerModStudio.SystemPresenter
         protected override GeometryModel3D GetGeometry()
         {
             //special zones
-            if (Type == ZoneType.Path)
-                return SharedGeometries.ZonePath;
+            if (Type == ZoneType.PathPatrol)
+                return SharedGeometries.ZonePathPatrol;
+            else if (Type == ZoneType.PathTrade)
+                return SharedGeometries.ZonePathTrade;
             else if (Type == ZoneType.Vignette)
                 return SharedGeometries.ZoneVignette;
             else if (Type == ZoneType.Exclusion)
@@ -237,7 +239,8 @@ namespace FreelancerModStudio.SystemPresenter
     public enum ZoneType
     {
         Zone,
-        Path,
+        PathTrade,
+        PathPatrol,
         Vignette,
         Exclusion
     }

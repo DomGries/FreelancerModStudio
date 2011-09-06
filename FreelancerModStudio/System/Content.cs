@@ -24,214 +24,74 @@ namespace FreelancerModStudio.SystemPresenter
         }
     }
 
-    public class Sun : ContentBase
+    public class SystemObject : ContentBase
     {
+        public ContentType Type { get; set; }
+
         protected override GeometryModel3D GetGeometry()
         {
-            return SharedGeometries.Sun;
+            switch (Type)
+            {
+                case ContentType.Construct:
+                    return SharedGeometries.Construct;
+                case ContentType.Depot:
+                    return SharedGeometries.Depot;
+                case ContentType.DockingRing:
+                    return SharedGeometries.DockingRing;
+                case ContentType.JumpGate:
+                    return SharedGeometries.JumpGate;
+                case ContentType.JumpHole:
+                    return SharedGeometries.JumpHole;
+                case ContentType.Planet:
+                    return SharedGeometries.Planet;
+                case ContentType.Satellite:
+                    return SharedGeometries.Satellite;
+                case ContentType.Ship:
+                    return SharedGeometries.Ship;
+                case ContentType.Station:
+                    return SharedGeometries.Station;
+                case ContentType.Sun:
+                    return SharedGeometries.Sun;
+                case ContentType.TradeLane:
+                    return SharedGeometries.TradeLane;
+                case ContentType.WeaponsPlatform:
+                    return SharedGeometries.WeaponsPlatform;
+            }
+
+            return null;
         }
 
         public override MeshGeometry3D GetMesh()
         {
-            return SharedMeshes.Sphere;
-        }
+            switch (Type)
+            {
+                case ContentType.Construct:
+                    return SharedMeshes.Box;
+                case ContentType.Depot:
+                    return SharedMeshes.Box;
+                case ContentType.DockingRing:
+                    return SharedMeshes.CylinderRing;
+                case ContentType.JumpGate:
+                    return SharedMeshes.Pyramid;
+                case ContentType.JumpHole:
+                    return SharedMeshes.CylinderRing;
+                case ContentType.Planet:
+                    return SharedMeshes.Sphere;
+                case ContentType.Satellite:
+                    return SharedMeshes.Box;
+                case ContentType.Ship:
+                    return SharedMeshes.Pyramid;
+                case ContentType.Station:
+                    return SharedMeshes.Box;
+                case ContentType.Sun:
+                    return SharedMeshes.Sphere;
+                case ContentType.TradeLane:
+                    return SharedMeshes.BoxTradeLane;
+                case ContentType.WeaponsPlatform:
+                    return SharedMeshes.Box;
+            }
 
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class Planet : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.Planet;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Sphere;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class Station : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.Station;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Box;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class Satellite : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.Satellite;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Box;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class Construct : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.Construct;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Box;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class Depot : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.Depot;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Box;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class Ship : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.Ship;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Pyramid;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class WeaponsPlatform : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.WeaponsPlatform;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Box;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class TradeLane : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.TradeLane;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.BoxTradeLane;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class JumpHole : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.JumpHole;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.CylinderRing;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class JumpGate : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.JumpGate;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Pyramid;
-        }
-
-        public override bool IsEmissive()
-        {
-            return false;
-        }
-    }
-
-    public class DockingRing : ContentBase
-    {
-        protected override GeometryModel3D GetGeometry()
-        {
-            return SharedGeometries.DockingRing;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.CylinderRing;
+            return null;
         }
 
         public override bool IsEmissive()

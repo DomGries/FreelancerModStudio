@@ -7,6 +7,7 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public enum ContentType
     {
+        None,
         LightSource,
         Sun,
         Planet,
@@ -21,8 +22,7 @@ namespace FreelancerModStudio.SystemPresenter
         JumpGate,
         TradeLane,
         Zone,
-        System,
-        None
+        System
     }
 
     public static class SharedMaterials
@@ -37,8 +37,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material Ship = MaterialHelper.CreateMaterial(Brushes.Gold);
         public static Material WeaponsPlatform = MaterialHelper.CreateMaterial(Brushes.BurlyWood);
         public static Material TradeLane = MaterialHelper.CreateMaterial(Brushes.Cyan);
-        public static Material JumpHole = MaterialHelper.CreateMaterial(Brushes.DarkGreen);
-        public static Material JumpGate = MaterialHelper.CreateMaterial(Brushes.DarkGreen);
+        public static Material JumpHoleAndGate = MaterialHelper.CreateMaterial(Brushes.DarkGreen);
         public static Material DockingRing = MaterialHelper.CreateMaterial(Brushes.Firebrick);
         public static Material Zone = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 30, 30));
         public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 30, 15));
@@ -119,10 +118,10 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.BoxTradeLane, SharedMaterials.TradeLane);
 
         public static GeometryModel3D JumpHole =
-            GetGeometry(SharedMeshes.CylinderRing, SharedMaterials.JumpHole);
+            GetGeometry(SharedMeshes.CylinderRing, SharedMaterials.JumpHoleAndGate);
 
         public static GeometryModel3D JumpGate =
-            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.JumpGate);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.JumpHoleAndGate);
 
         public static GeometryModel3D DockingRing =
             GetGeometry(SharedMeshes.CylinderRing, SharedMaterials.DockingRing);

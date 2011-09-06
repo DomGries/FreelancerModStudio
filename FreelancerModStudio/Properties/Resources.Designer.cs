@@ -474,6 +474,13 @@ namespace FreelancerModStudio.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap System {
+            get {
+                object obj = ResourceManager.GetObject("System", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Template.xml.
         /// </summary>

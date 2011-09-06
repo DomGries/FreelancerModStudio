@@ -123,6 +123,7 @@ namespace FreelancerModStudio
                 Properties.Resources.JumpGate,
                 Properties.Resources.TradeLane,
                 Properties.Resources.Zone,
+                Properties.Resources.System,
             });
             objectListView1.SmallImageList = imageList;
         }
@@ -294,20 +295,20 @@ namespace FreelancerModStudio
             cols[2].MinimumWidth = 120;
             cols[2].FillsFreeSpace = true;
 
-            if (ViewerType == ViewerType.System)
+            if (ViewerType != ViewerType.None)
             {
                 //legend icons in system editor
+                cols[0].ImageGetter = delegate(object rowObject)
+                {
+                    return (int)((TableBlock)rowObject).ObjectType - 1;
+                };
+            }
+
+            if (ViewerType == ViewerType.System)
+            {
                 cols[0].AspectGetter = delegate(object x)
                 {
                     return ((TableBlock)x).Name;
-                };
-                cols[0].ImageGetter = delegate(object rowObject)
-                {
-                    TableBlock block = (TableBlock)rowObject;
-                    if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
-                        return (int)block.ObjectType;
-
-                    return -1;
                 };
 
                 //checkboxes for hidden shown objects

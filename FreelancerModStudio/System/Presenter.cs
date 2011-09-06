@@ -505,7 +505,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         ContentBase GetContent(TableBlock block)
         {
-            ContentBase content = Parser.ParseContentBase(block.ObjectType);
+            ContentBase content = CreateContent(block.ObjectType);
             if (content == null)
                 return null;
 
@@ -514,6 +514,23 @@ namespace FreelancerModStudio.SystemPresenter
 
             content.ID = block.UniqueID;
             return content;
+        }
+
+        ContentBase CreateContent(ContentType type)
+        {
+            switch (type)
+            {
+                case ContentType.None:
+                    return null;
+                case ContentType.LightSource:
+                    return new LightSource();
+                case ContentType.Zone:
+                    return new Zone();
+                case ContentType.System:
+                    return new System();
+                default:
+                    return new SystemObject();
+            }
         }
     }
 }

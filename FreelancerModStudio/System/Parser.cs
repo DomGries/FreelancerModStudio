@@ -108,13 +108,22 @@ namespace FreelancerModStudio.SystemPresenter
                 if (block.Archetype != null)
                 {
                     scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) / 1000;
+
+                    //clamp scale of objects which size is actually not being defined by archetype radius
                     if (block.ObjectType != ContentType.Planet && block.ObjectType != ContentType.Sun)
                     {
-                        //clamp scale of objects which size is actually not being defined by archetype radius
                         if (scale.X < 0.1)
                             scale = new Vector3D(0.1, 0.1, 0.1);
                         else if (scale.X > 1)
                             scale = new Vector3D(1, 1, 1);
+                    }
+
+                    //update system object type
+                    SystemObject contentObject = content as SystemObject;
+                    if (contentObject != null && block.ObjectType != contentObject.Type)
+                    {
+                        contentObject.Type = block.ObjectType;
+                        ModelChanged = true;
                     }
                 }
                 else
@@ -239,72 +248,36 @@ namespace FreelancerModStudio.SystemPresenter
             return number;
         }
 
-        public static ContentBase ParseContentBase(ContentType type)
-        {
-            if (type == ContentType.LightSource)
-                return new LightSource();
-            else if (type == ContentType.Sun)
-                return new Sun();
-            else if (type == ContentType.Planet)
-                return new Planet();
-            else if (type == ContentType.Station)
-                return new Station();
-            else if (type == ContentType.Satellite)
-                return new Satellite();
-            else if (type == ContentType.Construct)
-                return new Construct();
-            else if (type == ContentType.Depot)
-                return new Depot();
-            else if (type == ContentType.Ship)
-                return new Ship();
-            else if (type == ContentType.WeaponsPlatform)
-                return new WeaponsPlatform();
-            else if (type == ContentType.DockingRing)
-                return new DockingRing();
-            else if (type == ContentType.JumpHole)
-                return new JumpHole();
-            else if (type == ContentType.JumpGate)
-                return new JumpGate();
-            else if (type == ContentType.TradeLane)
-                return new TradeLane();
-            else if (type == ContentType.Zone)
-                return new Zone();
-            else if (type == ContentType.System)
-                return new System();
-
-            return null;
-        }
-
         public static ContentType ParseContentType(string type)
         {
-            type = type.ToLower();
-
-            if (type == "jump_hole")
-                return ContentType.JumpHole;
-            else if (type == "jump_gate")
-                return ContentType.JumpGate;
-            else if (type == "sun")
-                return ContentType.Sun;
-            else if (type == "planet")
-                return ContentType.Planet;
-            else if (type == "station")
-                return ContentType.Station;
-            else if (type == "destroyable_depot")
-                return ContentType.Depot;
-            else if (type == "satellite")
-                return ContentType.Satellite;
-            else if (type == "mission_satellite")
-                return ContentType.Ship;
-            else if (type == "weapons_platform")
-                return ContentType.WeaponsPlatform;
-            else if (type == "docking_ring")
-                return ContentType.DockingRing;
-            else if (type == "tradelane_ring")
-                return ContentType.TradeLane;
-            else if (type == "non_targetable")
-                return ContentType.Construct;
-            else if (type == "airlock_gate")
-                return ContentType.JumpGate;
+            switch (type.ToLower())
+            {
+                case "jump_hole":
+                    return ContentType.JumpHole;
+                case "jump_gate":
+                case "airlock_gate":
+                    return ContentType.JumpGate;
+                case "sun":
+                    return ContentType.Sun;
+                case "planet":
+                    return ContentType.Planet;
+                case "station":
+                    return ContentType.Station;
+                case "destroyable_depot":
+                    return ContentType.Depot;
+                case "satellite":
+                    return ContentType.Satellite;
+                case "mission_satellite":
+                    return ContentType.Ship;
+                case "weapons_platform":
+                    return ContentType.WeaponsPlatform;
+                case "docking_ring":
+                    return ContentType.DockingRing;
+                case "tradelane_ring":
+                    return ContentType.TradeLane;
+                case "non_targetable":
+                    return ContentType.Construct;
+            }
 
             return ContentType.None;
         }

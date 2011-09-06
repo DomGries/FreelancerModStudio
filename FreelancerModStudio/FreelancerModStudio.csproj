@@ -278,13 +278,16 @@
     <Content Include="Resources\SolutionExplorer.ico" />
     <Content Include="Resources\SystemLegend\Construct.ico" />
     <Content Include="Resources\SystemLegend\Depot.ico" />
+    <Content Include="Resources\SystemLegend\DockingRing.ico" />
     <Content Include="Resources\SystemLegend\JumpGate.ico" />
+    <Content Include="Resources\SystemLegend\JumpHole.ico" />
     <Content Include="Resources\SystemLegend\LightSource.ico" />
     <Content Include="Resources\SystemLegend\Planet.ico" />
     <Content Include="Resources\SystemLegend\Satellite.ico" />
     <Content Include="Resources\SystemLegend\Ship.ico" />
     <Content Include="Resources\SystemLegend\Station.ico" />
     <Content Include="Resources\SystemLegend\Sun.ico" />
+    <Content Include="Resources\SystemLegend\System.ico" />
     <Content Include="Resources\SystemLegend\TradeLane.ico" />
     <Content Include="Resources\SystemLegend\WeaponsPlatform.ico" />
     <Content Include="Resources\SystemLegend\Zone.ico" />
@@ -384,10 +387,6 @@
       <Project>{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}</Project>
       <Name>HelixEngine</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\SystemLegend\DockingRing.ico" />
-    <None Include="Resources\SystemLegend\JumpHole.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="GenSerializationAssembly" DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">

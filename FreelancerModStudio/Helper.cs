@@ -73,6 +73,12 @@ namespace FreelancerModStudio
 
             public static void Check(bool silentCheck, bool silentDownload)
             {
+                Uri checkFileUri;
+                if (!Uri.TryCreate(Helper.Settings.Data.Data.General.AutoUpdate.UpdateFile, UriKind.Absolute, out checkFileUri))
+                    return;
+
+                AutoUpdate.CheckFileUri = checkFileUri;
+
                 string proxy = "";
                 string username = "";
                 string password = "";
@@ -84,7 +90,6 @@ namespace FreelancerModStudio
                     password = Settings.Data.Data.General.AutoUpdate.Proxy.Password;
                 }
 
-                AutoUpdate.CheckFileUri = new Uri(Helper.Settings.Data.Data.General.AutoUpdate.UpdateFile);
                 AutoUpdate.SilentCheck = silentCheck;
                 AutoUpdate.SilentDownload = silentDownload;
                 AutoUpdate.SetProxy(proxy);

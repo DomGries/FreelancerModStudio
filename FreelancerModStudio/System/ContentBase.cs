@@ -18,6 +18,13 @@ namespace FreelancerModStudio.SystemPresenter
         public string Title { get; set; }
         public bool Visibility { get; set; }
 
+        public ContentBase()
+        {
+            Matrix = Matrix3D.Identity;
+
+            Visibility = true;
+        }
+
         public void SetDisplay(Matrix3D matrix)
         {
             if (Model != null)
@@ -51,13 +58,6 @@ namespace FreelancerModStudio.SystemPresenter
             matrix.Translate(position);
 
             return matrix;
-        }
-
-        public ContentBase()
-        {
-            Matrix = Matrix3D.Identity;
-
-            Visibility = true;
         }
 
         protected abstract GeometryModel3D GetGeometry();

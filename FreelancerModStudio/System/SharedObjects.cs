@@ -43,7 +43,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material ZonePathTrade = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(10, 15, 30));
         public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 30, 15));
         public static Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 15, 0));
-        public static Material System = MaterialHelper.CreateMaterial(Brushes.White);
+        public static Material System = MaterialHelper.CreateMaterial(Brushes.LightYellow);
 
         public static Color ConnectionJumphole = Colors.OrangeRed;
         public static Color ConnectionJumpgate = Colors.SlateGray;

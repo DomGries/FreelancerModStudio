@@ -359,9 +359,9 @@
             this.toolStripSeparator3,
             this.mnuFocusSelected,
             this.mnuChangeVisibility,
-            this.mnuSelectAll,
+            this.mnuGoTo,
             this.toolStripSeparator4,
-            this.mnuGoTo});
+            this.mnuSelectAll});
             this.mnuEdit.Name = "mnuEdit";
             this.mnuEdit.ShortcutKeyDisplayString = null;
             // 

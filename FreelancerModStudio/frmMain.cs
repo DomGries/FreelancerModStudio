@@ -928,7 +928,10 @@ namespace FreelancerModStudio
             this.mnuRedo.Enabled = document.CanRedo();
 
             this.mnuChangeVisibility.Visible = document.CanChangeVisibility();
-            this.mnuFocusSelected.Visible = document.CanChangeVisibility();
+            this.mnuFocusSelected.Visible = document.CanFocusSelected();
+
+            this.toolStripSeparator4.Visible = document.CanChangeVisibility() || document.CanFocusSelected();
+
             this.mnu3dEditor.Enabled = document.CanDisplay3DViewer();
         }
 
@@ -942,6 +945,7 @@ namespace FreelancerModStudio
                 this.mnuAdd.Enabled = false;
                 this.mnuDelete.Enabled = false;
                 this.mnuSelectAll.Enabled = false;
+
                 this.mnuChangeVisibility.Enabled = false;
                 this.mnuFocusSelected.Enabled = false;
 
@@ -956,8 +960,18 @@ namespace FreelancerModStudio
                 this.mnuAdd.Enabled = content.CanAdd();
                 this.mnuDelete.Enabled = content.CanDelete();
                 this.mnuSelectAll.Enabled = content.CanSelectAll();
-                this.mnuChangeVisibility.Enabled = content.CanDelete();
-                this.mnuFocusSelected.Enabled = content.CanDelete();
+
+                DocumentInterface document = content as DocumentInterface;
+                if (document != null)
+                {
+                    this.mnuChangeVisibility.Enabled = document.CanChangeVisibilityRightNow();
+                    this.mnuFocusSelected.Enabled = document.CanFocusSelectedRightNow();
+                }
+                else
+                {
+                    this.mnuChangeVisibility.Enabled = false;
+                    this.mnuFocusSelected.Enabled = false;
+                }
 
                 this.mnuAdd.Click -= this.mnuAdd_Click;
 

@@ -963,7 +963,22 @@ namespace FreelancerModStudio
 
         public bool CanChangeVisibility()
         {
-            return Archetype != null;
+            return ViewerType == ViewerType.System;
+        }
+
+        public bool CanChangeVisibilityRightNow()
+        {
+            return objectListView1.SelectedObjects.Count > 0 && CanChangeVisibility();
+        }
+
+        public bool CanFocusSelected()
+        {
+            return ViewerType != ViewerType.None;
+        }
+
+        public bool CanFocusSelectedRightNow()
+        {
+            return objectListView1.SelectedObjects.Count > 0 && CanFocusSelected();
         }
 
         public void ChangeVisibility()

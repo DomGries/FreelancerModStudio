@@ -927,10 +927,10 @@ namespace FreelancerModStudio
             this.mnuUndo.Enabled = document.CanUndo();
             this.mnuRedo.Enabled = document.CanRedo();
 
-            this.mnuChangeVisibility.Visible = document.CanChangeVisibility();
-            this.mnuFocusSelected.Visible = document.CanFocusSelected();
+            this.mnuChangeVisibility.Visible = document.CanChangeVisibility(false);
+            this.mnuFocusSelected.Visible = document.CanFocusSelected(false);
 
-            this.toolStripSeparator4.Visible = document.CanChangeVisibility() || document.CanFocusSelected();
+            this.toolStripSeparator4.Visible = document.CanChangeVisibility(false) || document.CanFocusSelected(false);
 
             this.mnu3dEditor.Enabled = document.CanDisplay3DViewer();
         }
@@ -964,8 +964,8 @@ namespace FreelancerModStudio
                 DocumentInterface document = content as DocumentInterface;
                 if (document != null)
                 {
-                    this.mnuChangeVisibility.Enabled = document.CanChangeVisibilityRightNow();
-                    this.mnuFocusSelected.Enabled = document.CanFocusSelectedRightNow();
+                    this.mnuChangeVisibility.Enabled = document.CanChangeVisibility(true);
+                    this.mnuFocusSelected.Enabled = document.CanFocusSelected(true);
                 }
                 else
                 {

@@ -95,6 +95,8 @@ namespace FreelancerModStudio
             }
 
             objectListView1.CellToolTip.InitialDelay = 1000;
+            objectListView1.UnfocusedHighlightBackgroundColor = objectListView1.HighlightBackgroundColorOrDefault;
+            objectListView1.UnfocusedHighlightForegroundColor = objectListView1.HighlightForegroundColorOrDefault;
             SimpleDropSink dropSink = objectListView1.DropSink as SimpleDropSink;
             dropSink.CanDropBetween = true;
             dropSink.CanDropOnItem = false;
@@ -961,24 +963,22 @@ namespace FreelancerModStudio
             }
         }
 
-        public bool CanChangeVisibility()
+        public bool CanChangeVisibility(bool rightNow)
         {
-            return ViewerType == ViewerType.System;
+            bool correctFileType = ViewerType == ViewerType.System;
+            if (rightNow)
+                return correctFileType && objectListView1.SelectedObjects.Count > 0;
+
+            return correctFileType;
         }
 
-        public bool CanChangeVisibilityRightNow()
+        public bool CanFocusSelected(bool rightNow)
         {
-            return objectListView1.SelectedObjects.Count > 0 && CanChangeVisibility();
-        }
+            bool correctFileType = ViewerType != ViewerType.None;
+            if (rightNow)
+                return correctFileType && objectListView1.SelectedObjects.Count > 0;
 
-        public bool CanFocusSelected()
-        {
-            return ViewerType != ViewerType.None;
-        }
-
-        public bool CanFocusSelectedRightNow()
-        {
-            return objectListView1.SelectedObjects.Count > 0 && CanFocusSelected();
+            return correctFileType;
         }
 
         public void ChangeVisibility()

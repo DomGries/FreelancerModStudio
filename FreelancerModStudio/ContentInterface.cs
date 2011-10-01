@@ -32,10 +32,8 @@ namespace FreelancerModStudio
         bool CanUndo();
         bool CanRedo();
 
-        bool CanChangeVisibility();
-        bool CanChangeVisibilityRightNow();
-        bool CanFocusSelected();
-        bool CanFocusSelectedRightNow();
+        bool CanChangeVisibility(bool rightNow);
+        bool CanFocusSelected(bool rightNow);
 
         bool CanDisplay3DViewer();
 

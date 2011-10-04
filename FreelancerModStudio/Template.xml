@@ -501,6 +501,7 @@
             <Option>spacedust</Option>
             <Option>spacedust_maxparticles</Option>
             <Option>interference</Option>
+            <Option>drag_modifier</Option>
             <Option>edge_fraction</Option>
             <Option>ids_info</Option>
             <Option>attack_ids</Option>

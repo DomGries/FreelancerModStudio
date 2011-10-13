@@ -56,6 +56,7 @@ namespace FreelancerModStudio.Data
                     ContentType type = ContentType.None;
                     string name = null;
                     double radius = -1;
+                    string cmpFile = null;
 
                     foreach (EditorINIOption option in block.Block.Options)
                     {
@@ -72,12 +73,15 @@ namespace FreelancerModStudio.Data
                                 case "type":
                                     type = Parser.ParseContentType(option.Values[0].Value.ToString());
                                     break;
+                                case "da_archetype":
+                                    cmpFile = option.Values[0].Value.ToString();
+                                    break;
                             }
                         }
                     }
 
                     if (name != null && type != ContentType.None)
-                        contentTable[name] = new ArchetypeInfo() { Type = type, Radius = radius };
+                        contentTable[name] = new ArchetypeInfo() { Type = type, Radius = radius, ModelPath = cmpFile };
                 }
             }
         }
@@ -100,6 +104,7 @@ namespace FreelancerModStudio.Data
     {
         public ContentType Type { get; set; }
         public double Radius { get; set; }
+        public string ModelPath { get; set; }
 
         public override string ToString()
         {

@@ -65,30 +65,23 @@ namespace FreelancerModStudio.SystemPresenter
         {
             switch (Type)
             {
-                case ContentType.Construct:
-                    return SharedMeshes.Box;
-                case ContentType.Depot:
-                    return SharedMeshes.Box;
-                case ContentType.DockingRing:
-                    return SharedMeshes.CylinderRing;
-                case ContentType.JumpGate:
-                    return SharedMeshes.Pyramid;
-                case ContentType.JumpHole:
-                    return SharedMeshes.CylinderRing;
                 case ContentType.Planet:
-                    return SharedMeshes.Sphere;
-                case ContentType.Satellite:
-                    return SharedMeshes.Box;
-                case ContentType.Ship:
-                    return SharedMeshes.Pyramid;
-                case ContentType.Station:
-                    return SharedMeshes.Box;
                 case ContentType.Sun:
                     return SharedMeshes.Sphere;
-                case ContentType.TradeLane:
-                    return SharedMeshes.BoxTradeLane;
+                case ContentType.Construct:
+                case ContentType.Depot:
+                case ContentType.Satellite:
+                case ContentType.Station:
                 case ContentType.WeaponsPlatform:
                     return SharedMeshes.Box;
+                case ContentType.TradeLane:
+                    return SharedMeshes.BoxTradeLane;
+                case ContentType.DockingRing:
+                case ContentType.JumpHole:
+                    return SharedMeshes.CylinderRing;
+                case ContentType.JumpGate:
+                case ContentType.Ship:
+                    return SharedMeshes.Pyramid;
             }
 
             return null;

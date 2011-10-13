@@ -106,6 +106,11 @@
     <Compile Include="Data\ArchetypeManager.cs" />
     <Compile Include="Data\Table.cs" />
     <Compile Include="Data\TableData.cs" />
+    <Compile Include="Data\UTF\CmpData.cs" />
+    <Compile Include="Data\IO\UTFManager.cs" />
+    <Compile Include="Data\UTF\D3DFVF.cs" />
+    <Compile Include="Data\UTF\VMeshData.cs" />
+    <Compile Include="Data\UTF\VMeshRef.cs" />
     <Compile Include="DevTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -221,6 +226,7 @@
     <Compile Include="Data\ChangedData.cs" />
     <Compile Include="StringLogicalComparer.cs" />
     <Compile Include="System\Animator.cs" />
+    <Compile Include="System\CmpModelContent.cs" />
     <Compile Include="System\ContentBase.cs" />
     <Compile Include="System\DefaultLightsVisual3D.cs" />
     <Compile Include="System\Matrix3DAnimation.cs" />

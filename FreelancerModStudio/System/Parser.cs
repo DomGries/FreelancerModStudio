@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
+using System.IO;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -126,6 +127,13 @@ namespace FreelancerModStudio.SystemPresenter
                     {
                         contentObject.Type = block.ObjectType;
                         ModelChanged = true;
+                    }
+
+                    string ext = Path.GetExtension(block.Archetype.ModelPath).ToLower();
+                    if (ext == ".cmp" || ext == ".3db")
+                    {
+                        CmpModelContent cmpModel = new CmpModelContent();
+                        content.Model = cmpModel.LoadModel(Path.Combine(@"D:\Games\FL\DATA", block.Archetype.ModelPath));
                     }
                 }
                 else

@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
-using System.Text;
-using System.IO;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace FreelancerModStudio
 {

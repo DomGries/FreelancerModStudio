@@ -193,10 +193,10 @@ namespace FreelancerModStudio
                 Archetype = new ArchetypeManager(archetypeFile, archetypeTemplate);
 
             foreach (TableBlock block in Data.Blocks)
-                SetArchetype(block, Archetype);
+                SetObjectType(block, Archetype);
         }
 
-        void SetArchetype(TableBlock block, ArchetypeManager archetypeManager)
+        void SetObjectType(TableBlock block, ArchetypeManager archetypeManager)
         {
             switch (block.Block.Name.ToLower())
             {
@@ -472,7 +472,7 @@ namespace FreelancerModStudio
 
                 //set archetype of block
                 if (tableBlock.Archetype == null)
-                    SetArchetype(tableBlock, Archetype);
+                    SetObjectType(tableBlock, Archetype);
 
                 bool existSingle = false;
 
@@ -625,7 +625,7 @@ namespace FreelancerModStudio
             }
 
             foreach (TableBlock block in newBlocks)
-                SetArchetype(block, Archetype);
+                SetObjectType(block, Archetype);
 
             undoManager.Execute(new ChangedData() { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Edit });
         }

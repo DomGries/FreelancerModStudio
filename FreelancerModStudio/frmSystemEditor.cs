@@ -182,6 +182,11 @@ namespace FreelancerModStudio
             systemPresenter.Add(blocks);
         }
 
+        public void AddModel(Visual3D v)
+        {
+            systemPresenter.Viewport.Add(v);
+        }
+
         public void Delete(List<TableBlock> blocks)
         {
             systemPresenter.Delete(blocks);

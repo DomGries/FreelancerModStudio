@@ -39,6 +39,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static Material TradeLane = MaterialHelper.CreateMaterial(Brushes.Cyan);
         public static Material JumpHoleAndGate = MaterialHelper.CreateMaterial(Brushes.DarkGreen);
         public static Material DockingRing = MaterialHelper.CreateMaterial(Brushes.Firebrick);
+        public static Material CmpModel = MaterialHelper.CreateMaterial(Brushes.SlateGray);
         public static Material Zone = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 30, 30));
         public static Material ZonePathTrade = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(10, 15, 30));
         public static Material ZoneVignette = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 30, 15));

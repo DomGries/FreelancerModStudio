@@ -284,24 +284,6 @@ namespace HelixEngine
             CameraHelper.AnimateTo(Camera, newPosition, newDirection, newUpDirection, animationTime);
         }
 
-        public void Add(Visual3D v)
-        {
-            if (!Viewport.Children.Contains(v))
-                Viewport.Children.Add(v);
-        }
-
-        public void Insert(int index, Visual3D v)
-        {
-            if (!Viewport.Children.Contains(v))
-                Viewport.Children.Insert(index, v);
-        }
-
-        public void Remove(Visual3D v)
-        {
-            if (Viewport.Children.Contains(v))
-                Viewport.Children.Remove(v);
-        }
-
         public void Save(string fileName)
         {
             Viewport3DHelper.Save(Viewport, fileName);

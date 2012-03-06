@@ -11,6 +11,7 @@ namespace FreelancerModStudio.Data
 
         List<List<T>> changes = new List<List<T>>();
         int current = 0;
+        int savedIndex = 0;
 
         void OnDataChanged(List<T> o, bool undo)
         {
@@ -84,6 +85,16 @@ namespace FreelancerModStudio.Data
         public bool CanRedo()
         {
             return changes.Count - current > 0;
+        }
+
+        public void SetAsSaved()
+        {
+            savedIndex = current;
+        }
+
+        public bool IsModified()
+        {
+            return savedIndex != current;
         }
     }
 }

@@ -179,10 +179,10 @@ namespace FreelancerModStudio.SystemPresenter
         void AddModel(ContentBase content)
         {
             if (content.IsEmissive())
-                Viewport.Add(content.Model);
+                Viewport.Children.Add(content.Model);
             else
             {
-                Viewport.Insert(secondLayerID, content.Model);
+                Viewport.Children.Insert(secondLayerID, content.Model);
                 secondLayerID++;
             }
         }
@@ -209,7 +209,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         void RemoveModel(ContentBase content)
         {
-            Viewport.Remove(content.Model);
+            Viewport.Children.Remove(content.Model);
 
             if (!content.IsEmissive())
                 secondLayerID--;
@@ -320,21 +320,13 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void ClearDisplay(bool light)
         {
+            Viewport.Children.Clear();
+
             if (light || Lightning == null)
-            {
-                Viewport.Children.Clear();
                 secondLayerID = 0;
-            }
             else
             {
-                //remove all but the first one which is the light
-                for (int i = Viewport.Children.Count - 1; i >= 0; i--)
-                {
-                    ModelVisual3D model = (ModelVisual3D)Viewport.Children[i];
-                    if (model != Lightning)
-                        Viewport.Remove(model);
-                }
-
+                Viewport.Children.Add(Lightning);
                 secondLayerID = 1;
             }
         }
@@ -366,7 +358,7 @@ namespace FreelancerModStudio.SystemPresenter
             Viewport.Dispatcher.Invoke(new Action(delegate
             {
                 foreach (UniverseConnection connection in connections)
-                    Viewport.Add(GetConnection(connection).Model);
+                    Viewport.Children.Add(GetConnection(connection).Model);
             }));
         }
 

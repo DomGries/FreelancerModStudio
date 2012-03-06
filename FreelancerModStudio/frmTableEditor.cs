@@ -18,7 +18,6 @@ namespace FreelancerModStudio
         public string File { get; set; }
         public bool IsBINI { get; set; }
 
-        bool modified = false;
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
 
         public ViewerType ViewerType { get; set; }
@@ -376,7 +375,7 @@ namespace FreelancerModStudio
             fileManager.WriteEmptyLine = Helper.Settings.Data.Data.General.FormattingEmptyLine;
             fileManager.Write(Data.GetEditorData());
 
-            Modified = false;
+            SetAsSaved();
 
             try
             {
@@ -390,49 +389,32 @@ namespace FreelancerModStudio
 
         void SetFile(string file)
         {
-            string fileName;
-            if (file == "")
-                fileName = Properties.Strings.FileEditorNewFile;
-            else
-                fileName = Path.GetFileName(file);
+            File = file;
 
-            this.File = file;
+            var title = GetTitle();
+            if (undoManager.IsModified())
+                title += "*";
 
-            string tabText = fileName;
-            if (Modified)
-                tabText += "*";
-
-            this.TabText = tabText;
-            this.Text = tabText;
+            this.TabText = title;
+            this.Text = title;
             this.ToolTipText = File;
 
             OnDocumentChanged((DocumentInterface)this);
         }
 
-        public bool Modified
+        void SetAsSaved()
         {
-            get
+            if (undoManager.IsModified())
             {
-                return modified;
-            }
-            set
-            {
-                if (modified != value)
-                {
-                    modified = value;
-                    SetFile(File);
+                undoManager.SetAsSaved();
 
-                    //set objects in listview as unmodified
-                    if (!modified)
+                //set objects in listview as unmodified
+                foreach (TableBlock tableData in objectListView1.Objects)
+                {
+                    if (tableData.Modified == TableModified.Changed)
                     {
-                        foreach (TableBlock tableData in objectListView1.Objects)
-                        {
-                            if (tableData.Modified == TableModified.Changed)
-                            {
-                                tableData.Modified = TableModified.ChangedSaved;
-                                objectListView1.RefreshObject(tableData);
-                            }
-                        }
+                        tableData.Modified = TableModified.ChangedSaved;
+                        objectListView1.RefreshObject(tableData);
                     }
                 }
             }
@@ -440,15 +422,9 @@ namespace FreelancerModStudio
 
         bool CancelClose()
         {
-            if (this.modified)
+            if (undoManager.IsModified())
             {
-                string fileName;
-                if (File == "")
-                    fileName = Properties.Strings.FileEditorNewFile;
-                else
-                    fileName = Path.GetFileName(File);
-
-                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, fileName), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, GetTitle()), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Cancel)
                     return true;
                 else if (dialogResult == DialogResult.Yes)
@@ -916,7 +892,7 @@ namespace FreelancerModStudio
             for (int i = 0; i < data.Count; i++)
                 ExecuteDataChanged(undo ? data[i].GetUndoData() : data[i], i, undo);
 
-            Modified = true;
+            SetFile(File);
             OnDocumentChanged((DocumentInterface)this);
         }
 

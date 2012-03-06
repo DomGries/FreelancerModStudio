@@ -75,7 +75,13 @@ namespace FreelancerModStudio
             {
                 Uri checkFileUri;
                 if (!Uri.TryCreate(Helper.Settings.Data.Data.General.AutoUpdate.UpdateFile, UriKind.Absolute, out checkFileUri))
+                {
+                    if (!silentCheck)
+                        MessageBox.Show(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    Helper.Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
                     return;
+                }
 
                 AutoUpdate.CheckFileUri = checkFileUri;
 

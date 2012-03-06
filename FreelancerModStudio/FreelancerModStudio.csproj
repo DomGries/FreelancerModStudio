@@ -180,7 +180,6 @@
     <Compile Include="Data\IO\INIManager.cs" />
     <Compile Include="Data\UndoManager.cs" />
     <Compile Include="Data\Mod.cs" />
-    <Compile Include="Data\News.cs" />
     <Compile Include="Data\Settings.cs">
     </Compile>
     <Compile Include="Program.cs" />
@@ -209,7 +208,6 @@
       <DependentUpon>Strings.de.resx</DependentUpon>
     </Compile>
     <Compile Include="Data\Serializer.cs" />
-    <Compile Include="ShellUtilities.cs" />
     <Compile Include="Properties\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -116,6 +116,8 @@ namespace FreelancerModStudio.SystemPresenter
 
             UTFManager utfManager = new UTFManager(file);
             UTFNode root = utfManager.Read();
+            if (root == null)
+                return null;
 
             UTFNode model = root.FindNode("VMeshData", true);
             if (model == null || model.Data == null)

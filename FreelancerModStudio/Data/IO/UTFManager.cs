@@ -16,13 +16,12 @@ namespace FreelancerModStudio.Data.IO
 
         public UTFNode Read()
         {
-            FileStream stream = null;
             BinaryReader reader = null;
             UTFNode info = null;
 
             try
             {
-                stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read);
+                FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read);
                 reader = new BinaryReader(stream);
 
                 int signature = reader.ReadInt32();
@@ -61,9 +60,6 @@ namespace FreelancerModStudio.Data.IO
 
             if (reader != null)
                 reader.Close();
-
-            if (stream != null)
-                stream.Close();
 
             return info;
         }

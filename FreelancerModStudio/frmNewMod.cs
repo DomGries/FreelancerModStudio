@@ -34,22 +34,6 @@ namespace FreelancerModStudio
             return name.Trim().Length > 0;
         }
 
-        bool ValidHomepage(string uri)
-        {
-            if (uri.Trim().Length == 0)
-                return true;
-
-            try
-            {
-                new Uri(uri.Trim());
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         void Path_TextChanged(object sender, EventArgs e)
         {
             this.btnOK.Enabled = (this.ValidName(this.txtName.Text) && this.ValidPathRoot(this.txtSaveLocation.Text));
@@ -60,12 +44,7 @@ namespace FreelancerModStudio
             if (this.ValidChars(this.txtName.Text))
             {
                 if (this.ValidChars(this.txtSaveLocation.Text))
-                {
-                    if (this.ValidHomepage(this.txtHomepage.Text))
-                        this.DialogResult = DialogResult.OK;
-                    else
-                        MessageBox.Show(Properties.Strings.ModInvalidHomepage, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
+                    this.DialogResult = DialogResult.OK;
                 else
                     MessageBox.Show(Properties.Strings.ModInvalidPathChars, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }

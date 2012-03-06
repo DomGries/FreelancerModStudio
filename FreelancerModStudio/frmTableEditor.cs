@@ -442,7 +442,7 @@ namespace FreelancerModStudio
                 Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[blocks[i].Block.TemplateIndex];
                 TableBlock tableBlock = blocks[i];
 
-                //set block to be modified except in is undo mode
+                //set block to be modified except in undo mode
                 if (!undo)
                     tableBlock.Modified = TableModified.Changed;
 
@@ -711,11 +711,11 @@ namespace FreelancerModStudio
 
         void SetContextMenuEnabled()
         {
-            bool selection = objectListView1.SelectedObjects.Count > 0;
+            bool isSelected = objectListView1.SelectedObjects.Count > 0;
 
-            mnuDeleteSeperator.Visible = selection;
-            mnuDelete.Visible = selection;
-            mnuDelete.Enabled = selection;
+            mnuDeleteSeperator.Visible = isSelected;
+            mnuDelete.Visible = isSelected;
+            mnuDelete.Enabled = isSelected;
         }
 
         void mnuAddItem_Click(object sender, EventArgs e)
@@ -799,10 +799,10 @@ namespace FreelancerModStudio
 
         public string GetTitle()
         {
-            if (this.File == "")
+            if (File == "")
                 return Properties.Strings.FileEditorNewFile;
             else
-                return Path.GetFileName(this.File);
+                return Path.GetFileName(File);
         }
 
         public void Copy()

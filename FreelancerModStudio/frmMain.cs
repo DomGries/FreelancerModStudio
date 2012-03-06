@@ -180,6 +180,7 @@ namespace FreelancerModStudio
             if (data != null)
             {
                 propertiesForm.ShowData(data, templateIndex);
+
                 if (systemEditor != null)
                     systemEditor.Select(data[0].UniqueID);
             }
@@ -200,12 +201,9 @@ namespace FreelancerModStudio
 
         void Properties_OptionsChanged(PropertyBlock[] blocks)
         {
-            IDockContent activeDocument = this.dockPanel1.ActiveDocument;
-            if (activeDocument != null && activeDocument is frmTableEditor)
-            {
-                frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-                defaultEditor.SetBlocks(blocks);
-            }
+            var tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
+            if (tableEditor != null)
+                tableEditor.SetBlocks(blocks);
         }
 
         void mnuFullScreen_Click(object sender, EventArgs e)
@@ -284,7 +282,7 @@ namespace FreelancerModStudio
             }
             else
             {
-                //eixt fullscreen
+                //exit fullscreen
                 this.MainMenuStrip.Items.RemoveAt(this.MainMenuStrip.Items.Count - 1);
 
                 this.FormBorderStyle = FormBorderStyle.Sizable;
@@ -581,18 +579,16 @@ namespace FreelancerModStudio
         void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
         {
             //show properties of document if active document changed
-            IDockContent activeDocument = dockPanel1.ActiveDocument;
-            if (activeDocument != null && activeDocument is frmTableEditor)
+            var tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
+            if (tableEditor != null)
             {
-                frmTableEditor defaultEditor = (frmTableEditor)activeDocument;
-
-                if (!defaultEditor.CanDisplay3DViewer() && systemEditor != null)
+                if (!tableEditor.CanDisplay3DViewer() && systemEditor != null)
                     CloseSystemEditor();
                 else
-                    ShowSystemEditor(defaultEditor);
+                    ShowSystemEditor(tableEditor);
 
-                DefaultEditor_SelectionChanged(defaultEditor.GetSelectedBlocks(), defaultEditor.Data.TemplateIndex);
-                Document_DisplayChanged((DocumentInterface)activeDocument);
+                DefaultEditor_SelectionChanged(tableEditor.GetSelectedBlocks(), tableEditor.Data.TemplateIndex);
+                Document_DisplayChanged((DocumentInterface)tableEditor);
             }
             else
             {
@@ -642,8 +638,9 @@ namespace FreelancerModStudio
         {
             foreach (IDockContent document in dockPanel1.Documents)
             {
-                if (document is frmTableEditor)
-                    ((frmTableEditor)document).Save();
+                var tableEditor = document as frmTableEditor;
+                if (tableEditor != null)
+                    tableEditor.Save();
             }
         }
 
@@ -652,9 +649,10 @@ namespace FreelancerModStudio
             List<frmTableEditor> editors = new List<frmTableEditor>();
             foreach (IDockContent document in dockPanel1.Contents)
             {
-                if (document is frmTableEditor)
+                var tableEditor = document as frmTableEditor;
+                if (tableEditor != null)
                 {
-                    editors.Add((frmTableEditor)document);
+                    editors.Add(tableEditor);
                     this.uiCultureChanger1.AddForm((Form)document);
                 }
             }
@@ -704,9 +702,10 @@ namespace FreelancerModStudio
             int i = 0;
             foreach (IDockContent document in dockPanel1.Documents)
             {
-                if (document is frmTableEditor)
+                var tableEditor = document as frmTableEditor;
+                if (tableEditor != null)
                 {
-                    if (((frmTableEditor)document).File.ToLower() == file.ToLower())
+                    if (tableEditor.File.ToLower() == file.ToLower())
                         return i;
                 }
                 i++;
@@ -991,20 +990,21 @@ namespace FreelancerModStudio
 
             systemEditor.Show(dockPanel1);
 
-            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
-                ShowSystemEditor((frmTableEditor)dockPanel1.ActiveDocument);
+            var tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
+            if (tableEditor != null)
+                ShowSystemEditor(tableEditor);
         }
 
         void systemEditor_FileOpen(string path)
         {
-            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
+            var tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
+            if (tableEditor != null)
             {
-                frmTableEditor editor = (frmTableEditor)dockPanel1.ActiveDocument;
                 string file = "";
 
                 try
                 {
-                    file = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(editor.File), path);
+                    file = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(tableEditor.File), path);
                     if (System.IO.File.Exists(file))
                         OpenFile(file, Helper.Template.Data.SystemFile);
                     else
@@ -1019,8 +1019,9 @@ namespace FreelancerModStudio
 
         void systemEditor_SelectionChanged(int id)
         {
-            if (dockPanel1.ActiveDocument != null && dockPanel1.ActiveDocument is frmTableEditor)
-                ((frmTableEditor)dockPanel1.ActiveDocument).SelectByUID(id);
+            var tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
+            if (tableEditor != null)
+                tableEditor.SelectByUID(id);
         }
     }
 }

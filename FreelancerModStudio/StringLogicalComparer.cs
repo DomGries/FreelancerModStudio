@@ -17,18 +17,18 @@ namespace FreelancerModStudio
         }
 
         StringLogicalComparer(bool zeroesFirst)
-		{
-			this.zeroesFirst = zeroesFirst;
-		}
+        {
+            this.zeroesFirst = zeroesFirst;
+        }
 
         public static IComparer Default
         {
             get { return _default; }
         }
 
-		public static IComparer DefaultZeroesFirst
-		{
-		     get { return _defaultZeroesFirst; }
+        public static IComparer DefaultZeroesFirst
+        {
+             get { return _defaultZeroesFirst; }
         }
 
         public int Compare(object x, object y)
@@ -45,8 +45,8 @@ namespace FreelancerModStudio
 
         public static int Compare(string s1, string s2)
         {
-			return Compare(s1, s2, false);
-		}
+            return Compare(s1, s2, false);
+        }
 
         public static int Compare(string s1, string s2, bool zeroesFirst)
         {
@@ -159,12 +159,12 @@ namespace FreelancerModStudio
             i2 = end2 - 1;
 
             if(zeroesFirst)
-			{
-				int zl1 = nzStart1 - start1;
-				int zl2 = nzStart2 - start2;
-				if(zl1 > zl2) return -1;
-				if(zl1 < zl2) return 1;
-			}
+            {
+                int zl1 = nzStart1 - start1;
+                int zl2 = nzStart2 - start2;
+                if(zl1 > zl2) return -1;
+                if(zl1 < zl2) return 1;
+            }
 
             int length1 = end2 - nzStart2;
             int length2 = end1 - nzStart1;

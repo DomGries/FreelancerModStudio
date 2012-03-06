@@ -9,7 +9,6 @@ namespace FreelancerModStudio.Data.IO
     public class BINIManager
     {
         public string File { get; set; }
-        public bool IsBini { get; set; }
         public List<INIBlock> Data { get; set; }
 
         public BINIManager(string file)
@@ -17,26 +16,24 @@ namespace FreelancerModStudio.Data.IO
             File = file;
         }
 
-        public void Read()
+        public bool Read()
         {
             Data = new List<INIBlock>();
-            FileStream stream = null;
             BinaryReader binaryReader = null;
             try
             {
-                stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read);
+                FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read);
                 binaryReader = new BinaryReader(stream, Encoding.Default);
 
                 //read header
-                if (Encoding.Default.GetString(binaryReader.ReadBytes(4)) != "BINI" ||
+                if (stream.Length < 4 + 4 ||
+                    Encoding.Default.GetString(binaryReader.ReadBytes(4)) != "BINI" ||
                     binaryReader.ReadInt32() != 1)
                 {
-                    IsBini = false;
+                    // return false if it is not a bini file
                     binaryReader.Close();
-                    return;
+                    return false;
                 }
-
-                IsBini = true;
 
                 int stringTablePosition = binaryReader.ReadInt32();
                 long dataPosition = stream.Position;
@@ -91,7 +88,7 @@ namespace FreelancerModStudio.Data.IO
                         }
                         block.Add(entryName, new INIOption(string.Join(", ", options.ToArray()), i));
                     }
-                    Data.Add(new INIBlock() { Name = sectionName, Options = block } );
+                    Data.Add(new INIBlock { Name = sectionName, Options = block } );
                 }
             }
             catch (Exception ex)
@@ -101,6 +98,8 @@ namespace FreelancerModStudio.Data.IO
 
             if (binaryReader != null)
                 binaryReader.Close();
+
+            return true;
         }
     }
 

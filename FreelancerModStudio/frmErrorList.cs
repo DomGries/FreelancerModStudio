@@ -11,8 +11,8 @@ namespace FreelancerModStudio
     {
         public frmErrorList()
         {
-			InitializeComponent();
-			this.Icon = Properties.Resources.Error;
+            InitializeComponent();
+            this.Icon = Properties.Resources.Error;
         }
 
         public void RefreshSettings()

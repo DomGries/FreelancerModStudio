@@ -36,8 +36,7 @@ namespace FreelancerModStudio.Data.IO
                     IsBini = true;
 
                     BINIManager biniManager = new BINIManager(File);
-                    biniManager.Read();
-                    if (biniManager.IsBini)
+                    if (biniManager.Read())
                         iniData = biniManager.Data;
                     else
                     {

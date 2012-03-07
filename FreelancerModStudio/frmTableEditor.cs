@@ -460,6 +460,9 @@ namespace FreelancerModStudio
                         //block already exists
                         if (Data.Blocks[j].Block.TemplateIndex == blocks[i].Block.TemplateIndex)
                         {
+                            tableBlock.ID = Data.Blocks[j].ID;
+                            tableBlock.UniqueID = Data.Blocks[j].UniqueID;
+
                             //overwrite data if we add blocks which are single then they are overwritten which means they have to be changed to edit in the undo history
                             undoManager.CurrentData[undoBlock] = new ChangedData()
                             {

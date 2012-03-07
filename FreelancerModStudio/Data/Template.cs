@@ -43,7 +43,7 @@ namespace FreelancerModStudio.Data
             [XmlAttribute("name")]
             public string Name;
 
-            public FileType Type = FileType.ini;
+            //public FileType Type = FileType.ini;
 
             [XmlArrayItem("Path")]
             public List<string> Pathes;

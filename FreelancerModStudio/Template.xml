@@ -2,7 +2,6 @@
 <FreelancerModStudio-Template-1.0 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Files>
     <File name="Game Configuration">
-      <Type>ini</Type>
       <Pathes>
         <Path>exe\freelancer.ini</Path>
       </Pathes>
@@ -102,7 +101,6 @@
       </Blocks>
     </File>
     <File name="Game Cameras">
-      <Type>ini</Type>
       <Pathes>
         <Path>cameras.ini</Path>
       </Pathes>
@@ -131,7 +129,6 @@
       </Blocks>
     </File>
     <File name="Game Concave">
-      <Type>ini</Type>
       <Pathes>
         <Path>concave.ini</Path>
       </Pathes>
@@ -145,7 +142,6 @@
       </Blocks>
     </File>
     <File name="Game Constants">
-      <Type>ini</Type>
       <Pathes>
         <Path>constants.ini</Path>
       </Pathes>
@@ -208,7 +204,6 @@
       </Blocks>
     </File>
     <File name="Game IGraph">
-      <Type>ini</Type>
       <Pathes>
         <Path>igraph.ini</Path>
       </Pathes>
@@ -223,7 +218,6 @@
       </Blocks>
     </File>
     <File name="Game Initial World">
-      <Type>ini</Type>
       <Pathes>
         <Path>initialworld.ini</Path>
       </Pathes>
@@ -246,7 +240,6 @@
       </Blocks>
     </File>
     <File name="Game Mouse">
-      <Type>ini</Type>
       <Pathes>
         <Path>mouse.ini</Path>
       </Pathes>
@@ -280,7 +273,6 @@
       </Blocks>
     </File>
     <File name="Game Petal Db">
-      <Type>ini</Type>
       <Pathes>
         <Path>petaldb.ini</Path>
       </Pathes>
@@ -294,38 +286,7 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Mission Created Solars">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>universe\missioncreatedsolars.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="MissionCreatedSolar" multiple="true" identifier="base">
-          <Options>
-            <Option>base</Option>
-            <Option>ids_info</Option>
-            <Option>pos</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Universe Path">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>universe\shortest_illegal_path.ini</Path>
-        <Path>universe\shortest_legal_path.ini</Path>
-        <Path>universe\systems_shortest_path.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="SystemConnections" multiple="true">
-          <Options>
-            <Option multiple="true">Path</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
     <File name="Universe">
-      <Type>ini</Type>
       <Pathes>
         <Path>universe\universe.ini</Path>
       </Pathes>
@@ -365,8 +326,43 @@
         </Block>
       </Blocks>
     </File>
+    <File name="Universe Path">
+      <Pathes>
+        <Path>universe\shortest_illegal_path.ini</Path>
+        <Path>universe\shortest_legal_path.ini</Path>
+        <Path>universe\systems_shortest_path.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="SystemConnections" multiple="true">
+          <Options>
+            <Option multiple="true">Path</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Universe Heaven">
+      <Pathes>
+        <Path>universe\heavens\shapes.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="Shape" multiple="true" identifier="name">
+          <Options>
+            <Option>name</Option>
+            <Option>x</Option>
+            <Option>y</Option>
+            <Option>w</Option>
+            <Option>h</Option>
+          </Options>
+        </Block>
+        <Block name="Texture" multiple="true" identifier="name">
+          <Options>
+            <Option>file</Option>
+            <Option>name</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
     <File name="System">
-      <Type>ini</Type>
       <Pathes>
         <Path>universe\systems\*\*.ini</Path>
       </Pathes>
@@ -534,7 +530,6 @@
       </Blocks>
     </File>
     <File name="System Base">
-      <Type>ini</Type>
       <Pathes>
         <Path>universe\systems\*\bases\*_base.ini</Path>
         <Path>universe\systems\*_mining_base.ini</Path>
@@ -556,7 +551,6 @@
       </Blocks>
     </File>
     <File name="System Room">
-      <Type>ini</Type>
       <Pathes>
         <Path>universe\systems\*\bases\rooms\*.ini</Path>
       </Pathes>
@@ -640,70 +634,7 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Universe Heaven">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>universe\heavens\shapes.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="Shape" multiple="true" identifier="name">
-          <Options>
-            <Option>name</Option>
-            <Option>x</Option>
-            <Option>y</Option>
-            <Option>w</Option>
-            <Option>h</Option>
-          </Options>
-        </Block>
-        <Block name="Texture" multiple="true" identifier="name">
-          <Options>
-            <Option>file</Option>
-            <Option>name</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Solar Asteroid Archetype">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>solar\asteroidarch.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="Asteroid" multiple="true" identifier="nickname">
-          <Options>
-            <Option>nickname</Option>
-            <Option>DA_archetype</Option>
-            <Option>material_library</Option>
-            <Option>explosion_arch</Option>
-            <Option>recharge_time</Option>
-          </Options>
-        </Block>
-        <Block name="AsteroidMine" multiple="true" identifier="nickname">
-          <Options>
-            <Option>nickname</Option>
-            <Option>DA_archetype</Option>
-            <Option>material_library</Option>
-            <Option>explosion_arch</Option>
-            <Option>explosion_impulse</Option>
-            <Option>detect_radius</Option>
-            <Option>explosion_offset</Option>
-            <Option>recharge_time</Option>
-            <Option>phantom_physics</Option>
-          </Options>
-        </Block>
-        <Block name="DynamicAsteroid" multiple="true" identifier="nickname">
-          <Options>
-            <Option>nickname</Option>
-            <Option>DA_archetype</Option>
-            <Option>material_library</Option>
-            <Option>explosion_arch</Option>
-            <Option>particle_effect</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
     <File name="Loadouts">
-      <Type>ini</Type>
       <Pathes>
         <Path>solar\loadouts.ini</Path>
         <Path>ships\loadouts_special.ini</Path>
@@ -722,7 +653,6 @@
       </Blocks>
     </File>
     <File name="Solar Archetype">
-      <Type>ini</Type>
       <Pathes>
         <Path>solar\solararch.ini</Path>
       </Pathes>
@@ -778,8 +708,45 @@
         </Block>
       </Blocks>
     </File>
+    <File name="Solar Asteroid Archetype">
+      <Pathes>
+        <Path>solar\asteroidarch.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="Asteroid" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>DA_archetype</Option>
+            <Option>material_library</Option>
+            <Option>explosion_arch</Option>
+            <Option>recharge_time</Option>
+          </Options>
+        </Block>
+        <Block name="AsteroidMine" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>DA_archetype</Option>
+            <Option>material_library</Option>
+            <Option>explosion_arch</Option>
+            <Option>explosion_impulse</Option>
+            <Option>detect_radius</Option>
+            <Option>explosion_offset</Option>
+            <Option>recharge_time</Option>
+            <Option>phantom_physics</Option>
+          </Options>
+        </Block>
+        <Block name="DynamicAsteroid" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>DA_archetype</Option>
+            <Option>material_library</Option>
+            <Option>explosion_arch</Option>
+            <Option>particle_effect</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
     <File name="Solar Star Archetype">
-      <Type>ini</Type>
       <Pathes>
         <Path>solar\stararch.ini</Path>
       </Pathes>
@@ -846,34 +813,7 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Solar Ring Shapes">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>solar\rings\shapes.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="Shape" multiple="true" identifier="name">
-          <Options>
-            <Option>x</Option>
-            <Option>y</Option>
-            <Option>w</Option>
-            <Option>h</Option>
-            <Option>name</Option>
-          </Options>
-        </Block>
-        <Block name="Texture" multiple="true" identifier="name">
-          <Options>
-            <Option>file</Option>
-            <Option>name</Option>
-            <Option>texture_name</Option>
-            <Option multiple="true">shape_name</Option>
-            <Option parent="shape_name">dim</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Solar Ring">
-      <Type>ini</Type>
+    <File name="Solar Rings">
       <Pathes>
         <Path>solar\rings\*.ini</Path>
       </Pathes>
@@ -914,8 +854,32 @@
         </Block>
       </Blocks>
     </File>
+    <File name="Solar Ring Shapes">
+      <Pathes>
+        <Path>solar\rings\shapes.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="Shape" multiple="true" identifier="name">
+          <Options>
+            <Option>x</Option>
+            <Option>y</Option>
+            <Option>w</Option>
+            <Option>h</Option>
+            <Option>name</Option>
+          </Options>
+        </Block>
+        <Block name="Texture" multiple="true" identifier="name">
+          <Options>
+            <Option>file</Option>
+            <Option>name</Option>
+            <Option>texture_name</Option>
+            <Option multiple="true">shape_name</Option>
+            <Option parent="shape_name">dim</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
     <File name="Solar Nebula">
-      <Type>ini</Type>
       <Pathes>
         <Path>solar\nebula\*.ini</Path>
       </Pathes>
@@ -981,10 +945,10 @@
         </Block>
         <Block name="Fog">
           <Options>
-            <Option>color</Option>
-            <Option>distance</Option>
             <Option>fog_enabled</Option>
             <Option>near</Option>
+            <Option>distance</Option>
+            <Option>color</Option>
           </Options>
         </Block>
         <Block name="NebulaLight">
@@ -1016,7 +980,6 @@
       </Blocks>
     </File>
     <File name="Solar Blackholes">
-      <Type>ini</Type>
       <Pathes>
         <Path>solar\blackhole\*.ini</Path>
       </Pathes>
@@ -1103,7 +1066,6 @@
       </Blocks>
     </File>
     <File name="Solar Asteroids">
-      <Type>ini</Type>
       <Pathes>
         <Path>solar\asteroids\*.ini</Path>
       </Pathes>
@@ -1233,7 +1195,6 @@
       </Blocks>
     </File>
     <File name="Ship Archetype">
-      <Type>ini</Type>
       <Pathes>
         <Path>ships\*shiparch.ini</Path>
       </Pathes>
@@ -1322,36 +1283,7 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Scripts Rtc Slider">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>scripts\rtcslider.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="RtcSlider">
-          <Options>
-            <Option multiple="true">set</Option>
-            <Option multiple="true">set_less</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Scripts Gcsexcl">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>scripts\gcs\gcsexcl.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="GCS_Exclusions">
-          <Options>
-            <Option multiple="true">script</Option>
-            <Option multiple="true">voice</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
     <File name="Scripts Generic">
-      <Type>ini</Type>
       <Pathes>
         <Path>scripts\gcs\genericscripts.ini</Path>
       </Pathes>
@@ -1366,822 +1298,33 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Mission Diff to Money">
-      <Type>ini</Type>
+    <File name="Scripts Rtc Slider">
       <Pathes>
-        <Path>randommissions\diff2money.ini</Path>
+        <Path>scripts\rtcslider.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="Diff2Money">
+        <Block name="RtcSlider">
           <Options>
-            <Option multiple="true">Diff2Money</Option>
+            <Option multiple="true">set</Option>
+            <Option multiple="true">set_less</Option>
           </Options>
         </Block>
       </Blocks>
     </File>
-    <File name="Mission Killable Solars">
-      <Type>ini</Type>
+    <File name="Scripts GCS Exclusion">
       <Pathes>
-        <Path>randommissions\killablesolars.ini</Path>
+        <Path>scripts\gcs\gcsexcl.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="KillableSolar" multiple="true" identifier="nickname">
+        <Block name="GCS_Exclusions">
           <Options>
-            <Option>archetype</Option>
-            <Option>difficulty</Option>
-            <Option>faction</Option>
-            <Option>hitpoints</Option>
-            <Option>loadout</Option>
-            <Option>nickname</Option>
-            <Option>only_allowed_in_zone_type</Option>
-            <Option>pilot_choices</Option>
-            <Option>solar_type</Option>
-            <Option>string_id</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Npc Rank to Diff">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>randommissions\npcranktodiff.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="RankAndFormationSizeToDifficulty">
-          <Options>
-            <Option multiple="true">NpcRank</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Loot Info">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>randommissions\rmlootinfo.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="Global">
-          <Options>
-            <Option>BonusLootDropChance</Option>
-          </Options>
-        </Block>
-        <Block name="RMBonusLoot" multiple="true" identifier="archetype">
-          <Options>
-            <Option>archetype</Option>
-            <Option>difficulty_range</Option>
-            <Option>faction</Option>
-            <Option>num_to_drop</Option>
-            <Option>weight</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Solar Formations">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>randommissions\solarformations.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="SolarFormation" multiple="true" identifier="nickname">
-          <Options>
-            <Option>nickname</Option>
-            <Option multiple="true">pos</Option>
-            <Option>type</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Vignette Critical Loot">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>randommissions\vignettecriticalloot.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="critical_loot" multiple="true" identifier="archetype">
-          <Options>
-            <Option>archetype</Option>
-            <Option>faction</Option>
-            <Option>name</Option>
-            <Option>type</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Vignette Parameters">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>randommissions\vignetteparams.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="DataNode" multiple="true">
-          <Options>
-            <Option>Allowable_zone_types</Option>
-            <Option>child_node</Option>
-            <Option multiple="true">comm_sequence</Option>
-            <Option>Difficulty</Option>
-            <Option>Failure_text</Option>
-            <Option>Hostile_group</Option>
-            <Option>Implemented</Option>
-            <Option>node_id</Option>
-            <Option multiple="true">objective_text</Option>
-            <Option>Offer_group</Option>
-            <Option multiple="true">offer_text</Option>
-            <Option>Reward_text</Option>
-            <Option>Weight</Option>
-          </Options>
-        </Block>
-        <Block name="DecisionNode" multiple="true" identifier="nickname">
-          <Options>
-            <Option multiple="true">child_node</Option>
-            <Option>nickname</Option>
-            <Option>node_id</Option>
-          </Options>
-        </Block>
-        <Block name="DocumentationNode" multiple="true" identifier="documentation">
-          <Options>
-            <Option>child_node</Option>
-            <Option>documentation</Option>
-            <Option>node_id</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Empathy">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\empathy.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="RepChangeEffects" multiple="true" identifier="group">
-          <Options>
-            <Option>group</Option>
-            <Option multiple="true">event</Option>
-            <Option multiple="true">empathy_rate</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Faction Properties">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\faction_prop.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="FactionProps" multiple="true" identifier="affiliation">
-          <Options>
-            <Option>affiliation</Option>
-            <Option>firstname_female</Option>
-            <Option>firstname_male</Option>
-            <Option multiple="true">formation</Option>
-            <Option>formation_desig</Option>
-            <Option>jump_preference</Option>
-            <Option>large_ship_desig</Option>
-            <Option>large_ship_names</Option>
-            <Option>lastname</Option>
-            <Option>legality</Option>
-            <Option>mc_costume</Option>
-            <Option>msg_id_prefix</Option>
-            <Option>nickname_plurality</Option>
-            <Option multiple="true">npc_ship</Option>
-            <Option>rank_desig</Option>
-            <Option>scan_announce</Option>
-            <Option>scan_chance</Option>
-            <Option multiple="true">scan_for_cargo</Option>
-            <Option multiple="true">space_costume</Option>
+            <Option multiple="true">script</Option>
             <Option multiple="true">voice</Option>
           </Options>
         </Block>
       </Blocks>
     </File>
-    <File name="Mission Formations">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\formations.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="Formation" multiple="true" identifier="nickname">
-          <Options>
-            <Option>nickname</Option>
-            <Option>pl_pos</Option>
-            <Option multiple="true">pos</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Loot Properties">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\lootprops.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="mLootProps" multiple="true" identifier="nickname">
-          <Options>
-            <Option>drop_properties</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="PhantomLoot" multiple="true" identifier="nickname">
-          <Options>
-            <Option>nickname</Option>
-            <Option>num_to_drop</Option>
-            <Option>percent_chance</Option>
-            <Option>toughness_range</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Bases">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\mbases.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="BaseFaction" multiple="true" identifier="faction">
-          <Options>
-            <Option>faction</Option>
-            <Option>mission_type</Option>
-            <Option multiple="true">npc</Option>
-            <Option>offers_missions</Option>
-            <Option>weight</Option>
-          </Options>
-        </Block>
-        <Block name="GF_NPC" multiple="true" identifier="nickname">
-          <Options>
-            <Option>accessory</Option>
-            <Option>affiliation</Option>
-            <Option>base_appr</Option>
-            <Option>body</Option>
-            <Option multiple="true">bribe</Option>
-            <Option>head</Option>
-            <Option>individual_name</Option>
-            <Option multiple="true">know</Option>
-            <Option multiple="true">knowdb</Option>
-            <Option>lefthand</Option>
-            <Option>misn</Option>
-            <Option>nickname</Option>
-            <Option>righthand</Option>
-            <Option>room</Option>
-            <Option multiple="true">rumor</Option>
-            <Option multiple="true">rumor_type2</Option>
-            <Option multiple="true">rumorknowdb</Option>
-            <Option>voice</Option>
-          </Options>
-        </Block>
-        <Block name="MBase" multiple="true" identifier="nickname">
-          <Options>
-            <Option>diff</Option>
-            <Option>local_faction</Option>
-            <Option>msg_id_prefix</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="MRoom" multiple="true" identifier="nickname">
-          <Options>
-            <Option>character_density</Option>
-            <Option multiple="true">fixture</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="MVendor" multiple="true">
-          <Options>
-            <Option>num_offers</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Ship Properties">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\mshipprops.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="mShipProps" multiple="true" identifier="archetype_id">
-          <Options>
-            <Option>archetype_id</Option>
-            <Option>prop</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission News">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\news.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="NewsItem" multiple="true">
-          <Options>
-            <Option>audio</Option>
-            <Option>autoselect</Option>
-            <Option multiple="true">base</Option>
-            <Option>category</Option>
-            <Option>headline</Option>
-            <Option>icon</Option>
-            <Option>logo</Option>
-            <Option>rank</Option>
-            <Option>text</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Npc Ships">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\npcships.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="NPCShipArch" multiple="true" identifier="nickname">
-          <Options>
-            <Option>level</Option>
-            <Option>loadout</Option>
-            <Option>nickname</Option>
-            <Option>npc_class</Option>
-            <Option>pilot</Option>
-            <Option>ship_archetype</Option>
-            <Option>state_graph</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Pilots Population">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\pilots_population.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="BuzzHeadTowardBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>buzz_dodge_cone_angle</Option>
-            <Option>buzz_dodge_cone_angle_variance_percent</Option>
-            <Option multiple="true">buzz_dodge_direction_weight</Option>
-            <Option>buzz_dodge_interval_time</Option>
-            <Option>buzz_dodge_interval_time_variance_percent</Option>
-            <Option>buzz_dodge_roll_angle</Option>
-            <Option>buzz_dodge_turn_throttle</Option>
-            <Option>buzz_dodge_waggle_axis_cone_angle</Option>
-            <Option>buzz_head_toward_engine_throttle</Option>
-            <Option>buzz_head_toward_roll_flip_direction</Option>
-            <Option>buzz_head_toward_roll_throttle</Option>
-            <Option multiple="true">buzz_head_toward_style_weight</Option>
-            <Option>buzz_head_toward_turn_throttle</Option>
-            <Option>buzz_max_time_to_head_away</Option>
-            <Option>buzz_min_distance_to_head_toward</Option>
-            <Option>buzz_min_distance_to_head_toward_variance_percent</Option>
-            <Option>buzz_slide_interval_time</Option>
-            <Option>buzz_slide_interval_time_variance_percent</Option>
-            <Option>buzz_slide_throttle</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="BuzzPassByBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>buzz_break_direction_cone_angle</Option>
-            <Option multiple="true">buzz_break_direction_weight</Option>
-            <Option>buzz_break_turn_throttle</Option>
-            <Option>buzz_distance_to_pass_by</Option>
-            <Option>buzz_drop_bomb_on_pass_by</Option>
-            <Option>buzz_pass_by_roll_throttle</Option>
-            <Option multiple="true">buzz_pass_by_style_weight</Option>
-            <Option>buzz_pass_by_time</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="CountermeasureBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>countermeasure_active_time</Option>
-            <Option>countermeasure_unactive_time</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="DamageReactionBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>afterburner_damage_trigger_percent</Option>
-            <Option>afterburner_damage_trigger_time</Option>
-            <Option>brake_reverse_damage_trigger_percent</Option>
-            <Option>drop_mines_damage_trigger_percent</Option>
-            <Option>drop_mines_damage_trigger_time</Option>
-            <Option>engine_kill_face_damage_trigger_percent</Option>
-            <Option>engine_kill_face_damage_trigger_time</Option>
-            <Option>evade_break_damage_trigger_percent</Option>
-            <Option>evade_dodge_more_damage_trigger_percent</Option>
-            <Option>fire_guns_damage_trigger_percent</Option>
-            <Option>fire_guns_damage_trigger_time</Option>
-            <Option>fire_missiles_damage_trigger_percent</Option>
-            <Option>fire_missiles_damage_trigger_time</Option>
-            <Option>nickname</Option>
-            <Option>roll_damage_trigger_percent</Option>
-            <Option>roll_damage_trigger_time</Option>
-          </Options>
-        </Block>
-        <Block name="EngineKillBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>engine_kill_afterburner_time</Option>
-            <Option>engine_kill_face_time</Option>
-            <Option>engine_kill_max_target_distance</Option>
-            <Option>engine_kill_search_time</Option>
-            <Option>engine_kill_use_afterburner</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="EvadeBreakBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>evade_break_afterburner_delay</Option>
-            <Option>evade_break_afterburner_delay_variance_percent</Option>
-            <Option>evade_break_attempt_reverse_time</Option>
-            <Option multiple="true">evade_break_direction_weight</Option>
-            <Option>evade_break_interval_time</Option>
-            <Option>evade_break_reverse_distance</Option>
-            <Option>evade_break_roll_throttle</Option>
-            <Option multiple="true">evade_break_style_weight</Option>
-            <Option>evade_break_time</Option>
-            <Option>evade_break_turn_throttle</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="EvadeDodgeBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>evade_activate_range</Option>
-            <Option>evade_dodge_cone_angle</Option>
-            <Option>evade_dodge_cone_angle_variance_percent</Option>
-            <Option>evade_dodge_corkscrew_roll_flip_direction</Option>
-            <Option>evade_dodge_corkscrew_roll_throttle</Option>
-            <Option>evade_dodge_corkscrew_turn_throttle</Option>
-            <Option multiple="true">evade_dodge_direction_weight</Option>
-            <Option>evade_dodge_distance</Option>
-            <Option>evade_dodge_interval_time</Option>
-            <Option>evade_dodge_interval_time_variance_percent</Option>
-            <Option>evade_dodge_roll_angle</Option>
-            <Option>evade_dodge_slide_throttle</Option>
-            <Option>evade_dodge_style_weight</Option>
-            <Option>evade_dodge_time</Option>
-            <Option>evade_dodge_turn_throttle</Option>
-            <Option>evade_dodge_waggle_axis_cone_angle</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="FormationBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>break_apart_formation_missile_reaction_time</Option>
-            <Option>break_apart_formation_on_evade_break</Option>
-            <Option>break_formation_damage_trigger_percent</Option>
-            <Option>break_formation_damage_trigger_time</Option>
-            <Option>break_formation_missile_reaction_time</Option>
-            <Option>break_formation_on_evade_break_time</Option>
-            <Option>force_attack_formation_active_time</Option>
-            <Option>force_attack_formation_unactive_time</Option>
-            <Option>formation_exit_max_time</Option>
-            <Option>formation_exit_roll_outrun_throttle</Option>
-            <Option>formation_exit_top_turn_break_away_throttle</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="GunBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>auto_turret_burst_interval_time</Option>
-            <Option>auto_turret_burst_interval_variance_percent</Option>
-            <Option>auto_turret_interval_time</Option>
-            <Option>auto_turret_no_burst_interval_time</Option>
-            <Option>fire_style</Option>
-            <Option>gun_fire_accuracy_cone_angle</Option>
-            <Option>gun_fire_accuracy_power</Option>
-            <Option>gun_fire_accuracy_power_npc</Option>
-            <Option>gun_fire_burst_interval_time</Option>
-            <Option>gun_fire_burst_interval_variance_percent</Option>
-            <Option>gun_fire_interval_time</Option>
-            <Option>gun_fire_interval_variance_percent</Option>
-            <Option>gun_fire_no_burst_interval_time</Option>
-            <Option>gun_range_threshold</Option>
-            <Option>gun_range_threshold_variance_percent</Option>
-            <Option>gun_target_point_switch_time</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="JobBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option multiple="true">attack_preference</Option>
-            <Option>attack_subtarget_order</Option>
-            <Option>combat_drift_distance</Option>
-            <Option>field_targeting</Option>
-            <Option>flee_no_weapons_style</Option>
-            <Option>flee_scene_threat_style</Option>
-            <Option>flee_when_hull_damaged_percent</Option>
-            <Option>flee_when_leader_flees_style</Option>
-            <Option>force_attack_formation</Option>
-            <Option>loot_flee_threshold</Option>
-            <Option>loot_preference</Option>
-            <Option>maximum_leader_target_distance</Option>
-            <Option>nickname</Option>
-            <Option>scene_toughness_threshold</Option>
-            <Option>wait_for_leader_target</Option>
-          </Options>
-        </Block>
-        <Block name="MineBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>mine_launch_cone_angle</Option>
-            <Option>mine_launch_interval</Option>
-            <Option>mine_launch_range</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="MissileBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>missile_launch_allow_out_of_range</Option>
-            <Option>missile_launch_cone_angle</Option>
-            <Option>missile_launch_interval_time</Option>
-            <Option>missile_launch_interval_variance_percent</Option>
-            <Option>missile_launch_range</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="MissileReactionBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>evade_afterburn_missile_reaction_time</Option>
-            <Option>evade_break_missile_reaction_time</Option>
-            <Option>evade_missile_distance</Option>
-            <Option>evade_slide_missile_reaction_time</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="Pilot" multiple="true" identifier="nickname">
-          <Options>
-            <Option>buzz_head_toward_id</Option>
-            <Option>buzz_pass_by_id</Option>
-            <Option>countermeasure_id</Option>
-            <Option>damage_reaction_id</Option>
-            <Option>engine_kill_id</Option>
-            <Option>evade_break_id</Option>
-            <Option>evade_dodge_id</Option>
-            <Option>formation_id</Option>
-            <Option>gun_id</Option>
-            <Option>inherit</Option>
-            <Option>job_id</Option>
-            <Option>mine_id</Option>
-            <Option>missile_id</Option>
-            <Option>missile_reaction_id</Option>
-            <Option>nickname</Option>
-            <Option>repair_id</Option>
-            <Option>strafe_id</Option>
-            <Option>trail_id</Option>
-          </Options>
-        </Block>
-        <Block name="RepairBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>nickname</Option>
-            <Option>use_hull_repair_at_damage_percent</Option>
-            <Option>use_hull_repair_post_delay</Option>
-            <Option>use_hull_repair_pre_delay</Option>
-            <Option>use_shield_repair_at_damage_percent</Option>
-            <Option>use_shield_repair_post_delay</Option>
-            <Option>use_shield_repair_pre_delay</Option>
-          </Options>
-        </Block>
-        <Block name="StrafeBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>nickname</Option>
-            <Option>strafe_attack_throttle</Option>
-            <Option>strafe_run_away_distance</Option>
-          </Options>
-        </Block>
-        <Block name="TrailBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>nickname</Option>
-            <Option>trail_break_afterburner</Option>
-            <Option>trail_break_roll_throttle</Option>
-            <Option>trail_break_time</Option>
-            <Option>trail_distance</Option>
-            <Option>trail_lock_cone_angle</Option>
-            <Option>trail_max_turn_throttle</Option>
-            <Option>trail_min_no_lock_time</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Pilots Story">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\pilots_story.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="EvadeDodgeBlock">
-          <Options>
-            <Option>evade_activate_range</Option>
-            <Option>evade_dodge_cone_angle</Option>
-            <Option>evade_dodge_cone_angle_variance_percent</Option>
-            <Option>evade_dodge_corkscrew_roll_flip_direction</Option>
-            <Option>evade_dodge_corkscrew_roll_throttle</Option>
-            <Option>evade_dodge_corkscrew_turn_throttle</Option>
-            <Option multiple="true">evade_dodge_direction_weight</Option>
-            <Option>evade_dodge_distance</Option>
-            <Option>evade_dodge_interval_time</Option>
-            <Option>evade_dodge_interval_time_variance_percent</Option>
-            <Option>evade_dodge_roll_angle</Option>
-            <Option>evade_dodge_slide_throttle</Option>
-            <Option>evade_dodge_style_weight</Option>
-            <Option>evade_dodge_time</Option>
-            <Option>evade_dodge_turn_throttle</Option>
-            <Option>evade_dodge_waggle_axis_cone_angle</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="FormationBlock">
-          <Options>
-            <Option>force_attack_formation_active_time</Option>
-            <Option>force_attack_formation_unactive_time</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="GunBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>auto_turret_burst_interval_time</Option>
-            <Option>auto_turret_burst_interval_variance_percent</Option>
-            <Option>auto_turret_interval_time</Option>
-            <Option>auto_turret_no_burst_interval_time</Option>
-            <Option>fire_style</Option>
-            <Option>gun_fire_accuracy_cone_angle</Option>
-            <Option>gun_fire_accuracy_power</Option>
-            <Option>gun_fire_accuracy_power_npc</Option>
-            <Option>gun_fire_burst_interval_time</Option>
-            <Option>gun_fire_burst_interval_variance_percent</Option>
-            <Option>gun_fire_interval_time</Option>
-            <Option>gun_fire_interval_variance_percent</Option>
-            <Option>gun_fire_no_burst_interval_time</Option>
-            <Option>gun_range_threshold</Option>
-            <Option>gun_range_threshold_variance_percent</Option>
-            <Option>gun_target_point_switch_time</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="JobBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>allow_player_targeting</Option>
-            <Option multiple="true">attack_preference</Option>
-            <Option>attack_subtarget_order</Option>
-            <Option>field_targeting</Option>
-            <Option>flee_no_weapons_style</Option>
-            <Option>flee_scene_threat_style</Option>
-            <Option>flee_when_hull_damaged_percent</Option>
-            <Option>flee_when_leader_flees_style</Option>
-            <Option>force_attack_formation</Option>
-            <Option>loot_flee_threshold</Option>
-            <Option>loot_preference</Option>
-            <Option>maximum_leader_target_distance</Option>
-            <Option>nickname</Option>
-            <Option>scene_toughness_threshold</Option>
-            <Option>wait_for_leader_target</Option>
-          </Options>
-        </Block>
-        <Block name="MissileBlock" multiple="true" identifier="nickname">
-          <Options>
-            <Option>missile_launch_allow_out_of_range</Option>
-            <Option>missile_launch_cone_angle</Option>
-            <Option>missile_launch_interval_time</Option>
-            <Option>missile_launch_interval_variance_percent</Option>
-            <Option>missile_launch_range</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-        <Block name="Pilot" multiple="true" identifier="nickname">
-          <Options>
-            <Option>buzz_head_toward_id</Option>
-            <Option>buzz_pass_by_id</Option>
-            <Option>countermeasure_id</Option>
-            <Option>damage_reaction_id</Option>
-            <Option>engine_kill_id</Option>
-            <Option>evade_break_id</Option>
-            <Option>evade_dodge_id</Option>
-            <Option>formation_id</Option>
-            <Option>gun_id</Option>
-            <Option>inherit</Option>
-            <Option>job_id</Option>
-            <Option>mine_id</Option>
-            <Option>missile_id</Option>
-            <Option>missile_reaction_id</Option>
-            <Option>nickname</Option>
-            <Option>repair_id</Option>
-            <Option>strafe_id</Option>
-            <Option>trail_id</Option>
-          </Options>
-        </Block>
-        <Block name="StrafeBlock">
-          <Options>
-            <Option>nickname</Option>
-            <Option>strafe_attack_throttle</Option>
-            <Option>strafe_run_away_distance</Option>
-            <Option>strafe_turn_throttle</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Player Toughness">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\ptough.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="PlayerToughnessScale">
-          <Options>
-            <Option multiple="true">ptough_graph_pt</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Rank Diff">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\rankdiff.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="RankDiffDB">
-          <Options>
-            <Option multiple="true">rank_diff</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Ship Classes">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\shipclasses.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="ShipClass" multiple="true" identifier="nickname">
-          <Options>
-            <Option multiple="true">member</Option>
-            <Option>nickname</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Specific Npc">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\specific_npc.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="NPC" multiple="true" identifier="nickname">
-          <Options>
-            <Option>affiliation</Option>
-            <Option>base_appr</Option>
-            <Option>individual_name</Option>
-            <Option>nickname</Option>
-            <Option>voice</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Mission Voice Properties">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\voice_properties.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="mVoiceProp" multiple="true" identifier="voice">
-          <Options>
-            <Option>voice</Option>
-            <Option multiple="true">permutation_count</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
-    <File name="Missions Nrml">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>missions\*\*_nrml.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="Char">
-          <Options>
-            <Option>actor</Option>
-            <Option>fidget</Option>
-            <Option>npc</Option>
-            <Option>spot</Option>
-          </Options>
-        </Block>
-        <Block name="CharacterEncounter">
-          <Options>
-            <Option>accept</Option>
-            <Option>action</Option>
-            <Option>autoplay</Option>
-            <Option>decision</Option>
-            <Option>decline</Option>
-            <Option>Location</Option>
-            <Option>mission_text_id</Option>
-            <Option>nooffer_text_id</Option>
-            <Option>offer</Option>
-            <Option>reject</Option>
-            <Option>relocate_player</Option>
-            <Option>start_room</Option>
-          </Options>
-        </Block>
-        <Block name="Reserve">
-          <Options>
-            <Option multiple="true">spot</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
     <File name="Mission">
-      <Type>ini</Type>
       <Pathes>
         <Path>missions\*\*.ini</Path>
       </Pathes>
@@ -2445,8 +1588,812 @@
         </Block>
       </Blocks>
     </File>
+    <File name="Mission Created Solars">
+      <Pathes>
+        <Path>universe\missioncreatedsolars.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="MissionCreatedSolar" multiple="true" identifier="base">
+          <Options>
+            <Option>base</Option>
+            <Option>ids_info</Option>
+            <Option>pos</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Diff to Money">
+      <Pathes>
+        <Path>randommissions\diff2money.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="Diff2Money">
+          <Options>
+            <Option multiple="true">Diff2Money</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Killable Solars">
+      <Pathes>
+        <Path>randommissions\killablesolars.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="KillableSolar" multiple="true" identifier="nickname">
+          <Options>
+            <Option>archetype</Option>
+            <Option>difficulty</Option>
+            <Option>faction</Option>
+            <Option>hitpoints</Option>
+            <Option>loadout</Option>
+            <Option>nickname</Option>
+            <Option>only_allowed_in_zone_type</Option>
+            <Option>pilot_choices</Option>
+            <Option>solar_type</Option>
+            <Option>string_id</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Npc Rank to Diff">
+      <Pathes>
+        <Path>randommissions\npcranktodiff.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="RankAndFormationSizeToDifficulty">
+          <Options>
+            <Option multiple="true">NpcRank</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Loot Info">
+      <Pathes>
+        <Path>randommissions\rmlootinfo.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="Global">
+          <Options>
+            <Option>BonusLootDropChance</Option>
+          </Options>
+        </Block>
+        <Block name="RMBonusLoot" multiple="true" identifier="archetype">
+          <Options>
+            <Option>archetype</Option>
+            <Option>difficulty_range</Option>
+            <Option>faction</Option>
+            <Option>num_to_drop</Option>
+            <Option>weight</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Solar Formations">
+      <Pathes>
+        <Path>randommissions\solarformations.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="SolarFormation" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option multiple="true">pos</Option>
+            <Option>type</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Vignette Critical Loot">
+      <Pathes>
+        <Path>randommissions\vignettecriticalloot.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="critical_loot" multiple="true" identifier="archetype">
+          <Options>
+            <Option>archetype</Option>
+            <Option>faction</Option>
+            <Option>name</Option>
+            <Option>type</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Vignette Parameters">
+      <Pathes>
+        <Path>randommissions\vignetteparams.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="DataNode" multiple="true">
+          <Options>
+            <Option>Allowable_zone_types</Option>
+            <Option>child_node</Option>
+            <Option multiple="true">comm_sequence</Option>
+            <Option>Difficulty</Option>
+            <Option>Failure_text</Option>
+            <Option>Hostile_group</Option>
+            <Option>Implemented</Option>
+            <Option>node_id</Option>
+            <Option multiple="true">objective_text</Option>
+            <Option>Offer_group</Option>
+            <Option multiple="true">offer_text</Option>
+            <Option>Reward_text</Option>
+            <Option>Weight</Option>
+          </Options>
+        </Block>
+        <Block name="DecisionNode" multiple="true" identifier="nickname">
+          <Options>
+            <Option multiple="true">child_node</Option>
+            <Option>nickname</Option>
+            <Option>node_id</Option>
+          </Options>
+        </Block>
+        <Block name="DocumentationNode" multiple="true" identifier="documentation">
+          <Options>
+            <Option>child_node</Option>
+            <Option>documentation</Option>
+            <Option>node_id</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Empathy">
+      <Pathes>
+        <Path>missions\empathy.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="RepChangeEffects" multiple="true" identifier="group">
+          <Options>
+            <Option>group</Option>
+            <Option multiple="true">event</Option>
+            <Option multiple="true">empathy_rate</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Faction Properties">
+      <Pathes>
+        <Path>missions\faction_prop.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="FactionProps" multiple="true" identifier="affiliation">
+          <Options>
+            <Option>affiliation</Option>
+            <Option>firstname_female</Option>
+            <Option>firstname_male</Option>
+            <Option multiple="true">formation</Option>
+            <Option>formation_desig</Option>
+            <Option>jump_preference</Option>
+            <Option>large_ship_desig</Option>
+            <Option>large_ship_names</Option>
+            <Option>lastname</Option>
+            <Option>legality</Option>
+            <Option>mc_costume</Option>
+            <Option>msg_id_prefix</Option>
+            <Option>nickname_plurality</Option>
+            <Option multiple="true">npc_ship</Option>
+            <Option>rank_desig</Option>
+            <Option>scan_announce</Option>
+            <Option>scan_chance</Option>
+            <Option multiple="true">scan_for_cargo</Option>
+            <Option multiple="true">space_costume</Option>
+            <Option multiple="true">voice</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Formations">
+      <Pathes>
+        <Path>missions\formations.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="Formation" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>pl_pos</Option>
+            <Option multiple="true">pos</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Loot Properties">
+      <Pathes>
+        <Path>missions\lootprops.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="mLootProps" multiple="true" identifier="nickname">
+          <Options>
+            <Option>drop_properties</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="PhantomLoot" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>num_to_drop</Option>
+            <Option>percent_chance</Option>
+            <Option>toughness_range</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Bases">
+      <Pathes>
+        <Path>missions\mbases.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="BaseFaction" multiple="true" identifier="faction">
+          <Options>
+            <Option>faction</Option>
+            <Option>mission_type</Option>
+            <Option multiple="true">npc</Option>
+            <Option>offers_missions</Option>
+            <Option>weight</Option>
+          </Options>
+        </Block>
+        <Block name="GF_NPC" multiple="true" identifier="nickname">
+          <Options>
+            <Option>accessory</Option>
+            <Option>affiliation</Option>
+            <Option>base_appr</Option>
+            <Option>body</Option>
+            <Option multiple="true">bribe</Option>
+            <Option>head</Option>
+            <Option>individual_name</Option>
+            <Option multiple="true">know</Option>
+            <Option multiple="true">knowdb</Option>
+            <Option>lefthand</Option>
+            <Option>misn</Option>
+            <Option>nickname</Option>
+            <Option>righthand</Option>
+            <Option>room</Option>
+            <Option multiple="true">rumor</Option>
+            <Option multiple="true">rumor_type2</Option>
+            <Option multiple="true">rumorknowdb</Option>
+            <Option>voice</Option>
+          </Options>
+        </Block>
+        <Block name="MBase" multiple="true" identifier="nickname">
+          <Options>
+            <Option>diff</Option>
+            <Option>local_faction</Option>
+            <Option>msg_id_prefix</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="MRoom" multiple="true" identifier="nickname">
+          <Options>
+            <Option>character_density</Option>
+            <Option multiple="true">fixture</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="MVendor" multiple="true">
+          <Options>
+            <Option>num_offers</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Ship Properties">
+      <Pathes>
+        <Path>missions\mshipprops.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="mShipProps" multiple="true" identifier="archetype_id">
+          <Options>
+            <Option>archetype_id</Option>
+            <Option>prop</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission News">
+      <Pathes>
+        <Path>missions\news.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="NewsItem" multiple="true">
+          <Options>
+            <Option>audio</Option>
+            <Option>autoselect</Option>
+            <Option multiple="true">base</Option>
+            <Option>category</Option>
+            <Option>headline</Option>
+            <Option>icon</Option>
+            <Option>logo</Option>
+            <Option>rank</Option>
+            <Option>text</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Npc Ships">
+      <Pathes>
+        <Path>missions\npcships.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="NPCShipArch" multiple="true" identifier="nickname">
+          <Options>
+            <Option>level</Option>
+            <Option>loadout</Option>
+            <Option>nickname</Option>
+            <Option>npc_class</Option>
+            <Option>pilot</Option>
+            <Option>ship_archetype</Option>
+            <Option>state_graph</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Pilots Population">
+      <Pathes>
+        <Path>missions\pilots_population.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="BuzzHeadTowardBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>buzz_dodge_cone_angle</Option>
+            <Option>buzz_dodge_cone_angle_variance_percent</Option>
+            <Option multiple="true">buzz_dodge_direction_weight</Option>
+            <Option>buzz_dodge_interval_time</Option>
+            <Option>buzz_dodge_interval_time_variance_percent</Option>
+            <Option>buzz_dodge_roll_angle</Option>
+            <Option>buzz_dodge_turn_throttle</Option>
+            <Option>buzz_dodge_waggle_axis_cone_angle</Option>
+            <Option>buzz_head_toward_engine_throttle</Option>
+            <Option>buzz_head_toward_roll_flip_direction</Option>
+            <Option>buzz_head_toward_roll_throttle</Option>
+            <Option multiple="true">buzz_head_toward_style_weight</Option>
+            <Option>buzz_head_toward_turn_throttle</Option>
+            <Option>buzz_max_time_to_head_away</Option>
+            <Option>buzz_min_distance_to_head_toward</Option>
+            <Option>buzz_min_distance_to_head_toward_variance_percent</Option>
+            <Option>buzz_slide_interval_time</Option>
+            <Option>buzz_slide_interval_time_variance_percent</Option>
+            <Option>buzz_slide_throttle</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="BuzzPassByBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>buzz_break_direction_cone_angle</Option>
+            <Option multiple="true">buzz_break_direction_weight</Option>
+            <Option>buzz_break_turn_throttle</Option>
+            <Option>buzz_distance_to_pass_by</Option>
+            <Option>buzz_drop_bomb_on_pass_by</Option>
+            <Option>buzz_pass_by_roll_throttle</Option>
+            <Option multiple="true">buzz_pass_by_style_weight</Option>
+            <Option>buzz_pass_by_time</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="CountermeasureBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>countermeasure_active_time</Option>
+            <Option>countermeasure_unactive_time</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="DamageReactionBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>afterburner_damage_trigger_percent</Option>
+            <Option>afterburner_damage_trigger_time</Option>
+            <Option>brake_reverse_damage_trigger_percent</Option>
+            <Option>drop_mines_damage_trigger_percent</Option>
+            <Option>drop_mines_damage_trigger_time</Option>
+            <Option>engine_kill_face_damage_trigger_percent</Option>
+            <Option>engine_kill_face_damage_trigger_time</Option>
+            <Option>evade_break_damage_trigger_percent</Option>
+            <Option>evade_dodge_more_damage_trigger_percent</Option>
+            <Option>fire_guns_damage_trigger_percent</Option>
+            <Option>fire_guns_damage_trigger_time</Option>
+            <Option>fire_missiles_damage_trigger_percent</Option>
+            <Option>fire_missiles_damage_trigger_time</Option>
+            <Option>nickname</Option>
+            <Option>roll_damage_trigger_percent</Option>
+            <Option>roll_damage_trigger_time</Option>
+          </Options>
+        </Block>
+        <Block name="EngineKillBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>engine_kill_afterburner_time</Option>
+            <Option>engine_kill_face_time</Option>
+            <Option>engine_kill_max_target_distance</Option>
+            <Option>engine_kill_search_time</Option>
+            <Option>engine_kill_use_afterburner</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="EvadeBreakBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>evade_break_afterburner_delay</Option>
+            <Option>evade_break_afterburner_delay_variance_percent</Option>
+            <Option>evade_break_attempt_reverse_time</Option>
+            <Option multiple="true">evade_break_direction_weight</Option>
+            <Option>evade_break_interval_time</Option>
+            <Option>evade_break_reverse_distance</Option>
+            <Option>evade_break_roll_throttle</Option>
+            <Option multiple="true">evade_break_style_weight</Option>
+            <Option>evade_break_time</Option>
+            <Option>evade_break_turn_throttle</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="EvadeDodgeBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>evade_activate_range</Option>
+            <Option>evade_dodge_cone_angle</Option>
+            <Option>evade_dodge_cone_angle_variance_percent</Option>
+            <Option>evade_dodge_corkscrew_roll_flip_direction</Option>
+            <Option>evade_dodge_corkscrew_roll_throttle</Option>
+            <Option>evade_dodge_corkscrew_turn_throttle</Option>
+            <Option multiple="true">evade_dodge_direction_weight</Option>
+            <Option>evade_dodge_distance</Option>
+            <Option>evade_dodge_interval_time</Option>
+            <Option>evade_dodge_interval_time_variance_percent</Option>
+            <Option>evade_dodge_roll_angle</Option>
+            <Option>evade_dodge_slide_throttle</Option>
+            <Option>evade_dodge_style_weight</Option>
+            <Option>evade_dodge_time</Option>
+            <Option>evade_dodge_turn_throttle</Option>
+            <Option>evade_dodge_waggle_axis_cone_angle</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="FormationBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>break_apart_formation_missile_reaction_time</Option>
+            <Option>break_apart_formation_on_evade_break</Option>
+            <Option>break_formation_damage_trigger_percent</Option>
+            <Option>break_formation_damage_trigger_time</Option>
+            <Option>break_formation_missile_reaction_time</Option>
+            <Option>break_formation_on_evade_break_time</Option>
+            <Option>force_attack_formation_active_time</Option>
+            <Option>force_attack_formation_unactive_time</Option>
+            <Option>formation_exit_max_time</Option>
+            <Option>formation_exit_roll_outrun_throttle</Option>
+            <Option>formation_exit_top_turn_break_away_throttle</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="GunBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>auto_turret_burst_interval_time</Option>
+            <Option>auto_turret_burst_interval_variance_percent</Option>
+            <Option>auto_turret_interval_time</Option>
+            <Option>auto_turret_no_burst_interval_time</Option>
+            <Option>fire_style</Option>
+            <Option>gun_fire_accuracy_cone_angle</Option>
+            <Option>gun_fire_accuracy_power</Option>
+            <Option>gun_fire_accuracy_power_npc</Option>
+            <Option>gun_fire_burst_interval_time</Option>
+            <Option>gun_fire_burst_interval_variance_percent</Option>
+            <Option>gun_fire_interval_time</Option>
+            <Option>gun_fire_interval_variance_percent</Option>
+            <Option>gun_fire_no_burst_interval_time</Option>
+            <Option>gun_range_threshold</Option>
+            <Option>gun_range_threshold_variance_percent</Option>
+            <Option>gun_target_point_switch_time</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="JobBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option multiple="true">attack_preference</Option>
+            <Option>attack_subtarget_order</Option>
+            <Option>combat_drift_distance</Option>
+            <Option>field_targeting</Option>
+            <Option>flee_no_weapons_style</Option>
+            <Option>flee_scene_threat_style</Option>
+            <Option>flee_when_hull_damaged_percent</Option>
+            <Option>flee_when_leader_flees_style</Option>
+            <Option>force_attack_formation</Option>
+            <Option>loot_flee_threshold</Option>
+            <Option>loot_preference</Option>
+            <Option>maximum_leader_target_distance</Option>
+            <Option>nickname</Option>
+            <Option>scene_toughness_threshold</Option>
+            <Option>wait_for_leader_target</Option>
+          </Options>
+        </Block>
+        <Block name="MineBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>mine_launch_cone_angle</Option>
+            <Option>mine_launch_interval</Option>
+            <Option>mine_launch_range</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="MissileBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>missile_launch_allow_out_of_range</Option>
+            <Option>missile_launch_cone_angle</Option>
+            <Option>missile_launch_interval_time</Option>
+            <Option>missile_launch_interval_variance_percent</Option>
+            <Option>missile_launch_range</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="MissileReactionBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>evade_afterburn_missile_reaction_time</Option>
+            <Option>evade_break_missile_reaction_time</Option>
+            <Option>evade_missile_distance</Option>
+            <Option>evade_slide_missile_reaction_time</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="Pilot" multiple="true" identifier="nickname">
+          <Options>
+            <Option>buzz_head_toward_id</Option>
+            <Option>buzz_pass_by_id</Option>
+            <Option>countermeasure_id</Option>
+            <Option>damage_reaction_id</Option>
+            <Option>engine_kill_id</Option>
+            <Option>evade_break_id</Option>
+            <Option>evade_dodge_id</Option>
+            <Option>formation_id</Option>
+            <Option>gun_id</Option>
+            <Option>inherit</Option>
+            <Option>job_id</Option>
+            <Option>mine_id</Option>
+            <Option>missile_id</Option>
+            <Option>missile_reaction_id</Option>
+            <Option>nickname</Option>
+            <Option>repair_id</Option>
+            <Option>strafe_id</Option>
+            <Option>trail_id</Option>
+          </Options>
+        </Block>
+        <Block name="RepairBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>use_hull_repair_at_damage_percent</Option>
+            <Option>use_hull_repair_post_delay</Option>
+            <Option>use_hull_repair_pre_delay</Option>
+            <Option>use_shield_repair_at_damage_percent</Option>
+            <Option>use_shield_repair_post_delay</Option>
+            <Option>use_shield_repair_pre_delay</Option>
+          </Options>
+        </Block>
+        <Block name="StrafeBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>strafe_attack_throttle</Option>
+            <Option>strafe_run_away_distance</Option>
+          </Options>
+        </Block>
+        <Block name="TrailBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>trail_break_afterburner</Option>
+            <Option>trail_break_roll_throttle</Option>
+            <Option>trail_break_time</Option>
+            <Option>trail_distance</Option>
+            <Option>trail_lock_cone_angle</Option>
+            <Option>trail_max_turn_throttle</Option>
+            <Option>trail_min_no_lock_time</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Pilots Story">
+      <Pathes>
+        <Path>missions\pilots_story.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="EvadeDodgeBlock">
+          <Options>
+            <Option>evade_activate_range</Option>
+            <Option>evade_dodge_cone_angle</Option>
+            <Option>evade_dodge_cone_angle_variance_percent</Option>
+            <Option>evade_dodge_corkscrew_roll_flip_direction</Option>
+            <Option>evade_dodge_corkscrew_roll_throttle</Option>
+            <Option>evade_dodge_corkscrew_turn_throttle</Option>
+            <Option multiple="true">evade_dodge_direction_weight</Option>
+            <Option>evade_dodge_distance</Option>
+            <Option>evade_dodge_interval_time</Option>
+            <Option>evade_dodge_interval_time_variance_percent</Option>
+            <Option>evade_dodge_roll_angle</Option>
+            <Option>evade_dodge_slide_throttle</Option>
+            <Option>evade_dodge_style_weight</Option>
+            <Option>evade_dodge_time</Option>
+            <Option>evade_dodge_turn_throttle</Option>
+            <Option>evade_dodge_waggle_axis_cone_angle</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="FormationBlock">
+          <Options>
+            <Option>force_attack_formation_active_time</Option>
+            <Option>force_attack_formation_unactive_time</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="GunBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>auto_turret_burst_interval_time</Option>
+            <Option>auto_turret_burst_interval_variance_percent</Option>
+            <Option>auto_turret_interval_time</Option>
+            <Option>auto_turret_no_burst_interval_time</Option>
+            <Option>fire_style</Option>
+            <Option>gun_fire_accuracy_cone_angle</Option>
+            <Option>gun_fire_accuracy_power</Option>
+            <Option>gun_fire_accuracy_power_npc</Option>
+            <Option>gun_fire_burst_interval_time</Option>
+            <Option>gun_fire_burst_interval_variance_percent</Option>
+            <Option>gun_fire_interval_time</Option>
+            <Option>gun_fire_interval_variance_percent</Option>
+            <Option>gun_fire_no_burst_interval_time</Option>
+            <Option>gun_range_threshold</Option>
+            <Option>gun_range_threshold_variance_percent</Option>
+            <Option>gun_target_point_switch_time</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="JobBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>allow_player_targeting</Option>
+            <Option multiple="true">attack_preference</Option>
+            <Option>attack_subtarget_order</Option>
+            <Option>field_targeting</Option>
+            <Option>flee_no_weapons_style</Option>
+            <Option>flee_scene_threat_style</Option>
+            <Option>flee_when_hull_damaged_percent</Option>
+            <Option>flee_when_leader_flees_style</Option>
+            <Option>force_attack_formation</Option>
+            <Option>loot_flee_threshold</Option>
+            <Option>loot_preference</Option>
+            <Option>maximum_leader_target_distance</Option>
+            <Option>nickname</Option>
+            <Option>scene_toughness_threshold</Option>
+            <Option>wait_for_leader_target</Option>
+          </Options>
+        </Block>
+        <Block name="MissileBlock" multiple="true" identifier="nickname">
+          <Options>
+            <Option>missile_launch_allow_out_of_range</Option>
+            <Option>missile_launch_cone_angle</Option>
+            <Option>missile_launch_interval_time</Option>
+            <Option>missile_launch_interval_variance_percent</Option>
+            <Option>missile_launch_range</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+        <Block name="Pilot" multiple="true" identifier="nickname">
+          <Options>
+            <Option>buzz_head_toward_id</Option>
+            <Option>buzz_pass_by_id</Option>
+            <Option>countermeasure_id</Option>
+            <Option>damage_reaction_id</Option>
+            <Option>engine_kill_id</Option>
+            <Option>evade_break_id</Option>
+            <Option>evade_dodge_id</Option>
+            <Option>formation_id</Option>
+            <Option>gun_id</Option>
+            <Option>inherit</Option>
+            <Option>job_id</Option>
+            <Option>mine_id</Option>
+            <Option>missile_id</Option>
+            <Option>missile_reaction_id</Option>
+            <Option>nickname</Option>
+            <Option>repair_id</Option>
+            <Option>strafe_id</Option>
+            <Option>trail_id</Option>
+          </Options>
+        </Block>
+        <Block name="StrafeBlock">
+          <Options>
+            <Option>nickname</Option>
+            <Option>strafe_attack_throttle</Option>
+            <Option>strafe_run_away_distance</Option>
+            <Option>strafe_turn_throttle</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Player Toughness">
+      <Pathes>
+        <Path>missions\ptough.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="PlayerToughnessScale">
+          <Options>
+            <Option multiple="true">ptough_graph_pt</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Rank Diff">
+      <Pathes>
+        <Path>missions\rankdiff.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="RankDiffDB">
+          <Options>
+            <Option multiple="true">rank_diff</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Ship Classes">
+      <Pathes>
+        <Path>missions\shipclasses.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="ShipClass" multiple="true" identifier="nickname">
+          <Options>
+            <Option multiple="true">member</Option>
+            <Option>nickname</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Specific Npc">
+      <Pathes>
+        <Path>missions\specific_npc.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="NPC" multiple="true" identifier="nickname">
+          <Options>
+            <Option>affiliation</Option>
+            <Option>base_appr</Option>
+            <Option>individual_name</Option>
+            <Option>nickname</Option>
+            <Option>voice</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Voice Properties">
+      <Pathes>
+        <Path>missions\voice_properties.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="mVoiceProp" multiple="true" identifier="voice">
+          <Options>
+            <Option>voice</Option>
+            <Option multiple="true">permutation_count</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Mission Nrml">
+      <Pathes>
+        <Path>missions\*\*_nrml.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="Char">
+          <Options>
+            <Option>actor</Option>
+            <Option>fidget</Option>
+            <Option>npc</Option>
+            <Option>spot</Option>
+          </Options>
+        </Block>
+        <Block name="CharacterEncounter">
+          <Options>
+            <Option>accept</Option>
+            <Option>action</Option>
+            <Option>autoplay</Option>
+            <Option>decision</Option>
+            <Option>decline</Option>
+            <Option>Location</Option>
+            <Option>mission_text_id</Option>
+            <Option>nooffer_text_id</Option>
+            <Option>offer</Option>
+            <Option>reject</Option>
+            <Option>relocate_player</Option>
+            <Option>start_room</Option>
+          </Options>
+        </Block>
+        <Block name="Reserve">
+          <Options>
+            <Option multiple="true">spot</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
     <File name="Mission Encounters">
-      <Type>ini</Type>
       <Pathes>
         <Path>missions\encounters\*.ini</Path>
       </Pathes>
@@ -2477,7 +2424,6 @@
       </Blocks>
     </File>
     <File name="Interface Button Montage">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\buttonmontage.ini</Path>
       </Pathes>
@@ -2564,7 +2510,6 @@
       </Blocks>
     </File>
     <File name="Interface Button Textures">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\buttontextures.ini</Path>
       </Pathes>
@@ -2578,7 +2523,6 @@
       </Blocks>
     </File>
     <File name="Interface Hud">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\hud.ini</Path>
       </Pathes>
@@ -2648,7 +2592,6 @@
       </Blocks>
     </File>
     <File name="Interface Infocard Map">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\infocardmap.ini</Path>
       </Pathes>
@@ -2661,7 +2604,6 @@
       </Blocks>
     </File>
     <File name="Interface Intro">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\intro.ini</Path>
       </Pathes>
@@ -2678,7 +2620,6 @@
       </Blocks>
     </File>
     <File name="Interface Key List">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\keylist.ini</Path>
       </Pathes>
@@ -2697,7 +2638,6 @@
       </Blocks>
     </File>
     <File name="Interface Key Map">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\keymap.ini</Path>
       </Pathes>
@@ -2723,7 +2663,6 @@
       </Blocks>
     </File>
     <File name="Interface Knowledge Map">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\knowledgemap.ini</Path>
       </Pathes>
@@ -2736,7 +2675,6 @@
       </Blocks>
     </File>
     <File name="Interface Option List">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\optlist.ini</Path>
       </Pathes>
@@ -2759,7 +2697,6 @@
       </Blocks>
     </File>
     <File name="Interface Rollover">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\rollover.ini</Path>
       </Pathes>
@@ -2772,7 +2709,6 @@
       </Blocks>
     </File>
     <File name="Interface UI Textures">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\ui\uitextures.ini</Path>
       </Pathes>
@@ -2786,7 +2722,6 @@
       </Blocks>
     </File>
     <File name="Interface Nav Map Textures">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\neuronet\navmap\newnavmap\navmaptextures.ini</Path>
       </Pathes>
@@ -2800,7 +2735,6 @@
       </Blocks>
     </File>
     <File name="Interface Hud Target">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\hud\hudtarget.ini</Path>
       </Pathes>
@@ -2823,7 +2757,6 @@
       </Blocks>
     </File>
     <File name="Interface Hud Textures">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\hud\hud_txm.ini</Path>
       </Pathes>
@@ -2837,7 +2770,6 @@
       </Blocks>
     </File>
     <File name="Interface Nav Bar">
-      <Type>ini</Type>
       <Pathes>
         <Path>interface\baseside\navbar.ini</Path>
       </Pathes>
@@ -3069,7 +3001,6 @@
       </Blocks>
     </File>
     <File name="Effects">
-      <Type>ini</Type>
       <Pathes>
         <Path>fx\*effects*.ini</Path>
       </Pathes>
@@ -3151,7 +3082,6 @@
       </Blocks>
     </File>
     <File name="Effect Shapes">
-      <Type>ini</Type>
       <Pathes>
         <Path>fx\effect_shapes.ini</Path>
       </Pathes>
@@ -3165,7 +3095,6 @@
       </Blocks>
     </File>
     <File name="Effect Explosions">
-      <Type>ini</Type>
       <Pathes>
         <Path>fx\explosions.ini</Path>
       </Pathes>
@@ -3210,7 +3139,6 @@
       </Blocks>
     </File>
     <File name="Effect Fuses">
-      <Type>ini</Type>
       <Pathes>
         <Path>fx\fuse*.ini</Path>
       </Pathes>
@@ -3316,7 +3244,6 @@
       </Blocks>
     </File>
     <File name="Effect Gate Tunnel">
-      <Type>ini</Type>
       <Pathes>
         <Path>fx\gate_tunnel.ini</Path>
       </Pathes>
@@ -3363,7 +3290,6 @@
       </Blocks>
     </File>
     <File name="Effect Jump Effect">
-      <Type>ini</Type>
       <Pathes>
         <Path>fx\jumpeffect.ini</Path>
       </Pathes>
@@ -3394,7 +3320,6 @@
       </Blocks>
     </File>
     <File name="Effect Light Animation">
-      <Type>ini</Type>
       <Pathes>
         <Path>fx\lightanim.ini</Path>
       </Pathes>
@@ -3408,7 +3333,6 @@
       </Blocks>
     </File>
     <File name="Effect Weapons">
-      <Type>ini</Type>
       <Pathes>
         <Path>fx\weapons\*.ini</Path>
       </Pathes>
@@ -3424,7 +3348,6 @@
       </Blocks>
     </File>
     <File name="Fonts">
-      <Type>ini</Type>
       <Pathes>
         <Path>fonts\fonts.ini</Path>
       </Pathes>
@@ -3439,7 +3362,6 @@
       </Blocks>
     </File>
     <File name="Fonts Rich Fonts">
-      <Type>ini</Type>
       <Pathes>
         <Path>fonts\rich_fonts.ini</Path>
       </Pathes>
@@ -3462,22 +3384,7 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Equipment Commodities per Faction">
-      <Type>ini</Type>
-      <Pathes>
-        <Path>equipment\commodities_per_faction.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="FactionGood" multiple="true" identifier="faction">
-          <Options>
-            <Option>faction</Option>
-            <Option multiple="true">MarketGood</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
     <File name="Equipment">
-      <Type>ini</Type>
       <Pathes>
         <Path>equipment\*equip*</Path>
       </Pathes>
@@ -3961,8 +3868,20 @@
         </Block>
       </Blocks>
     </File>
+    <File name="Equipment Commodities per Faction">
+      <Pathes>
+        <Path>equipment\commodities_per_faction.ini</Path>
+      </Pathes>
+      <Blocks>
+        <Block name="FactionGood" multiple="true" identifier="faction">
+          <Options>
+            <Option>faction</Option>
+            <Option multiple="true">MarketGood</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
     <File name="Equipment Goods">
-      <Type>ini</Type>
       <Pathes>
         <Path>equipment\*good*</Path>
       </Pathes>
@@ -3994,7 +3913,6 @@
       </Blocks>
     </File>
     <File name="Equipment Market">
-      <Type>ini</Type>
       <Pathes>
         <Path>equipment\market*.ini</Path>
       </Pathes>
@@ -4008,7 +3926,6 @@
       </Blocks>
     </File>
     <File name="Equipment Weapon Mod Db">
-      <Type>ini</Type>
       <Pathes>
         <Path>equipment\weaponmoddb.ini</Path>
       </Pathes>
@@ -4022,7 +3939,6 @@
       </Blocks>
     </File>
     <File name="Cockpits">
-      <Type>ini</Type>
       <Pathes>
         <Path>cockpits\*\*.ini</Path>
       </Pathes>
@@ -4055,7 +3971,6 @@
       </Blocks>
     </File>
     <File name="Characters Body Parts">
-      <Type>ini</Type>
       <Pathes>
         <Path>characters\bodyparts.ini</Path>
       </Pathes>
@@ -4115,7 +4030,6 @@
       </Blocks>
     </File>
     <File name="Characters Costumes">
-      <Type>ini</Type>
       <Pathes>
         <Path>characters\costumes.ini</Path>
       </Pathes>
@@ -4132,7 +4046,6 @@
       </Blocks>
     </File>
     <File name="Characters New Charakter">
-      <Type>ini</Type>
       <Pathes>
         <Path>characters\newcharacter.ini</Path>
       </Pathes>
@@ -4170,7 +4083,6 @@
       </Blocks>
     </File>
     <File name="Sounds">
-      <Type>ini</Type>
       <Pathes>
         <Path>audio\*sounds.ini</Path>
       </Pathes>
@@ -4209,7 +4121,6 @@
       </Blocks>
     </File>
     <File name="Sound Configuration">
-      <Type>ini</Type>
       <Pathes>
         <Path>audio\soundcfg.ini</Path>
       </Pathes>

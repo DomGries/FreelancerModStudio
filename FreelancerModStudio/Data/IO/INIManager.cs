@@ -20,132 +20,114 @@ namespace FreelancerModStudio.Data.IO
         {
             List<INIBlock> data = new List<INIBlock>();
 
-            StreamReader streamReader = null;
+            INIBlock currentBlock = new INIBlock();
+            int currentOptionIndex = 0;
 
-            try
+            var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var streamReader = new StreamReader(stream, Encoding.Default);
+
+            while (!streamReader.EndOfStream)
             {
-                streamReader = new StreamReader(File, Encoding.Default);
-                INIBlock currentBlock = new INIBlock();
-                int currentOptionIndex = 0;
+                var line = streamReader.ReadLine();
+                if (line == null)
+                    break;
 
-                while (!streamReader.EndOfStream)
+                line = line.Trim();
+
+                //remove comments from data
+                int commentIndex = line.IndexOf(';');
+                if (commentIndex != -1)
+                    line = line.Substring(0, commentIndex).Trim();
+
+                if (line.Length > 0)
                 {
-                    var line = streamReader.ReadLine();
-                    if (line == null)
-                        break;
-
-                    line = line.Trim();
-
-                    //remove comments from data
-                    int commentIndex = line.IndexOf(';');
-                    if (commentIndex != -1)
-                        line = line.Substring(0, commentIndex).Trim();
-
-                    if (line.Length > 0)
+                    if (line[0] == '[' && line[line.Length - 1] != ']')
                     {
-                        if (line[0] == '[' && line[line.Length - 1] != ']')
+                        //reset current block if block was commented out
+                        if (currentBlock.Name != null)
+                            data.Add(currentBlock);
+
+                        currentBlock = new INIBlock();
+                    }
+                    else if (line[0] == '[' && line[line.Length - 1] == ']')
+                    {
+                        //new block
+                        if (currentBlock.Name != null)
+                            data.Add(currentBlock);
+
+                        string blockName = line.Substring(1, line.Length - 2).Trim();
+
+                        currentBlock = new INIBlock { Name = blockName, Options = new INIOptions() };
+                        currentOptionIndex = 0;
+                    }
+                    else if (currentBlock.Name != null)
+                    {
+                        //new value for block
+                        int valueIndex = line.IndexOf('=');
+                        if (valueIndex != -1)
                         {
-                            //reset current block if block was commented out
-                            if (currentBlock.Name != null)
-                                data.Add(currentBlock);
+                            //retrieve name and value from data
+                            string optionName = line.Substring(0, valueIndex).Trim();
+                            string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
 
-                            currentBlock = new INIBlock();
-                        }
-                        else if (line[0] == '[' && line[line.Length - 1] == ']')
-                        {
-                            //new block
-                            if (currentBlock.Name != null)
-                                data.Add(currentBlock);
-
-                            string blockName = line.Substring(1, line.Length - 2).Trim();
-
-                            currentBlock = new INIBlock { Name = blockName, Options = new INIOptions() };
-                            currentOptionIndex = 0;
-                        }
-                        else if (currentBlock.Name != null)
-                        {
-                            //new value for block
-                            int valueIndex = line.IndexOf('=');
-                            if (valueIndex != -1)
-                            {
-                                //retrieve name and value from data
-                                string optionName = line.Substring(0, valueIndex).Trim();
-                                string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
-
-                                currentBlock.Options.Add(optionName, new INIOption(optionValue, currentOptionIndex));
-                                currentOptionIndex++;
-                            }
+                            currentBlock.Options.Add(optionName, new INIOption(optionValue, currentOptionIndex));
+                            currentOptionIndex++;
                         }
                     }
                 }
-
-                if (currentBlock.Name != null)
-                    data.Add(currentBlock);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
 
-            if (streamReader != null)
-                streamReader.Close();
+            streamReader.Close();
+
+            if (currentBlock.Name != null)
+                data.Add(currentBlock);
 
             return data;
         }
 
         public void Write(List<INIBlock> data)
         {
-            StreamWriter streamWriter = null;
+            var streamWriter = new StreamWriter(File, false, Encoding.Default);
 
-            try
+            //write each block
+            int i = 0;
+            foreach (INIBlock block in data)
             {
-                streamWriter = new StreamWriter(File, false, Encoding.Default);
-
-                //write each block
-                int i = 0;
-                foreach (INIBlock block in data)
+                if (i > 0)
                 {
-                    if (i > 0)
-                    {
+                    streamWriter.WriteLine();
+                    if (WriteEmptyLine)
                         streamWriter.WriteLine();
-                        if (WriteEmptyLine)
-                            streamWriter.WriteLine();
-                    }
-
-                    streamWriter.WriteLine("[" + block.Name + "]");
-
-                    //write each option
-                    int k = 0;
-                    foreach (KeyValuePair<string, List<INIOption>> option in block.Options)
-                    {
-                        for (int h = 0; h < option.Value.Count; h++)
-                        {
-                            var key = option.Value[h].Parent ?? option.Key;
-
-                            if (WriteSpaces)
-                                streamWriter.Write(key + " = " + option.Value[h].Value);
-                            else
-                                streamWriter.Write(key + "=" + option.Value[h].Value);
-
-                            if (h < option.Value.Count - 1)
-                                streamWriter.Write(Environment.NewLine);
-                        }
-
-                        if (k < block.Options.Count - 1)
-                            streamWriter.Write(Environment.NewLine);
-
-                        k++;
-                    }
-                    i++;
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+
+                streamWriter.WriteLine("[" + block.Name + "]");
+
+                //write each option
+                int k = 0;
+                foreach (KeyValuePair<string, List<INIOption>> option in block.Options)
+                {
+                    for (int h = 0; h < option.Value.Count; h++)
+                    {
+                        var key = option.Value[h].Parent ?? option.Key;
+
+                        if (WriteSpaces)
+                            streamWriter.Write(key + " = " + option.Value[h].Value);
+                        else
+                            streamWriter.Write(key + "=" + option.Value[h].Value);
+
+                        if (h < option.Value.Count - 1)
+                            streamWriter.Write(Environment.NewLine);
+                    }
+
+                    if (k < block.Options.Count - 1)
+                        streamWriter.Write(Environment.NewLine);
+
+                    k++;
+                }
+                i++;
             }
 
-            if (streamWriter != null)
-                streamWriter.Close();
+            streamWriter.Close();
         }
     }
 

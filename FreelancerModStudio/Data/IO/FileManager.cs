@@ -6,13 +6,13 @@ namespace FreelancerModStudio.Data.IO
     public class FileManager
     {
         public string File { get; set; }
-        public bool IsBini { get; set; }
+        public bool IsBINI { get; set; }
         public bool WriteSpaces { get; set; }
         public bool WriteEmptyLine { get; set; }
 
         public FileManager(string file, bool isBINI)
         {
-            IsBini = isBINI;
+            IsBINI = isBINI;
             File = file;
         }
 
@@ -27,32 +27,25 @@ namespace FreelancerModStudio.Data.IO
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
             st.Start();
 #endif
-            List<INIBlock> iniData = null;
-            try
+            List<INIBlock> iniData;
+            //read basic file structure
+            if (encoding == FileEncoding.Automatic || encoding == FileEncoding.BINI)
             {
-                //read basic file structure
-                if (encoding == FileEncoding.Automatic || encoding == FileEncoding.BINI)
-                {
-                    IsBini = true;
+                IsBINI = true;
 
-                    BINIManager biniManager = new BINIManager(File);
-                    if (biniManager.Read())
-                        iniData = biniManager.Data;
-                    else
-                    {
-                        if (encoding == FileEncoding.Automatic)
-                            iniData = ReadINI();
-                        else
-                            return null;
-                    }
-                }
+                BINIManager biniManager = new BINIManager(File);
+                if (biniManager.Read())
+                    iniData = biniManager.Data;
                 else
-                    iniData = ReadINI();
+                {
+                    if (encoding == FileEncoding.Automatic)
+                        iniData = ReadINI();
+                    else
+                        return null;
+                }
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            else
+                iniData = ReadINI();
 #if DEBUG
             st.Stop();
             System.Diagnostics.Debug.WriteLine("load data: " + st.ElapsedMilliseconds + "ms");
@@ -178,7 +171,7 @@ namespace FreelancerModStudio.Data.IO
 
         List<INIBlock> ReadINI()
         {
-            IsBini = false;
+            IsBINI = false;
             INIManager iniManager = new INIManager(File);
             return iniManager.Read();
         }
@@ -237,28 +230,21 @@ namespace FreelancerModStudio.Data.IO
                 newData.Add(new INIBlock { Name = block.Name, Options = newBlock });
             }
 
-            try
-            {
-                //if (IsBini)
-                //{
-                //    BINIManager biniManager = new BINIManager(File);
-                //    biniManager.Data = newData;
-                //    biniManager.Write();
-                //}
-                //else
-                //{
-                var iniManager = new INIManager(File)
-                    {
-                        WriteEmptyLine = WriteEmptyLine,
-                        WriteSpaces = WriteSpaces
-                    };
-                iniManager.Write(newData);
-                //}
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            //if (IsBINI)
+            //{
+            //    BINIManager biniManager = new BINIManager(File);
+            //    biniManager.Data = newData;
+            //    biniManager.Write();
+            //}
+            //else
+            //{
+            var iniManager = new INIManager(File)
+                                 {
+                                     WriteEmptyLine = WriteEmptyLine,
+                                     WriteSpaces = WriteSpaces
+                                 };
+            iniManager.Write(newData);
+            //}
         }
 
         public static int GetTemplateIndex(string file)

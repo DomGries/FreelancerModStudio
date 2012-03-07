@@ -80,7 +80,7 @@ namespace FreelancerModStudio
                 EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, templateIndex);
 
                 Data = new TableData(iniContent);
-                IsBINI = fileManager.IsBini;
+                IsBINI = fileManager.IsBINI;
 
                 SetFile(file);
             }

@@ -6,66 +6,17 @@
         <Path>exe\freelancer.ini</Path>
       </Pathes>
       <Blocks>
-        <Block name="Freelancer">
-          <Options>
-            <Option>data path</Option>
-            <Option>local_server</Option>
-            <Option>initial_world</Option>
-            <Option>AppGUID</Option>
-          </Options>
-        </Block>
-        <Block name="Display">
-          <Options>
-            <Option>fullscreen</Option>
-            <Option>size</Option>
-            <Option>color_bpp</Option>
-            <Option>depth_bpp</Option>
-          </Options>
-        </Block>
-        <Block name="Startup">
-          <Options>
-            <Option multiple="true">movie_file</Option>
-          </Options>
-        </Block>
-        <Block name="ListServer">
-          <Options>
-            <Option>hostname</Option>
-            <Option>port</Option>
-          </Options>
-        </Block>
-        <Block name="Server">
-          <Options>
-            <Option>death_penalty</Option>
-          </Options>
-        </Block>
-        <Block name="Initial MP DLLs">
-          <Options>
-            <Option>path</Option>
-            <Option multiple="true">DLL</Option>
-          </Options>
-        </Block>
-        <Block name="Initial SP DLLs">
-          <Options>
-            <Option>path</Option>
-            <Option multiple="true">DLL</Option>
-          </Options>
-        </Block>
-        <Block name="Resources">
-          <Options>
-            <Option multiple="true">DLL</Option>
-          </Options>
-        </Block>
         <Block name="Data">
           <Options>
             <Option>solar</Option>
             <Option>universe</Option>
             <Option>constants</Option>
-            <Option multiple="true">fonts</Option>
-            <Option multiple="true">fonts_dir</Option>
-            <Option multiple="true">rich_fonts</Option>
+            <Option>fonts</Option>
+            <Option>fonts_dir</Option>
+            <Option>rich_fonts</Option>
             <Option multiple="true">sounds</Option>
             <Option multiple="true">voices</Option>
-            <Option multiple="true">explosions</Option>
+            <Option>explosions</Option>
             <Option>debris</Option>
             <Option>asteroids</Option>
             <Option multiple="true">equipment</Option>
@@ -80,8 +31,8 @@
             <Option multiple="true">fuses</Option>
             <Option>concave</Option>
             <Option>intro</Option>
-            <Option multiple="true">gate_tunnels</Option>
-            <Option multiple="true">groups</Option>
+            <Option>gate_tunnels</Option>
+            <Option>groups</Option>
             <Option>HUD</Option>
             <Option>jump_effect</Option>
             <Option>stars</Option>
@@ -93,9 +44,58 @@
             <Option>rtcslider</Option>
           </Options>
         </Block>
+        <Block name="Display">
+          <Options>
+            <Option>fullscreen</Option>
+            <Option>size</Option>
+            <Option>color_bpp</Option>
+            <Option>depth_bpp</Option>
+          </Options>
+        </Block>
         <Block name="Error">
           <Options>
             <Option multiple="true">log</Option>
+          </Options>
+        </Block>
+        <Block name="Freelancer">
+          <Options>
+            <Option>data path</Option>
+            <Option>local_server</Option>
+            <Option>initial_world</Option>
+            <Option>AppGUID</Option>
+          </Options>
+        </Block>
+        <Block name="Initial MP DLLs">
+          <Options>
+            <Option>path</Option>
+            <Option multiple="true">DLL</Option>
+          </Options>
+        </Block>
+        <Block name="Initial SP DLLs">
+          <Options>
+            <Option>path</Option>
+            <Option multiple="true">DLL</Option>
+          </Options>
+        </Block>
+        <Block name="ListServer">
+          <Options>
+            <Option>hostname</Option>
+            <Option>port</Option>
+          </Options>
+        </Block>
+        <Block name="Resources">
+          <Options>
+            <Option multiple="true">DLL</Option>
+          </Options>
+        </Block>
+        <Block name="Server">
+          <Options>
+            <Option>death_penalty</Option>
+          </Options>
+        </Block>
+        <Block name="Startup">
+          <Options>
+            <Option multiple="true">movie_file</Option>
           </Options>
         </Block>
       </Blocks>
@@ -154,16 +154,16 @@
         </Block>
         <Block name="CommConsts">
           <Options>
+            <Option>COMM_PLAYER_FAR_DIST</Option>
+            <Option>COMM_PLAYER_FAR_DIST_ATTEN</Option>
             <Option>CHATTER_MAX_DIST</Option>
             <Option>CHATTER_MAX_DIST_ATTEN</Option>
             <Option>CHATTER_START_ATTEN</Option>
             <Option>COMM_CONFLICT_PRIORITY_CUTOFF</Option>
-            <Option>COMM_PLAYER_FAR_DIST</Option>
-            <Option>COMM_PLAYER_FAR_DIST_ATTEN</Option>
             <Option>WALLA_MAX_DIST</Option>
             <Option>WALLA_MAX_DIST_ATTEN</Option>
-            <Option>WALLA_PRIORITY_CUTOFF</Option>
             <Option>WALLA_START_ATTEN</Option>
+            <Option>WALLA_PRIORITY_CUTOFF</Option>
           </Options>
         </Block>
         <Block name="Constants">
@@ -171,29 +171,29 @@
             <Option>COLLISION_DAMAGE_FACTOR</Option>
             <Option>MUSIC_CROSS_FADE_DELAY</Option>
             <Option>MUZZLE_CONE_ANGLE</Option>
-            <Option>PLAYER_ATTACHED_EQUIP_HIT_PTS_SCALE</Option>
             <Option>PLAYER_COLLISION_GROUP_HIT_PTS_SCALE</Option>
+            <Option>PLAYER_ATTACHED_EQUIP_HIT_PTS_SCALE</Option>
           </Options>
         </Block>
         <Block name="EngineEquipConsts">
           <Options>
-            <Option>CRUISE_ATTEN_MOD_RANGE</Option>
             <Option>CRUISE_DISRUPT_TIME</Option>
-            <Option>CRUISE_STEADY_TIME</Option>
-            <Option>DELTA_CRUISE_ATTEN_MOD_STEADY</Option>
+            <Option>MAX_DELTA_FX_THROTTLE</Option>
+            <Option>THROTTLE_STEADY_TIME</Option>
+            <Option>THROTTLE_ATTEN_MOD_RANGE</Option>
             <Option>DELTA_THROTTLE_ATTEN_MOD_CHANGING</Option>
             <Option>DELTA_THROTTLE_ATTEN_MOD_STEADY</Option>
-            <Option>MAX_DELTA_FX_THROTTLE</Option>
-            <Option>THROTTLE_ATTEN_MOD_RANGE</Option>
-            <Option>THROTTLE_STEADY_TIME</Option>
+            <Option>CRUISE_STEADY_TIME</Option>
+            <Option>DELTA_CRUISE_ATTEN_MOD_STEADY</Option>
+            <Option>CRUISE_ATTEN_MOD_RANGE</Option>
           </Options>
         </Block>
         <Block name="PhySysConsts">
           <Options>
-            <Option>DEFAULT_ANGULAR_DAMPING</Option>
-            <Option>DEFAULT_LINEAR_DAMPING</Option>
-            <Option>MATERIAL_ELASTICITY</Option>
             <Option>MATERIAL_FRICTION</Option>
+            <Option>MATERIAL_ELASTICITY</Option>
+            <Option>DEFAULT_LINEAR_DAMPING</Option>
+            <Option>DEFAULT_ANGULAR_DAMPING</Option>
           </Options>
         </Block>
         <Block name="ShieldEquipConsts">
@@ -211,8 +211,8 @@
         <Block name="IGraph" multiple="true" identifier="nickname">
           <Options>
             <Option>nickname</Option>
-            <Option multiple="true">point</Option>
             <Option>type</Option>
+            <Option multiple="true">point</Option>
           </Options>
         </Block>
       </Blocks>
@@ -224,10 +224,10 @@
       <Blocks>
         <Block name="Group" multiple="true" identifier="nickname">
           <Options>
-            <Option>ids_info</Option>
-            <Option>ids_name</Option>
-            <Option>ids_short_name</Option>
             <Option>nickname</Option>
+            <Option>ids_name</Option>
+            <Option>ids_info</Option>
+            <Option>ids_short_name</Option>
             <Option multiple="true">rep</Option>
           </Options>
         </Block>
@@ -246,22 +246,22 @@
       <Blocks>
         <Block name="Cursor" multiple="true" identifier="nickname">
           <Options>
-            <Option>anim</Option>
-            <Option>blend</Option>
-            <Option>color</Option>
-            <Option>hotspot</Option>
             <Option>nickname</Option>
-            <Option>scale</Option>
+            <Option>anim</Option>
+            <Option>hotspot</Option>
+            <Option>blend</Option>
             <Option>spin</Option>
+            <Option>scale</Option>
+            <Option>color</Option>
           </Options>
         </Block>
         <Block name="Shape" multiple="true" identifier="name">
           <Options>
-            <Option>h</Option>
             <Option>name</Option>
-            <Option>w</Option>
             <Option>x</Option>
             <Option>y</Option>
+            <Option>w</Option>
+            <Option>h</Option>
           </Options>
         </Block>
         <Block name="Texture">
@@ -279,9 +279,9 @@
       <Blocks>
         <Block name="ObjectTable">
           <Options>
-            <Option multiple="true">cart</Option>
-            <Option multiple="true">prop</Option>
             <Option multiple="true">room</Option>
+            <Option multiple="true">prop</Option>
+            <Option multiple="true">cart</Option>
           </Options>
         </Block>
       </Blocks>

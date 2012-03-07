@@ -75,9 +75,10 @@ namespace FreelancerModStudio.SystemPresenter
 
                 zone.Shape = Parser.ParseShape(shapeString);
 
-                if (usageString == "trade")
+                var usageArray = usageString.Split(new char[] { ',' });
+                if (usageArray.ContainsValue("trade"))
                     zone.Type = ZoneType.PathTrade;
-                else if (usageString == "patrol")
+                else if (usageArray.ContainsValue("patrol"))
                     zone.Type = ZoneType.PathPatrol;
                 else if (vignetteString == "open" || vignetteString == "field" || vignetteString == "exclusion")
                     zone.Type = ZoneType.Vignette;
@@ -129,12 +130,16 @@ namespace FreelancerModStudio.SystemPresenter
                         ModelChanged = true;
                     }
 
-                    string ext = Path.GetExtension(block.Archetype.ModelPath).ToLower();
-                    if (ext == ".cmp" || ext == ".3db")
-                    {
-                        CmpModelContent cmpModel = new CmpModelContent();
-                        content.Model = cmpModel.LoadModel(Path.Combine(@"D:\Games\FL\DATA", block.Archetype.ModelPath));
-                    }
+                    //string ext = Path.GetExtension(block.Archetype.ModelPath).ToLower();
+                    //if (ext == ".cmp" || ext == ".3db")
+                    //{
+                    //    var path = Path.Combine(@"E:\Games\FL\DATA", block.Archetype.ModelPath);
+                    //    if (File.Exists(path))
+                    //    {
+                    //        var cmpModel = new CmpModelContent();
+                    //        content.Model = cmpModel.LoadModel(path);
+                    //    }
+                    //}
                 }
                 else
                     scale = new Vector3D(1, 1, 1);

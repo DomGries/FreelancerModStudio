@@ -71,7 +71,7 @@ namespace FreelancerModStudio.Data
                                     radius = Parser.ParseDouble(option.Values[0].Value.ToString(), 1);
                                     break;
                                 case "type":
-                                    type = Parser.ParseContentType(option.Values[0].Value.ToString());
+                                    type = SystemParser.ParseContentType(option.Values[0].Value.ToString());
                                     break;
                                 case "da_archetype":
                                     cmpFile = option.Values[0].Value.ToString();

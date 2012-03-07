@@ -20,7 +20,7 @@ namespace FreelancerModStudio.SystemPresenter
             string rotationString = "0,0,0";
             string shapeString = "box";
             string scaleString = "1,1,1";
-            string usageString = "";
+            var usageArray = new string[] { string.Empty };
             string vignetteString = "";
             string flagsString = "";
             string fileString = "";
@@ -46,7 +46,7 @@ namespace FreelancerModStudio.SystemPresenter
                             scaleString = value;
                             break;
                         case "usage":
-                            usageString = value.ToLower();
+                            usageArray = value.ToLower().Split(new char[] { ',' });
                             break;
                         case "vignette_type":
                             vignetteString = value.ToLower();
@@ -61,7 +61,7 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
-            Vector3D position = Parser.ParsePosition(positionString);
+            Vector3D position = ParsePosition(positionString);
             Vector3D rotation;
             Vector3D scale;
 
@@ -73,9 +73,8 @@ namespace FreelancerModStudio.SystemPresenter
                 ZoneShape oldShape = zone.Shape;
                 ZoneType oldType = zone.Type;
 
-                zone.Shape = Parser.ParseShape(shapeString);
+                zone.Shape = ParseShape(shapeString);
 
-                var usageArray = usageString.Split(new char[] { ',' });
                 if (usageArray.ContainsValue("trade"))
                     zone.Type = ZoneType.PathTrade;
                 else if (usageArray.ContainsValue("patrol"))
@@ -87,8 +86,8 @@ namespace FreelancerModStudio.SystemPresenter
                 else
                     zone.Type = ZoneType.Zone;
 
-                rotation = Parser.ParseRotation(rotationString, zone.Type == ZoneType.PathPatrol || zone.Type == ZoneType.PathTrade);
-                scale = Parser.ParseScale(scaleString, zone.Shape);
+                rotation = ParseRotation(rotationString, zone.Type == ZoneType.PathPatrol || zone.Type == ZoneType.PathTrade);
+                scale = ParseScale(scaleString, zone.Shape);
 
                 if (zone.Shape != oldShape || zone.Type != oldType)
                     ModelChanged = true;
@@ -96,13 +95,13 @@ namespace FreelancerModStudio.SystemPresenter
             else if (block.ObjectType == ContentType.LightSource)
             {
                 scale = new Vector3D(1, 1, 1);
-                rotation = Parser.ParseRotation(rotationString, false);
+                rotation = ParseRotation(rotationString, false);
             }
             else if (block.ObjectType == ContentType.System)
             {
-                position = Parser.ParseUniverseVector(positionString);
+                position = ParseUniverseVector(positionString);
                 scale = new Vector3D(2, 2, 2);
-                rotation = Parser.ParseRotation(rotationString, false);
+                rotation = ParseRotation(rotationString, false);
 
                 System system = (System)content;
                 system.Path = fileString;
@@ -144,22 +143,10 @@ namespace FreelancerModStudio.SystemPresenter
                 else
                     scale = new Vector3D(1, 1, 1);
 
-                rotation = Parser.ParseRotation(rotationString, false);
+                rotation = ParseRotation(rotationString, false);
             }
 
             content.SetDisplay(position, rotation, scale);
-        }
-    }
-
-    public static class Parser
-    {
-        public static double ParseDouble(string text, double defaultValue)
-        {
-            double value;
-            if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
-                return value;
-
-            return defaultValue;
         }
 
         public static Vector3D ParseScale(string scale, ZoneShape shape)
@@ -168,29 +155,32 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (shape == ZoneShape.Sphere && values.Length > 0)
             {
-                double tempScale = ParseDouble(values[0], 1);
+                var tempScale = Parser.ParseDouble(values[0], 1);
                 return new Vector3D(tempScale, tempScale, tempScale) / 1000;
             }
             else if (shape == ZoneShape.Cylinder && values.Length > 1)
             {
-                double tempScale1 = ParseDouble(values[0], 1);
-                double tempScale2 = ParseDouble(values[1], 1);
+                var tempScale1 = Parser.ParseDouble(values[0], 1);
+                var tempScale2 = Parser.ParseDouble(values[1], 1);
                 return new Vector3D(tempScale1, tempScale2, tempScale1) / 1000;
             }
             else if (values.Length > 2)
             {
-                double tempScale1 = ParseDouble(values[0], 1);
-                double tempScale2 = ParseDouble(values[1], 1);
-                double tempScale3 = ParseDouble(values[2], 1);
-                return new Vector3D(tempScale1, tempScale3, tempScale2) / 1000;
+                return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) / 1000;
             }
 
             return new Vector3D(1, 1, 1);
         }
 
+        public static Vector3D ParsePosition(string vector)
+        {
+            Vector3D tempVector = Parser.ParseVector(vector);
+            return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y) / 1000;
+        }
+
         public static Vector3D ParseRotation(string vector, bool pathRotation)
         {
-            Vector3D tempRotation = ParseVector(vector);
+            Vector3D tempRotation = Parser.ParseVector(vector);
 
             if (pathRotation)
             {
@@ -203,64 +193,39 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static ZoneShape ParseShape(string shape)
         {
-            shape = shape.ToLower();
-            if (shape == "box")
-                return ZoneShape.Box;
-            else if (shape == "sphere")
-                return ZoneShape.Sphere;
-            else if (shape == "cylinder")
-                return ZoneShape.Cylinder;
-            else if (shape == "ring")
-                return ZoneShape.Ring;
-            else
-                return ZoneShape.Ellipsoid;
+            switch (shape.ToLower())
+            {
+                case "box":
+                    return ZoneShape.Box;
+                case "sphere":
+                    return ZoneShape.Sphere;
+                case "cylinder":
+                    return ZoneShape.Cylinder;
+                case "ring":
+                    return ZoneShape.Ring;
+                default:
+                    return ZoneShape.Ellipsoid;
+            }
         }
 
-        public static Vector3D ParseUniverseVector(string vector)
+        public Vector3D ParseUniverseVector(string vector)
         {
             //Use Point.Parse after implementation of type handling
             string[] values = vector.Split(new char[] { ',' });
             if (values.Length > 1)
             {
-                double tempScale1 = ParseDouble(values[0], 0);
-                double tempScale2 = ParseDouble(values[1], 0);
+                var tempScale1 = Parser.ParseDouble(values[0], 0);
+                var tempScale2 = Parser.ParseDouble(values[1], 0);
                 return new Vector3D(tempScale1 - 7, -tempScale2 + 7, 0) / 0.09;
             }
             return new Vector3D(0, 0, 0);
         }
 
-        public static Vector3D ParseVector(string vector)
-        {
-            //Use Vector3D.Parse after implementation of type handling
-            string[] values = vector.Split(new char[] { ',' });
-            if (values.Length > 2)
-            {
-                double tempScale1 = ParseDouble(values[0], 0);
-                double tempScale2 = ParseDouble(values[1], 0);
-                double tempScale3 = ParseDouble(values[2], 0);
-                return new Vector3D(tempScale1, tempScale2, tempScale3);
-            }
-            return new Vector3D(0, 0, 0);
-        }
-
-        public static Vector3D ParsePosition(string vector)
-        {
-            Vector3D tempVector = ParseVector(vector);
-            return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y) / 1000;
-        }
-
-        public static double GetFactor(double number)
+        public double GetFactor(double number)
         {
             if (number < 0)
                 return -1;
             return 1;
-        }
-
-        public static double GetPositive(double number)
-        {
-            if (number < 0)
-                return number * -1;
-            return number;
         }
 
         public static ContentType ParseContentType(string type)

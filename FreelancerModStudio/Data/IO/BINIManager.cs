@@ -47,9 +47,6 @@ namespace FreelancerModStudio.Data.IO
                 //go back to data
                 stream.Position = dataPosition;
 
-                //us culture for american numbers
-                System.Globalization.CultureInfo usCulture = new System.Globalization.CultureInfo("en-us");
-
                 //read data
                 while (stream.Position < stringTablePosition && stream.Position < stream.Length)
                 {
@@ -76,9 +73,9 @@ namespace FreelancerModStudio.Data.IO
 
                             string entryValue = null;
                             if (valueType == 1)
-                                entryValue = binaryReader.ReadInt32().ToString("D", usCulture);
+                                entryValue = binaryReader.ReadInt32().ToString("D", System.Globalization.CultureInfo.InvariantCulture);
                             else if (valueType == 2)
-                                entryValue = binaryReader.ReadSingle().ToString("0.000000", usCulture);
+                                entryValue = binaryReader.ReadSingle().ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture);
                             else //string
                             {
                                 int valueStringPosition = binaryReader.ReadInt32();

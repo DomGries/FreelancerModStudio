@@ -104,6 +104,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Data\ArchetypeManager.cs" />
+    <Compile Include="Data\Parser.cs" />
     <Compile Include="Data\Table.cs" />
     <Compile Include="Data\TableData.cs" />
     <Compile Include="Data\UTF\CmpData.cs" />
@@ -230,10 +231,10 @@
     <Compile Include="System\DefaultLightsVisual3D.cs" />
     <Compile Include="System\Matrix3DAnimation.cs" />
     <Compile Include="System\SharedObjects.cs" />
-    <Compile Include="System\Parser.cs" />
     <Compile Include="System\Analyzer.cs" />
     <Compile Include="System\Content.cs" />
     <Compile Include="System\Presenter.cs" />
+    <Compile Include="System\SystemParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\About.ico" />

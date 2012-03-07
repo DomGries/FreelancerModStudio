@@ -100,42 +100,52 @@ namespace FreelancerModStudio.SystemPresenter
         protected override GeometryModel3D GetGeometry()
         {
             //special zones
-            if (Type == ZoneType.PathPatrol)
-                return SharedGeometries.ZonePathPatrol;
-            else if (Type == ZoneType.PathTrade)
-                return SharedGeometries.ZonePathTrade;
-            else if (Type == ZoneType.Vignette)
-                return SharedGeometries.ZoneVignette;
-            else if (Type == ZoneType.Exclusion)
+            switch (Type)
             {
-                if (Shape == ZoneShape.Box)
-                    return SharedGeometries.ZoneExclusionBox;
-                else if (Shape == ZoneShape.Cylinder)
-                    return SharedGeometries.ZoneExclusionCylinder;
-                else if (Shape == ZoneShape.Ring)
-                    return SharedGeometries.ZoneExclusionRing;
-                else
-                    return SharedGeometries.ZoneExclusionSphere;
+                case ZoneType.PathPatrol:
+                    return SharedGeometries.ZonePathPatrol;
+                case ZoneType.PathTrade:
+                    return SharedGeometries.ZonePathTrade;
+                case ZoneType.Vignette:
+                    return SharedGeometries.ZoneVignette;
+                case ZoneType.Exclusion:
+                    switch (Shape)
+                    {
+                        case ZoneShape.Box:
+                            return SharedGeometries.ZoneExclusionBox;
+                        case ZoneShape.Cylinder:
+                            return SharedGeometries.ZoneExclusionCylinder;
+                        case ZoneShape.Ring:
+                            return SharedGeometries.ZoneExclusionRing;
+                        default:
+                            return SharedGeometries.ZoneExclusionSphere;
+                    }
+                default:
+                    switch (Shape)
+                    {
+                        case ZoneShape.Box:
+                            return SharedGeometries.ZoneBox;
+                        case ZoneShape.Cylinder:
+                            return SharedGeometries.ZoneCylinder;
+                        case ZoneShape.Ring:
+                            return SharedGeometries.ZoneRing;
+                        default:
+                            return SharedGeometries.ZoneSphere;
+                    }
             }
-
-            if (Shape == ZoneShape.Box)
-                return SharedGeometries.ZoneBox;
-            else if (Shape == ZoneShape.Cylinder)
-                return SharedGeometries.ZoneCylinder;
-            else if (Shape == ZoneShape.Ring)
-                return SharedGeometries.ZoneRing;
-            else
-                return SharedGeometries.ZoneSphere;
         }
 
         public override MeshGeometry3D GetMesh()
         {
-            if (Shape == ZoneShape.Box)
-                return SharedMeshes.Box;
-            else if (Shape == ZoneShape.Cylinder)
-                return SharedMeshes.Cylinder;
-            else
-                return SharedMeshes.Sphere;
+            switch (Shape)
+            {
+                case ZoneShape.Box:
+                    return SharedMeshes.Box;
+                case ZoneShape.Cylinder:
+                    return SharedMeshes.Cylinder;
+                default:
+                    return SharedMeshes.Sphere;
+            }
         }
 
         public override bool IsEmissive()
@@ -198,14 +208,17 @@ namespace FreelancerModStudio.SystemPresenter
 
         Color GetColor(ConnectionType type)
         {
-            if (type == ConnectionType.Jumpgate)
-                return SharedMaterials.ConnectionJumpgate;
-            else if (type == ConnectionType.Jumphole)
-                return SharedMaterials.ConnectionJumphole;
-            else if (type == ConnectionType.Both)
-                return SharedMaterials.ConnectionBoth;
-            else
-                return SharedMaterials.ConnectionNone;
+            switch (type)
+            {
+                case ConnectionType.Jumpgate:
+                    return SharedMaterials.ConnectionJumpgate;
+                case ConnectionType.Jumphole:
+                    return SharedMaterials.ConnectionJumphole;
+                case ConnectionType.Both:
+                    return SharedMaterials.ConnectionBoth;
+                default:
+                    return SharedMaterials.ConnectionNone;
+            }
         }
 
         public override MeshGeometry3D GetMesh()

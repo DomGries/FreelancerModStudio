@@ -422,9 +422,9 @@ namespace FreelancerModStudio.SystemPresenter
         {
             if (jumpgate && !jumphole)
                 return ConnectionType.Jumpgate;
-            else if (!jumpgate && jumphole)
+            if (!jumpgate && jumphole)
                 return ConnectionType.Jumphole;
-            else if (jumpgate && jumphole)
+            if (jumpgate && jumphole)
                 return ConnectionType.Both;
 
             return ConnectionType.None;
@@ -434,8 +434,8 @@ namespace FreelancerModStudio.SystemPresenter
         {
             if (x > y)
                 return x - y;
-            else
-                return y - x;
+
+            return y - x;
         }
 
         public void ChangeValues(ContentBase content, TableBlock block)

@@ -118,7 +118,7 @@ namespace FreelancerModStudio.Data.UTF
                     break;
                 }
             }
-            return System.Text.Encoding.ASCII.GetString(data, index, count);
+            return Encoding.ASCII.GetString(data, index, count);
         }
 
         public byte[] Write()

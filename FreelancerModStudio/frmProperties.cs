@@ -56,16 +56,16 @@ namespace FreelancerModStudio
                 return;
             }
 
-            List<PropertyBlock> propertyBlocks = new List<PropertyBlock>();
+            var propertyBlocks = new object[blocks.Count];
 
             //loop each selected block
-            foreach (TableBlock block in blocks)
-                propertyBlocks.Add(new PropertyBlock(block.Block, Helper.Template.Data.Files[templateIndex].Blocks.Values[block.Block.TemplateIndex]));
+            for (int i = 0; i < blocks.Count; i++)
+                propertyBlocks[i] = new PropertyBlock(blocks[i].Block, Helper.Template.Data.Files[templateIndex].Blocks.Values[blocks[i].Block.TemplateIndex]);
 
-            propertyGrid.SelectedObjects = propertyBlocks.ToArray();
+            propertyGrid.SelectedObjects = propertyBlocks;
             propertyGrid.ExpandAllGridItems();
 
-            //ensure visibile of selected grid item
+            //ensure visibility of selected grid item
             propertyGrid.SelectedGridItem.Select();
         }
 
@@ -90,8 +90,8 @@ namespace FreelancerModStudio
         {
             if (propertyGrid.SelectedGridItem != null)
                 return propertyGrid.SelectedGridItem.Value is PropertySubOptions || (propertyGrid.SelectedGridItem.Parent != null && propertyGrid.SelectedGridItem.Parent.Value is PropertySubOptions);
-            else
-                return false;
+
+            return false;
         }
 
         public bool CanCopy()
@@ -134,7 +134,7 @@ namespace FreelancerModStudio
             {
                 PropertyOption option = propertyOptionDescriptor.PropertyOption;
                 object oldValue = option.Value;
-                option.Value = "";
+                option.Value = string.Empty;
 
                 propertyGrid_PropertyValueChanged(propertyGrid, new PropertyValueChangedEventArgs(propertyGrid.SelectedGridItem, oldValue));
             }

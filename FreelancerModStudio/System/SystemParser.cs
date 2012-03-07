@@ -15,9 +15,9 @@ namespace FreelancerModStudio.SystemPresenter
             string shapeString = "box";
             string scaleString = "1,1,1";
             var usageArray = new[] { string.Empty };
-            string vignetteString = "";
-            string flagsString = "";
-            string fileString = "";
+            string vignetteString = string.Empty;
+            string flagsString = string.Empty;
+            string fileString = string.Empty;
 
             //get properties of content
             foreach (EditorINIOption option in block.Block.Options)
@@ -152,16 +152,14 @@ namespace FreelancerModStudio.SystemPresenter
                 var tempScale = Parser.ParseDouble(values[0], 1);
                 return new Vector3D(tempScale, tempScale, tempScale) / 1000;
             }
-            else if (shape == ZoneShape.Cylinder && values.Length > 1)
+            if (shape == ZoneShape.Cylinder && values.Length > 1)
             {
                 var tempScale1 = Parser.ParseDouble(values[0], 1);
                 var tempScale2 = Parser.ParseDouble(values[1], 1);
                 return new Vector3D(tempScale1, tempScale2, tempScale1) / 1000;
             }
-            else if (values.Length > 2)
-            {
+            if (values.Length > 2)
                 return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) / 1000;
-            }
 
             return new Vector3D(1, 1, 1);
         }

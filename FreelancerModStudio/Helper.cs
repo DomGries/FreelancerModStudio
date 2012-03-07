@@ -31,7 +31,7 @@ namespace FreelancerModStudio
                 if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
                 {
                     //install update
-                    AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate("", "", "", null);
+                    AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(string.Empty, string.Empty, string.Empty, null);
                     if (autoUpdate.Install())
                         return;
                 }
@@ -48,13 +48,13 @@ namespace FreelancerModStudio
                 Application.Run(new frmMain());
 
                 //save settings
-                Helper.Settings.Save();
+                Settings.Save();
             }
         }
 
         public struct Update
         {
-            public static AutoUpdate.AutoUpdate AutoUpdate = new FreelancerModStudio.AutoUpdate.AutoUpdate();
+            public static AutoUpdate.AutoUpdate AutoUpdate = new AutoUpdate.AutoUpdate();
 
             public static void BackgroundCheck()
             {
@@ -71,20 +71,20 @@ namespace FreelancerModStudio
             public static void Check(bool silentCheck, bool silentDownload)
             {
                 Uri checkFileUri;
-                if (!Uri.TryCreate(Helper.Settings.Data.Data.General.AutoUpdate.UpdateFile, UriKind.Absolute, out checkFileUri))
+                if (!Uri.TryCreate(Settings.Data.Data.General.AutoUpdate.UpdateFile, UriKind.Absolute, out checkFileUri))
                 {
                     if (!silentCheck)
-                        MessageBox.Show(String.Format(Properties.Strings.UpdatesDownloadException, Helper.Assembly.Title), Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(String.Format(Properties.Strings.UpdatesDownloadException, Assembly.Title), Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    Helper.Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
+                    Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
                     return;
                 }
 
                 AutoUpdate.CheckFileUri = checkFileUri;
 
-                string proxy = "";
-                string username = "";
-                string password = "";
+                string proxy = string.Empty;
+                string username = string.Empty;
+                string password = string.Empty;
 
                 if (Settings.Data.Data.General.AutoUpdate.Proxy.Enabled)
                 {
@@ -118,7 +118,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(String.Format(Properties.Strings.TemplateLoadException, Properties.Resources.TemplatePath), ex);
+                    Exceptions.Show(String.Format(Properties.Strings.TemplateLoadException, Properties.Resources.TemplatePath), ex);
                     Environment.Exit(0);
                 }
             }
@@ -169,7 +169,7 @@ namespace FreelancerModStudio
 
         public struct Settings
         {
-            public static FreelancerModStudio.Data.Settings Data;
+            public static Data.Settings Data;
 
             public static void Save()
             {
@@ -183,24 +183,24 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(String.Format(Properties.Strings.SettingsSaveException, Properties.Resources.SettingsPath), ex);
+                    Exceptions.Show(String.Format(Properties.Strings.SettingsSaveException, Properties.Resources.SettingsPath), ex);
                 }
             }
 
             public static void Load()
             {
-                string File = System.IO.Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Properties.Resources.SettingsPath);
-                Data = new FreelancerModStudio.Data.Settings();
+                string file = System.IO.Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Properties.Resources.SettingsPath);
+                Data = new Data.Settings();
 
-                if (System.IO.File.Exists(File))
+                if (System.IO.File.Exists(file))
                 {
                     try
                     {
-                        Data.Load(File);
+                        Data.Load(file);
                     }
                     catch (Exception ex)
                     {
-                        Helper.Exceptions.Show(String.Format(Properties.Strings.SettingsLoadException, Properties.Resources.SettingsPath), ex);
+                        Exceptions.Show(String.Format(Properties.Strings.SettingsLoadException, Properties.Resources.SettingsPath), ex);
                     }
                 }
             }
@@ -260,8 +260,8 @@ namespace FreelancerModStudio
             {
                 if (bigger)
                     return (checkSize.Width >= currentSize.Width && checkSize.Height >= currentSize.Height);
-                else
-                    return (checkSize.Width <= currentSize.Width && checkSize.Height <= currentSize.Height);
+
+                return (checkSize.Width <= currentSize.Width && checkSize.Height <= currentSize.Height);
             }
         }
 
@@ -299,7 +299,7 @@ namespace FreelancerModStudio
                     {
                         System.Reflection.AssemblyTitleAttribute titleAttribute = (System.Reflection.AssemblyTitleAttribute)attributes[0];
 
-                        if (titleAttribute.Title != "")
+                        if (titleAttribute.Title != string.Empty)
                             return titleAttribute.Title;
                     }
 
@@ -321,7 +321,7 @@ namespace FreelancerModStudio
                 {
                     object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyDescriptionAttribute), false);
                     if (attributes.Length == 0)
-                        return "";
+                        return string.Empty;
 
                     return ((System.Reflection.AssemblyDescriptionAttribute)attributes[0]).Description;
                 }
@@ -333,7 +333,7 @@ namespace FreelancerModStudio
                 {
                     object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyProductAttribute), false);
                     if (attributes.Length == 0)
-                        return "";
+                        return string.Empty;
 
                     return ((System.Reflection.AssemblyProductAttribute)attributes[0]).Product;
                 }
@@ -345,7 +345,7 @@ namespace FreelancerModStudio
                 {
                     object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyCopyrightAttribute), false);
                     if (attributes.Length == 0)
-                        return "";
+                        return string.Empty;
 
                     return ((System.Reflection.AssemblyCopyrightAttribute)attributes[0]).Copyright;
                 }
@@ -357,7 +357,7 @@ namespace FreelancerModStudio
                 {
                     object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyCompanyAttribute), false);
                     if (attributes.Length == 0)
-                        return "";
+                        return string.Empty;
 
                     return ((System.Reflection.AssemblyCompanyAttribute)attributes[0]).Company;
                 }

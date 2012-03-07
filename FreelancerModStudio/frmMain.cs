@@ -454,7 +454,7 @@ namespace FreelancerModStudio
             DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, mod.Data.About.Name), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Cancel)
                 return true;
-            else if (dialogResult == DialogResult.Yes)
+            if (dialogResult == DialogResult.Yes)
             {
                 //TODO: save current mod
             }
@@ -548,22 +548,11 @@ namespace FreelancerModStudio
 
         void AutoUpdate_RestartingApplication(object sender, CancelEventArgs e)
         {
-            bool canceled = false;
-
             //close all MdiChildren and check if user canceled one
-            foreach (Form child in MdiChildren)
-            {
-                child.Close();
-                if (!child.IsDisposed)
-                    canceled = true;
-            }
-
-            if (canceled)
-                e.Cancel = true;
-            else
-            {
+            if (CloseAllDocuments())
                 BeginInvoke((MethodInvoker)Close);
-            }
+            else
+                e.Cancel = true;
         }
 
         void mnuOpenMod_Click(object sender, EventArgs e)
@@ -731,7 +720,7 @@ namespace FreelancerModStudio
 
         void mnuNewFile_Click(object sender, EventArgs e)
         {
-            int templateIndex = -1;
+            int templateIndex;
 
             //let the user choose the ini file type
             frmFileType fileTypeForm = new frmFileType(null);
@@ -763,8 +752,8 @@ namespace FreelancerModStudio
             {
                 if (dockPanel1.ActiveDocument != null)
                     return (ContentInterface)dockPanel1.ActiveDocument;
-                else
-                    return null;
+
+                return null;
             }
 
             return content;
@@ -909,8 +898,8 @@ namespace FreelancerModStudio
 
             if (document.CanSave())
             {
-                mnuSave.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSave, document.GetTitle());
-                mnuSaveAs.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSaveAs, document.GetTitle());
+                mnuSave.Text = String.Format(Properties.Strings.FileEditorSave, document.GetTitle());
+                mnuSaveAs.Text = String.Format(Properties.Strings.FileEditorSaveAs, document.GetTitle());
             }
 
             mnuUndo.Enabled = document.CanUndo();
@@ -991,7 +980,7 @@ namespace FreelancerModStudio
             var tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
             {
-                string file = "";
+                string file = string.Empty;
 
                 try
                 {

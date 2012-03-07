@@ -89,7 +89,7 @@ namespace FreelancerModStudio
                 Data = new TableData { TemplateIndex = templateIndex };
                 IsBINI = false;
 
-                SetFile("");
+                SetFile(string.Empty);
             }
 
             objectListView1.CellToolTip.InitialDelay = 1000;
@@ -145,7 +145,7 @@ namespace FreelancerModStudio
                 else if (block.Modified == TableModified.ChangedSaved)
                     lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
 
-                if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None && !block.Visibility)
+                if (block.ObjectType != SystemPresenter.ContentType.None && !block.Visibility)
                     lvi.ForeColor = Helper.Settings.Data.Data.General.EditorHiddenColor;
             };
 
@@ -157,8 +157,8 @@ namespace FreelancerModStudio
             }
 
             //update 'New file' to new language
-            if (File == "")
-                SetFile("");
+            if (File == string.Empty)
+                SetFile(string.Empty);
 
             objectListView1.Refresh();
         }
@@ -205,13 +205,13 @@ namespace FreelancerModStudio
             switch (block.Block.Name.ToLower())
             {
                 case "lightsource":
-                    block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.LightSource;
+                    block.ObjectType = SystemPresenter.ContentType.LightSource;
                     break;
                 case "zone":
-                    block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.Zone;
+                    block.ObjectType = SystemPresenter.ContentType.Zone;
                     break;
                 case "system":
-                    block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.System;
+                    block.ObjectType = SystemPresenter.ContentType.System;
                     break;
                 case "object":
                     if (archetypeManager != null)
@@ -238,12 +238,12 @@ namespace FreelancerModStudio
                         }
 
                         if (!hasArchetype)
-                            block.ObjectType = FreelancerModStudio.SystemPresenter.ContentType.None;
+                            block.ObjectType = SystemPresenter.ContentType.None;
                     }
                     break;
             }
 
-            if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
+            if (block.ObjectType != SystemPresenter.ContentType.None)
                 block.Visibility = true;
         }
 
@@ -327,7 +327,7 @@ namespace FreelancerModStudio
                 objectListView1.BooleanCheckStatePutter = delegate(object x, bool newValue)
                 {
                     TableBlock block = (TableBlock)x;
-                    if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
+                    if (block.ObjectType != SystemPresenter.ContentType.None)
                     {
                         block.Visibility = newValue;
 
@@ -342,7 +342,7 @@ namespace FreelancerModStudio
                 cols[2].AspectGetter = delegate(object x)
                 {
                     TableBlock block = (TableBlock)x;
-                    if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
+                    if (block.ObjectType != SystemPresenter.ContentType.None)
                         return block.ObjectType.ToString();
 
                     return block.Group;
@@ -634,7 +634,7 @@ namespace FreelancerModStudio
             EnsureSelectionVisible();
         }
 
-        private void MoveBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks, bool undo)
+        private void MoveBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
         {
             //remove all moved blocks first because otherwise inserted index would be wrong
             List<TableBlock> blocks = new List<TableBlock>();
@@ -770,7 +770,7 @@ namespace FreelancerModStudio
 
         public void Save()
         {
-            if (File == "")
+            if (File == string.Empty)
                 SaveAs();
             else
                 Save(File);
@@ -800,10 +800,7 @@ namespace FreelancerModStudio
 
         public string GetTitle()
         {
-            if (File == "")
-                return Properties.Strings.FileEditorNewFile;
-            else
-                return Path.GetFileName(File);
+            return File == string.Empty ? Properties.Strings.FileEditorNewFile : Path.GetFileName(File);
         }
 
         public void Copy()
@@ -888,7 +885,7 @@ namespace FreelancerModStudio
                     ChangeBlocks(data.NewBlocks, data.OldBlocks);
                     break;
                 case ChangedType.Move:
-                    MoveBlocks(data.NewBlocks, data.OldBlocks, undo);
+                    MoveBlocks(data.NewBlocks, data.OldBlocks);
                     break;
             }
 
@@ -937,7 +934,7 @@ namespace FreelancerModStudio
 
             foreach (TableBlock block in objectListView1.SelectedObjects)
             {
-                if (block.ObjectType != FreelancerModStudio.SystemPresenter.ContentType.None)
+                if (block.ObjectType != SystemPresenter.ContentType.None)
                 {
                     block.Visibility = visibility;
                     OnDataVisibilityChanged(block, visibility);

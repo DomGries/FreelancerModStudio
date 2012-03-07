@@ -15,10 +15,11 @@ namespace FreelancerModStudio.Controls
     {
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (value is PropertySubOptions)
-                return "[" + (((PropertySubOptions)value).Count - 1).ToString() + "]";
-            else
-                return "";
+            var propertySubOptions = value as PropertySubOptions;
+            if (propertySubOptions != null)
+                return "[" + ((propertySubOptions).Count - 1).ToString(CultureInfo.InvariantCulture) + "]";
+
+            return string.Empty;
         }
 
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
@@ -116,7 +117,7 @@ namespace FreelancerModStudio.Controls
                 index++;
             }
 
-            List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), "", null, children));
+            List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), string.Empty, null, children));
         }
     }
 
@@ -260,8 +261,8 @@ namespace FreelancerModStudio.Controls
             {
                 if (PropertyOption.Value != null)
                     return PropertyOption.Value.GetType();
-                else
-                    return typeof(object);
+
+                return typeof(object);
             }
         }
 

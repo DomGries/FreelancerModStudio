@@ -285,7 +285,7 @@ namespace FreelancerModStudio.AutoUpdate
                     //save settings because application was already closed except for this thread
                     Helper.Settings.Save();
 
-                    string arguments = "";
+                    string arguments = string.Empty;
                     if (Helper.Settings.Data.Data.General.AutoUpdate.Update.SilentInstall)
                         arguments = "/SILENT";
 

@@ -186,8 +186,8 @@ namespace FreelancerModStudio.Data
             [XmlArrayItem("RecentFile")]
             public List<RecentFile> RecentFiles = new List<RecentFile>();
 
-            public System.Drawing.Point Location;
-            public System.Drawing.Size Size;
+            public Point Location;
+            public Size Size;
 
             public bool Maximized;
             public bool FullScreen;
@@ -195,8 +195,8 @@ namespace FreelancerModStudio.Data
 
         public class NewMod
         {
-            public string ModSaveLocation = System.IO.Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "Mods");
-            public System.Drawing.Size Size;
+            public string ModSaveLocation = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Mods");
+            public Size Size;
         }
 
         public class ChooseFileType
@@ -226,11 +226,11 @@ namespace FreelancerModStudio.Data
 
     public class SettingsConverter : ExpandableObjectConverter
     {
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, System.Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            return "";
+            return string.Empty;
         }
-        public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return false;
         }

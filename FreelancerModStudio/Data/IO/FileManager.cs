@@ -309,33 +309,34 @@ namespace FreelancerModStudio.Data.IO
             if (type == ArrayType.String)
                 return arrayValues;
 
-            if (type == ArrayType.Int)
+            switch (type)
             {
-                List<int> newValues = new List<int>();
+                case ArrayType.Int:
+                    {
+                        List<int> newValues = new List<int>();
 
-                foreach (string arrayValue in arrayValues)
-                    newValues.Add(Convert.ToInt32(arrayValue.Trim()));
+                        foreach (string arrayValue in arrayValues)
+                            newValues.Add(Convert.ToInt32(arrayValue.Trim()));
 
-                return newValues.ToArray();
-            }
-            else if (type == ArrayType.Double)
-            {
-                List<double> newValues = new List<double>();
+                        return newValues.ToArray();
+                    }
+                case ArrayType.Double:
+                    {
+                        List<double> newValues = new List<double>();
 
-                foreach (string arrayValue in arrayValues)
-                    newValues.Add(Convert.ToDouble(arrayValue.Trim()));
+                        foreach (string arrayValue in arrayValues)
+                            newValues.Add(Convert.ToDouble(arrayValue.Trim()));
 
-                return newValues.ToArray();
-            }
-            else if (type == ArrayType.Point)
-            {
-                if (arrayValues.Length == 2)
-                    return new System.Drawing.Point(Convert.ToInt32(arrayValues[0].Trim()), Convert.ToInt32(arrayValues[1].Trim()));
-            }
-            else if (type == ArrayType.RGB)
-            {
-                if (arrayValues.Length == 3)
-                    return System.Drawing.Color.FromArgb(Convert.ToInt32(arrayValues[0].Trim()), Convert.ToInt32(arrayValues[1].Trim()), Convert.ToInt32(arrayValues[2].Trim()));
+                        return newValues.ToArray();
+                    }
+                case ArrayType.Point:
+                    if (arrayValues.Length == 2)
+                        return new System.Drawing.Point(Convert.ToInt32(arrayValues[0].Trim()), Convert.ToInt32(arrayValues[1].Trim()));
+                    break;
+                case ArrayType.RGB:
+                    if (arrayValues.Length == 3)
+                        return System.Drawing.Color.FromArgb(Convert.ToInt32(arrayValues[0].Trim()), Convert.ToInt32(arrayValues[1].Trim()), Convert.ToInt32(arrayValues[2].Trim()));
+                    break;
             }
 
             return null;

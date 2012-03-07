@@ -51,7 +51,7 @@ namespace FreelancerModStudio
         {
             folderBrowserDialog1.SelectedPath = txtSaveLocation.Text;
 
-            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 txtSaveLocation.Text = folderBrowserDialog1.SelectedPath;
         }
     }

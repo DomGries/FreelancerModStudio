@@ -23,7 +23,7 @@ namespace FreelancerModStudio.Controls
             DragDrop += SimpleTreeView_DragDrop;
         }
         
-        void tree_DragOver(object sender, System.Windows.Forms.DragEventArgs e)
+        void tree_DragOver(object sender, DragEventArgs e)
         {
             //string format = typeof(TreeNode).ToString();
 

@@ -48,11 +48,9 @@ namespace FreelancerModStudio.Data
                 value = dictionary.Values[index];
                 return true;
             }
-            else
-            {
-                value = default(TValue);
-                return false;
-            }
+
+            value = default(TValue);
+            return false;
         }
 
         public TKey KeyOf(int index)

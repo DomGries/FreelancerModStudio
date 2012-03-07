@@ -11,7 +11,7 @@ namespace FreelancerModStudio
 {
     public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface
     {
-        SystemPresenter.Presenter systemPresenter;
+        Presenter systemPresenter;
         Thread universeLoadingThread;
 
         public delegate void SelectionChangedType(int id);
@@ -23,7 +23,7 @@ namespace FreelancerModStudio
                 SelectionChanged(id);
         }
 
-        public FreelancerModStudio.SystemPresenter.Presenter.FileOpenType FileOpen;
+        public Presenter.FileOpenType FileOpen;
 
         void OnFileOpen(string file)
         {
@@ -65,7 +65,7 @@ namespace FreelancerModStudio
             st.Stop();
             System.Diagnostics.Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");
 #endif
-            systemPresenter = new SystemPresenter.Presenter(view);
+            systemPresenter = new Presenter(view);
             systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
             systemPresenter.FileOpen += systemPresenter_FileOpen;
         }

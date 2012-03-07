@@ -105,15 +105,13 @@ namespace FreelancerModStudio.SystemPresenter
                 //TextureCoordinates = texture
             };
 
-            gm.Material = FreelancerModStudio.SystemPresenter.SharedMaterials.CmpModel;
+            gm.Material = SharedMaterials.CmpModel;
             gm.Transform = new MatrixTransform3D(transform);
             return gm;
         }
 
         public ModelVisual3D LoadModel(string file)
         {
-            string dirPath = Path.GetDirectoryName(file);
-
             UTFManager utfManager = new UTFManager(file);
             UTFNode root = utfManager.Read();
             if (root == null)

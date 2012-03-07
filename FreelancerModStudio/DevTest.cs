@@ -1,7 +1,6 @@
 ﻿#if DEBUG
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
 
@@ -31,8 +30,8 @@ namespace FreelancerModStudio
                     Template.Options templateOptions = new Template.Options();
                     foreach (KeyValuePair<string, List<INIOption>> option in block.Options) //each option
                     {
-                        templateOptions.Add(new Template.Option()
-                            {
+                        templateOptions.Add(new Template.Option
+                                                {
                                 Multiple = option.Value.Count > 1,
                                 Name = option.Key
                             });
@@ -78,10 +77,12 @@ namespace FreelancerModStudio
                     }
                 }
 
-                Template.File file = new Template.File();
-                file.Name = System.IO.Path.GetFileName(iniDataTemplate.Path.ToLower());
-                file.Paths = new List<string>() { iniDataTemplate.Path.ToLower() };
-                file.Blocks = templateBlocks;
+                var file = new Template.File
+                    {
+                        Name = System.IO.Path.GetFileName(iniDataTemplate.Path.ToLower()),
+                        Paths = new List<string> { iniDataTemplate.Path.ToLower() },
+                        Blocks = templateBlocks
+                    };
                 template.Data.Files.Add(file);
             }
 
@@ -100,7 +101,7 @@ namespace FreelancerModStudio
         #region "File Groups"
         static string[][] fileGroups = {
             // fuses
-            new string[] {
+            new[] {
                 "fx\\fuse.ini",
                 "fx\\fuse_br_battleship.ini",
                 "fx\\fuse_br_destroyer.ini",
@@ -120,7 +121,7 @@ namespace FreelancerModStudio
                 "fx\\fuse_freeport7.ini",
             },
             // systems
-            new string[] {
+            new[] {
                 "universe\\systems\\st03b\\st03b.ini",
                 "universe\\systems\\st03\\st03.ini",
                 "universe\\systems\\st02c\\st02c.ini",
@@ -177,7 +178,7 @@ namespace FreelancerModStudio
                 "universe\\systems\\br01\\br01.ini"
             },
             // system bases
-            new string[] {
+            new[] {
                 "universe\\systems\\br_m_mining_base.ini",
                 "universe\\systems\\co_ti_mining_base.ini",
                 "universe\\systems\\gd_im_mining_base.ini",
@@ -380,7 +381,7 @@ namespace FreelancerModStudio
                 "universe\\systems\\br01\\bases\\br01_08_base.ini"
             },
             // system base rooms
-            new string[] {
+            new[] {
                 "universe\\systems\\st03b\\bases\\rooms\\st03b_01_cityscape.ini",
                 "universe\\systems\\st02\\bases\\rooms\\st02_01_bar.ini",
                 "universe\\systems\\st02\\bases\\rooms\\st02_01_deck.ini",
@@ -829,13 +830,13 @@ namespace FreelancerModStudio
                 "universe\\systems\\br01\\bases\\rooms\\br01_08_shipdealer.ini"
             },
             // shortest universe paths
-            new string[] {
+            new[] {
                 "universe\\systems_shortest_path.ini",
                 "universe\\shortest_legal_path.ini",
                 "universe\\shortest_illegal_path.ini",
             },
             // solar rings
-            new string[] {
+            new[] {
                 "solar\\rings\\aso.ini",
                 "solar\\rings\\ew05_ring.ini",
                 "solar\\rings\\ew05_ring2.ini",
@@ -847,7 +848,7 @@ namespace FreelancerModStudio
                 "solar\\rings\\weisser.ini"
             },
             // solar nebulae
-            new string[] {
+            new[] {
                 "solar\\nebula\\badlands_li01.ini",
                 "solar\\nebula\\br03_grasmere_ice_cloud.ini",
                 "solar\\nebula\\br03_keswick_ice_cloud.ini",
@@ -914,13 +915,13 @@ namespace FreelancerModStudio
                 "solar\\nebula\\zone21_li01.ini"
             },
             // solar blackholes
-            new string[] {
+            new[] {
                 "solar\\blackhole\\bh.ini",
                 "solar\\blackhole\\bhshapes.ini",
                 "solar\\blackhole\\omega13.ini"
             },
             // solar asteroids
-            new string[] {
+            new[] {
                 "solar\\asteroids\\br01_cornwall_rock_asteroid_field.ini",
                 "solar\\asteroids\\br01_cumbria_rock_asteroid_field.ini",
                 "solar\\asteroids\\br01_devon_rock_asteroid_field.ini",
@@ -1081,14 +1082,14 @@ namespace FreelancerModStudio
                 "solar\\asteroids\\st03b_nomad_asteroids.ini",
             },
             // loadouts
-            new string[] {
+            new[] {
                 "ships\\loadouts.ini",
                 "ships\\loadouts_special.ini",
                 "ships\\loadouts_utility.ini",
                 "solar\\loadouts.ini"
             },
             // audio sounds
-            new string[] {
+            new[] {
                 "audio\\ambience_sounds.ini",
                 "audio\\engine_sounds.ini",
                 "audio\\gf_sounds.ini",
@@ -1098,7 +1099,7 @@ namespace FreelancerModStudio
                 "audio\\story_sounds.ini",
             },
             // audio voices
-            new string[] {
+            new[] {
                 "audio\\voices_base_female.ini",
                 "audio\\voices_base_male.ini",
                 "audio\\voices_mission01.ini",
@@ -1119,7 +1120,7 @@ namespace FreelancerModStudio
                 "audio\\voices_space_male.ini"
             },
             // effects
-            new string[] {
+            new[] {
                 "fx\\effect_types.ini",
                 "fx\\beam_effects.ini",
                 "fx\\engines\\engines_ale.ini",
@@ -1134,7 +1135,7 @@ namespace FreelancerModStudio
                 "fx\\effects_explosion.ini",
             },
             // mission enounters
-            new string[] {
+            new[] {
                 "missions\\encounters\\area_armored_prisoner.ini",
                 "missions\\encounters\\area_assault.ini",
                 "missions\\encounters\\area_bh_assault.ini",
@@ -1179,7 +1180,7 @@ namespace FreelancerModStudio
                 "missions\\encounters\\tradep_trade_transport.ini"
             },
             // missions
-            new string[] {
+            new[] {
                 "missions\\m13\\m13.ini",
                 "missions\\m12\\m12.ini",
                 "missions\\m11\\m11.ini",
@@ -1196,7 +1197,7 @@ namespace FreelancerModStudio
                 "missions\\m01a\\m01a.ini"
             },
             // mission ships
-            new string[] {
+            new[] {
                 "missions\\npcships.ini",
                 "missions\\npcships_test.ini",
                 "missions\\m13\\npcships.ini",
@@ -1215,7 +1216,7 @@ namespace FreelancerModStudio
                 "missions\\m01a\\npcships.ini"
             },
             // mission nrmls
-            new string[] {
+            new[] {
                 "missions\\m13\\m013_endgame_st03b_nrml.ini",
                 "missions\\m13\\m013_s072aa_st01_01_nrml.ini",
                 "missions\\m13\\m013_s072ab_st01_01_offer.ini",
@@ -1286,7 +1287,7 @@ namespace FreelancerModStudio
                 "missions\\m01a\\m001a_s006x_li01_02_nrml.ini"
             },
             // equipment
-            new string[] {
+            new[] {
                 "equipment\\light_equip.ini",
                 "equipment\\select_equip.ini",
                 "equipment\\misc_equip.ini",
@@ -1296,7 +1297,7 @@ namespace FreelancerModStudio
                 "equipment\\prop_equip.ini"
             },
             // goods
-            new string[] {
+            new[] {
                 "equipment\\goods.ini",
                 "equipment\\engine_good.ini",
                 "equipment\\misc_good.ini",
@@ -1304,13 +1305,13 @@ namespace FreelancerModStudio
                 "equipment\\weapon_good.ini"
             },
             // markets
-            new string[] {
+            new[] {
                 "equipment\\market_misc.ini",
                 "equipment\\market_ships.ini",
                 "equipment\\market_commodities.ini"
             },
             // cockpits
-            new string[] {
+            new[] {
                 "cockpits\\rheinland\\r_elite.ini",
                 "cockpits\\rheinland\\r_fighter.ini",
                 "cockpits\\rheinland\\r_freighter.ini",
@@ -1382,11 +1383,11 @@ namespace FreelancerModStudio
             if (selectedFileGroup != -1)
             {
                 var selectedFileGroupData = new List<string>(fileGroups[selectedFileGroup]);
-                for (int i = 0; i < dataList.Count; i++)
+                foreach (var template in dataList)
                 {
-                    if (selectedFileGroupData.Contains(dataList[i].Path.ToLower()))
+                    if (selectedFileGroupData.Contains(template.Path.ToLower()))
                     {
-                        dataList[i].Blocks.AddRange(newTemplate.Blocks);
+                        template.Blocks.AddRange(newTemplate.Blocks);
                         return;
                     }
                 }

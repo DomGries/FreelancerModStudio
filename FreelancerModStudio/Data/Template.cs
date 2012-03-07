@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace FreelancerModStudio.Data
@@ -11,25 +10,25 @@ namespace FreelancerModStudio.Data
 
         public void Load(System.IO.Stream stream)
         {
-            this.Data = (TemplateData)Serializer.Load(stream, this.Data.GetType());
+            Data = (TemplateData)Serializer.Load(stream, Data.GetType());
         }
 
         public void Load(string path)
         {
-            this.Data = (TemplateData)Serializer.Load(path, this.Data.GetType());
+            Data = (TemplateData)Serializer.Load(path, Data.GetType());
         }
 
         public void Save(System.IO.Stream stream)
         {
-            Serializer.Save(stream, this.Data);
+            Serializer.Save(stream, Data);
         }
 
         public void Save(string path)
         {
-            Serializer.Save(path, this.Data);
+            Serializer.Save(path, Data);
         }
 
-        [XmlRootAttribute("FreelancerModStudio-Template-1.0")]
+        [XmlRoot("FreelancerModStudio-Template-1.0")]
         public class TemplateData
         {
             [XmlArrayItem("File")]
@@ -59,7 +58,7 @@ namespace FreelancerModStudio.Data
 
             [XmlAttribute("multiple"),
                 System.ComponentModel.DefaultValueAttribute(false)]
-            public bool Multiple = false;
+            public bool Multiple;
 
             [XmlAttribute("identifier")]
             public string Identifier;
@@ -77,7 +76,7 @@ namespace FreelancerModStudio.Data
         {
             [XmlAttribute("multiple"),
                 System.ComponentModel.DefaultValueAttribute(false)]
-            public bool Multiple = false;
+            public bool Multiple;
 
             [XmlAttribute("parent")]
             public string Parent;
@@ -99,7 +98,7 @@ namespace FreelancerModStudio.Data
 
             int IComparable<Option>.CompareTo(Option obj)
             {
-                return this.Name.CompareTo(obj.Name);
+                return Name.CompareTo(obj.Name);
             }
         }
 
@@ -163,7 +162,7 @@ namespace FreelancerModStudio.Data
         {
             public int IndexOf(string name)
             {
-                for (int i = 0; i < this.Count; i++)
+                for (int i = 0; i < Count; i++)
                     if (this[i].Name.ToLower() == name.ToLower())
                         return i;
 
@@ -175,7 +174,7 @@ namespace FreelancerModStudio.Data
         {
             public int IndexOf(string name)
             {
-                for (int i = 0; i < this.Count; i++)
+                for (int i = 0; i < Count; i++)
                     if (this[i].Name.ToLower() == name.ToLower())
                         return i;
 

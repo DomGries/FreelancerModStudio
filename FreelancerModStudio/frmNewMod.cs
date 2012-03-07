@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace FreelancerModStudio
@@ -36,15 +31,15 @@ namespace FreelancerModStudio
 
         void Path_TextChanged(object sender, EventArgs e)
         {
-            this.btnOK.Enabled = (this.ValidName(this.txtName.Text) && this.ValidPathRoot(this.txtSaveLocation.Text));
+            btnOK.Enabled = (ValidName(txtName.Text) && ValidPathRoot(txtSaveLocation.Text));
         }
 
         void btnOK_Click(object sender, EventArgs e)
         {
-            if (this.ValidChars(this.txtName.Text))
+            if (ValidChars(txtName.Text))
             {
-                if (this.ValidChars(this.txtSaveLocation.Text))
-                    this.DialogResult = DialogResult.OK;
+                if (ValidChars(txtSaveLocation.Text))
+                    DialogResult = DialogResult.OK;
                 else
                     MessageBox.Show(Properties.Strings.ModInvalidPathChars, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
@@ -54,10 +49,10 @@ namespace FreelancerModStudio
 
         void btnBrowse_Click(object sender, EventArgs e)
         {
-            this.folderBrowserDialog1.SelectedPath = this.txtSaveLocation.Text;
+            folderBrowserDialog1.SelectedPath = txtSaveLocation.Text;
 
-            if (this.folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                this.txtSaveLocation.Text = this.folderBrowserDialog1.SelectedPath;
+            if (folderBrowserDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                txtSaveLocation.Text = folderBrowserDialog1.SelectedPath;
         }
     }
 }

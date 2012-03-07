@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace FreelancerModStudio
 {
@@ -18,15 +12,15 @@ namespace FreelancerModStudio
 
             if (filePath != null)
             {
-                this.pathTextBox.Text = filePath;
-                this.pathTextBox.SelectionStart = this.pathTextBox.Text.Length - 1;
-                this.pathTextBox.ScrollToCaret();
+                pathTextBox.Text = filePath;
+                pathTextBox.SelectionStart = pathTextBox.Text.Length - 1;
+                pathTextBox.ScrollToCaret();
             }
             else
             {
-                this.pathLabel.Visible = false;
-                this.pathTextBox.Visible = false;
-                this.Height -= 26;
+                pathLabel.Visible = false;
+                pathTextBox.Visible = false;
+                Height -= 26;
             }
 
             //set aviable file types

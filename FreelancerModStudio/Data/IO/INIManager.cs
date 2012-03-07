@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace FreelancerModStudio.Data.IO
 {
@@ -30,7 +30,11 @@ namespace FreelancerModStudio.Data.IO
 
                 while (!streamReader.EndOfStream)
                 {
-                    string line = streamReader.ReadLine().Trim();
+                    var line = streamReader.ReadLine();
+                    if (line == null)
+                        break;
+
+                    line = line.Trim();
 
                     //remove comments from data
                     int commentIndex = line.IndexOf(';');
@@ -55,7 +59,7 @@ namespace FreelancerModStudio.Data.IO
 
                             string blockName = line.Substring(1, line.Length - 2).Trim();
 
-                            currentBlock = new INIBlock() { Name = blockName, Options = new INIOptions() };
+                            currentBlock = new INIBlock { Name = blockName, Options = new INIOptions() };
                             currentOptionIndex = 0;
                         }
                         else if (currentBlock.Name != null)
@@ -116,11 +120,7 @@ namespace FreelancerModStudio.Data.IO
                     {
                         for (int h = 0; h < option.Value.Count; h++)
                         {
-                            string key;
-                            if (option.Value[h].Parent == null)
-                                key = option.Key;
-                            else
-                                key = option.Value[h].Parent;
+                            var key = option.Value[h].Parent ?? option.Key;
 
                             if (WriteSpaces)
                                 streamWriter.Write(key + " = " + option.Value[h].Value);
@@ -161,7 +161,7 @@ namespace FreelancerModStudio.Data.IO
 
         public new void Add(string key, List<INIOption> values)
         {
-            if (this.ContainsKey(key))
+            if (ContainsKey(key))
             {
                 //add value to existing option
                 foreach (INIOption option in values)
@@ -176,7 +176,7 @@ namespace FreelancerModStudio.Data.IO
 
         public void Add(string key, INIOption value)
         {
-            this.Add(key, new List<INIOption>() { value });
+            Add(key, new List<INIOption> { value });
         }
     }
 

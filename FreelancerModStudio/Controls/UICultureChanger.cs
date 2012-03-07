@@ -1,9 +1,8 @@
 using System;
 using System.CodeDom;
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.ComponentModel.Design.Serialization;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.Design.Serialization;
 using System.Drawing;
 using System.Globalization;
 using System.Reflection;
@@ -101,7 +100,7 @@ public class UICultureChanger : Component
         /// </summary>
         public object Value
         {
-            get { return this.value; }
+            get { return value; }
         }
 
         /// <summary>
@@ -154,8 +153,8 @@ public class UICultureChanger : Component
      Category("Behavior")]
     public bool ApplyText
     {
-        get { return this.applyText; }
-        set { this.applyText = value; }
+        get { return applyText; }
+        set { applyText = value; }
     }
 
     /// <summary>
@@ -171,8 +170,8 @@ public class UICultureChanger : Component
      Category("Behavior")]
     public bool ApplySize
     {
-        get { return this.applySize; }
-        set { this.applySize = value; }
+        get { return applySize; }
+        set { applySize = value; }
     }
 
     /// <summary>
@@ -188,8 +187,8 @@ public class UICultureChanger : Component
      Category("Behavior")]
     public bool ApplyLocation
     {
-        get { return this.applyLocation; }
-        set { this.applyLocation = value; }
+        get { return applyLocation; }
+        set { applyLocation = value; }
     }
 
     /// <summary>
@@ -205,8 +204,8 @@ public class UICultureChanger : Component
      Category("Behavior")]
     public bool ApplyRightToLeft
     {
-        get { return this.applyRightToLeft; }
-        set { this.applyRightToLeft = value; }
+        get { return applyRightToLeft; }
+        set { applyRightToLeft = value; }
     }
 
     /// <summary>
@@ -222,8 +221,8 @@ public class UICultureChanger : Component
      Category("Behavior")]
     public bool ApplyRightToLeftLayout
     {
-        get { return this.applyRightToLeftLayout; }
-        set { this.applyRightToLeftLayout = value; }
+        get { return applyRightToLeftLayout; }
+        set { applyRightToLeftLayout = value; }
     }
 
     /// <summary>
@@ -239,8 +238,8 @@ public class UICultureChanger : Component
      Category("Behavior")]
     public bool ApplyToolTip
     {
-        get { return this.applyToolTip; }
-        set { this.applyToolTip = value; }
+        get { return applyToolTip; }
+        set { applyToolTip = value; }
     }
 
     /// <summary>
@@ -256,8 +255,8 @@ public class UICultureChanger : Component
      Category("Behavior")]
     public bool ApplyHelp
     {
-        get { return this.applyHelp; }
-        set { this.applyHelp = value; }
+        get { return applyHelp; }
+        set { applyHelp = value; }
     }
 
     /// <summary>
@@ -276,8 +275,8 @@ public class UICultureChanger : Component
      Category("Behavior")]
     public bool PreserveFormSize
     {
-        get { return this.preserveFormSize; }
-        set { this.preserveFormSize = value; }
+        get { return preserveFormSize; }
+        set { preserveFormSize = value; }
     }
 
     /// <summary>
@@ -296,8 +295,8 @@ public class UICultureChanger : Component
      Category("Behavior")]
     public bool PreserveFormLocation
     {
-        get { return this.preserveFormLocation; }
-        set { this.preserveFormLocation = value; }
+        get { return preserveFormLocation; }
+        set { preserveFormLocation = value; }
     }
 
     /// <summary>
@@ -313,17 +312,17 @@ public class UICultureChanger : Component
     public UICultureChanger()
     {
         // Create List with size 1, so it can take the container form of the component without resizing.
-        this.forms = new List<Form>(1);
+        forms = new List<Form>(1);
 
-        this.applyText = true;
-        this.applySize = false;
-        this.applyLocation = false;
-        this.applyRightToLeft = false;
-        this.applyRightToLeftLayout = false;
-        this.applyToolTip = false;
-        this.applyHelp = false;
-        this.preserveFormSize = true;
-        this.preserveFormLocation = true;
+        applyText = true;
+        applySize = false;
+        applyLocation = false;
+        applyRightToLeft = false;
+        applyRightToLeftLayout = false;
+        applyToolTip = false;
+        applyHelp = false;
+        preserveFormSize = true;
+        preserveFormLocation = true;
     }
 
     /// <summary> 
@@ -338,8 +337,8 @@ public class UICultureChanger : Component
     {
         if (disposing)
         {
-            for (int index = 0; index < this.forms.Count; index++)
-                this.RemoveForm(this.forms[index]);
+            for (int index = 0; index < forms.Count; index++)
+                RemoveForm(forms[index]);
         }
 
         base.Dispose(disposing);
@@ -359,8 +358,8 @@ public class UICultureChanger : Component
     {
         if (form != null)
         {
-            this.forms.Add(form);
-            form.FormClosed += new FormClosedEventHandler(this.Form_FormClosed);
+            forms.Add(form);
+            form.FormClosed += Form_FormClosed;
         }
     }
 
@@ -380,8 +379,8 @@ public class UICultureChanger : Component
             return false;
         else
         {
-            form.FormClosed -= new FormClosedEventHandler(this.Form_FormClosed);
-            return this.forms.Remove(form);
+            form.FormClosed -= Form_FormClosed;
+            return forms.Remove(form);
         }
     }
 
@@ -396,7 +395,7 @@ public class UICultureChanger : Component
         Form form = sender as Form;
         if (form != null)
         {
-            this.RemoveForm(form);
+            RemoveForm(form);
         }
     }
 
@@ -410,9 +409,9 @@ public class UICultureChanger : Component
         // Applies culture to current Thread.
         Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
-        for (int index = 0; index < this.forms.Count; index++)
+        for (int index = 0; index < forms.Count; index++)
         {
-            this.ApplyCultureToForm(this.forms[index]);
+            ApplyCultureToForm(forms[index]);
         }
     }
 
@@ -449,7 +448,7 @@ public class UICultureChanger : Component
             }
         }
 
-        if (this.applyText)
+        if (applyText)
         {
             // If available, assign localized text to Form and fields.
             String text;
@@ -468,13 +467,13 @@ public class UICultureChanger : Component
             }
         }
 
-        if (this.applySize)
+        if (applySize)
         {
             // If available, assign localized sizes to Form and fields.
             object size;
             Control control;
             int index = 0;
-            if (this.preserveFormSize)
+            if (preserveFormSize)
             {
                 // Skip the form entry in changeInfos collection.
                 index = 1;
@@ -505,7 +504,7 @@ public class UICultureChanger : Component
                         else
                         {
                             changeInfos[index].Type.InvokeMember("Size", BindingFlags.SetProperty, null,
-                                changeInfos[index].Value, new object[] { size });
+                                changeInfos[index].Value, new[] { size });
                         }
                     }
                 }
@@ -535,20 +534,20 @@ public class UICultureChanger : Component
                         else
                         {
                             changeInfos[index].Type.InvokeMember("ClientSize", BindingFlags.SetProperty, null,
-                                changeInfos[index].Value, new object[] { size });
+                                changeInfos[index].Value, new[] { size });
                         }
                     }
                 }
             }
         }
 
-        if (this.applyLocation)
+        if (applyLocation)
         {
             // If available, assign localized locations to Form and fields.
             object location;
             Control control;
             int index = 0;
-            if (this.preserveFormLocation)
+            if (preserveFormLocation)
             {
                 // Skip the form entry in changeInfos collection.
                 index = 1;
@@ -579,14 +578,14 @@ public class UICultureChanger : Component
                         else
                         {
                             changeInfos[index].Type.InvokeMember("Location", BindingFlags.SetProperty, null,
-                                changeInfos[index].Value, new object[] { location });
+                                changeInfos[index].Value, new[] { location });
                         }
                     }
                 }
             }
         }
 
-        if (this.applyRightToLeft)
+        if (applyRightToLeft)
         {
             // If available, assign localized RightToLeft values to Form and fields.
             object rightToLeft;
@@ -599,13 +598,13 @@ public class UICultureChanger : Component
                     if (rightToLeft != null && rightToLeft.GetType() == typeof(RightToLeft))
                     {
                         changeInfos[index].Type.InvokeMember("RightToLeft", BindingFlags.SetProperty, null,
-                            changeInfos[index].Value, new object[] { rightToLeft });
+                            changeInfos[index].Value, new[] { rightToLeft });
                     }
                 }
             }
         }
 
-        if (this.applyRightToLeftLayout)
+        if (applyRightToLeftLayout)
         {
             // If available, assign localized RightToLeftLayout values to Form and fields.
             object rightToLeftLayout;
@@ -618,13 +617,13 @@ public class UICultureChanger : Component
                     if (rightToLeftLayout != null && rightToLeftLayout.GetType() == typeof(bool))
                     {
                         changeInfos[index].Type.InvokeMember("RightToLeftLayout", BindingFlags.SetProperty, null,
-                            changeInfos[index].Value, new object[] { rightToLeftLayout });
+                            changeInfos[index].Value, new[] { rightToLeftLayout });
                     }
                 }
             }
         }
 
-        if (this.applyToolTip)
+        if (applyToolTip)
         {
             // If available, assign localized ToolTipText to fields.
             // Also search for a ToolTip component in the current form.
@@ -666,7 +665,7 @@ public class UICultureChanger : Component
             }
         }
 
-        if (this.applyHelp)
+        if (applyHelp)
         {
             // Search for a HelpProvider component in the current form.
             HelpProvider helpProvider = null;

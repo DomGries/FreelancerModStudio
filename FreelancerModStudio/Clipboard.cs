@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 
 namespace FreelancerModStudio
@@ -20,14 +18,16 @@ namespace FreelancerModStudio
         public static bool CanPaste(Type type)
         {
             //check if clipboard contains object type
-            return System.Windows.Forms.Clipboard.GetDataObject().GetDataPresent(type.FullName);
+            var dataObject = System.Windows.Forms.Clipboard.GetDataObject();
+            return dataObject != null && dataObject.GetDataPresent(type.FullName);
         }
 
         public static object Paste(Type type)
         {
             //deserialize object from clipboard
-            if (CanPaste(type))
-                return System.Windows.Forms.Clipboard.GetDataObject().GetData(type.FullName);
+            var dataObject = System.Windows.Forms.Clipboard.GetDataObject();
+            if (dataObject != null && dataObject.GetDataPresent(type.FullName))
+                return dataObject.GetData(type.FullName);
 
             return null;
         }

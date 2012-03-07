@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.SystemPresenter;
@@ -113,7 +112,7 @@ namespace FreelancerModStudio.Data
                         if (option.Values.Count > 1)
                             append = option.Name + " = [" + option.Values.Count.ToString() + "]";
                         else if (option.Values.Count == 1)
-                            append = option.Name + " = " + option.Values[0].ToString();
+                            append = option.Name + " = " + option.Values[0];
 
                         if (append != null)
                         {
@@ -134,15 +133,15 @@ namespace FreelancerModStudio.Data
         public int CompareTo(TableBlock other)
         {
             //sort by group, object type, name, modified
-            int groupComparison = this.Group.CompareTo(other.Group);
+            int groupComparison = Group.CompareTo(other.Group);
             if (groupComparison == 0)
             {
-                int objectTypeComparison = this.ObjectType.CompareTo(other.ObjectType);
+                int objectTypeComparison = ObjectType.CompareTo(other.ObjectType);
                 if (objectTypeComparison == 0)
                 {
-                    int nameComparison = StringLogicalComparer.Compare(this.Name, other.Name);
+                    int nameComparison = StringLogicalComparer.Compare(Name, other.Name);
                     if (nameComparison == 0)
-                        return this.Modified.CompareTo(other.Modified);
+                        return Modified.CompareTo(other.Modified);
 
                     return nameComparison;
                 }

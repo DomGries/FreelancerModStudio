@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms.Design;
+using System.ComponentModel.Design;
 using System.Drawing.Design;
+using System.Globalization;
+using System.Text;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
 
-namespace FreelancerModStudio
+namespace FreelancerModStudio.Controls
 {
     public class PropertyOptionCollectionConverter : ExpandableObjectConverter
     {
-        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             if (value is PropertySubOptions)
                 return "[" + (((PropertySubOptions)value).Count - 1).ToString() + "]";
@@ -20,7 +21,7 @@ namespace FreelancerModStudio
                 return "";
         }
 
-        public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return false;
         }
@@ -36,7 +37,7 @@ namespace FreelancerModStudio
         public PropertyBlock(EditorINIBlock block, Template.Block templateBlock)
         {
             foreach (EditorINIOption option in block.Options)
-                this.List.Add(new PropertyOption(option.Values, templateBlock.Options[option.TemplateIndex], option.ChildTemplateIndex != -1));
+                List.Add(new PropertyOption(option.Values, templateBlock.Options[option.TemplateIndex], option.ChildTemplateIndex != -1));
         }
     }
 
@@ -57,36 +58,33 @@ namespace FreelancerModStudio
 
         public PropertyOption(List<EditorINIEntry> options, Template.Option templateOption, bool children)
         {
-            this.Name = templateOption.Name;
+            Name = templateOption.Name;
 
-            this.Category = templateOption.Category;
-            this.Comment = templateOption.Comment;
+            Category = templateOption.Category;
+            Comment = templateOption.Comment;
 
             if (templateOption.Multiple)
             {
                 Attributes = new Attribute[] { 
-                    new EditorAttribute(typeof(System.Drawing.Design.UITypeEditor), typeof(System.Drawing.Design.UITypeEditor)),
+                    new EditorAttribute(typeof(UITypeEditor), typeof(UITypeEditor)),
                     new TypeConverterAttribute(typeof(PropertyOptionCollectionConverter)) };
 
-                this.Value = new PropertySubOptions(templateOption.Name, options, children);
+                Value = new PropertySubOptions(templateOption.Name, options, children);
             }
             else
             {
-                if (options.Count > 0)
-                    this.Value = options[0].Value;
-                else
-                    this.Value = string.Empty;
+                Value = options.Count > 0 ? options[0].Value : string.Empty;
             }
         }
 
         public PropertyOption(string name, object option, List<object> subOptions, bool children)
         {
-            this.Name = name;
+            Name = name;
 
             if (children)
             {
                 Attributes = new Attribute[] { 
-                    new EditorAttribute(typeof(System.ComponentModel.Design.MultilineStringEditor), typeof(System.Drawing.Design.UITypeEditor)) };
+                    new EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor)) };
 
                 StringBuilder valueCollection = new StringBuilder();
                 valueCollection.Append(option);
@@ -100,10 +98,10 @@ namespace FreelancerModStudio
                         valueCollection.Append(subValue.ToString());
                     }
                 }
-                this.Value = valueCollection.ToString();
+                Value = valueCollection.ToString();
             }
             else
-                this.Value = option;
+                Value = option;
         }
     }
 
@@ -114,31 +112,31 @@ namespace FreelancerModStudio
             int index = 0;
             foreach (EditorINIEntry entry in options)
             {
-                this.List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), entry.Value, entry.SubOptions, children));
+                List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), entry.Value, entry.SubOptions, children));
                 index++;
             }
 
-            this.List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), "", null, children));
+            List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), "", null, children));
         }
     }
 
-    public class PropertyOptionCollection : System.Collections.CollectionBase, ICustomTypeDescriptor
+    public class PropertyOptionCollection : CollectionBase, ICustomTypeDescriptor
     {
         public void Add(PropertyOption value)
         {
-            this.List.Add(value);
+            List.Add(value);
         }
 
         public void Remove(PropertyOption value)
         {
-            this.List.Remove(value);
+            List.Remove(value);
         }
 
         public PropertyOption this[int index]
         {
             get
             {
-                return (PropertyOption)this.List[index];
+                return (PropertyOption)List[index];
             }
         }
 
@@ -194,9 +192,9 @@ namespace FreelancerModStudio
 
         public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
-            PropertyDescriptor[] properties = new PropertyDescriptor[this.List.Count];
+            PropertyDescriptor[] properties = new PropertyDescriptor[List.Count];
 
-            for (int i = 0; i < this.List.Count; i++)
+            for (int i = 0; i < List.Count; i++)
             {
                 PropertyOption propertyValue = this[i];
                 properties[i] = new PropertyOptionDescriptor(propertyValue, propertyValue.Attributes);
@@ -213,12 +211,12 @@ namespace FreelancerModStudio
 
     public class PropertyOptionDescriptor : PropertyDescriptor
     {
-        public PropertyOption PropertyOption = null;
+        public PropertyOption PropertyOption;
 
         public PropertyOptionDescriptor(PropertyOption propertyValue, Attribute[] attributes)
             : base(propertyValue.Name, attributes)
         {
-            this.PropertyOption = propertyValue;
+            PropertyOption = propertyValue;
         }
 
         public override bool CanResetValue(object component)
@@ -233,22 +231,22 @@ namespace FreelancerModStudio
 
         public override string DisplayName
         {
-            get { return this.PropertyOption.Name; }
+            get { return PropertyOption.Name; }
         }
 
         public override string Category
         {
-            get { return this.PropertyOption.Category; }
+            get { return PropertyOption.Category; }
         }
 
         public override string Description
         {
-            get { return this.PropertyOption.Comment; }
+            get { return PropertyOption.Comment; }
         }
 
         public override object GetValue(object component)
         {
-            return this.PropertyOption.Value;
+            return PropertyOption.Value;
         }
 
         public override bool IsReadOnly
@@ -261,7 +259,7 @@ namespace FreelancerModStudio
             get
             {
                 if (PropertyOption.Value != null)
-                    return this.PropertyOption.Value.GetType();
+                    return PropertyOption.Value.GetType();
                 else
                     return typeof(object);
             }
@@ -278,7 +276,7 @@ namespace FreelancerModStudio
 
         public override void SetValue(object component, object value)
         {
-            this.PropertyOption.Value = value;
+            PropertyOption.Value = value;
         }
     }
 }

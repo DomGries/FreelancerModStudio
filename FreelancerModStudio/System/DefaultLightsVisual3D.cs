@@ -1,5 +1,5 @@
-﻿using System.Windows.Media.Media3D;
-using System.Windows.Media;
+﻿using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -12,7 +12,7 @@ namespace FreelancerModStudio.SystemPresenter
             lightGroup.Children.Add(new AmbientLight(Color.FromRgb(100, 100, 100)));
             lightGroup.Children.Add(new DirectionalLight(Colors.White, new Vector3D(0.2, 0.2, -1)));
 
-            this.Content = lightGroup;
+            Content = lightGroup;
         }
     }
 
@@ -24,7 +24,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             lightGroup.Children.Add(new DirectionalLight(Colors.White, new Vector3D(0.2, 0.2, -1)));
 
-            this.Content = lightGroup;
+            Content = lightGroup;
         }
     }
 }

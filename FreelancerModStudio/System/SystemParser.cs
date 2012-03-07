@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Windows.Media.Media3D;
+﻿using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
-using System.IO;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -20,7 +14,7 @@ namespace FreelancerModStudio.SystemPresenter
             string rotationString = "0,0,0";
             string shapeString = "box";
             string scaleString = "1,1,1";
-            var usageArray = new string[] { string.Empty };
+            var usageArray = new[] { string.Empty };
             string vignetteString = "";
             string flagsString = "";
             string fileString = "";
@@ -46,7 +40,7 @@ namespace FreelancerModStudio.SystemPresenter
                             scaleString = value;
                             break;
                         case "usage":
-                            usageArray = value.ToLower().Split(new char[] { ',' });
+                            usageArray = value.ToLower().Split(new[] { ',' });
                             break;
                         case "vignette_type":
                             vignetteString = value.ToLower();
@@ -151,7 +145,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static Vector3D ParseScale(string scale, ZoneShape shape)
         {
-            string[] values = scale.Split(new char[] { ',' });
+            string[] values = scale.Split(new[] { ',' });
 
             if (shape == ZoneShape.Sphere && values.Length > 0)
             {
@@ -211,7 +205,7 @@ namespace FreelancerModStudio.SystemPresenter
         public Vector3D ParseUniverseVector(string vector)
         {
             //Use Point.Parse after implementation of type handling
-            string[] values = vector.Split(new char[] { ',' });
+            string[] values = vector.Split(new[] { ',' });
             if (values.Length > 1)
             {
                 var tempScale1 = Parser.ParseDouble(values[0], 0);

@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
-using FreelancerModStudio.Data;
 using System.IO;
+using System.Windows.Forms;
 
 namespace FreelancerModStudio
 {
@@ -28,8 +25,7 @@ namespace FreelancerModStudio
 #endif
 
                 //whidbey color table (gray colors of menustrip and tabstrip)
-                ProfessionalColorTable whidbeyColorTable = new ProfessionalColorTable();
-                whidbeyColorTable.UseSystemColors = true;
+                var whidbeyColorTable = new ProfessionalColorTable { UseSystemColors = true };
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer(whidbeyColorTable);
 
                 if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
@@ -231,11 +227,8 @@ namespace FreelancerModStudio
             public static void Start(ref System.Threading.Thread thread, System.Threading.ThreadStart threadDelegate, System.Threading.ThreadPriority priority, bool isBackground)
             {
                 Abort(ref thread, true);
-                thread = new System.Threading.Thread(threadDelegate);
 
-                thread.Priority = priority;
-                thread.IsBackground = isBackground;
-
+                thread = new System.Threading.Thread(threadDelegate) { Priority = priority, IsBackground = isBackground };
                 thread.Start();
             }
 
@@ -289,7 +282,7 @@ namespace FreelancerModStudio
                 System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder(exception.Message);
 
                 if (exception.InnerException != null)
-                    stringBuilder.Append(Environment.NewLine + Environment.NewLine + Get(exception.InnerException).ToString());
+                    stringBuilder.Append(Environment.NewLine + Environment.NewLine + Get(exception.InnerException));
 
                 return stringBuilder.ToString();
             }

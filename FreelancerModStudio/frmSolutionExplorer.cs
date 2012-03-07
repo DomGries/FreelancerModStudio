@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using FreelancerModStudio.Data;
 
@@ -14,10 +8,9 @@ namespace FreelancerModStudio
         public frmSolutionExplorer()
         {
             InitializeComponent();
-            this.Icon = Properties.Resources.SolutionExplorer;
+            Icon = Properties.Resources.SolutionExplorer;
 
-            ImageList imageList = new ImageList();
-            imageList.ColorDepth = ColorDepth.Depth24Bit;
+            var imageList = new ImageList { ColorDepth = ColorDepth.Depth24Bit };
             imageList.Images.Add("mod", Properties.Resources.Mod);
             imageList.Images.Add("openfolder", Properties.Resources.OpenFolder);
             imageList.Images.Add("folder", Properties.Resources.Folder);
@@ -38,7 +31,7 @@ namespace FreelancerModStudio
 
         public void RefreshSettings()
         {
-            this.TabText = Properties.Strings.SolutionExplorerText;
+            TabText = Properties.Strings.SolutionExplorerText;
         }
 
         //void AddNode(Settings.Template.File file)
@@ -56,9 +49,7 @@ namespace FreelancerModStudio
 
         public void ShowProject(Mod mod)
         {
-            TreeNode treeNode = new TreeNode(mod.Data.About.Name);
-            treeNode.Name = "mod";
-            treeNode.ImageKey = "mod";
+            var treeNode = new TreeNode(mod.Data.About.Name) { Name = "mod", ImageKey = "mod" };
             treeNode.Nodes.Add("data", "data", "hiddenfolder");
             treeNode.Nodes.Add("exe", "exe", "hiddenfolder");
             treeNode.Nodes.Add("dlls", "dlls", "hiddenfolder");

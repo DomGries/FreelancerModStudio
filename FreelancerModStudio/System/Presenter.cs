@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using System.Windows.Threading;
 using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.IO;
 using HelixEngine;
-using HelixEngine.Meshes;
 using HelixEngine.Wires;
-using IO = System.IO;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -93,8 +86,8 @@ namespace FreelancerModStudio.SystemPresenter
 
         void OnSelectionChanged(ContentBase content)
         {
-            if (this.SelectionChanged != null)
-                this.SelectionChanged(content);
+            if (SelectionChanged != null)
+                SelectionChanged(content);
         }
 
         public delegate void FileOpenType(string file);
@@ -102,11 +95,11 @@ namespace FreelancerModStudio.SystemPresenter
 
         void OnFileOpen(string file)
         {
-            if (this.FileOpen != null)
-                this.FileOpen(file);
+            if (FileOpen != null)
+                FileOpen(file);
         }
 
-        int secondLayerID = 0;
+        int secondLayerID;
 
         public Presenter(HelixView3D viewport)
         {
@@ -239,10 +232,12 @@ namespace FreelancerModStudio.SystemPresenter
         void DisplayContextMenu(string path)
         {
             ContextMenu menu = new ContextMenu();
-            MenuItem item = new MenuItem();
-            item.Header = string.Format(Properties.Strings.SystemPresenterOpen, IO.Path.GetFileName(path));
-            item.Tag = path;
-            item.Click += new RoutedEventHandler(item_Click);
+            MenuItem item = new MenuItem
+                                {
+                                    Header = string.Format(Properties.Strings.SystemPresenterOpen, global::System.IO.Path.GetFileName(path)),
+                                    Tag = path
+                                };
+            item.Click += item_Click;
 
             menu.Items.Add(item);
             menu.IsOpen = true;
@@ -263,44 +258,35 @@ namespace FreelancerModStudio.SystemPresenter
 
         WireLines GetWireBox(Rect3D bounds)
         {
-            Point3DCollection points = new Point3DCollection();
-            points.Add(new Point3D(bounds.X, bounds.Y, bounds.Z));
-            points.Add(new Point3D(-bounds.X, bounds.Y, bounds.Z));
+            var points = new Point3DCollection
+                                           {
+                                               new Point3D(bounds.X, bounds.Y, bounds.Z),
+                                               new Point3D(-bounds.X, bounds.Y, bounds.Z),
+                                               new Point3D(-bounds.X, bounds.Y, bounds.Z),
+                                               new Point3D(-bounds.X, bounds.Y, -bounds.Z),
+                                               new Point3D(-bounds.X, bounds.Y, -bounds.Z),
+                                               new Point3D(bounds.X, bounds.Y, -bounds.Z),
+                                               new Point3D(bounds.X, bounds.Y, -bounds.Z),
+                                               new Point3D(bounds.X, bounds.Y, bounds.Z),
+                                               new Point3D(bounds.X, -bounds.Y, bounds.Z),
+                                               new Point3D(-bounds.X, -bounds.Y, bounds.Z),
+                                               new Point3D(-bounds.X, -bounds.Y, bounds.Z),
+                                               new Point3D(-bounds.X, -bounds.Y, -bounds.Z),
+                                               new Point3D(-bounds.X, -bounds.Y, -bounds.Z),
+                                               new Point3D(bounds.X, -bounds.Y, -bounds.Z),
+                                               new Point3D(bounds.X, -bounds.Y, -bounds.Z),
+                                               new Point3D(bounds.X, -bounds.Y, bounds.Z),
+                                               new Point3D(bounds.X, bounds.Y, bounds.Z),
+                                               new Point3D(bounds.X, -bounds.Y, bounds.Z),
+                                               new Point3D(-bounds.X, bounds.Y, bounds.Z),
+                                               new Point3D(-bounds.X, -bounds.Y, bounds.Z),
+                                               new Point3D(bounds.X, bounds.Y, -bounds.Z),
+                                               new Point3D(bounds.X, -bounds.Y, -bounds.Z),
+                                               new Point3D(-bounds.X, bounds.Y, -bounds.Z),
+                                               new Point3D(-bounds.X, -bounds.Y, -bounds.Z)
+                                           };
 
-            points.Add(new Point3D(-bounds.X, bounds.Y, bounds.Z));
-            points.Add(new Point3D(-bounds.X, bounds.Y, -bounds.Z));
-
-            points.Add(new Point3D(-bounds.X, bounds.Y, -bounds.Z));
-            points.Add(new Point3D(bounds.X, bounds.Y, -bounds.Z));
-
-            points.Add(new Point3D(bounds.X, bounds.Y, -bounds.Z));
-            points.Add(new Point3D(bounds.X, bounds.Y, bounds.Z));
-
-            points.Add(new Point3D(bounds.X, -bounds.Y, bounds.Z));
-            points.Add(new Point3D(-bounds.X, -bounds.Y, bounds.Z));
-
-            points.Add(new Point3D(-bounds.X, -bounds.Y, bounds.Z));
-            points.Add(new Point3D(-bounds.X, -bounds.Y, -bounds.Z));
-
-            points.Add(new Point3D(-bounds.X, -bounds.Y, -bounds.Z));
-            points.Add(new Point3D(bounds.X, -bounds.Y, -bounds.Z));
-
-            points.Add(new Point3D(bounds.X, -bounds.Y, -bounds.Z));
-            points.Add(new Point3D(bounds.X, -bounds.Y, bounds.Z));
-
-            points.Add(new Point3D(bounds.X, bounds.Y, bounds.Z));
-            points.Add(new Point3D(bounds.X, -bounds.Y, bounds.Z));
-
-            points.Add(new Point3D(-bounds.X, bounds.Y, bounds.Z));
-            points.Add(new Point3D(-bounds.X, -bounds.Y, bounds.Z));
-
-            points.Add(new Point3D(bounds.X, bounds.Y, -bounds.Z));
-            points.Add(new Point3D(bounds.X, -bounds.Y, -bounds.Z));
-
-            points.Add(new Point3D(-bounds.X, bounds.Y, -bounds.Z));
-            points.Add(new Point3D(-bounds.X, -bounds.Y, -bounds.Z));
-
-            return new WireLines() { Lines = points, Color = Colors.Yellow };
+            return new WireLines { Lines = points, Color = Colors.Yellow };
         }
 
         public void SetVisibility(ContentBase content, bool visibility)
@@ -341,13 +327,13 @@ namespace FreelancerModStudio.SystemPresenter
                     systems.Add(block);
             }
 
-            Analyzer analyzer = new Analyzer()
-            {
-                Universe = systems,
-                UniversePath = path,
-                SystemTemplate = systemTemplate,
-                Archetype = archetype
-            };
+            Analyzer analyzer = new Analyzer
+                                    {
+                                        Universe = systems,
+                                        UniversePath = path,
+                                        SystemTemplate = systemTemplate,
+                                        Archetype = archetype
+                                    };
             analyzer.Analyze();
 
             DisplayUniverseConnections(analyzer.Connections);

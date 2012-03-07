@@ -133,7 +133,7 @@ namespace FreelancerModStudio.Data.UTF
                 if (part.ParentName.Length > 0x3F)
                     part.ParentName = part.ParentName.Substring(0, 0x3F);
 
-                data.AddRange(ASCIIEncoding.ASCII.GetBytes(part.ParentName));
+                data.AddRange(Encoding.ASCII.GetBytes(part.ParentName));
 
                 for (int i = 0; i < 0x40 - part.ParentName.Length; i++)
                     data.Add(0);
@@ -141,13 +141,13 @@ namespace FreelancerModStudio.Data.UTF
                 if (part.ChildName.Length > 0x3F + fixedDiff)
                     part.ChildName = part.ChildName.Substring(0, 0x3F + fixedDiff);
 
-                data.AddRange(ASCIIEncoding.ASCII.GetBytes(part.ChildName));
+                data.AddRange(Encoding.ASCII.GetBytes(part.ChildName));
 
                 for (int i = 0; i < 0x40 + fixedDiff - part.ChildName.Length; i++)
                     data.Add(0);
 
                 if (IsFixed)
-                    data.AddRange(BitConverter.GetBytes((int)0));
+                    data.AddRange(BitConverter.GetBytes(0));
 
                 data.AddRange(BitConverter.GetBytes(part.Origin.X));
                 data.AddRange(BitConverter.GetBytes(part.Origin.Y));

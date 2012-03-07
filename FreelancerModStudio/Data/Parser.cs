@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Windows.Media.Media3D;
-using FreelancerModStudio.SystemPresenter;
 
 namespace FreelancerModStudio.Data
 {
@@ -36,7 +35,7 @@ namespace FreelancerModStudio.Data
         public static Vector3D ParseVector(string vector)
         {
             //Use Vector3D.Parse after implementation of type handling
-            string[] values = vector.Split(new char[] { ',' });
+            string[] values = vector.Split(new[] { ',' });
             if (values.Length > 2)
                 return new Vector3D(ParseDouble(values[0], 0), ParseDouble(values[1], 0), ParseDouble(values[2], 0));
 

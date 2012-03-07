@@ -1,4 +1,6 @@
-﻿namespace FreelancerModStudio.AutoUpdate
+﻿using FreelancerModStudio.Controls;
+
+namespace FreelancerModStudio.AutoUpdate
 {
 	partial class frmAutoUpdate
 	{

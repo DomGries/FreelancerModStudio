@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace FreelancerModStudio.Data
 {
@@ -12,30 +10,27 @@ namespace FreelancerModStudio.Data
 
         public ChangedData GetUndoData()
         {
-            if (Type == ChangedType.Add)
+            switch (Type)
             {
-                return new ChangedData()
-                {
-                    Type = ChangedType.Delete,
-                    NewBlocks = this.NewBlocks
-                };
-            }
-            else if (Type == ChangedType.Delete)
-            {
-                return new ChangedData()
-                {
-                    Type = ChangedType.Add,
-                    NewBlocks = this.NewBlocks
-                };
-            }
-            else
-            {
-                return new ChangedData()
-                {
-                    Type = this.Type,
-                    NewBlocks = this.OldBlocks,
-                    OldBlocks = this.NewBlocks
-                };
+                case ChangedType.Add:
+                    return new ChangedData
+                               {
+                                   Type = ChangedType.Delete,
+                                   NewBlocks = NewBlocks
+                               };
+                case ChangedType.Delete:
+                    return new ChangedData
+                               {
+                                   Type = ChangedType.Add,
+                                   NewBlocks = NewBlocks
+                               };
+                default:
+                    return new ChangedData
+                               {
+                                   Type = Type,
+                                   NewBlocks = OldBlocks,
+                                   OldBlocks = NewBlocks
+                               };
             }
         }
     }

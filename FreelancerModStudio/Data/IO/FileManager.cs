@@ -58,7 +58,7 @@ namespace FreelancerModStudio.Data.IO
             System.Diagnostics.Debug.WriteLine("load data: " + st.ElapsedMilliseconds + "ms");
 #endif
 
-            return GetEditorData(iniData, templateFileIndex); ;
+            return GetEditorData(iniData, templateFileIndex);
         }
 
         EditorINIData GetEditorData(List<INIBlock> iniData, int templateFileIndex)
@@ -208,33 +208,33 @@ namespace FreelancerModStudio.Data.IO
             foreach (EditorINIBlock block in data.Blocks)
             {
                 INIOptions newBlock = new INIOptions();
-                for (int i = 0; i < block.Options.Count; i++)
+                foreach (EditorINIOption option in block.Options)
                 {
-                    if (block.Options[i].Values.Count > 0)
+                    if (option.Values.Count > 0)
                     {
                         List<INIOption> newOption = new List<INIOption>();
 
-                        for (int j = 0; j < block.Options[i].Values.Count; j++)
+                        foreach (EditorINIEntry entry in option.Values)
                         {
-                            string optionValue = block.Options[i].Values[j].Value.ToString();
+                            var optionValue = entry.Value.ToString();
                             if (optionValue == "=")
                                 //use an empty value for options which dont have values and are simply defined when using the option key followed by a colon equal
-                                newOption.Add(new INIOption(""));
+                                newOption.Add(new INIOption(string.Empty));
                             else
                                 newOption.Add(new INIOption(optionValue));
 
                             //add suboptions as options with defined parent
-                            if (block.Options[i].Values[j].SubOptions != null)
+                            if (entry.SubOptions != null)
                             {
-                                for (int k = 0; k < block.Options[i].Values[j].SubOptions.Count; k++)
-                                    newOption.Add(new INIOption(block.Options[i].Values[j].SubOptions[k].ToString(), block.Options[i].ChildName));
+                                for (int k = 0; k < entry.SubOptions.Count; k++)
+                                    newOption.Add(new INIOption(entry.SubOptions[k].ToString(), option.ChildName));
                             }
                         }
 
-                        newBlock.Add(block.Options[i].Name, newOption);
+                        newBlock.Add(option.Name, newOption);
                     }
                 }
-                newData.Add(new INIBlock() { Name = block.Name, Options = newBlock });
+                newData.Add(new INIBlock { Name = block.Name, Options = newBlock });
             }
 
             try
@@ -247,9 +247,11 @@ namespace FreelancerModStudio.Data.IO
                 //}
                 //else
                 //{
-                INIManager iniManager = new INIManager(File);
-                iniManager.WriteSpaces = WriteSpaces;
-                iniManager.WriteEmptyLine = WriteEmptyLine;
+                var iniManager = new INIManager(File)
+                    {
+                        WriteEmptyLine = WriteEmptyLine,
+                        WriteSpaces = WriteSpaces
+                    };
                 iniManager.Write(newData);
                 //}
             }
@@ -316,7 +318,7 @@ namespace FreelancerModStudio.Data.IO
 
         object ConvertToArray(ArrayType type, string value)
         {
-            string[] arrayValues = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] arrayValues = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (type == ArrayType.String)
                 return arrayValues;
@@ -378,7 +380,7 @@ namespace FreelancerModStudio.Data.IO
 
         public EditorINIData(int templateIndex)
         {
-            this.TemplateIndex = templateIndex;
+            TemplateIndex = templateIndex;
         }
     }
 
@@ -392,8 +394,8 @@ namespace FreelancerModStudio.Data.IO
 
         public EditorINIBlock(string name, int templateIndex)
         {
-            this.Name = name;
-            this.TemplateIndex = templateIndex;
+            Name = name;
+            TemplateIndex = templateIndex;
         }
     }
 
@@ -410,8 +412,8 @@ namespace FreelancerModStudio.Data.IO
 
         public EditorINIOption(string name, int templateIndex)
         {
-            this.Name = name;
-            this.TemplateIndex = templateIndex;
+            Name = name;
+            TemplateIndex = templateIndex;
         }
     }
 

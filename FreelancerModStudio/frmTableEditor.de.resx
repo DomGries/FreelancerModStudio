@@ -121,63 +121,6 @@
   <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
     <value>178, 48</value>
   </data>
-  <data name="mnuAdd2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 22</value>
-  </data>
-  <data name="mnuAdd2.Text" xml:space="preserve">
-    <value>&amp;Hinzufügen</value>
-  </data>
-  <data name="mnuDelete2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 22</value>
-  </data>
-  <data name="mnuDelete2.Text" xml:space="preserve">
-    <value>&amp;Löschen</value>
-  </data>
-  <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
-  </data>
-  <data name="fileToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Datei</value>
-  </data>
-  <data name="mnuClose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>232, 22</value>
-  </data>
-  <data name="mnuClose.Text" xml:space="preserve">
-    <value>&amp;Schließen</value>
-  </data>
-  <data name="mnuSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>232, 22</value>
-  </data>
-  <data name="mnuSave.Text" xml:space="preserve">
-    <value>&amp;Speichern</value>
-  </data>
-  <data name="mnuSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>232, 22</value>
-  </data>
-  <data name="mnuSaveAs.Text" xml:space="preserve">
-    <value>&amp;Speichern unter...</value>
-  </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Bearbeiten</value>
-  </data>
-  <data name="mnuReDo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
-  </data>
-  <data name="mnuReDo.Text" xml:space="preserve">
-    <value>&amp;Rückgängig</value>
-  </data>
-  <data name="mnuUnDo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
-  </data>
-  <data name="mnuUnDo.Text" xml:space="preserve">
-    <value>&amp;Wiederholen</value>
-  </data>
-  <data name="toolStripMenuItem3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 6</value>
-  </data>
   <data name="mnuAdd.Size" type="System.Drawing.Size, System.Drawing">
     <value>191, 22</value>
   </data>
@@ -189,23 +132,5 @@
   </data>
   <data name="mnuDelete.Text" xml:space="preserve">
     <value>&amp;Löschen</value>
-  </data>
-  <data name="toolStripMenuItem4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 6</value>
-  </data>
-  <data name="mnuSelectAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
-  </data>
-  <data name="mnuSelectAll.Text" xml:space="preserve">
-    <value>&amp;Alle markieren</value>
-  </data>
-  <data name="toolStripMenuItem5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 6</value>
-  </data>
-  <data name="mnuGoTo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
-  </data>
-  <data name="mnuGoTo.Text" xml:space="preserve">
-    <value>&amp;Gehe zu...</value>
   </data>
 </root>

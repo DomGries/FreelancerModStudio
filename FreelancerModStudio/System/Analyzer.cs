@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
-using IO = System.IO;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -32,7 +29,7 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     if (option.Name.ToLower() == "file" && option.Values.Count > 0)
                     {
-                        Table<int, ConnectionPart> systemConnections = GetConnections(block.UniqueID, IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()));
+                        Table<int, ConnectionPart> systemConnections = GetConnections(block.UniqueID, global::System.IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()));
                         if (systemConnections != null)
                             AddConnections(block.UniqueID, systemConnections);
 
@@ -46,11 +43,11 @@ namespace FreelancerModStudio.SystemPresenter
         {
             foreach (ConnectionPart connectionPart in connections)
             {
-                UniverseConnection connection = new UniverseConnection()
-                {
-                    From = new ConnectionPart() { ID = id, Jumpgate = connectionPart.Jumpgate, Jumphole = connectionPart.Jumphole },
-                    To = new ConnectionPart() { ID = connectionPart.ID }
-                };
+                UniverseConnection connection = new UniverseConnection
+                                                    {
+                                                        From = new ConnectionPart { ID = id, Jumpgate = connectionPart.Jumpgate, Jumphole = connectionPart.Jumphole },
+                                                        To = new ConnectionPart { ID = connectionPart.ID }
+                                                    };
 
                 UniverseConnection existingConnection;
                 if (Connections.TryGetValue(connection.ID, out existingConnection))
@@ -65,7 +62,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         Table<int, ConnectionPart> GetConnections(int id, string file)
         {
-            if (!IO.File.Exists(file))
+            if (!global::System.IO.File.Exists(file))
                 return null;
 
             FileManager fileManager = new FileManager(file);
@@ -157,7 +154,7 @@ namespace FreelancerModStudio.SystemPresenter
             get
             {
                 if (From != null && To != null)
-                    return new UniverseConnectionID() { From = From.ID, To = To.ID };
+                    return new UniverseConnectionID { From = From.ID, To = To.ID };
                 else
                     return null;
             }

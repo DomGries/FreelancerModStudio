@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using FreelancerModStudio.Controls;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
 using WeifenLuo.WinFormsUI.Docking;
@@ -13,24 +14,24 @@ namespace FreelancerModStudio
     public partial class frmMain : Form
     {
         Mod mod;
-        bool modChanged = false;
+        bool modChanged;
 
-        frmProperties propertiesForm = null;
+        frmProperties propertiesForm;
         //frmSolutionExplorer solutionExplorerForm = null;
-        frmSystemEditor systemEditor = null;
+        frmSystemEditor systemEditor;
 
         public frmMain()
         {
             InitializeComponent();
-            this.Icon = Properties.Resources.LogoIcon;
+            Icon = Properties.Resources.LogoIcon;
 
-            this.GetSettings();
+            GetSettings();
 
             //initialize content windows after language was set
             InitContentWindows();
 
             //register event to restart app if update was downloaded and button 'Install' pressed
-            Helper.Update.AutoUpdate.RestartingApplication += new EventHandler<CancelEventArgs>(this.AutoUpdate_RestartingApplication);
+            Helper.Update.AutoUpdate.RestartingApplication += AutoUpdate_RestartingApplication;
         }
 
         void frmMain_Load(object sender, EventArgs e)
@@ -42,7 +43,7 @@ namespace FreelancerModStudio
             {
                 try
                 {
-                    dockPanel1.LoadFromXml(layoutFile, new DeserializeDockContent(GetContentFromPersistString));
+                    dockPanel1.LoadFromXml(layoutFile, GetContentFromPersistString);
                     layoutLoaded = true;
                 }
                 catch { }
@@ -51,7 +52,7 @@ namespace FreelancerModStudio
             if (!layoutLoaded)
             {
                 //this.solutionExplorerForm.Show(dockPanel1);
-                this.propertiesForm.Show(dockPanel1);
+                propertiesForm.Show(dockPanel1);
             }
 
             //open files
@@ -62,7 +63,7 @@ namespace FreelancerModStudio
                     OpenFile(arguments[i]);
             }
 
-            if (this.dockPanel1.DocumentsCount == 0)
+            if (dockPanel1.DocumentsCount == 0)
                 SetDocumentMenus(false);
         }
 
@@ -94,7 +95,7 @@ namespace FreelancerModStudio
                 return systemEditor;
             else
             {
-                string[] parsedStrings = persistString.Split(new char[] { ',' });
+                string[] parsedStrings = persistString.Split(new[] { ',' });
                 if (parsedStrings.Length != 3)
                     return null;
 
@@ -128,7 +129,7 @@ namespace FreelancerModStudio
 
         bool CloseAllDocuments()
         {
-            foreach (Form child in this.MdiChildren)
+            foreach (Form child in MdiChildren)
             {
                 child.Close();
                 if (!child.IsDisposed)
@@ -141,11 +142,11 @@ namespace FreelancerModStudio
         bool CloseOtherDocuments()
         {
             int index = 0;
-            while (index < this.dockPanel1.ActiveDocumentPane.Contents.Count)
+            while (index < dockPanel1.ActiveDocumentPane.Contents.Count)
             {
-                IDockContent dockContent = this.dockPanel1.ActiveDocumentPane.Contents[index];
+                IDockContent dockContent = dockPanel1.ActiveDocumentPane.Contents[index];
 
-                if (dockContent != this.dockPanel1.ActiveDocumentPane.ActiveContent)
+                if (dockContent != dockPanel1.ActiveDocumentPane.ActiveContent)
                 {
                     dockContent.DockHandler.Close();
                     if (!dockContent.DockHandler.Form.IsDisposed)
@@ -208,7 +209,7 @@ namespace FreelancerModStudio
 
         void mnuFullScreen_Click(object sender, EventArgs e)
         {
-            this.FullScreen(!Helper.Settings.Data.Data.Forms.Main.FullScreen);
+            FullScreen(!Helper.Settings.Data.Data.Forms.Main.FullScreen);
         }
 
         void SetSettings()
@@ -226,13 +227,13 @@ namespace FreelancerModStudio
 
             if (!Helper.Settings.Data.Data.Forms.Main.FullScreen)
             {
-                Helper.Settings.Data.Data.Forms.Main.Maximized = (this.WindowState == FormWindowState.Maximized);
+                Helper.Settings.Data.Data.Forms.Main.Maximized = (WindowState == FormWindowState.Maximized);
 
                 if (Helper.Settings.Data.Data.Forms.Main.Maximized)
-                    this.WindowState = FormWindowState.Normal;
+                    WindowState = FormWindowState.Normal;
 
-                Helper.Settings.Data.Data.Forms.Main.Location = this.Location;
-                Helper.Settings.Data.Data.Forms.Main.Size = this.Size;
+                Helper.Settings.Data.Data.Forms.Main.Location = Location;
+                Helper.Settings.Data.Data.Forms.Main.Size = Size;
             }
         }
 
@@ -242,55 +243,52 @@ namespace FreelancerModStudio
             {
                 if (Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Location, new Point(0, 0), true) &&
                     Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Location, new Point(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height), false))
-                    this.Location = Helper.Settings.Data.Data.Forms.Main.Location;
+                    Location = Helper.Settings.Data.Data.Forms.Main.Location;
 
                 if (Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Size, new Size(0, 0), true) &&
                     Helper.Compare.Size(Helper.Settings.Data.Data.Forms.Main.Size, new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height), false))
-                    this.Size = Helper.Settings.Data.Data.Forms.Main.Size;
+                    Size = Helper.Settings.Data.Data.Forms.Main.Size;
             }
 
             if (Helper.Settings.Data.Data.Forms.Main.Maximized)
-                this.WindowState = FormWindowState.Maximized;
+                WindowState = FormWindowState.Maximized;
 
             if (Helper.Settings.Data.Data.Forms.Main.FullScreen)
-                this.FullScreen(true);
+                FullScreen(true);
 
-            this.uiCultureChanger1.ApplyCulture(new System.Globalization.CultureInfo(Helper.Settings.GetShortLanguage()));
+            uiCultureChanger1.ApplyCulture(new System.Globalization.CultureInfo(Helper.Settings.GetShortLanguage()));
 
-            this.DisplayRecentFiles();
+            DisplayRecentFiles();
         }
 
         void FullScreen(bool value)
         {
             Helper.Settings.Data.Data.Forms.Main.FullScreen = value;
-            this.mnuFullScreen.Checked = value;
+            mnuFullScreen.Checked = value;
 
             if (Helper.Settings.Data.Data.Forms.Main.FullScreen)
             {
                 //show fullscreen
-                ToolStripMenuItem fullScreenMenuItem = new ToolStripMenuItem(this.mnuFullScreen.Text, this.mnuFullScreen.Image, new EventHandler(this.mnuFullScreen_Click));
+                ToolStripMenuItem fullScreenMenuItem = new ToolStripMenuItem(mnuFullScreen.Text, mnuFullScreen.Image, mnuFullScreen_Click);
                 fullScreenMenuItem.Checked = true;
-                this.MainMenuStrip.Items.Add(fullScreenMenuItem);
+                MainMenuStrip.Items.Add(fullScreenMenuItem);
 
-                Helper.Settings.Data.Data.Forms.Main.Location = this.Location;
-                Helper.Settings.Data.Data.Forms.Main.Size = this.Size;
+                Helper.Settings.Data.Data.Forms.Main.Location = Location;
+                Helper.Settings.Data.Data.Forms.Main.Size = Size;
 
-                Helper.Settings.Data.Data.Forms.Main.Maximized = (this.WindowState == FormWindowState.Maximized);
+                Helper.Settings.Data.Data.Forms.Main.Maximized = (WindowState == FormWindowState.Maximized);
 
-                this.FormBorderStyle = FormBorderStyle.None;
-                this.WindowState = FormWindowState.Maximized;
+                FormBorderStyle = FormBorderStyle.None;
+                WindowState = FormWindowState.Maximized;
             }
             else
             {
                 //exit fullscreen
-                this.MainMenuStrip.Items.RemoveAt(this.MainMenuStrip.Items.Count - 1);
+                MainMenuStrip.Items.RemoveAt(MainMenuStrip.Items.Count - 1);
 
-                this.FormBorderStyle = FormBorderStyle.Sizable;
+                FormBorderStyle = FormBorderStyle.Sizable;
 
-                if (Helper.Settings.Data.Data.Forms.Main.Maximized)
-                    this.WindowState = FormWindowState.Maximized;
-                else
-                    this.WindowState = FormWindowState.Normal;
+                WindowState = Helper.Settings.Data.Data.Forms.Main.Maximized ? FormWindowState.Maximized : FormWindowState.Normal;
             }
         }
 
@@ -304,7 +302,7 @@ namespace FreelancerModStudio
                     break;
                 }
             }
-            this.DisplayRecentFiles();
+            DisplayRecentFiles();
         }
 
         void AddToRecentFiles(string file, int templateIndex)
@@ -326,17 +324,17 @@ namespace FreelancerModStudio
             if (Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count > Helper.Settings.Data.Data.General.RecentFilesCount)
                 Helper.Settings.Data.Data.Forms.Main.RecentFiles.RemoveAt(Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count - 1);
 
-            this.DisplayRecentFiles();
+            DisplayRecentFiles();
         }
 
         void DisplayRecentFiles()
         {
-            int firstItemIndex = this.mnuOpen.DropDownItems.IndexOf(this.mnuRecentFilesSeperator) + 1;
+            int firstItemIndex = mnuOpen.DropDownItems.IndexOf(mnuRecentFilesSeperator) + 1;
 
             //remove all recent menuitems
-            for (int i = firstItemIndex; i < this.mnuOpen.DropDownItems.Count; i++)
+            for (int i = firstItemIndex; i < mnuOpen.DropDownItems.Count; i++)
             {
-                this.mnuOpen.DropDownItems.RemoveAt(this.mnuOpen.DropDownItems.Count - 1);
+                mnuOpen.DropDownItems.RemoveAt(mnuOpen.DropDownItems.Count - 1);
                 i--;
             }
 
@@ -347,20 +345,20 @@ namespace FreelancerModStudio
                 {
                     if (i < Helper.Settings.Data.Data.General.RecentFilesCount)
                     {
-                        ToolStripMenuItem menuItem = new ToolStripMenuItem(System.IO.Path.GetFileName(Helper.Settings.Data.Data.Forms.Main.RecentFiles[i].File), null, new EventHandler(mnuLoadRecentFile_Click));
+                        ToolStripMenuItem menuItem = new ToolStripMenuItem(System.IO.Path.GetFileName(Helper.Settings.Data.Data.Forms.Main.RecentFiles[i].File), null, mnuLoadRecentFile_Click);
 
                         menuItem.Tag = Helper.Settings.Data.Data.Forms.Main.RecentFiles[i];
 
                         if (i == 0)
                             menuItem.ShortcutKeys = Keys.Control & Keys.Shift & Keys.O;
 
-                        this.mnuOpen.DropDownItems.Add(menuItem);
+                        mnuOpen.DropDownItems.Add(menuItem);
                     }
                 }
-                this.mnuRecentFilesSeperator.Visible = true;
+                mnuRecentFilesSeperator.Visible = true;
             }
             else
-                this.mnuRecentFilesSeperator.Visible = false;
+                mnuRecentFilesSeperator.Visible = false;
         }
 
         void mnuLoadRecentFile_Click(object sender, EventArgs e)
@@ -432,7 +430,7 @@ namespace FreelancerModStudio
             defaultEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
             defaultEditor.ContentChanged += Content_DisplayChanged;
             defaultEditor.DocumentChanged += Document_DisplayChanged;
-            defaultEditor.Show(this.dockPanel1, DockState.Document);
+            defaultEditor.Show(dockPanel1, DockState.Document);
 
             return defaultEditor;
         }
@@ -442,15 +440,15 @@ namespace FreelancerModStudio
             if (e.Cancel)
                 return;
 
-            if (this.CancelModClose())
+            if (CancelModClose())
                 e.Cancel = true;
             else
-                this.SetSettings();
+                SetSettings();
         }
 
         bool CancelModClose()
         {
-            if (mod == null || mod.Data.About == null || mod.Data.About.Name == null || !this.modChanged)
+            if (mod == null || mod.Data.About == null || mod.Data.About.Name == null || !modChanged)
                 return false;
 
             DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, mod.Data.About.Name), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -466,23 +464,23 @@ namespace FreelancerModStudio
 
         void LoadMod(string file)
         {
-            this.modChanged = false;
+            modChanged = false;
             //TODO:Load
         }
 
         void CreateMod(Mod.About about, string saveLocation)
         {
-            this.mod = new Mod(about);
+            mod = new Mod(about);
 
             string path = System.IO.Path.Combine(saveLocation, about.Name);
 
             if (!System.IO.Directory.Exists(path))
                 System.IO.Directory.CreateDirectory(path);
 
-            this.mod.Save(System.IO.Path.Combine(path, about.Name + Properties.Resources.ModExtension));
+            mod.Save(System.IO.Path.Combine(path, about.Name + Properties.Resources.ModExtension));
             //this.solutionExplorerForm.ShowProject(this.mod);
 
-            this.modChanged = false;
+            modChanged = false;
         }
 
         void mnuNewMod_Click(object sender, EventArgs e)
@@ -516,18 +514,18 @@ namespace FreelancerModStudio
             //show window
             if (frmNewMod.ShowDialog() == DialogResult.OK)
             {
-                if (!this.CancelModClose())
+                if (!CancelModClose())
                 {
                     //create mod
-                    Mod.About about = new Mod.About()
-                    {
+                    Mod.About about = new Mod.About
+                                          {
                         Name = frmNewMod.txtName.Text,
                         Author = frmNewMod.txtAuthor.Text,
                         Version = Properties.Resources.DefaultModVersion,
                         HomePage = frmNewMod.txtHomepage.Text,
                         Description = frmNewMod.txtDescription.Text
                     };
-                    this.CreateMod(about, frmNewMod.txtSaveLocation.Text.Trim());
+                    CreateMod(about, frmNewMod.txtSaveLocation.Text.Trim());
 
                     //set mod save location
                     Helper.Settings.Data.Data.Forms.NewMod.ModSaveLocation = frmNewMod.txtSaveLocation.Text.Trim();
@@ -540,7 +538,7 @@ namespace FreelancerModStudio
 
         void mnuExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         void mnuCheckUpdate_Click(object sender, EventArgs e)
@@ -553,7 +551,7 @@ namespace FreelancerModStudio
             bool canceled = false;
 
             //close all MdiChildren and check if user canceled one
-            foreach (Form child in this.MdiChildren)
+            foreach (Form child in MdiChildren)
             {
                 child.Close();
                 if (!child.IsDisposed)
@@ -564,10 +562,7 @@ namespace FreelancerModStudio
                 e.Cancel = true;
             else
             {
-                this.BeginInvoke((MethodInvoker)delegate
-                {
-                    this.Close();
-                });
+                BeginInvoke((MethodInvoker)Close);
             }
         }
 
@@ -588,7 +583,7 @@ namespace FreelancerModStudio
                     ShowSystemEditor(tableEditor);
 
                 DefaultEditor_SelectionChanged(tableEditor.GetSelectedBlocks(), tableEditor.Data.TemplateIndex);
-                Document_DisplayChanged((DocumentInterface)tableEditor);
+                Document_DisplayChanged(tableEditor);
             }
             else
             {
@@ -625,8 +620,7 @@ namespace FreelancerModStudio
 
         void mnuOpenFile_Click(object sender, EventArgs e)
         {
-            OpenFileDialog fileOpener = new OpenFileDialog();
-            fileOpener.Filter = Properties.Strings.FileDialogFilter;
+            var fileOpener = new OpenFileDialog { Filter = Properties.Strings.FileDialogFilter };
             if (fileOpener.ShowDialog() == DialogResult.OK)
             {
                 foreach (string file in fileOpener.FileNames)
@@ -653,11 +647,11 @@ namespace FreelancerModStudio
                 if (tableEditor != null)
                 {
                     editors.Add(tableEditor);
-                    this.uiCultureChanger1.AddForm((Form)document);
+                    uiCultureChanger1.AddForm((Form)document);
                 }
             }
 
-            this.uiCultureChanger1.ApplyCulture(new System.Globalization.CultureInfo(Helper.Settings.GetShortLanguage()));
+            uiCultureChanger1.ApplyCulture(new System.Globalization.CultureInfo(Helper.Settings.GetShortLanguage()));
 
             //refresh settings after language change
             foreach (frmTableEditor editor in editors)
@@ -691,9 +685,9 @@ namespace FreelancerModStudio
 
             if (!value)
             {
-                mnuChangeVisibility.Visible = value;
-                mnuFocusSelected.Visible = value;
-                mnu3dEditor.Enabled = value;
+                mnuChangeVisibility.Visible = false;
+                mnuFocusSelected.Visible = false;
+                mnu3dEditor.Enabled = false;
             }
         }
 
@@ -715,10 +709,7 @@ namespace FreelancerModStudio
 
         void frmMain_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                e.Effect = DragDropEffects.Copy;
-            else
-                e.Effect = DragDropEffects.None;
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
         void frmMain_DragDrop(object sender, DragEventArgs e)
@@ -754,12 +745,12 @@ namespace FreelancerModStudio
 
         void mnuSave_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)this.dockPanel1.ActiveDocument).Save();
+            ((DocumentInterface)dockPanel1.ActiveDocument).Save();
         }
 
         void mnuSaveAs_Click(object sender, EventArgs e)
         {
-            frmTableEditor tableEditor = ((frmTableEditor)this.dockPanel1.ActiveDocument);
+            frmTableEditor tableEditor = ((frmTableEditor)dockPanel1.ActiveDocument);
             tableEditor.SaveAs();
 
             AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
@@ -767,11 +758,11 @@ namespace FreelancerModStudio
 
         ContentInterface GetContent()
         {
-            ContentInterface content = this.dockPanel1.ActiveContent as ContentInterface;
+            ContentInterface content = dockPanel1.ActiveContent as ContentInterface;
             if (content != null && content.UseDocument())
             {
-                if (this.dockPanel1.ActiveDocument != null)
-                    return (ContentInterface)this.dockPanel1.ActiveDocument;
+                if (dockPanel1.ActiveDocument != null)
+                    return (ContentInterface)dockPanel1.ActiveDocument;
                 else
                     return null;
             }
@@ -781,7 +772,7 @@ namespace FreelancerModStudio
 
         DocumentInterface GetDocument()
         {
-            return this.dockPanel1.ActiveDocument as DocumentInterface;
+            return dockPanel1.ActiveDocument as DocumentInterface;
         }
 
         void mnuCut_Click(object sender, EventArgs e)
@@ -821,7 +812,7 @@ namespace FreelancerModStudio
 
         void mnuClose_Click(object sender, EventArgs e)
         {
-            this.dockPanel1.ActiveContent.DockHandler.Close();
+            dockPanel1.ActiveContent.DockHandler.Close();
         }
 
         void mnuAdd_Click(object sender, EventArgs e)
@@ -918,67 +909,67 @@ namespace FreelancerModStudio
 
             if (document.CanSave())
             {
-                this.mnuSave.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSave, document.GetTitle());
-                this.mnuSaveAs.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSaveAs, document.GetTitle());
+                mnuSave.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSave, document.GetTitle());
+                mnuSaveAs.Text = String.Format(FreelancerModStudio.Properties.Strings.FileEditorSaveAs, document.GetTitle());
             }
 
-            this.mnuUndo.Enabled = document.CanUndo();
-            this.mnuRedo.Enabled = document.CanRedo();
+            mnuUndo.Enabled = document.CanUndo();
+            mnuRedo.Enabled = document.CanRedo();
 
-            this.mnuChangeVisibility.Visible = document.CanChangeVisibility(false);
-            this.mnuFocusSelected.Visible = document.CanFocusSelected(false);
+            mnuChangeVisibility.Visible = document.CanChangeVisibility(false);
+            mnuFocusSelected.Visible = document.CanFocusSelected(false);
 
-            this.toolStripSeparator4.Visible = document.CanChangeVisibility(false) || document.CanFocusSelected(false);
+            toolStripSeparator4.Visible = document.CanChangeVisibility(false) || document.CanFocusSelected(false);
 
-            this.mnu3dEditor.Enabled = document.CanDisplay3DViewer();
+            mnu3dEditor.Enabled = document.CanDisplay3DViewer();
         }
 
         void Content_DisplayChanged(ContentInterface content)
         {
             if (content == null)
             {
-                this.mnuCopy.Enabled = false;
-                this.mnuCut.Enabled = false;
-                this.mnuPaste.Enabled = false;
-                this.mnuAdd.Enabled = false;
-                this.mnuDelete.Enabled = false;
-                this.mnuSelectAll.Enabled = false;
+                mnuCopy.Enabled = false;
+                mnuCut.Enabled = false;
+                mnuPaste.Enabled = false;
+                mnuAdd.Enabled = false;
+                mnuDelete.Enabled = false;
+                mnuSelectAll.Enabled = false;
 
-                this.mnuChangeVisibility.Enabled = false;
-                this.mnuFocusSelected.Enabled = false;
+                mnuChangeVisibility.Enabled = false;
+                mnuFocusSelected.Enabled = false;
 
-                this.mnuAdd.Click -= this.mnuAdd_Click;
-                this.mnuAdd.DropDown = new ToolStripDropDown();
+                mnuAdd.Click -= mnuAdd_Click;
+                mnuAdd.DropDown = new ToolStripDropDown();
             }
             else
             {
-                this.mnuCopy.Enabled = content.CanCopy();
-                this.mnuCut.Enabled = content.CanCut();
-                this.mnuPaste.Enabled = content.CanPaste();
-                this.mnuAdd.Enabled = content.CanAdd();
-                this.mnuDelete.Enabled = content.CanDelete();
-                this.mnuSelectAll.Enabled = content.CanSelectAll();
+                mnuCopy.Enabled = content.CanCopy();
+                mnuCut.Enabled = content.CanCut();
+                mnuPaste.Enabled = content.CanPaste();
+                mnuAdd.Enabled = content.CanAdd();
+                mnuDelete.Enabled = content.CanDelete();
+                mnuSelectAll.Enabled = content.CanSelectAll();
 
                 DocumentInterface document = content as DocumentInterface;
                 if (document != null)
                 {
-                    this.mnuChangeVisibility.Enabled = document.CanChangeVisibility(true);
-                    this.mnuFocusSelected.Enabled = document.CanFocusSelected(true);
+                    mnuChangeVisibility.Enabled = document.CanChangeVisibility(true);
+                    mnuFocusSelected.Enabled = document.CanFocusSelected(true);
                 }
                 else
                 {
-                    this.mnuChangeVisibility.Enabled = false;
-                    this.mnuFocusSelected.Enabled = false;
+                    mnuChangeVisibility.Enabled = false;
+                    mnuFocusSelected.Enabled = false;
                 }
 
-                this.mnuAdd.Click -= this.mnuAdd_Click;
+                mnuAdd.Click -= mnuAdd_Click;
 
                 if (content.CanAddMultiple())
-                    this.mnuAdd.DropDown = content.MultipleAddDropDown();
+                    mnuAdd.DropDown = content.MultipleAddDropDown();
                 else
                 {
-                    this.mnuAdd.Click += this.mnuAdd_Click;
-                    this.mnuAdd.DropDown = new ToolStripDropDown();
+                    mnuAdd.Click += mnuAdd_Click;
+                    mnuAdd.DropDown = new ToolStripDropDown();
                 }
             }
         }

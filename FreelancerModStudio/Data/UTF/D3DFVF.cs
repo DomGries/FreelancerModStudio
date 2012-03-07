@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FreelancerModStudio.Data.UTF
 {
+    [Flags]
     public enum D3DFVF : ushort
     {
         //RESERVED0 = 0x0001,

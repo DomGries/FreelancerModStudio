@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace FreelancerModStudio.Data
 {
@@ -15,8 +13,8 @@ namespace FreelancerModStudio.Data
 
         void OnDataChanged(List<T> o, bool undo)
         {
-            if (this.DataChanged != null)
-                this.DataChanged(o, undo);
+            if (DataChanged != null)
+                DataChanged(o, undo);
         }
 
         public List<T> CurrentData

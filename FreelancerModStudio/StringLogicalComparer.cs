@@ -1,7 +1,6 @@
 // Optimized by Richard Deeming
 // Original code by Vasian Cepa
 
-using System;
 using System.Collections;
 
 namespace FreelancerModStudio
@@ -10,7 +9,7 @@ namespace FreelancerModStudio
     {
         static readonly IComparer _default = new StringLogicalComparer();
         static readonly IComparer _defaultZeroesFirst = new StringLogicalComparer(true);
-        bool zeroesFirst = false;
+        bool zeroesFirst;
 
         StringLogicalComparer()
         {

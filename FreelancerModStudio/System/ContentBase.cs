@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Media.Media3D;
+﻿using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
-using HelixEngine;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -18,7 +13,7 @@ namespace FreelancerModStudio.SystemPresenter
         public string Title { get; set; }
         public bool Visibility { get; set; }
 
-        public ContentBase()
+        protected ContentBase()
         {
             Matrix = Matrix3D.Identity;
 
@@ -29,11 +24,11 @@ namespace FreelancerModStudio.SystemPresenter
         {
             if (Model != null)
             {
-                ContentAnimation animation = new ContentAnimation()
-                {
-                    OldMatrix = Matrix,
-                    NewMatrix = matrix,
-                };
+                ContentAnimation animation = new ContentAnimation
+                                                 {
+                                                     OldMatrix = Matrix,
+                                                     NewMatrix = matrix,
+                                                 };
                 Animator.Animate(Model, animation);
             }
 
@@ -66,7 +61,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void LoadModel()
         {
-            Model = new ModelVisual3D() { Content = GetGeometry() };
+            Model = new ModelVisual3D { Content = GetGeometry() };
             SetDisplay(Matrix);
         }
 

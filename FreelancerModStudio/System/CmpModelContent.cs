@@ -128,8 +128,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             // Find Cons(truct) nodes. They contain data that links each mesh to the
             // root mesh.
-            SortedList<string, string> mapFileToObj = new SortedList<string, string>();
-            mapFileToObj.Add("\\", "\\");
+            var mapFileToObj = new SortedList<string, string> { { "\\", "\\" } };
             foreach (UTFNode nodeObj in root.FindNodes("Object Name", true))
             {
                 UTFNode nodeFileName = nodeObj.ParentNode.FindNode("File Name", false);

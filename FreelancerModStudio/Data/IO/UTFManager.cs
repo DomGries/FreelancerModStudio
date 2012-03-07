@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace FreelancerModStudio.Data.IO
 {
@@ -50,7 +49,7 @@ namespace FreelancerModStudio.Data.IO
                     StringTable stringTable = new StringTable(Encoding.ASCII.GetString(reader.ReadBytes(stringBlockSize)));
 
                     info = new UTFNode();
-                    ParseNode(reader, stringTable, nodeBlockOffset, 0, stringBlockOffset, dataBlockOffset, info);
+                    ParseNode(reader, stringTable, nodeBlockOffset, 0, dataBlockOffset, info);
                 }
             }
             catch
@@ -64,7 +63,7 @@ namespace FreelancerModStudio.Data.IO
             return info;
         }
 
-        private void ParseNode(BinaryReader reader, StringTable stringTable, int nodeBlockStart, int nodeStart, int stringBlockOffset, int dataBlockOffset, UTFNode parent)
+        private void ParseNode(BinaryReader reader, StringTable stringTable, int nodeBlockStart, int nodeStart, int dataBlockOffset, UTFNode parent)
         {
             int offset = nodeBlockStart + nodeStart;
             reader.BaseStream.Position = offset;
@@ -100,10 +99,10 @@ namespace FreelancerModStudio.Data.IO
             parent.Nodes.Add(node);
 
             if (childOffset > 0 && flags == 0x10)
-                ParseNode(reader, stringTable, nodeBlockStart, childOffset, stringBlockOffset, dataBlockOffset, node);
+                ParseNode(reader, stringTable, nodeBlockStart, childOffset, dataBlockOffset, node);
 
             if (peerOffset > 0)
-                ParseNode(reader, stringTable, nodeBlockStart, peerOffset, stringBlockOffset, dataBlockOffset, parent);
+                ParseNode(reader, stringTable, nodeBlockStart, peerOffset, dataBlockOffset, parent);
         }
     }
     public class UTFNode
@@ -146,7 +145,7 @@ namespace FreelancerModStudio.Data.IO
 
                 if (searchAllChildren)
                 {
-                    UTFNode foundNode = node.FindNode(name, searchAllChildren);
+                    UTFNode foundNode = node.FindNode(name, true);
                     if (foundNode != null)
                         return foundNode;
                 }
@@ -159,13 +158,13 @@ namespace FreelancerModStudio.Data.IO
         {
             List<UTFNode> foundNodes = new List<UTFNode>();
 
-            for (int index = 0; index < Nodes.Count; index++)
+            foreach (var node in Nodes)
             {
                 if (searchAllChildren)
-                    foundNodes.AddRange(Nodes[index].FindNodes(name, searchAllChildren));
+                    foundNodes.AddRange(node.FindNodes(name, true));
 
-                if (Nodes[index].Name.ToLower() == name.ToLower())
-                    foundNodes.Add(Nodes[index]);
+                if (node.Name.ToLower() == name.ToLower())
+                    foundNodes.Add(node);
             }
 
             return foundNodes;

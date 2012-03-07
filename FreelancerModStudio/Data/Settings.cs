@@ -1,9 +1,9 @@
 using System;
-using System.Drawing;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using System.ComponentModel;
+using System.Drawing;
 using System.Globalization;
+using System.Xml.Serialization;
 
 namespace FreelancerModStudio.Data
 {
@@ -13,25 +13,25 @@ namespace FreelancerModStudio.Data
 
         public void Load(System.IO.Stream stream)
         {
-            this.Data = (SettingsData)Serializer.Load(stream, this.Data.GetType());
+            Data = (SettingsData)Serializer.Load(stream, Data.GetType());
         }
 
         public void Load(string path)
         {
-            this.Data = (SettingsData)Serializer.Load(path, this.Data.GetType());
+            Data = (SettingsData)Serializer.Load(path, Data.GetType());
         }
 
         public void Save(System.IO.Stream stream)
         {
-            Serializer.Save(stream, this.Data);
+            Serializer.Save(stream, Data);
         }
 
         public void Save(string path)
         {
-            Serializer.Save(path, this.Data);
+            Serializer.Save(path, Data);
         }
 
-        [XmlRootAttribute("FreelancerModStudio-Settings-1.0")]
+        [XmlRoot("FreelancerModStudio-Settings-1.0")]
         public class SettingsData
         {
             public General General = new General();
@@ -41,42 +41,42 @@ namespace FreelancerModStudio.Data
         [DisplayName("General")]
         public class General
         {
-            [CategoryAttribute("General"),
+            [Category("General"),
                 DisplayName("Display recent files")]
             public ushort RecentFilesCount { get; set; }
 
-            [CategoryAttribute("General"),
+            [Category("General"),
                 DisplayName("Language")]
             public LanguageType Language { get; set; }
 
-            [CategoryAttribute("Properties"),
+            [Category("Properties"),
                 DisplayName("Sort type")]
             public System.Windows.Forms.PropertySort PropertiesSortType { get; set; }
 
-            [CategoryAttribute("Properties"),
+            [Category("Properties"),
                 DisplayName("Show description")]
             public bool PropertiesShowHelp { get; set; }
 
             [XmlIgnore,
-                CategoryAttribute("INI Editor"),
+                Category("INI Editor"),
                 DisplayName("Modified row color")]
             public Color EditorModifiedColor { get; set; }
 
             [XmlIgnore,
-                CategoryAttribute("INI Editor"),
+                Category("INI Editor"),
                 DisplayName("Saved row color")]
             public Color EditorModifiedSavedColor { get; set; }
 
             [XmlIgnore,
-                CategoryAttribute("INI Editor"),
+                Category("INI Editor"),
                 DisplayName("Hidden row color")]
             public Color EditorHiddenColor { get; set; }
 
-            [CategoryAttribute("INI Formatting"),
+            [Category("INI Formatting"),
                 DisplayName("Spaces around equal sign")]
             public bool FormattingSpaces { get; set; }
 
-            [CategoryAttribute("INI Formatting"),
+            [Category("INI Formatting"),
                 DisplayName("Empty line between sections")]
             public bool FormattingEmptyLine { get; set; }
 
@@ -122,7 +122,7 @@ namespace FreelancerModStudio.Data
             }
         }
 
-        [CategoryAttribute("Auto Update"),
+        [Category("Auto Update"),
             DisplayName("Auto Update"),
             TypeConverter(typeof(SettingsConverter))]
         public class AutoUpdate
@@ -154,8 +154,8 @@ namespace FreelancerModStudio.Data
         public class Update
         {
             public string FileName;
-            public bool Downloaded = false;
-            public bool Installed = false;
+            public bool Downloaded;
+            public bool Installed;
             public bool SilentInstall;
         }
 

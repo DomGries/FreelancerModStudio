@@ -1,4 +1,6 @@
-﻿namespace FreelancerModStudio
+﻿using FreelancerModStudio.Controls;
+
+namespace FreelancerModStudio
 {
     partial class frmNewMod
     {

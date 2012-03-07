@@ -1,43 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using FreelancerModStudio.SystemPresenter;
-using System.Windows.Media.Media3D;
-using HelixEngine;
-using System.Windows.Forms.Integration;
-using FreelancerModStudio.Data.IO;
-using FreelancerModStudio.Data;
-using System.Windows.Input;
+﻿using System.Collections.Generic;
 using System.Threading;
-using System.Windows.Threading;
+using System.Windows.Forms;
+using System.Windows.Forms.Integration;
+using System.Windows.Media.Media3D;
+using FreelancerModStudio.Data;
+using FreelancerModStudio.SystemPresenter;
+using HelixEngine;
 
 namespace FreelancerModStudio
 {
     public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface
     {
-        SystemPresenter.Presenter systemPresenter = null;
-        Thread universeLoadingThread = null;
+        SystemPresenter.Presenter systemPresenter;
+        Thread universeLoadingThread;
 
         public delegate void SelectionChangedType(int id);
         public SelectionChangedType SelectionChanged;
 
         void OnSelectionChanged(int id)
         {
-            if (this.SelectionChanged != null)
-                this.SelectionChanged(id);
+            if (SelectionChanged != null)
+                SelectionChanged(id);
         }
 
         public FreelancerModStudio.SystemPresenter.Presenter.FileOpenType FileOpen;
 
         void OnFileOpen(string file)
         {
-            if (this.FileOpen != null)
-                this.FileOpen(file);
+            if (FileOpen != null)
+                FileOpen(file);
         }
 
         public frmSystemEditor()
@@ -53,23 +44,23 @@ namespace FreelancerModStudio
             st.Start();
 #endif
             //create viewport using the Helix Engine
-            HelixView3D view = new HelixView3D();
-            view.Background = System.Windows.Media.Brushes.Black;
-            view.Foreground = System.Windows.Media.Brushes.White;
-            view.FontSize = 16;
-            view.FontWeight = System.Windows.FontWeights.Bold;
-            view.ClipToBounds = false;
-            view.ShowViewCube = true;
+            HelixView3D view = new HelixView3D
+                                   {
+                                       Background = System.Windows.Media.Brushes.Black,
+                                       Foreground = System.Windows.Media.Brushes.White,
+                                       FontSize = 16,
+                                       FontWeight = System.Windows.FontWeights.Bold,
+                                       ClipToBounds = false,
+                                       ShowViewCube = true
+                                   };
             view.Camera.NearPlaneDistance = 0.001;
 #if DEBUG
             st.Stop();
             System.Diagnostics.Debug.WriteLine("init HelixView: " + st.ElapsedMilliseconds + "ms");
             st.Start();
 #endif
-            ElementHost host = new ElementHost();
-            host.Child = view;
-            host.Dock = DockStyle.Fill;
-            this.Controls.Add(host);
+            ElementHost host = new ElementHost { Child = view, Dock = DockStyle.Fill };
+            Controls.Add(host);
 #if DEBUG
             st.Stop();
             System.Diagnostics.Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");
@@ -109,10 +100,10 @@ namespace FreelancerModStudio
             {
                 string path = System.IO.Path.GetDirectoryName(file);
 
-                ThreadStart threadStart = new ThreadStart(delegate
-                {
-                    systemPresenter.DisplayUniverse(path, Helper.Template.Data.SystemFile, blocks, archetype);
-                });
+                ThreadStart threadStart = delegate
+                                              {
+                                                  systemPresenter.DisplayUniverse(path, Helper.Template.Data.SystemFile, blocks, archetype);
+                                              };
 
                 Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);
             }

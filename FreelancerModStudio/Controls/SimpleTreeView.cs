@@ -1,12 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 
-namespace test
+namespace FreelancerModStudio.Controls
 {
     public interface ITreeViewItem
     {
@@ -18,10 +17,10 @@ namespace test
         public SimpleTreeView()
         {
             //this.NodeMouseClick += new TreeNodeMouseClickEventHandler(SimpleTreeView_NodeMouseClick);
-            this.ItemDrag += new ItemDragEventHandler(SimpleTreeView_ItemDrag);
-            this.DragEnter += new DragEventHandler(SimpleTreeView_DragEnter);
-            this.DragOver += new DragEventHandler(tree_DragOver);
-            this.DragDrop += new DragEventHandler(SimpleTreeView_DragDrop);
+            ItemDrag += SimpleTreeView_ItemDrag;
+            DragEnter += SimpleTreeView_DragEnter;
+            DragOver += tree_DragOver;
+            DragDrop += SimpleTreeView_DragDrop;
         }
         
         void tree_DragOver(object sender, System.Windows.Forms.DragEventArgs e)
@@ -80,7 +79,7 @@ namespace test
         public void SetObjects(IEnumerable collection)
         {
             //this.BeginUpdate();
-            this.Nodes.Clear();
+            Nodes.Clear();
             AddObjects(collection);
             //this.EndUpdate();
         }
@@ -88,12 +87,12 @@ namespace test
         public void AddObjects(IEnumerable collection)
         {
             foreach (ITreeViewItem item in collection)
-                AddNode(this.Nodes, item.Path, item);
+                AddNode(Nodes, item.Path, item);
         }
 
         void AddNode(TreeNodeCollection nodes, string path, ITreeViewItem item)
         {
-            string[] structure = path.Split(new char[] { Path.DirectorySeparatorChar }, 2, StringSplitOptions.RemoveEmptyEntries);
+            string[] structure = path.Split(new[] { Path.DirectorySeparatorChar }, 2, StringSplitOptions.RemoveEmptyEntries);
             string root = structure[0];
             string nextPath = null;
             if (structure.Length > 1)
@@ -107,7 +106,7 @@ namespace test
                 if (nextPath == null)
                     value = item;
 
-                TreeNode node = new TreeNode() { Name = root, Text = root, Tag = value };
+                TreeNode node = new TreeNode { Name = root, Text = root, Tag = value };
                 if (nextPath != null)
                     AddNode(node.Nodes, nextPath, item);
 
@@ -117,16 +116,16 @@ namespace test
 
         public object GetSelectedObject()
         {
-            if (this.SelectedNode == null)
+            if (SelectedNode == null)
                 return null;
 
-            return this.SelectedNode.Tag;
+            return SelectedNode.Tag;
         }
 
         public object[] GetSelectedObjects()
         {
             List<object> objects = new List<object>();
-            foreach (TreeNode node in this.SelectedNodes)
+            foreach (TreeNode node in SelectedNodes)
             {
                 if (node.Tag != null)
                     objects.Add(node.Tag);
@@ -185,8 +184,8 @@ namespace test
             // Make sure at least one node has a selection
             // this way we can tab to the ctrl and use the 
             // keyboard to select nodes
-            if (m_SelectedNode == null && this.TopNode != null)
-                SelectSingleNode(this.TopNode, true);
+            if (m_SelectedNode == null && TopNode != null)
+                SelectSingleNode(TopNode, true);
             else
                 HighlightSelection();
 
@@ -196,7 +195,7 @@ namespace test
         protected override void OnLostFocus(EventArgs e)
         {
             // Handle if HideSelection property is in use.
-            if (this.HideSelection)
+            if (HideSelection)
                 DimSelection();
 
             base.OnLostFocus(e);
@@ -204,7 +203,7 @@ namespace test
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            TreeNode node = this.GetNodeAt(e.Location);
+            TreeNode node = GetNodeAt(e.Location);
             if (node != null)
             {
                 int leftBound = node.Bounds.X; // - 20; // Allow user to click on image
@@ -233,7 +232,7 @@ namespace test
             // any other selected nodes. e.g. A B C D are selected
             // the user clicks on B, now A C & D are no longer selected.
             // Check to see if a node was clicked on 
-            TreeNode node = this.GetNodeAt(e.Location);
+            TreeNode node = GetNodeAt(e.Location);
             if (node != null)
             {
                 if (ModifierKeys == Keys.None && m_SelectedNodes.Contains(node))
@@ -292,8 +291,8 @@ namespace test
 
             // Nothing is selected in the tree, this isn't a good state
             // select the top node
-            if (m_SelectedNode == null && this.TopNode != null)
-                ToggleNode(this.TopNode, true, true);
+            if (m_SelectedNode == null && TopNode != null)
+                ToggleNode(TopNode, true, true);
 
             // Nothing is still selected in the tree, this isn't a good state, leave.
             if (m_SelectedNode == null)
@@ -344,8 +343,8 @@ namespace test
                     if (m_SelectedNode.Parent == null)
                     {
                         // Select all of the root nodes up to this point 
-                        if (this.Nodes.Count > 0)
-                            SelectNode(this.Nodes[0]);
+                        if (Nodes.Count > 0)
+                            SelectNode(Nodes[0]);
                     }
                     else
                     {
@@ -356,8 +355,8 @@ namespace test
                 else
                 {
                     // Select this first node in the tree
-                    if (this.Nodes.Count > 0)
-                        SelectSingleNode(this.Nodes[0], true);
+                    if (Nodes.Count > 0)
+                        SelectSingleNode(Nodes[0], true);
                 }
             }
             else if (e.KeyCode == Keys.End)
@@ -367,8 +366,8 @@ namespace test
                     if (m_SelectedNode.Parent == null)
                     {
                         // Select the last ROOT node in the tree
-                        if (this.Nodes.Count > 0)
-                            SelectNode(this.Nodes[this.Nodes.Count - 1]);
+                        if (Nodes.Count > 0)
+                            SelectNode(Nodes[Nodes.Count - 1]);
                     }
                     else
                     {
@@ -378,11 +377,11 @@ namespace test
                 }
                 else
                 {
-                    if (this.Nodes.Count > 0)
+                    if (Nodes.Count > 0)
                     {
                         // Select the last node visible node in the tree.
                         // Don't expand branches incase the tree is virtual
-                        TreeNode ndLast = this.Nodes[0].LastNode;
+                        TreeNode ndLast = Nodes[0].LastNode;
                         while (ndLast.IsExpanded && (ndLast.LastNode != null))
                             ndLast = ndLast.LastNode;
 
@@ -393,7 +392,7 @@ namespace test
             else if (e.KeyCode == Keys.PageUp)
             {
                 // Select the highest node in the display
-                int nCount = this.VisibleCount;
+                int nCount = VisibleCount;
                 TreeNode ndCurrent = m_SelectedNode;
                 while ((nCount) > 0 && (ndCurrent.PrevVisibleNode != null))
                 {
@@ -405,7 +404,7 @@ namespace test
             else if (e.KeyCode == Keys.PageDown)
             {
                 // Select the lowest node in the display
-                int nCount = this.VisibleCount;
+                int nCount = VisibleCount;
                 TreeNode ndCurrent = m_SelectedNode;
                 while ((nCount) > 0 && (ndCurrent.NextVisibleNode != null))
                 {
@@ -448,12 +447,12 @@ namespace test
                     ndCurrent = ndCurrent.NextVisibleNode;
                 }
             }
-            this.EndUpdate();
+            EndUpdate();
         }
 
         void SelectNode(TreeNode node)
         {
-            this.BeginUpdate();
+            BeginUpdate();
 
             if (m_SelectedNode == null || ModifierKeys == Keys.Control)
             {
@@ -588,15 +587,15 @@ namespace test
             }
 
             //OnAfterSelect(new TreeViewEventArgs(m_SelectedNode));
-            this.EndUpdate();
+            EndUpdate();
         }
 
         void ClearSelectedNodes()
         {
             foreach (TreeNode node in m_SelectedNodes)
             {
-                node.BackColor = this.BackColor;
-                node.ForeColor = this.ForeColor;
+                node.BackColor = BackColor;
+                node.ForeColor = ForeColor;
             }
 
             m_SelectedNodes.Clear();
@@ -627,7 +626,7 @@ namespace test
             foreach (TreeNode node in m_SelectedNodes)
             {
                 node.BackColor = SystemColors.Control;
-                node.ForeColor = this.ForeColor;
+                node.ForeColor = ForeColor;
             }
         }
 
@@ -647,8 +646,8 @@ namespace test
             else
             {
                 m_SelectedNodes.Remove(node);
-                node.BackColor = this.BackColor;
-                node.ForeColor = this.ForeColor;
+                node.BackColor = BackColor;
+                node.ForeColor = ForeColor;
             }
         }
     }

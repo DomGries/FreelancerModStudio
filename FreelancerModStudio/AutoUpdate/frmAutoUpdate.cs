@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Threading;
+using FreelancerModStudio.Properties;
 
 namespace FreelancerModStudio.AutoUpdate
 {
@@ -13,19 +8,19 @@ namespace FreelancerModStudio.AutoUpdate
     {
         public frmAutoUpdate()
         {
-            this.InitializeComponent();
-            this.Icon = Properties.Resources.LogoIcon;
+            InitializeComponent();
+            Icon = Resources.LogoIcon;
         }
 
-        PageType mCurrentPage = PageType.Checking;
+        PageType _currentPage = PageType.Checking;
 
         public delegate void ActionRequiredType(ActionType value);
         public ActionRequiredType ActionRequired;
 
         void OnAction(ActionType action)
         {
-            if (this.ActionRequired != null)
-                this.ActionRequired(action);
+            if (ActionRequired != null)
+                ActionRequired(action);
         }
 
         public void SetPage(PageType page)
@@ -33,89 +28,89 @@ namespace FreelancerModStudio.AutoUpdate
             switch (page)
             {
                 case PageType.Checking:
-                    this.pnlDownload.Visible = true;
-                    this.lblDownloaded.Visible = false;
-                    this.btnNext.Visible = false;
-                    this.btnAbort.Visible = true;
+                    pnlDownload.Visible = true;
+                    lblDownloaded.Visible = false;
+                    btnNext.Visible = false;
+                    btnAbort.Visible = true;
 
-                    this.pgbDownload.Style = ProgressBarStyle.Marquee;
+                    pgbDownload.Style = ProgressBarStyle.Marquee;
 
-                    this.lblHeader.Text = FreelancerModStudio.Properties.Strings.UpdatesCheckingHeader;
-                    this.lblDescription.Text = String.Format(FreelancerModStudio.Properties.Strings.UpdatesCheckingDescription, Helper.Assembly.Title);
+                    lblHeader.Text = Strings.UpdatesCheckingHeader;
+                    lblDescription.Text = String.Format(Strings.UpdatesCheckingDescription, Helper.Assembly.Title);
 
-                    this.btnAbort.Text = FreelancerModStudio.Properties.Strings.UpdatesAbortButton;
+                    btnAbort.Text = Strings.UpdatesAbortButton;
 
-                    this.Text = Properties.Strings.UpdatesFormText;
+                    Text = Strings.UpdatesFormText;
 
                     break;
 
                 case PageType.Aviable:
-                    this.pnlDownload.Visible = false;
-                    this.lblDownloaded.Visible = false;
-                    this.btnNext.Visible = true;
-                    this.btnAbort.Visible = true;
+                    pnlDownload.Visible = false;
+                    lblDownloaded.Visible = false;
+                    btnNext.Visible = true;
+                    btnAbort.Visible = true;
 
-                    this.lblHeader.Text = FreelancerModStudio.Properties.Strings.UpdatesAviableHeader;
-                    this.lblDescription.Text = String.Format(FreelancerModStudio.Properties.Strings.UpdatesAviableDescription, Helper.Assembly.Title);
+                    lblHeader.Text = Strings.UpdatesAviableHeader;
+                    lblDescription.Text = String.Format(Strings.UpdatesAviableDescription, Helper.Assembly.Title);
 
-                    this.btnNext.Text = FreelancerModStudio.Properties.Strings.UpdatesDownloadButton;
-                    this.btnAbort.Text = FreelancerModStudio.Properties.Strings.UpdatesAbortButton;
+                    btnNext.Text = Strings.UpdatesDownloadButton;
+                    btnAbort.Text = Strings.UpdatesAbortButton;
 
-                    this.Text = Properties.Strings.UpdatesFormText;
+                    Text = Strings.UpdatesFormText;
 
                     break;
 
                 case PageType.NotAviable:
-                    this.pnlDownload.Visible = false;
-                    this.lblDownloaded.Visible = false;
-                    this.btnNext.Visible = false;
-                    this.btnAbort.Visible = true;
+                    pnlDownload.Visible = false;
+                    lblDownloaded.Visible = false;
+                    btnNext.Visible = false;
+                    btnAbort.Visible = true;
 
-                    this.lblHeader.Text = FreelancerModStudio.Properties.Strings.UpdatesNotAviableHeader;
-                    this.lblDescription.Text = String.Format(FreelancerModStudio.Properties.Strings.UpdatesNotAviableDescription, Helper.Assembly.Title);
+                    lblHeader.Text = Strings.UpdatesNotAviableHeader;
+                    lblDescription.Text = String.Format(Strings.UpdatesNotAviableDescription, Helper.Assembly.Title);
 
-                    this.btnAbort.Text = FreelancerModStudio.Properties.Strings.UpdatesFinishButton;
+                    btnAbort.Text = Strings.UpdatesFinishButton;
 
-                    this.Text = Properties.Strings.UpdatesFormText;
+                    Text = Strings.UpdatesFormText;
 
                     break;
 
                 case PageType.Downloading:
-                    this.pnlDownload.Visible = true;
-                    this.lblDownloaded.Visible = true;
-                    this.btnNext.Visible = true;
-                    this.btnAbort.Visible = true;
+                    pnlDownload.Visible = true;
+                    lblDownloaded.Visible = true;
+                    btnNext.Visible = true;
+                    btnAbort.Visible = true;
 
-                    this.pgbDownload.Style = ProgressBarStyle.Blocks;
+                    pgbDownload.Style = ProgressBarStyle.Blocks;
 
-                    this.lblHeader.Text = FreelancerModStudio.Properties.Strings.UpdatesDownloadingHeader;
-                    this.lblDescription.Text = String.Format(FreelancerModStudio.Properties.Strings.UpdatesDownloadingDescription, Helper.Assembly.Title);
+                    lblHeader.Text = Strings.UpdatesDownloadingHeader;
+                    lblDescription.Text = String.Format(Strings.UpdatesDownloadingDescription, Helper.Assembly.Title);
 
-                    this.btnNext.Text = FreelancerModStudio.Properties.Strings.UpdatesHideButton;
-                    this.btnAbort.Text = FreelancerModStudio.Properties.Strings.UpdatesAbortButton;
+                    btnNext.Text = Strings.UpdatesHideButton;
+                    btnAbort.Text = Strings.UpdatesAbortButton;
 
-                    this.Text = String.Format(Properties.Strings.UpdatesFormDownloadText, 0);
+                    Text = String.Format(Strings.UpdatesFormDownloadText, 0);
 
                     break;
 
                 case PageType.DownloadFinished:
-                    this.pnlDownload.Visible = false;
-                    this.lblDownloaded.Visible = true;
-                    this.btnNext.Visible = true;
-                    this.btnAbort.Visible = true;
+                    pnlDownload.Visible = false;
+                    lblDownloaded.Visible = true;
+                    btnNext.Visible = true;
+                    btnAbort.Visible = true;
 
-                    this.lblHeader.Text = FreelancerModStudio.Properties.Strings.UpdatesDownloadedHeader;
-                    this.lblDescription.Text = String.Format(FreelancerModStudio.Properties.Strings.UpdatesDownloadedDescription, Helper.Assembly.Title);
+                    lblHeader.Text = Strings.UpdatesDownloadedHeader;
+                    lblDescription.Text = String.Format(Strings.UpdatesDownloadedDescription, Helper.Assembly.Title);
 
-                    this.btnNext.Text = FreelancerModStudio.Properties.Strings.UpdatesInstallButton;
-                    this.btnAbort.Text = FreelancerModStudio.Properties.Strings.UpdatesLaterButton;
+                    btnNext.Text = Strings.UpdatesInstallButton;
+                    btnAbort.Text = Strings.UpdatesLaterButton;
 
-                    this.Text = Properties.Strings.UpdatesFormText;
+                    Text = Strings.UpdatesFormText;
 
                     break;
             }
 
-            this.mCurrentPage = page;
+            _currentPage = page;
         }
 
         public void ChangeProgress(long bytes, long bytesTotal, int percent)
@@ -123,42 +118,42 @@ namespace FreelancerModStudio.AutoUpdate
             int kbRead = Convert.ToInt32(bytes / 1024);
             int kbTotal = Convert.ToInt32(bytesTotal / 1024);
 
-            this.pgbDownload.Value = percent;
-            this.lblDownloaded.Text = String.Format(FreelancerModStudio.Properties.Strings.UpdatesDownloadSpeed, (Convert.ToDouble(kbRead) / 1024).ToString("N1"), (Convert.ToDouble(kbTotal) / 1024).ToString("N1"));
+            pgbDownload.Value = percent;
+            lblDownloaded.Text = String.Format(Strings.UpdatesDownloadSpeed, (Convert.ToDouble(kbRead) / 1024).ToString("N1"), (Convert.ToDouble(kbTotal) / 1024).ToString("N1"));
 
-            this.Text = String.Format(Properties.Strings.UpdatesFormDownloadText, percent);
+            Text = String.Format(Strings.UpdatesFormDownloadText, percent);
         }
 
         void btnAbort_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         void btnNext_Click(object sender, EventArgs e)
         {
-            switch (this.mCurrentPage)
+            switch (_currentPage)
             {
                 case PageType.Aviable:
-                    this.OnAction(ActionType.Download);
+                    OnAction(ActionType.Download);
                     break;
 
                 case PageType.Downloading:
                     //hide form
-                    this.mCurrentPage = PageType.DownloadFinished;
-                    this.Close();
+                    _currentPage = PageType.DownloadFinished;
+                    Close();
                     break;
 
                 case PageType.DownloadFinished:
-                    this.OnAction(ActionType.Install);
-                    this.Close();
+                    OnAction(ActionType.Install);
+                    Close();
                     break;
             }
         }
 
         void frmAutoUpdate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((this.mCurrentPage == PageType.Checking || this.mCurrentPage == PageType.Downloading))
-                this.OnAction(ActionType.Abort);
+            if ((_currentPage == PageType.Checking || _currentPage == PageType.Downloading))
+                OnAction(ActionType.Abort);
         }
     }
 

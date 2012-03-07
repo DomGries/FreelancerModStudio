@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+using FreelancerModStudio.Controls;
 using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio
 {
@@ -20,27 +16,27 @@ namespace FreelancerModStudio
 
         void OnOptionsChanged(PropertyBlock[] blocks)
         {
-            if (this.OptionsChanged != null)
-                this.OptionsChanged(blocks);
+            if (OptionsChanged != null)
+                OptionsChanged(blocks);
         }
 
         void OnContentChanged(ContentInterface content)
         {
-            if (this.ContentChanged != null)
-                this.ContentChanged(content);
+            if (ContentChanged != null)
+                ContentChanged(content);
         }
 
         public frmProperties()
         {
             InitializeComponent();
-            this.Icon = Properties.Resources.Properties;
+            Icon = Properties.Resources.Properties;
 
             RefreshSettings();
         }
 
         public void RefreshSettings()
         {
-            this.TabText = Properties.Strings.PropertiesText;
+            TabText = Properties.Strings.PropertiesText;
 
             propertyGrid.PropertySort = Helper.Settings.Data.Data.General.PropertiesSortType;
             propertyGrid.HelpVisible = Helper.Settings.Data.Data.General.PropertiesShowHelp;
@@ -86,8 +82,8 @@ namespace FreelancerModStudio
 
         void propertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
         {
-            if (this.DockHandler.IsActivated)
-                this.OnContentChanged((ContentInterface)this);
+            if (DockHandler.IsActivated)
+                OnContentChanged(this);
         }
 
         public bool CanAdd()
@@ -133,11 +129,15 @@ namespace FreelancerModStudio
 
         public void Delete()
         {
-            PropertyOption option = (PropertyOption)((PropertyOptionDescriptor)propertyGrid.SelectedGridItem.PropertyDescriptor).PropertyOption;
-            object oldValue = option.Value;
-            option.Value = "";
+            var propertyOptionDescriptor = propertyGrid.SelectedGridItem.PropertyDescriptor as PropertyOptionDescriptor;
+            if (propertyOptionDescriptor != null)
+            {
+                PropertyOption option = propertyOptionDescriptor.PropertyOption;
+                object oldValue = option.Value;
+                option.Value = "";
 
-            propertyGrid_PropertyValueChanged(propertyGrid, new PropertyValueChangedEventArgs(propertyGrid.SelectedGridItem, oldValue));
+                propertyGrid_PropertyValueChanged(propertyGrid, new PropertyValueChangedEventArgs(propertyGrid.SelectedGridItem, oldValue));
+            }
         }
 
         public bool CanAddMultiple()

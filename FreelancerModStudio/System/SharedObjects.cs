@@ -1,5 +1,5 @@
-﻿using System.Windows.Media.Media3D;
-using System.Windows.Media;
+﻿using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using HelixEngine;
 using HelixEngine.Meshes;
 
@@ -54,7 +54,7 @@ namespace FreelancerModStudio.SystemPresenter
 
     public static class SharedMeshes
     {
-        public static MeshGeometry3D Sphere = GetMesh(new SphereMesh()
+        public static MeshGeometry3D Sphere = GetMesh(new SphereMesh
         {
             Slices = 18,
             Stacks = 9
@@ -62,17 +62,17 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static MeshGeometry3D Box = GetMesh(new BoxMesh());
 
-        public static MeshGeometry3D BoxTradeLane = GetMesh(new BoxMesh()
+        public static MeshGeometry3D BoxTradeLane = GetMesh(new BoxMesh
         {
             Height = 0.3,
         });
 
-        public static MeshGeometry3D Cylinder = GetMesh(new CylinderMesh()
+        public static MeshGeometry3D Cylinder = GetMesh(new CylinderMesh
         {
             Slices = 18,
         });
 
-        public static MeshGeometry3D CylinderRing = GetMesh(new CylinderMesh()
+        public static MeshGeometry3D CylinderRing = GetMesh(new CylinderMesh
         {
             Radius = 0.5,
             Length = 0.25,
@@ -83,7 +83,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static MeshGeometry3D Octahedron = GetMesh(new OctahedronMesh());
 
-        public static MeshGeometry3D Surface = GetMesh(new SurfaceMesh()
+        public static MeshGeometry3D Surface = GetMesh(new SurfaceMesh
         {
             Width = 2
         });

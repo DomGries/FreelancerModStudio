@@ -56,9 +56,7 @@ namespace FreelancerModStudio
                 return;
             }
 
-            var propertyBlocks = new object[blocks.Count];
-
-            //loop each selected block
+            var propertyBlocks = new PropertyBlock[blocks.Count];
             for (int i = 0; i < blocks.Count; i++)
                 propertyBlocks[i] = new PropertyBlock(blocks[i].Block, Helper.Template.Data.Files[templateIndex].Blocks.Values[blocks[i].Block.TemplateIndex]);
 

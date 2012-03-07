@@ -127,12 +127,12 @@ namespace FreelancerModStudio.Data.IO
                                                 break;
 
                                             if (childOption.Index > iniOptions[k].Index)
-                                                editorChildOptions.Add(ConvertToTemplate(childTemplateOption.Type, childOption.Value));
+                                                editorChildOptions.Add(childOption.Value);
                                         }
                                     }
 
                                     //add entry of multiple option
-                                    editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniOptions[k].Value), editorChildOptions));
+                                    editorOption.Values.Add(new EditorINIEntry(iniOptions[k].Value, editorChildOptions));
                                 }
                             }
                             else //single option
@@ -141,7 +141,7 @@ namespace FreelancerModStudio.Data.IO
                                 {
                                     if (iniOptions[0].Value.Length > 0)
                                         //just add the last option (Freelancer like) if aviable to prevent multiple options which should be single
-                                        editorOption.Values.Add(new EditorINIEntry(ConvertToTemplate(templateOption.Type, iniOptions[iniOptions.Count - 1].Value)));
+                                        editorOption.Values.Add(new EditorINIEntry(iniOptions[iniOptions.Count - 1].Value));
                                     else
                                         //use '=' for options which dont have values and are simply defined when using the option key followed by a colon equal
                                         editorOption.Values.Add(new EditorINIEntry("="));
@@ -263,9 +263,9 @@ namespace FreelancerModStudio.Data.IO
         {
             for (int i = 0; i < Helper.Template.Data.Files.Count; i++)
             {
-                foreach (string path in Helper.Template.Data.Files[i].Pathes)
+                foreach (string path in Helper.Template.Data.Files[i].Paths)
                 {
-                    string pattern = ".+" + path.Replace("\\", "\\\\").Replace("*", "[^\\\\]*");
+                    string pattern = ".*" + path.Replace("\\", "\\\\").Replace("*", "[^\\\\]*");
                     if (System.Text.RegularExpressions.Regex.Match(file.ToLower(), pattern).Success)
                         return i;
                 }

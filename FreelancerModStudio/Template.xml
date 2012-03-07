@@ -2,9 +2,9 @@
 <FreelancerModStudio-Template-1.0 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Files>
     <File name="Game Configuration">
-      <Pathes>
+      <Paths>
         <Path>exe\freelancer.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Data">
           <Options>
@@ -101,9 +101,9 @@
       </Blocks>
     </File>
     <File name="Game Cameras">
-      <Pathes>
+      <Paths>
         <Path>cameras.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="CockpitCamera">
           <Options>
@@ -129,9 +129,9 @@
       </Blocks>
     </File>
     <File name="Game Concave">
-      <Pathes>
+      <Paths>
         <Path>concave.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="ConcaveObject" multiple="true">
           <Options>
@@ -142,9 +142,9 @@
       </Blocks>
     </File>
     <File name="Game Constants">
-      <Pathes>
+      <Paths>
         <Path>constants.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="AsteroidConsts">
           <Options>
@@ -204,9 +204,9 @@
       </Blocks>
     </File>
     <File name="Game IGraph">
-      <Pathes>
+      <Paths>
         <Path>igraph.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="IGraph" multiple="true" identifier="nickname">
           <Options>
@@ -218,9 +218,9 @@
       </Blocks>
     </File>
     <File name="Game Initial World">
-      <Pathes>
+      <Paths>
         <Path>initialworld.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Group" multiple="true" identifier="nickname">
           <Options>
@@ -240,9 +240,9 @@
       </Blocks>
     </File>
     <File name="Game Mouse">
-      <Pathes>
+      <Paths>
         <Path>mouse.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Cursor" multiple="true" identifier="nickname">
           <Options>
@@ -273,9 +273,9 @@
       </Blocks>
     </File>
     <File name="Game Petal Db">
-      <Pathes>
+      <Paths>
         <Path>petaldb.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="ObjectTable">
           <Options>
@@ -287,9 +287,9 @@
       </Blocks>
     </File>
     <File name="Universe">
-      <Pathes>
+      <Paths>
         <Path>universe\universe.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Base" multiple="true" identifier="nickname">
           <Options>
@@ -327,11 +327,11 @@
       </Blocks>
     </File>
     <File name="Universe Path">
-      <Pathes>
+      <Paths>
         <Path>universe\shortest_illegal_path.ini</Path>
         <Path>universe\shortest_legal_path.ini</Path>
         <Path>universe\systems_shortest_path.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="SystemConnections" multiple="true">
           <Options>
@@ -341,9 +341,9 @@
       </Blocks>
     </File>
     <File name="Universe Heaven">
-      <Pathes>
+      <Paths>
         <Path>universe\heavens\shapes.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Shape" multiple="true" identifier="name">
           <Options>
@@ -363,9 +363,9 @@
       </Blocks>
     </File>
     <File name="System">
-      <Pathes>
+      <Paths>
         <Path>universe\systems\*\*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="SystemInfo">
           <Options>
@@ -530,11 +530,11 @@
       </Blocks>
     </File>
     <File name="System Base">
-      <Pathes>
+      <Paths>
         <Path>universe\systems\*\bases\*_base.ini</Path>
         <Path>universe\systems\*_mining_base.ini</Path>
         <Path>universe\systems\miners\*_miner.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="BaseInfo">
           <Options>
@@ -551,9 +551,9 @@
       </Blocks>
     </File>
     <File name="System Room">
-      <Pathes>
+      <Paths>
         <Path>universe\systems\*\bases\rooms\*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Camera">
           <Options>
@@ -635,12 +635,12 @@
       </Blocks>
     </File>
     <File name="Loadouts">
-      <Pathes>
+      <Paths>
         <Path>solar\loadouts.ini</Path>
         <Path>ships\loadouts_special.ini</Path>
         <Path>ships\loadouts_utility.ini</Path>
         <Path>ships\loadouts.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Loadout" multiple="true" identifier="nickname">
           <Options>
@@ -653,9 +653,9 @@
       </Blocks>
     </File>
     <File name="Solar Archetype">
-      <Pathes>
+      <Paths>
         <Path>solar\solararch.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="CollisionGroup" multiple="true" identifier="obj">
           <Options>
@@ -709,9 +709,9 @@
       </Blocks>
     </File>
     <File name="Solar Asteroid Archetype">
-      <Pathes>
+      <Paths>
         <Path>solar\asteroidarch.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Asteroid" multiple="true" identifier="nickname">
           <Options>
@@ -747,9 +747,9 @@
       </Blocks>
     </File>
     <File name="Solar Star Archetype">
-      <Pathes>
+      <Paths>
         <Path>solar\stararch.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="lens_flare" multiple="true" identifier="nickname">
           <Options>
@@ -814,9 +814,9 @@
       </Blocks>
     </File>
     <File name="Solar Rings">
-      <Pathes>
+      <Paths>
         <Path>solar\rings\*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Clouds">
           <Options>
@@ -855,9 +855,9 @@
       </Blocks>
     </File>
     <File name="Solar Ring Shapes">
-      <Pathes>
+      <Paths>
         <Path>solar\rings\shapes.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Shape" multiple="true" identifier="name">
           <Options>
@@ -880,9 +880,9 @@
       </Blocks>
     </File>
     <File name="Solar Nebula">
-      <Pathes>
+      <Paths>
         <Path>solar\nebula\*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="BackgroundLightning">
           <Options>
@@ -980,9 +980,9 @@
       </Blocks>
     </File>
     <File name="Solar Blackholes">
-      <Pathes>
+      <Paths>
         <Path>solar\blackhole\*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="CloseChunks">
           <Options>
@@ -1066,9 +1066,9 @@
       </Blocks>
     </File>
     <File name="Solar Asteroids">
-      <Pathes>
+      <Paths>
         <Path>solar\asteroids\*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="AsteroidBillboards">
           <Options>
@@ -1195,9 +1195,9 @@
       </Blocks>
     </File>
     <File name="Ship Archetype">
-      <Pathes>
+      <Paths>
         <Path>ships\*shiparch.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="CollisionGroup" multiple="true" identifier="obj">
           <Options>
@@ -1284,9 +1284,9 @@
       </Blocks>
     </File>
     <File name="Scripts Generic">
-      <Pathes>
+      <Paths>
         <Path>scripts\gcs\genericscripts.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="GenericScripts">
           <Options>
@@ -1299,9 +1299,9 @@
       </Blocks>
     </File>
     <File name="Scripts Rtc Slider">
-      <Pathes>
+      <Paths>
         <Path>scripts\rtcslider.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="RtcSlider">
           <Options>
@@ -1312,9 +1312,9 @@
       </Blocks>
     </File>
     <File name="Scripts GCS Exclusion">
-      <Pathes>
+      <Paths>
         <Path>scripts\gcs\gcsexcl.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="GCS_Exclusions">
           <Options>
@@ -1325,9 +1325,9 @@
       </Blocks>
     </File>
     <File name="Mission">
-      <Pathes>
+      <Paths>
         <Path>missions\*\*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Dialog" multiple="true" identifier="nickname">
           <Options>
@@ -1589,9 +1589,9 @@
       </Blocks>
     </File>
     <File name="Mission Created Solars">
-      <Pathes>
+      <Paths>
         <Path>universe\missioncreatedsolars.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="MissionCreatedSolar" multiple="true" identifier="base">
           <Options>
@@ -1603,9 +1603,9 @@
       </Blocks>
     </File>
     <File name="Mission Diff to Money">
-      <Pathes>
+      <Paths>
         <Path>randommissions\diff2money.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Diff2Money">
           <Options>
@@ -1615,9 +1615,9 @@
       </Blocks>
     </File>
     <File name="Mission Killable Solars">
-      <Pathes>
+      <Paths>
         <Path>randommissions\killablesolars.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="KillableSolar" multiple="true" identifier="nickname">
           <Options>
@@ -1636,9 +1636,9 @@
       </Blocks>
     </File>
     <File name="Mission Npc Rank to Diff">
-      <Pathes>
+      <Paths>
         <Path>randommissions\npcranktodiff.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="RankAndFormationSizeToDifficulty">
           <Options>
@@ -1648,9 +1648,9 @@
       </Blocks>
     </File>
     <File name="Mission Loot Info">
-      <Pathes>
+      <Paths>
         <Path>randommissions\rmlootinfo.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Global">
           <Options>
@@ -1669,9 +1669,9 @@
       </Blocks>
     </File>
     <File name="Mission Solar Formations">
-      <Pathes>
+      <Paths>
         <Path>randommissions\solarformations.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="SolarFormation" multiple="true" identifier="nickname">
           <Options>
@@ -1683,9 +1683,9 @@
       </Blocks>
     </File>
     <File name="Mission Vignette Critical Loot">
-      <Pathes>
+      <Paths>
         <Path>randommissions\vignettecriticalloot.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="critical_loot" multiple="true" identifier="archetype">
           <Options>
@@ -1698,9 +1698,9 @@
       </Blocks>
     </File>
     <File name="Mission Vignette Parameters">
-      <Pathes>
+      <Paths>
         <Path>randommissions\vignetteparams.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="DataNode" multiple="true">
           <Options>
@@ -1736,9 +1736,9 @@
       </Blocks>
     </File>
     <File name="Mission Empathy">
-      <Pathes>
+      <Paths>
         <Path>missions\empathy.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="RepChangeEffects" multiple="true" identifier="group">
           <Options>
@@ -1750,9 +1750,9 @@
       </Blocks>
     </File>
     <File name="Mission Faction Properties">
-      <Pathes>
+      <Paths>
         <Path>missions\faction_prop.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="FactionProps" multiple="true" identifier="affiliation">
           <Options>
@@ -1781,9 +1781,9 @@
       </Blocks>
     </File>
     <File name="Mission Formations">
-      <Pathes>
+      <Paths>
         <Path>missions\formations.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Formation" multiple="true" identifier="nickname">
           <Options>
@@ -1795,9 +1795,9 @@
       </Blocks>
     </File>
     <File name="Mission Loot Properties">
-      <Pathes>
+      <Paths>
         <Path>missions\lootprops.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="mLootProps" multiple="true" identifier="nickname">
           <Options>
@@ -1816,9 +1816,9 @@
       </Blocks>
     </File>
     <File name="Mission Bases">
-      <Pathes>
+      <Paths>
         <Path>missions\mbases.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="BaseFaction" multiple="true" identifier="faction">
           <Options>
@@ -1874,9 +1874,9 @@
       </Blocks>
     </File>
     <File name="Mission Ship Properties">
-      <Pathes>
+      <Paths>
         <Path>missions\mshipprops.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="mShipProps" multiple="true" identifier="archetype_id">
           <Options>
@@ -1887,9 +1887,9 @@
       </Blocks>
     </File>
     <File name="Mission News">
-      <Pathes>
+      <Paths>
         <Path>missions\news.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="NewsItem" multiple="true">
           <Options>
@@ -1907,9 +1907,9 @@
       </Blocks>
     </File>
     <File name="Mission Npc Ships">
-      <Pathes>
+      <Paths>
         <Path>missions\npcships.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="NPCShipArch" multiple="true" identifier="nickname">
           <Options>
@@ -1925,9 +1925,9 @@
       </Blocks>
     </File>
     <File name="Mission Pilots Population">
-      <Pathes>
+      <Paths>
         <Path>missions\pilots_population.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="BuzzHeadTowardBlock" multiple="true" identifier="nickname">
           <Options>
@@ -2177,9 +2177,9 @@
       </Blocks>
     </File>
     <File name="Mission Pilots Story">
-      <Pathes>
+      <Paths>
         <Path>missions\pilots_story.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="EvadeDodgeBlock">
           <Options>
@@ -2292,9 +2292,9 @@
       </Blocks>
     </File>
     <File name="Mission Player Toughness">
-      <Pathes>
+      <Paths>
         <Path>missions\ptough.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="PlayerToughnessScale">
           <Options>
@@ -2304,9 +2304,9 @@
       </Blocks>
     </File>
     <File name="Mission Rank Diff">
-      <Pathes>
+      <Paths>
         <Path>missions\rankdiff.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="RankDiffDB">
           <Options>
@@ -2316,9 +2316,9 @@
       </Blocks>
     </File>
     <File name="Mission Ship Classes">
-      <Pathes>
+      <Paths>
         <Path>missions\shipclasses.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="ShipClass" multiple="true" identifier="nickname">
           <Options>
@@ -2329,9 +2329,9 @@
       </Blocks>
     </File>
     <File name="Mission Specific Npc">
-      <Pathes>
+      <Paths>
         <Path>missions\specific_npc.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="NPC" multiple="true" identifier="nickname">
           <Options>
@@ -2345,9 +2345,9 @@
       </Blocks>
     </File>
     <File name="Mission Voice Properties">
-      <Pathes>
+      <Paths>
         <Path>missions\voice_properties.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="mVoiceProp" multiple="true" identifier="voice">
           <Options>
@@ -2358,9 +2358,9 @@
       </Blocks>
     </File>
     <File name="Mission Nrml">
-      <Pathes>
+      <Paths>
         <Path>missions\*\*_nrml.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Char">
           <Options>
@@ -2394,9 +2394,9 @@
       </Blocks>
     </File>
     <File name="Mission Encounters">
-      <Pathes>
+      <Paths>
         <Path>missions\encounters\*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Creation">
           <Options>
@@ -2424,9 +2424,9 @@
       </Blocks>
     </File>
     <File name="Interface Button Montage">
-      <Pathes>
+      <Paths>
         <Path>interface\buttonmontage.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Montage" multiple="true">
           <Options>
@@ -2510,9 +2510,9 @@
       </Blocks>
     </File>
     <File name="Interface Button Textures">
-      <Pathes>
+      <Paths>
         <Path>interface\buttontextures.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Texture">
           <Options>
@@ -2523,9 +2523,9 @@
       </Blocks>
     </File>
     <File name="Interface Hud">
-      <Pathes>
+      <Paths>
         <Path>interface\hud.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="ContactList">
           <Options />
@@ -2592,9 +2592,9 @@
       </Blocks>
     </File>
     <File name="Interface Infocard Map">
-      <Pathes>
+      <Paths>
         <Path>interface\infocardmap.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="InfocardMapTable">
           <Options>
@@ -2604,9 +2604,9 @@
       </Blocks>
     </File>
     <File name="Interface Intro">
-      <Pathes>
+      <Paths>
         <Path>interface\intro.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Images">
           <Options>
@@ -2620,9 +2620,9 @@
       </Blocks>
     </File>
     <File name="Interface Key List">
-      <Pathes>
+      <Paths>
         <Path>interface\keylist.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Group" multiple="true">
           <Options>
@@ -2638,9 +2638,9 @@
       </Blocks>
     </File>
     <File name="Interface Key Map">
-      <Pathes>
+      <Paths>
         <Path>interface\keymap.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="KeyCmd" multiple="true" identifier="nickname">
           <Options>
@@ -2663,9 +2663,9 @@
       </Blocks>
     </File>
     <File name="Interface Knowledge Map">
-      <Pathes>
+      <Paths>
         <Path>interface\knowledgemap.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="KnowledgeMapTable" multiple="true">
           <Options>
@@ -2675,9 +2675,9 @@
       </Blocks>
     </File>
     <File name="Interface Option List">
-      <Pathes>
+      <Paths>
         <Path>interface\optlist.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Audio">
           <Options>
@@ -2697,9 +2697,9 @@
       </Blocks>
     </File>
     <File name="Interface Rollover">
-      <Pathes>
+      <Paths>
         <Path>interface\rollover.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="RolloverTable">
           <Options>
@@ -2709,9 +2709,9 @@
       </Blocks>
     </File>
     <File name="Interface UI Textures">
-      <Pathes>
+      <Paths>
         <Path>interface\ui\uitextures.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Texture">
           <Options>
@@ -2722,9 +2722,9 @@
       </Blocks>
     </File>
     <File name="Interface Nav Map Textures">
-      <Pathes>
+      <Paths>
         <Path>interface\neuronet\navmap\newnavmap\navmaptextures.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Texture">
           <Options>
@@ -2735,9 +2735,9 @@
       </Blocks>
     </File>
     <File name="Interface Hud Target">
-      <Pathes>
+      <Paths>
         <Path>interface\hud\hudtarget.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Shape">
           <Options>
@@ -2757,9 +2757,9 @@
       </Blocks>
     </File>
     <File name="Interface Hud Textures">
-      <Pathes>
+      <Paths>
         <Path>interface\hud\hud_txm.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Texture">
           <Options>
@@ -2770,9 +2770,9 @@
       </Blocks>
     </File>
     <File name="Interface Nav Bar">
-      <Pathes>
+      <Paths>
         <Path>interface\baseside\navbar.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="BaseFrame">
           <Options>
@@ -3001,90 +3001,99 @@
       </Blocks>
     </File>
     <File name="Effects">
-      <Pathes>
+      <Paths>
         <Path>fx\*effects*.ini</Path>
-      </Pathes>
+        <Path>fx\*\*ale.ini</Path>
+      </Paths>
       <Blocks>
         <Block name="BeamBolt" multiple="true" identifier="nickname">
           <Options>
-            <Option>core_color</Option>
-            <Option>core_length</Option>
-            <Option>core_width</Option>
-            <Option>flash_size</Option>
-            <Option>head_brightness</Option>
-            <Option>head_texture</Option>
-            <Option>head_width</Option>
             <Option>nickname</Option>
+            <Option>tip_length</Option>
+            <Option>tail_length</Option>
+            <Option>core_length</Option>
+            <Option>head_width</Option>
+            <Option>core_width</Option>
+            <Option>sec_core_width</Option>
+            <Option>tip_color</Option>
+            <Option>core_color</Option>
             <Option>outter_color</Option>
             <Option>sec_core_color</Option>
-            <Option>sec_core_width</Option>
             <Option>sec_outter_color</Option>
             <Option>tail_color</Option>
-            <Option>tail_length</Option>
-            <Option>tip_color</Option>
-            <Option>tip_length</Option>
+            <Option>head_brightness</Option>
             <Option>trail_brightness</Option>
+            <Option>head_texture</Option>
             <Option>trail_texture</Option>
+            <Option>flash_size</Option>
           </Options>
         </Block>
         <Block name="BeamSpear" multiple="true" identifier="nickname">
           <Options>
-            <Option>core_color</Option>
-            <Option>core_width</Option>
-            <Option>flash_size</Option>
-            <Option>head_brightness</Option>
-            <Option>head_texture</Option>
-            <Option>head_width</Option>
             <Option>nickname</Option>
+            <Option>tip_length</Option>
+            <Option>tail_length</Option>
+            <Option>head_width</Option>
+            <Option>core_width</Option>
+            <Option>tip_color</Option>
+            <Option>core_color</Option>
             <Option>outter_color</Option>
             <Option>tail_color</Option>
-            <Option>tail_length</Option>
-            <Option>tip_color</Option>
-            <Option>tip_length</Option>
+            <Option>head_brightness</Option>
             <Option>trail_brightness</Option>
+            <Option>head_texture</Option>
             <Option>trail_texture</Option>
+            <Option>flash_size</Option>
           </Options>
         </Block>
         <Block name="Effect" multiple="true" identifier="nickname">
           <Options>
-            <Option>effect_type</Option>
-            <Option>lgt_effect</Option>
-            <Option>lgt_radius</Option>
-            <Option>lgt_range_scale</Option>
             <Option>nickname</Option>
+            <Option>effect_type</Option>
             <Option>snd_effect</Option>
-            <Option>vis_beam</Option>
             <Option>vis_effect</Option>
             <Option>vis_generic</Option>
+            <Option>vis_beam</Option>
+            <Option>lgt_effect</Option>
+            <Option>lgt_range_scale</Option>
+            <Option>lgt_radius</Option>
           </Options>
         </Block>
         <Block name="EffectLOD" multiple="true">
           <Options>
+            <Option>type</Option>
             <Option>max_lod_screen_size</Option>
             <Option>min_lod_screen_size</Option>
             <Option>min_screen_size</Option>
-            <Option>type</Option>
           </Options>
         </Block>
         <Block name="EffectType" multiple="true" identifier="nickname">
           <Options>
+            <Option>nickname</Option>
+            <Option>priority</Option>
             <Option>generic_priority</Option>
             <Option>lod_type</Option>
-            <Option>nickname</Option>
-            <Option>pbubble</Option>
-            <Option>priority</Option>
             <Option>radius</Option>
-            <Option>run_time</Option>
-            <Option>update</Option>
             <Option>visibility</Option>
+            <Option>update</Option>
+            <Option>run_time</Option>
+            <Option>pbubble</Option>
+          </Options>
+        </Block>
+        <Block name="VisEffect" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>alchemy</Option>
+            <Option>effect_crc</Option>
+            <Option multiple="true">textures</Option>
           </Options>
         </Block>
       </Blocks>
     </File>
     <File name="Effect Shapes">
-      <Pathes>
+      <Paths>
         <Path>fx\effect_shapes.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Texture" multiple="true">
           <Options>
@@ -3095,9 +3104,9 @@
       </Blocks>
     </File>
     <File name="Effect Explosions">
-      <Pathes>
+      <Paths>
         <Path>fx\explosions.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Debris" multiple="true" identifier="nickname">
           <Options>
@@ -3139,9 +3148,9 @@
       </Blocks>
     </File>
     <File name="Effect Fuses">
-      <Pathes>
+      <Paths>
         <Path>fx\fuse*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="damage_group" multiple="true" identifier="group_name">
           <Options>
@@ -3244,9 +3253,9 @@
       </Blocks>
     </File>
     <File name="Effect Gate Tunnel">
-      <Pathes>
+      <Paths>
         <Path>fx\gate_tunnel.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="gate_tunnel" multiple="true" identifier="nickname">
           <Options>
@@ -3290,9 +3299,9 @@
       </Blocks>
     </File>
     <File name="Effect Jump Effect">
-      <Pathes>
+      <Paths>
         <Path>fx\jumpeffect.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="JumpGateEffect" multiple="true" identifier="nickname">
           <Options>
@@ -3320,9 +3329,9 @@
       </Blocks>
     </File>
     <File name="Effect Light Animation">
-      <Pathes>
+      <Paths>
         <Path>fx\lightanim.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="LightAnim" multiple="true" identifier="name">
           <Options>
@@ -3332,25 +3341,10 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Effect Weapons">
-      <Pathes>
-        <Path>fx\weapons\*.ini</Path>
-      </Pathes>
-      <Blocks>
-        <Block name="VisEffect" multiple="true" identifier="nickname">
-          <Options>
-            <Option>alchemy</Option>
-            <Option>effect_crc</Option>
-            <Option>nickname</Option>
-            <Option multiple="true">textures</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
     <File name="Fonts">
-      <Pathes>
+      <Paths>
         <Path>fonts\fonts.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="TrueType" multiple="true" identifier="nickname">
           <Options>
@@ -3362,9 +3356,9 @@
       </Blocks>
     </File>
     <File name="Fonts Rich Fonts">
-      <Pathes>
+      <Paths>
         <Path>fonts\rich_fonts.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Style" multiple="true" identifier="name">
           <Options>
@@ -3385,9 +3379,9 @@
       </Blocks>
     </File>
     <File name="Equipment">
-      <Pathes>
+      <Paths>
         <Path>equipment\*equip*</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Engine" multiple="true" identifier="nickname">
           <Options>
@@ -3869,9 +3863,9 @@
       </Blocks>
     </File>
     <File name="Equipment Commodities per Faction">
-      <Pathes>
+      <Paths>
         <Path>equipment\commodities_per_faction.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="FactionGood" multiple="true" identifier="faction">
           <Options>
@@ -3882,9 +3876,9 @@
       </Blocks>
     </File>
     <File name="Equipment Goods">
-      <Pathes>
+      <Paths>
         <Path>equipment\*good*</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Good" multiple="true" identifier="nickname">
           <Options>
@@ -3913,9 +3907,9 @@
       </Blocks>
     </File>
     <File name="Equipment Market">
-      <Pathes>
+      <Paths>
         <Path>equipment\market*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="BaseGood" multiple="true" identifier="base">
           <Options>
@@ -3926,9 +3920,9 @@
       </Blocks>
     </File>
     <File name="Equipment Weapon Mod Db">
-      <Pathes>
+      <Paths>
         <Path>equipment\weaponmoddb.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="WeaponType" multiple="true" identifier="nickname">
           <Options>
@@ -3939,9 +3933,9 @@
       </Blocks>
     </File>
     <File name="Cockpits">
-      <Pathes>
+      <Paths>
         <Path>cockpits\*\*.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Cockpit">
           <Options>
@@ -3971,9 +3965,9 @@
       </Blocks>
     </File>
     <File name="Characters Body Parts">
-      <Pathes>
+      <Paths>
         <Path>characters\bodyparts.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Accessory" multiple="true" identifier="nickname">
           <Options>
@@ -4030,9 +4024,9 @@
       </Blocks>
     </File>
     <File name="Characters Costumes">
-      <Pathes>
+      <Paths>
         <Path>characters\costumes.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Costume" multiple="true" identifier="nickname">
           <Options>
@@ -4046,9 +4040,9 @@
       </Blocks>
     </File>
     <File name="Characters New Charakter">
-      <Pathes>
+      <Paths>
         <Path>characters\newcharacter.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="Faction">
           <Options>
@@ -4082,10 +4076,32 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Sounds">
-      <Pathes>
+    <File name="Audio Sounds">
+      <Paths>
         <Path>audio\*sounds.ini</Path>
-      </Pathes>
+        <Path>audio\music.ini</Path>
+      </Paths>
+      <Blocks>
+        <Block name="Sound" multiple="true" identifier="nickname">
+          <Options>
+            <Option>nickname</Option>
+            <Option>type</Option>
+            <Option>file</Option>
+            <Option>attenuation</Option>
+            <Option>range</Option>
+            <Option>crv_pitch</Option>
+            <Option>pitch_bendable</Option>
+            <Option>is_2d</Option>
+            <Option>streamer</Option>
+            <Option>persistent</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
+    <File name="Audio Voices">
+      <Paths>
+        <Path>audio\voices*.ini</Path>
+      </Paths>
       <Blocks>
         <Block name="mVoiceProp" multiple="true" identifier="Voice">
           <Options>
@@ -4094,61 +4110,52 @@
             <Option>supports_roles</Option>
           </Options>
         </Block>
-        <Block name="Sound" multiple="true" identifier="nickname">
+        <Block name="Sound" multiple="true" identifier="msg">
           <Options>
-            <Option>attenuation</Option>
-            <Option>crv_pitch</Option>
-            <Option>duration</Option>
-            <Option>file</Option>
-            <Option>is_2d</Option>
             <Option>msg</Option>
-            <Option>nickname</Option>
-            <Option>persistent</Option>
-            <Option>pitch_bendable</Option>
+            <Option>attenuation</Option>
             <Option>Priority</Option>
-            <Option>range</Option>
-            <Option>streamer</Option>
-            <Option>type</Option>
+            <Option>duration</Option>
           </Options>
         </Block>
         <Block name="Voice" multiple="true" identifier="nickname">
           <Options>
-            <Option>extend</Option>
             <Option>nickname</Option>
+            <Option>extend</Option>
             <Option multiple="true">script</Option>
           </Options>
         </Block>
       </Blocks>
     </File>
-    <File name="Sound Configuration">
-      <Pathes>
+    <File name="Audio Sound Configuration">
+      <Paths>
         <Path>audio\soundcfg.ini</Path>
-      </Pathes>
+      </Paths>
       <Blocks>
         <Block name="CFG">
           <Options>
-            <Option>cockpit_attenuation</Option>
-            <Option>cross_fade_silence</Option>
-            <Option>default_crv_attenuation</Option>
-            <Option>default_crv_pitch</Option>
-            <Option>default_loop_style</Option>
-            <Option>default_reverb</Option>
-            <Option>ducking_comm_down_by</Option>
-            <Option>ducking_comm_down_time</Option>
-            <Option>ducking_comm_up_time</Option>
+            <Option>ear_doppler_factor</Option>
             <Option>ducking_rtc_down_by</Option>
             <Option>ducking_rtc_down_time</Option>
+            <Option>default_loop_style</Option>
+            <Option>default_crv_pitch</Option>
+            <Option>default_crv_attenuation</Option>
+            <Option>default_reverb</Option>
+            <Option>music_fade_time</Option>
+            <Option>cross_fade_silence</Option>
+            <Option>cockpit_attenuation</Option>
             <Option>ducking_spaceflight_down_by</Option>
             <Option>ducking_spaceflight_down_time</Option>
             <Option>ducking_spaceflight_up_time</Option>
-            <Option>ear_doppler_factor</Option>
+            <Option>spaceflight_dialogue_pan_range</Option>
+            <Option>ducking_comm_down_by</Option>
+            <Option>ducking_comm_down_time</Option>
+            <Option>ducking_comm_up_time</Option>
+            <Option>master_music</Option>
             <Option>master_ambient</Option>
             <Option>master_interface</Option>
-            <Option>master_music</Option>
             <Option>master_sfx</Option>
             <Option>master_voice</Option>
-            <Option>music_fade_time</Option>
-            <Option>spaceflight_dialogue_pan_range</Option>
           </Options>
         </Block>
         <Block name="reverb" multiple="true" identifier="nickname">

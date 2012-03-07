@@ -15,80 +15,72 @@ namespace FreelancerModStudio
         {
             public string Path;
             public List<INIBlock> Blocks = new List<INIBlock>();
-
-            public INIDataTemplate(string path, List<INIBlock> blocks)
-            {
-                this.Path = path;
-                this.Blocks = blocks;
-            }
         }
 
         static List<INIDataTemplate> dataList = new List<INIDataTemplate>();
         public static void CreateTemplate(string path)
         {
-            CreateTemplate(System.IO.Directory.GetFiles(path), path, path.Length + 1);
+            CreateTemplate(System.IO.Directory.GetFiles(path, "*.ini"), path, path.Length + 1);
 
             Template template = new Template();
             foreach (INIDataTemplate iniDataTemplate in dataList) //each file
             {
-                Table<string, Template.Block> templateBlocks = new Table<string, Template.Block>();
+                Table<string, Template.Block> templateBlocks = new Table<string, Template.Block>(StringComparer.OrdinalIgnoreCase);
                 foreach (INIBlock block in iniDataTemplate.Blocks) //each block
                 {
                     Template.Options templateOptions = new Template.Options();
                     foreach (KeyValuePair<string, List<INIOption>> option in block.Options) //each option
                     {
-                        Template.Option templateOption = new Template.Option();
-                        templateOption.Multiple = option.Value.Count > 1;
-                        templateOption.Name = option.Key;
-                        templateOptions.Add(templateOption);
+                        templateOptions.Add(new Template.Option()
+                            {
+                                Multiple = option.Value.Count > 1,
+                                Name = option.Key
+                            });
                     }
 
-                    Template.Block templateBlock = new Template.Block();
-                    templateBlock.Name = block.Name;
-                    templateBlock.Options = templateOptions;
-
-                    if (templateBlock.Multiple)
-                    {
-                        if (block.Options.ContainsKey("nickname"))
-                            templateBlock.Identifier = "nickname";
-                    }
-
-                    if (templateBlocks.Count > 0 && templateBlocks.Values[templateBlocks.Count - 1].Name.ToLower() == block.Name.ToLower())
+                    int blockIndex = templateBlocks.IndexOf(block.Name.ToLower());
+                    if (blockIndex != -1)
                     {
                         //integration options
                         foreach (Template.Option option in templateOptions)
                         {
-                            int optionIndex = templateBlocks.Values[templateBlocks.Count - 1].Options.IndexOf(option.Name);
+                            int optionIndex = templateBlocks.Values[blockIndex].Options.IndexOf(option.Name);
                             if (optionIndex != -1)
                             {
-                                //change to multiple options if required
+                                //change to multiple options
                                 if (option.Multiple)
-                                    templateBlocks.Values[templateBlocks.Count - 1].Options[optionIndex].Multiple = true;
+                                    templateBlocks.Values[blockIndex].Options[optionIndex].Multiple = true;
                             }
                             else
                             {
                                 //add missing option
-                                templateBlocks.Values[templateBlocks.Count - 1].Options.Add(option);
+                                templateBlocks.Values[blockIndex].Options.Add(option);
                             }
                         }
 
-                        //change to multiple blocks if required
-                        templateBlocks.Values[templateBlocks.Count - 1].Multiple = templateBlocks.Values[templateBlocks.Count - 1].Options.Count > 1;
+                        //change to multiple blocks
+                        templateBlocks.Values[blockIndex].Multiple = true;
+
+                        if (templateBlocks.Values[blockIndex].Options.IndexOf("nickname") != -1)
+                            templateBlocks.Values[blockIndex].Identifier = "nickname";
 
                         //sort options after integration
-                        //templateBlocks.Values[templateBlocks.Count - 1].Options.Sort();
+                        //templateBlocks.Values[blockIndex].Options.Sort();
                     }
                     else
                     {
                         //add new block
-                        templateBlock.Multiple = block.Options.Count > 1;
-                        templateBlocks.Add(templateBlock);
+                        templateBlocks.Add(new Template.Block
+                            {
+                                Name = block.Name,
+                                Options = templateOptions
+                            });
                     }
                 }
 
                 Template.File file = new Template.File();
                 file.Name = System.IO.Path.GetFileName(iniDataTemplate.Path.ToLower());
-                file.Pathes = new List<string>() { iniDataTemplate.Path.ToLower() };
+                file.Paths = new List<string>() { iniDataTemplate.Path.ToLower() };
                 file.Blocks = templateBlocks;
                 template.Data.Files.Add(file);
             }
@@ -102,35 +94,32 @@ namespace FreelancerModStudio
                 CreateTemplateFromFile(file, dataPathIndex);
 
             foreach (string directory in System.IO.Directory.GetDirectories(path))
-                CreateTemplate(System.IO.Directory.GetFiles(directory), directory, dataPathIndex);
+                CreateTemplate(System.IO.Directory.GetFiles(directory, "*.ini"), directory, dataPathIndex);
         }
 
         #region "File Groups"
         static string[][] fileGroups = {
+            // fuses
             new string[] {
                 "fx\\fuse.ini",
                 "fx\\fuse_br_battleship.ini",
                 "fx\\fuse_br_destroyer.ini",
                 "fx\\fuse_br_gunship.ini",
-                "fx\\fuse_freeport7.ini",
                 "fx\\fuse_ku_battleship.ini",
                 "fx\\fuse_ku_destroyer.ini",
                 "fx\\fuse_ku_gunship.ini",
                 "fx\\fuse_li_battleship.ini",
                 "fx\\fuse_li_cruiser.ini",
                 "fx\\fuse_li_dreadnought.ini",
-                "fx\\fuse_or_osiris.ini",
                 "fx\\fuse_rh_battleship.ini",
                 "fx\\fuse_rh_cruiser.ini",
                 "fx\\fuse_rh_gunship.ini",
+                "fx\\fuse_or_osiris.ini",
+                "fx\\fuse_transport.ini",
                 "fx\\fuse_suprise_solar.ini",
-                "fx\\fuse_transport.ini"
+                "fx\\fuse_freeport7.ini",
             },
-            new string[] {
-                "universe\\systems\\br_m_mining_base.ini",
-                "universe\\systems\\co_ti_mining_base.ini",
-                "universe\\systems\\gd_im_mining_base.ini"
-            },
+            // systems
             new string[] {
                 "universe\\systems\\st03b\\st03b.ini",
                 "universe\\systems\\st03\\st03.ini",
@@ -187,7 +176,11 @@ namespace FreelancerModStudio
                 "universe\\systems\\br02\\br02.ini",
                 "universe\\systems\\br01\\br01.ini"
             },
+            // system bases
             new string[] {
+                "universe\\systems\\br_m_mining_base.ini",
+                "universe\\systems\\co_ti_mining_base.ini",
+                "universe\\systems\\gd_im_mining_base.ini",
                 "universe\\systems\\miners\\br_m_beryllium_miner.ini",
                 "universe\\systems\\miners\\br_m_hydrocarbon_miner.ini",
                 "universe\\systems\\miners\\br_m_niobium_miner.ini",
@@ -202,9 +195,7 @@ namespace FreelancerModStudio
                 "universe\\systems\\miners\\gd_im_oxygen_miner.ini",
                 "universe\\systems\\miners\\gd_im_silver_miner.ini",
                 "universe\\systems\\miners\\gd_im_water_miner.ini",
-                "universe\\systems\\miners\\rh_m_diamond_miner.ini"
-            },
-            new string[] {
+                "universe\\systems\\miners\\rh_m_diamond_miner.ini",
                 "universe\\systems\\st03b\\bases\\st03b_01_base.ini",
                 "universe\\systems\\st02\\bases\\st02_01_base.ini",
                 "universe\\systems\\st01\\bases\\st01_01_base.ini",
@@ -388,6 +379,7 @@ namespace FreelancerModStudio
                 "universe\\systems\\br01\\bases\\br01_07_base.ini",
                 "universe\\systems\\br01\\bases\\br01_08_base.ini"
             },
+            // system base rooms
             new string[] {
                 "universe\\systems\\st03b\\bases\\rooms\\st03b_01_cityscape.ini",
                 "universe\\systems\\st02\\bases\\rooms\\st02_01_bar.ini",
@@ -836,6 +828,13 @@ namespace FreelancerModStudio
                 "universe\\systems\\br01\\bases\\rooms\\br01_08_deck.ini",
                 "universe\\systems\\br01\\bases\\rooms\\br01_08_shipdealer.ini"
             },
+            // shortest universe paths
+            new string[] {
+                "universe\\systems_shortest_path.ini",
+                "universe\\shortest_legal_path.ini",
+                "universe\\shortest_illegal_path.ini",
+            },
+            // solar rings
             new string[] {
                 "solar\\rings\\aso.ini",
                 "solar\\rings\\ew05_ring.ini",
@@ -845,9 +844,9 @@ namespace FreelancerModStudio
                 "solar\\rings\\lava.ini",
                 "solar\\rings\\protoplanet.ini",
                 "solar\\rings\\ross.ini",
-                "solar\\rings\\shapes.ini",
                 "solar\\rings\\weisser.ini"
             },
+            // solar nebulae
             new string[] {
                 "solar\\nebula\\badlands_li01.ini",
                 "solar\\nebula\\br03_grasmere_ice_cloud.ini",
@@ -914,11 +913,13 @@ namespace FreelancerModStudio
                 "solar\\nebula\\white_shapes.ini",
                 "solar\\nebula\\zone21_li01.ini"
             },
+            // solar blackholes
             new string[] {
                 "solar\\blackhole\\bh.ini",
                 "solar\\blackhole\\bhshapes.ini",
                 "solar\\blackhole\\omega13.ini"
             },
+            // solar asteroids
             new string[] {
                 "solar\\asteroids\\br01_cornwall_rock_asteroid_field.ini",
                 "solar\\asteroids\\br01_cumbria_rock_asteroid_field.ini",
@@ -1079,11 +1080,14 @@ namespace FreelancerModStudio
                 "solar\\asteroids\\st02_nomad_asteroids.ini",
                 "solar\\asteroids\\st03b_nomad_asteroids.ini",
             },
+            // loadouts
             new string[] {
                 "ships\\loadouts.ini",
                 "ships\\loadouts_special.ini",
-                "ships\\loadouts_utility.ini"
+                "ships\\loadouts_utility.ini",
+                "solar\\loadouts.ini"
             },
+            // audio sounds
             new string[] {
                 "audio\\ambience_sounds.ini",
                 "audio\\engine_sounds.ini",
@@ -1092,6 +1096,9 @@ namespace FreelancerModStudio
                 "audio\\music.ini",
                 "audio\\sounds.ini",
                 "audio\\story_sounds.ini",
+            },
+            // audio voices
+            new string[] {
                 "audio\\voices_base_female.ini",
                 "audio\\voices_base_male.ini",
                 "audio\\voices_mission01.ini",
@@ -1111,16 +1118,22 @@ namespace FreelancerModStudio
                 "audio\\voices_space_female.ini",
                 "audio\\voices_space_male.ini"
             },
+            // effects
             new string[] {
-                "fx\\weapons\\weapons_ale.ini",
-                "fx\\space\\space_ale.ini",
-                "fx\\shields\\shields_ale.ini",
-                "fx\\misc\\misc_ale.ini",
-                "fx\\hull_hits\\hull_hits_ale.ini",
-                "fx\\explosions\\explosions_ale.ini",
+                "fx\\effect_types.ini",
+                "fx\\beam_effects.ini",
+                "fx\\engines\\engines_ale.ini",
                 "fx\\equipment\\equipment_ale.ini",
-                "fx\\engines\\engines_ale.ini"
+                "fx\\explosions\\explosions_ale.ini",
+                "fx\\hull_hits\\hull_hits_ale.ini",
+                "fx\\misc\\misc_ale.ini",
+                "fx\\shields\\shields_ale.ini",
+                "fx\\space\\space_ale.ini",
+                "fx\\weapons\\weapons_ale.ini",
+                "fx\\effects.ini",
+                "fx\\effects_explosion.ini",
             },
+            // mission enounters
             new string[] {
                 "missions\\encounters\\area_armored_prisoner.ini",
                 "missions\\encounters\\area_assault.ini",
@@ -1165,6 +1178,7 @@ namespace FreelancerModStudio
                 "missions\\encounters\\tradep_trade_trader.ini",
                 "missions\\encounters\\tradep_trade_transport.ini"
             },
+            // missions
             new string[] {
                 "missions\\m13\\m13.ini",
                 "missions\\m12\\m12.ini",
@@ -1181,6 +1195,7 @@ namespace FreelancerModStudio
                 "missions\\m01b\\m01b.ini",
                 "missions\\m01a\\m01a.ini"
             },
+            // mission ships
             new string[] {
                 "missions\\npcships.ini",
                 "missions\\npcships_test.ini",
@@ -1199,6 +1214,7 @@ namespace FreelancerModStudio
                 "missions\\m01b\\npcships.ini",
                 "missions\\m01a\\npcships.ini"
             },
+            // mission nrmls
             new string[] {
                 "missions\\m13\\m013_endgame_st03b_nrml.ini",
                 "missions\\m13\\m013_s072aa_st01_01_nrml.ini",
@@ -1269,16 +1285,17 @@ namespace FreelancerModStudio
                 "missions\\m01a\\m001a_s005d_li01_01_reoffer.ini",
                 "missions\\m01a\\m001a_s006x_li01_02_nrml.ini"
             },
-            //unequal
-            //new string[] {
-            //    "equipment\\engine_equip.ini",
-            //    "equipment\\light_equip.ini",
-            //    "equipment\\misc_equip.ini",
-            //    "equipment\\prop_equip.ini",
-            //    "equipment\\select_equip.ini",
-            //    "equipment\\st_equip.ini",
-            //    "equipment\\weapon_equip.ini"
-            //},
+            // equipment
+            new string[] {
+                "equipment\\light_equip.ini",
+                "equipment\\select_equip.ini",
+                "equipment\\misc_equip.ini",
+                "equipment\\engine_equip.ini",
+                "equipment\\st_equip.ini",
+                "equipment\\weapon_equip.ini",
+                "equipment\\prop_equip.ini"
+            },
+            // goods
             new string[] {
                 "equipment\\goods.ini",
                 "equipment\\engine_good.ini",
@@ -1286,6 +1303,13 @@ namespace FreelancerModStudio
                 "equipment\\st_good.ini",
                 "equipment\\weapon_good.ini"
             },
+            // markets
+            new string[] {
+                "equipment\\market_misc.ini",
+                "equipment\\market_ships.ini",
+                "equipment\\market_commodities.ini"
+            },
+            // cockpits
             new string[] {
                 "cockpits\\rheinland\\r_elite.ini",
                 "cockpits\\rheinland\\r_fighter.ini",
@@ -1339,38 +1363,36 @@ namespace FreelancerModStudio
 
         static void CreateTemplateFromFile(string file, int dataPathIndex)
         {
-            INIManager iniManager = new INIManager(file);
-            List<INIBlock> newBlocks = iniManager.Read();
+            var newTemplate = new INIDataTemplate();
+            var biniManager = new BINIManager(file);
+            if (biniManager.Read())
+                newTemplate.Blocks = biniManager.Data;
+            else
+            {
+                var inimanager = new INIManager(file);
+                newTemplate.Blocks = inimanager.Read();
+            }
 
-            string dataPath = file.Substring(dataPathIndex);
-            int selectedFileGroup = GetTemplateFileGroup(dataPath);
+            if (newTemplate.Blocks == null || newTemplate.Blocks.Count == 0)
+                return;
 
+            newTemplate.Path = file.Substring(dataPathIndex);
+
+            var selectedFileGroup = GetTemplateFileGroup(newTemplate.Path);
             if (selectedFileGroup != -1)
             {
-                List<string> selectedFileGroupData = new List<string>(fileGroups[selectedFileGroup]);
+                var selectedFileGroupData = new List<string>(fileGroups[selectedFileGroup]);
                 for (int i = 0; i < dataList.Count; i++)
                 {
                     if (selectedFileGroupData.Contains(dataList[i].Path.ToLower()))
                     {
-                        //integrate data
-                        foreach (INIBlock newBlock in newBlocks)
-                        {
-                            int blockIndex = IndexOfName(dataList[i].Blocks, newBlock.Name);
-                            if (blockIndex != -1)
-                            {
-                                foreach (KeyValuePair<string, List<INIOption>> option in newBlock.Options)
-                                    dataList[i].Blocks[blockIndex].Options.Add(option.Key, option.Value);
-                            }
-                            else
-                                dataList[i].Blocks.Add(newBlock);
-                        }
-
+                        dataList[i].Blocks.AddRange(newTemplate.Blocks);
                         return;
                     }
                 }
             }
 
-            dataList.Add(new INIDataTemplate(dataPath, newBlocks));
+            dataList.Add(newTemplate);
         }
 
         static int IndexOfName(List<INIBlock> blocks, string name)

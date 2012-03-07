@@ -46,7 +46,7 @@ namespace FreelancerModStudio.Data
             //public FileType Type = FileType.ini;
 
             [XmlArrayItem("Path")]
-            public List<string> Pathes;
+            public List<string> Paths;
 
             [XmlArrayItem("Block")]
             public Table<string, Block> Blocks = new Table<string,Block>(StringComparer.OrdinalIgnoreCase);
@@ -57,7 +57,8 @@ namespace FreelancerModStudio.Data
             [XmlAttribute("name")]
             public string Name;
 
-            [XmlAttribute("multiple")]
+            [XmlAttribute("multiple"),
+                System.ComponentModel.DefaultValueAttribute(false)]
             public bool Multiple = false;
 
             [XmlAttribute("identifier")]
@@ -74,14 +75,15 @@ namespace FreelancerModStudio.Data
 
         public class Option : IComparable<Option>
         {
-            [XmlAttribute("multiple")]
+            [XmlAttribute("multiple"),
+                System.ComponentModel.DefaultValueAttribute(false)]
             public bool Multiple = false;
 
             [XmlAttribute("parent")]
             public string Parent;
 
-            [XmlAttribute("type")]
-            public OptionType Type = OptionType.String;
+            //[XmlAttribute("type")]
+            //public OptionType Type = OptionType.String;
 
             //[XmlAttribute("enum")]
             //public string EnumName;

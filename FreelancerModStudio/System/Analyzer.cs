@@ -29,9 +29,14 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     if (option.Name.ToLower() == "file" && option.Values.Count > 0)
                     {
-                        Table<int, ConnectionPart> systemConnections = GetConnections(block.UniqueID, global::System.IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()));
-                        if (systemConnections != null)
-                            AddConnections(block.UniqueID, systemConnections);
+                        // GetConnections throws an exception if the file cant be read
+                        try
+                        {
+                            Table<int, ConnectionPart> systemConnections = GetConnections(block.UniqueID, global::System.IO.Path.Combine(UniversePath, option.Values[0].Value.ToString()));
+                            if (systemConnections != null)
+                                AddConnections(block.UniqueID, systemConnections);
+                        }
+                        catch { }
 
                         break;
                     }
@@ -65,10 +70,10 @@ namespace FreelancerModStudio.SystemPresenter
             if (!global::System.IO.File.Exists(file))
                 return null;
 
+            Table<int, ConnectionPart> connections = new Table<int, ConnectionPart>();
+
             FileManager fileManager = new FileManager(file);
             EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, SystemTemplate);
-
-            Table<int, ConnectionPart> connections = new Table<int, ConnectionPart>();
 
             foreach (EditorINIBlock block in iniContent.Blocks)
             {
@@ -155,8 +160,8 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 if (From != null && To != null)
                     return new UniverseConnectionID { From = From.ID, To = To.ID };
-                else
-                    return null;
+
+                return null;
             }
         }
 
@@ -176,7 +181,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (from == 0)
                 return From.CompareTo(other.To);
-            else if (from2 == 0)
+            if (from2 == 0)
                 return From.CompareTo(other.From);
 
             return (From * To).CompareTo(other.From * other.To);

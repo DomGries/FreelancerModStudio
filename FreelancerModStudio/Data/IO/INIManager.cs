@@ -23,61 +23,60 @@ namespace FreelancerModStudio.Data.IO
             INIBlock currentBlock = new INIBlock();
             int currentOptionIndex = 0;
 
-            var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read);
-            var streamReader = new StreamReader(stream, Encoding.Default);
-
-            while (!streamReader.EndOfStream)
+            using (var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var streamReader = new StreamReader(stream, Encoding.Default))
             {
-                var line = streamReader.ReadLine();
-                if (line == null)
-                    break;
-
-                line = line.Trim();
-
-                //remove comments from data
-                int commentIndex = line.IndexOf(';');
-                if (commentIndex != -1)
-                    line = line.Substring(0, commentIndex).Trim();
-
-                if (line.Length > 0)
+                while (!streamReader.EndOfStream)
                 {
-                    if (line[0] == '[' && line[line.Length - 1] != ']')
-                    {
-                        //reset current block if block was commented out
-                        if (currentBlock.Name != null)
-                            data.Add(currentBlock);
+                    var line = streamReader.ReadLine();
+                    if (line == null)
+                        break;
 
-                        currentBlock = new INIBlock();
-                    }
-                    else if (line[0] == '[' && line[line.Length - 1] == ']')
-                    {
-                        //new block
-                        if (currentBlock.Name != null)
-                            data.Add(currentBlock);
+                    line = line.Trim();
 
-                        string blockName = line.Substring(1, line.Length - 2).Trim();
+                    //remove comments from data
+                    int commentIndex = line.IndexOf(';');
+                    if (commentIndex != -1)
+                        line = line.Substring(0, commentIndex).Trim();
 
-                        currentBlock = new INIBlock { Name = blockName, Options = new INIOptions() };
-                        currentOptionIndex = 0;
-                    }
-                    else if (currentBlock.Name != null)
+                    if (line.Length > 0)
                     {
-                        //new value for block
-                        int valueIndex = line.IndexOf('=');
-                        if (valueIndex != -1)
+                        if (line[0] == '[' && line[line.Length - 1] != ']')
                         {
-                            //retrieve name and value from data
-                            string optionName = line.Substring(0, valueIndex).Trim();
-                            string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
+                            //reset current block if block was commented out
+                            if (currentBlock.Name != null)
+                                data.Add(currentBlock);
 
-                            currentBlock.Options.Add(optionName, new INIOption(optionValue, currentOptionIndex));
-                            currentOptionIndex++;
+                            currentBlock = new INIBlock();
+                        }
+                        else if (line[0] == '[' && line[line.Length - 1] == ']')
+                        {
+                            //new block
+                            if (currentBlock.Name != null)
+                                data.Add(currentBlock);
+
+                            string blockName = line.Substring(1, line.Length - 2).Trim();
+
+                            currentBlock = new INIBlock { Name = blockName, Options = new INIOptions() };
+                            currentOptionIndex = 0;
+                        }
+                        else if (currentBlock.Name != null)
+                        {
+                            //new value for block
+                            int valueIndex = line.IndexOf('=');
+                            if (valueIndex != -1)
+                            {
+                                //retrieve name and value from data
+                                string optionName = line.Substring(0, valueIndex).Trim();
+                                string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
+
+                                currentBlock.Options.Add(optionName, new INIOption(optionValue, currentOptionIndex));
+                                currentOptionIndex++;
+                            }
                         }
                     }
                 }
             }
-
-            streamReader.Close();
 
             if (currentBlock.Name != null)
                 data.Add(currentBlock);
@@ -87,47 +86,45 @@ namespace FreelancerModStudio.Data.IO
 
         public void Write(List<INIBlock> data)
         {
-            var streamWriter = new StreamWriter(File, false, Encoding.Default);
-
-            //write each block
-            int i = 0;
-            foreach (INIBlock block in data)
+            using (var streamWriter = new StreamWriter(File, false, Encoding.Default))
             {
-                if (i > 0)
+                int i = 0;
+                foreach (INIBlock block in data)
                 {
-                    streamWriter.WriteLine();
-                    if (WriteEmptyLine)
-                        streamWriter.WriteLine();
-                }
-
-                streamWriter.WriteLine("[" + block.Name + "]");
-
-                //write each option
-                int k = 0;
-                foreach (KeyValuePair<string, List<INIOption>> option in block.Options)
-                {
-                    for (int h = 0; h < option.Value.Count; h++)
+                    if (i > 0)
                     {
-                        var key = option.Value[h].Parent ?? option.Key;
-
-                        if (WriteSpaces)
-                            streamWriter.Write(key + " = " + option.Value[h].Value);
-                        else
-                            streamWriter.Write(key + "=" + option.Value[h].Value);
-
-                        if (h < option.Value.Count - 1)
-                            streamWriter.Write(Environment.NewLine);
+                        streamWriter.WriteLine();
+                        if (WriteEmptyLine)
+                            streamWriter.WriteLine();
                     }
 
-                    if (k < block.Options.Count - 1)
-                        streamWriter.Write(Environment.NewLine);
+                    streamWriter.WriteLine("[" + block.Name + "]");
 
-                    k++;
+                    //write each option
+                    int k = 0;
+                    foreach (KeyValuePair<string, List<INIOption>> option in block.Options)
+                    {
+                        for (int h = 0; h < option.Value.Count; h++)
+                        {
+                            var key = option.Value[h].Parent ?? option.Key;
+
+                            if (WriteSpaces)
+                                streamWriter.Write(key + " = " + option.Value[h].Value);
+                            else
+                                streamWriter.Write(key + "=" + option.Value[h].Value);
+
+                            if (h < option.Value.Count - 1)
+                                streamWriter.Write(Environment.NewLine);
+                        }
+
+                        if (k < block.Options.Count - 1)
+                            streamWriter.Write(Environment.NewLine);
+
+                        k++;
+                    }
+                    i++;
                 }
-                i++;
             }
-
-            streamWriter.Close();
         }
     }
 

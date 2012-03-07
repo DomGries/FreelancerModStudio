@@ -15,14 +15,11 @@ namespace FreelancerModStudio.Data.IO
 
         public UTFNode Read()
         {
-            BinaryReader reader = null;
             UTFNode info = null;
 
-            try
+            using (var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var reader = new BinaryReader(stream))
             {
-                FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read);
-                reader = new BinaryReader(stream);
-
                 int signature = reader.ReadInt32();
                 int version = reader.ReadInt32();
                 if (signature == 0x20465455 || version == 0x101)
@@ -46,20 +43,13 @@ namespace FreelancerModStudio.Data.IO
                     reader.BaseStream.Position = stringBlockOffset;
 
                     //read string table
-                    StringTable stringTable = new StringTable(Encoding.ASCII.GetString(reader.ReadBytes(stringBlockSize)));
+                    StringTable stringTable =
+                        new StringTable(Encoding.ASCII.GetString(reader.ReadBytes(stringBlockSize)));
 
                     info = new UTFNode();
                     ParseNode(reader, stringTable, nodeBlockOffset, 0, dataBlockOffset, info);
                 }
             }
-            catch
-            {
-                //Error message
-            }
-
-            if (reader != null)
-                reader.Close();
-
             return info;
         }
 

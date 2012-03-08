@@ -9,7 +9,7 @@ using HelixEngine;
 
 namespace FreelancerModStudio
 {
-    public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface
+    public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, IContentForm
     {
         Presenter systemPresenter;
         Thread universeLoadingThread;

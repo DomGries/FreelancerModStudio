@@ -1,6 +1,6 @@
 ﻿namespace FreelancerModStudio
 {
-    public interface ContentInterface
+    public interface IContentForm
     {
         bool UseDocument();
 
@@ -8,7 +8,6 @@
         bool CanCut();
         bool CanPaste();
         bool CanAdd();
-        bool CanAddMultiple();
         bool CanDelete();
         bool CanSelectAll();
 
@@ -22,7 +21,7 @@
         void SelectAll();
     }
 
-    public interface DocumentInterface
+    public interface IDocumentForm
     {
         bool CanSave();
         bool CanUndo();

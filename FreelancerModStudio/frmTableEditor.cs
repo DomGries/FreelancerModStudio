@@ -11,7 +11,7 @@ using FreelancerModStudio.Data.IO;
 
 namespace FreelancerModStudio
 {
-    public partial class frmTableEditor : WeifenLuo.WinFormsUI.Docking.DockContent, DocumentInterface, ContentInterface
+    public partial class frmTableEditor : WeifenLuo.WinFormsUI.Docking.DockContent, IDocumentForm, IContentForm
     {
         public TableData Data;
         public string File { get; set; }
@@ -31,10 +31,10 @@ namespace FreelancerModStudio
         public delegate void DataVisibilityChangedType(TableBlock block, bool visibility);
         public DataVisibilityChangedType DataVisibilityChanged;
 
-        public delegate void ContentChangedType(ContentInterface content);
+        public delegate void ContentChangedType(IContentForm content);
         public ContentChangedType ContentChanged;
 
-        public delegate void DocumentChangedType(DocumentInterface document);
+        public delegate void DocumentChangedType(IDocumentForm document);
         public DocumentChangedType DocumentChanged;
 
         void OnDataChanged(ChangedData data)
@@ -55,13 +55,13 @@ namespace FreelancerModStudio
                 DataVisibilityChanged(block, visibility);
         }
 
-        void OnContentChanged(ContentInterface content)
+        void OnContentChanged(IContentForm content)
         {
             if (ContentChanged != null)
                 ContentChanged(content);
         }
 
-        void OnDocumentChanged(DocumentInterface document)
+        void OnDocumentChanged(IDocumentForm document)
         {
             if (DocumentChanged != null)
                 DocumentChanged(document);

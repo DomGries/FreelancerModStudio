@@ -654,7 +654,7 @@ namespace FreelancerModStudio
 
             IDockContent activeDocument = dockPanel1.ActiveDocument;
             if (activeDocument != null)
-                Document_DisplayChanged((DocumentInterface)activeDocument);
+                Document_DisplayChanged((IDocumentForm)activeDocument);
         }
 
         void SetDocumentMenus(bool value)
@@ -734,7 +734,7 @@ namespace FreelancerModStudio
 
         void mnuSave_Click(object sender, EventArgs e)
         {
-            ((DocumentInterface)dockPanel1.ActiveDocument).Save();
+            ((IDocumentForm)dockPanel1.ActiveDocument).Save();
         }
 
         void mnuSaveAs_Click(object sender, EventArgs e)
@@ -745,13 +745,13 @@ namespace FreelancerModStudio
             AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
         }
 
-        ContentInterface GetContent()
+        IContentForm GetContent()
         {
-            ContentInterface content = dockPanel1.ActiveContent as ContentInterface;
+            IContentForm content = dockPanel1.ActiveContent as IContentForm;
             if (content != null && content.UseDocument())
             {
                 if (dockPanel1.ActiveDocument != null)
-                    return (ContentInterface)dockPanel1.ActiveDocument;
+                    return (IContentForm)dockPanel1.ActiveDocument;
 
                 return null;
             }
@@ -759,42 +759,42 @@ namespace FreelancerModStudio
             return content;
         }
 
-        DocumentInterface GetDocument()
+        IDocumentForm GetDocument()
         {
-            return dockPanel1.ActiveDocument as DocumentInterface;
+            return dockPanel1.ActiveDocument as IDocumentForm;
         }
 
         void mnuCut_Click(object sender, EventArgs e)
         {
-            ContentInterface content = GetContent();
+            IContentForm content = GetContent();
             if (content != null)
                 content.Cut();
         }
 
         void mnuCopy_Click(object sender, EventArgs e)
         {
-            ContentInterface content = GetContent();
+            IContentForm content = GetContent();
             if (content != null)
                 content.Copy();
         }
 
         void mnuPaste_Click(object sender, EventArgs e)
         {
-            ContentInterface content = GetContent();
+            IContentForm content = GetContent();
             if (content != null)
                 content.Paste();
         }
 
         void mnuUndo_Click(object sender, EventArgs e)
         {
-            DocumentInterface content = GetDocument();
+            IDocumentForm content = GetDocument();
             if (content != null)
                 content.Undo();
         }
 
         void mnuRedo_Click(object sender, EventArgs e)
         {
-            DocumentInterface content = GetDocument();
+            IDocumentForm content = GetDocument();
             if (content != null)
                 content.Redo();
         }
@@ -806,7 +806,7 @@ namespace FreelancerModStudio
 
         void mnuAdd_Click(object sender, EventArgs e)
         {
-            ContentInterface content = GetContent();
+            IContentForm content = GetContent();
             if (content != null)
             {
                 int index = 0;
@@ -819,14 +819,14 @@ namespace FreelancerModStudio
 
         void mnuDelete_Click(object sender, EventArgs e)
         {
-            ContentInterface content = GetContent();
+            IContentForm content = GetContent();
             if (content != null)
                 content.Delete();
         }
 
         void mnuSelectAll_Click(object sender, EventArgs e)
         {
-            ContentInterface content = GetContent();
+            IContentForm content = GetContent();
             if (content != null)
                 content.SelectAll();
         }
@@ -839,7 +839,7 @@ namespace FreelancerModStudio
 
         private void mnuChangeVisibility_Click(object sender, EventArgs e)
         {
-            DocumentInterface content = GetDocument();
+            IDocumentForm content = GetDocument();
             if (content != null)
                 content.ChangeVisibility();
         }
@@ -888,7 +888,7 @@ namespace FreelancerModStudio
             Content_DisplayChanged(GetContent());
         }
 
-        void Document_DisplayChanged(DocumentInterface document)
+        void Document_DisplayChanged(IDocumentForm document)
         {
             if (document == null)
             {
@@ -913,7 +913,7 @@ namespace FreelancerModStudio
             mnu3dEditor.Enabled = document.CanDisplay3DViewer();
         }
 
-        void Content_DisplayChanged(ContentInterface content)
+        void Content_DisplayChanged(IContentForm content)
         {
             if (content == null)
             {
@@ -927,8 +927,7 @@ namespace FreelancerModStudio
                 mnuChangeVisibility.Enabled = false;
                 mnuFocusSelected.Enabled = false;
 
-                mnuAdd.Click -= mnuAdd_Click;
-                mnuAdd.DropDown = new ToolStripDropDown();
+                mnuAdd.DropDown = null;
             }
             else
             {
@@ -939,7 +938,7 @@ namespace FreelancerModStudio
                 mnuDelete.Enabled = content.CanDelete();
                 mnuSelectAll.Enabled = content.CanSelectAll();
 
-                DocumentInterface document = content as DocumentInterface;
+                IDocumentForm document = content as IDocumentForm;
                 if (document != null)
                 {
                     mnuChangeVisibility.Enabled = document.CanChangeVisibility(true);
@@ -951,15 +950,7 @@ namespace FreelancerModStudio
                     mnuFocusSelected.Enabled = false;
                 }
 
-                mnuAdd.Click -= mnuAdd_Click;
-
-                if (content.CanAddMultiple())
-                    mnuAdd.DropDown = content.MultipleAddDropDown();
-                else
-                {
-                    mnuAdd.Click += mnuAdd_Click;
-                    mnuAdd.DropDown = new ToolStripDropDown();
-                }
+                mnuAdd.DropDown = content.MultipleAddDropDown();
             }
         }
 

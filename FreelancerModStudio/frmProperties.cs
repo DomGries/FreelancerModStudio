@@ -6,12 +6,12 @@ using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio
 {
-    public partial class frmProperties : WeifenLuo.WinFormsUI.Docking.DockContent, ContentInterface
+    public partial class frmProperties : WeifenLuo.WinFormsUI.Docking.DockContent, IContentForm
     {
         public delegate void OptionsChangedType(PropertyBlock[] blocks);
         public OptionsChangedType OptionsChanged;
 
-        public delegate void ContentChangedType(ContentInterface content);
+        public delegate void ContentChangedType(IContentForm content);
         public ContentChangedType ContentChanged;
 
         void OnOptionsChanged(PropertyBlock[] blocks)
@@ -20,7 +20,7 @@ namespace FreelancerModStudio
                 OptionsChanged(blocks);
         }
 
-        void OnContentChanged(ContentInterface content)
+        void OnContentChanged(IContentForm content)
         {
             if (ContentChanged != null)
                 ContentChanged(content);

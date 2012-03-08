@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using HelixEngine;
 using HelixEngine.Wires;
+using ContextMenu = System.Windows.Controls.ContextMenu;
+using MenuItem = System.Windows.Controls.MenuItem;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -341,7 +343,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         void DisplayUniverseConnections(Table<UniverseConnectionID, UniverseConnection> connections)
         {
-            Viewport.Dispatcher.Invoke(new Action(delegate
+            Viewport.Dispatcher.Invoke((MethodInvoker)(delegate
             {
                 foreach (UniverseConnection connection in connections)
                     Viewport.Children.Add(GetConnection(connection).Model);

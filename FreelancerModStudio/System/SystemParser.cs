@@ -10,14 +10,14 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void SetValues(ContentBase content, TableBlock block)
         {
-            string positionString = "0,0,0";
-            string rotationString = "0,0,0";
-            string shapeString = "box";
-            string scaleString = "1,1,1";
-            var usageArray = new[] { string.Empty };
-            string vignetteString = string.Empty;
-            string flagsString = string.Empty;
-            string fileString = string.Empty;
+            var positionString = "0,0,0";
+            var rotationString = "0,0,0";
+            var shapeString = "box";
+            var scaleString = "1,1,1";
+            var usageString = string.Empty;
+            var vignetteString = string.Empty;
+            var flagsString = string.Empty;
+            var fileString = string.Empty;
 
             //get properties of content
             foreach (EditorINIOption option in block.Block.Options)
@@ -40,7 +40,7 @@ namespace FreelancerModStudio.SystemPresenter
                             scaleString = value;
                             break;
                         case "usage":
-                            usageArray = value.ToLower().Split(new[] { ',' });
+                            usageString = value.ToLower();
                             break;
                         case "vignette_type":
                             vignetteString = value.ToLower();
@@ -69,9 +69,9 @@ namespace FreelancerModStudio.SystemPresenter
 
                 zone.Shape = ParseShape(shapeString);
 
-                if (usageArray.ContainsValue("trade"))
+                if (usageString.Contains("trade"))
                     zone.Type = ZoneType.PathTrade;
-                else if (usageArray.ContainsValue("patrol"))
+                else if (usageString.Contains("patrol"))
                     zone.Type = ZoneType.PathPatrol;
                 else if (vignetteString == "open" || vignetteString == "field" || vignetteString == "exclusion")
                     zone.Type = ZoneType.Vignette;

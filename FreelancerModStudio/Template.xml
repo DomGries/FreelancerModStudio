@@ -116,7 +116,17 @@
             <Option>fovx</Option>
           </Options>
         </Block>
+        <Block name="RearViewCamera">
+          <Options>
+            <Option>fovx</Option>
+          </Options>
+        </Block>
         <Block name="ThirdPersonCamera">
+          <Options>
+            <Option>fovx</Option>
+          </Options>
+        </Block>
+        <Block name="TurretCamera">
           <Options>
             <Option>fovx</Option>
           </Options>
@@ -128,30 +138,11 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Game Concave">
-      <Paths>
-        <Path>concave.ini</Path>
-      </Paths>
-      <Blocks>
-        <Block name="ConcaveObject" multiple="true">
-          <Options>
-            <Option>filename</Option>
-            <Option multiple="true">part</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
     <File name="Game Constants">
       <Paths>
         <Path>constants.ini</Path>
       </Paths>
       <Blocks>
-        <Block name="AsteroidConsts">
-          <Options>
-            <Option>MAX_ASTEROID_LOOT_DAMAGE</Option>
-            <Option>MAX_LOOT_PER_ASTEROID</Option>
-          </Options>
-        </Block>
         <Block name="CommConsts">
           <Options>
             <Option>COMM_PLAYER_FAR_DIST</Option>
@@ -369,7 +360,6 @@
       <Blocks>
         <Block name="SystemInfo">
           <Options>
-            <Option>name</Option>
             <Option>space_color</Option>
             <Option>local_faction</Option>
             <Option>rpop_solar_detection</Option>
@@ -389,7 +379,6 @@
           <Options>
             <Option>nickname</Option>
             <Option>filename</Option>
-            <Option multiple="true">faction</Option>
           </Options>
         </Block>
         <Block name="TexturePanels">
@@ -510,7 +499,6 @@
             <Option>sort</Option>
             <Option>vignette_type</Option>
             <Option>toughness</Option>
-            <Option>difficulty</Option>
             <Option>density</Option>
             <Option>repop_time</Option>
             <Option>max_battle_size</Option>
@@ -983,16 +971,6 @@
         <Path>solar\blackhole\*.ini</Path>
       </Paths>
       <Blocks>
-        <Block name="CloseChunks">
-          <Options>
-            <Option>color</Option>
-            <Option>fade_range</Option>
-            <Option>num</Option>
-            <Option>shape</Option>
-            <Option>size</Option>
-            <Option>thickness</Option>
-          </Options>
-        </Block>
         <Block name="Clouds">
           <Options>
             <Option>max_distance</Option>
@@ -1020,16 +998,6 @@
             <Option>thickness_edge</Option>
           </Options>
         </Block>
-        <Block name="FadeChunks">
-          <Options>
-            <Option>color</Option>
-            <Option>fade_range</Option>
-            <Option>num</Option>
-            <Option>shape</Option>
-            <Option>size</Option>
-            <Option>thickness</Option>
-          </Options>
-        </Block>
         <Block name="Fog">
           <Options>
             <Option>color</Option>
@@ -1043,12 +1011,6 @@
             <Option>w</Option>
             <Option>x</Option>
             <Option>y</Option>
-          </Options>
-        </Block>
-        <Block name="Sound">
-          <Options>
-            <Option>ambient</Option>
-            <Option>flash</Option>
           </Options>
         </Block>
         <Block name="Texture" multiple="true" identifier="name">
@@ -1168,19 +1130,9 @@
             <Option multiple="true">flag</Option>
           </Options>
         </Block>
-        <Block name="Shape" multiple="true" identifier="name">
-          <Options>
-            <Option>h</Option>
-            <Option>name</Option>
-            <Option>w</Option>
-            <Option>x</Option>
-            <Option>y</Option>
-          </Options>
-        </Block>
-        <Block name="Texture" multiple="true" identifier="name">
+        <Block name="Texture" multiple="true">
           <Options>
             <Option>file</Option>
-            <Option>name</Option>
             <Option>shape_name</Option>
             <Option>tex_shape</Option>
             <Option>texture_name</Option>
@@ -1824,7 +1776,6 @@
             <Option>faction</Option>
             <Option>mission_type</Option>
             <Option multiple="true">npc</Option>
-            <Option>offers_missions</Option>
             <Option>weight</Option>
           </Options>
         </Block>
@@ -1872,19 +1823,6 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Mission Ship Properties">
-      <Paths>
-        <Path>missions\mshipprops.ini</Path>
-      </Paths>
-      <Blocks>
-        <Block name="mShipProps" multiple="true" identifier="archetype_id">
-          <Options>
-            <Option>archetype_id</Option>
-            <Option>prop</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
     <File name="Mission News">
       <Paths>
         <Path>missions\news.ini</Path>
@@ -1892,7 +1830,6 @@
       <Blocks>
         <Block name="NewsItem" multiple="true">
           <Options>
-            <Option>audio</Option>
             <Option>autoselect</Option>
             <Option multiple="true">base</Option>
             <Option>category</Option>
@@ -2407,15 +2344,10 @@
             <Option>allow_simultaneous_creation</Option>
             <Option>arrival</Option>
             <Option>behavior</Option>
-            <Option>explicit_group</Option>
-            <Option>feeling_to_formation</Option>
-            <Option>formation</Option>
             <Option>formation_by_class</Option>
-            <Option>longevity</Option>
             <Option multiple="true">make_class</Option>
             <Option multiple="true">pilot_job</Option>
             <Option multiple="true">ship_by_class</Option>
-            <Option multiple="true">ship_by_npc_arch</Option>
             <Option>times_to_create</Option>
             <Option>zone_creation_distance</Option>
           </Options>
@@ -2557,7 +2489,6 @@
             <Option>female_speaker_offset</Option>
             <Option>fly_time</Option>
             <Option>male_speaker_offset</Option>
-            <Option>object</Option>
             <Option>open</Option>
             <Option>shut</Option>
             <Option>speaker_rotate</Option>
@@ -2733,28 +2664,6 @@
         </Block>
       </Blocks>
     </File>
-    <File name="Interface Hud Target">
-      <Paths>
-        <Path>interface\hud\hudtarget.ini</Path>
-      </Paths>
-      <Blocks>
-        <Block name="Shape">
-          <Options>
-            <Option>h</Option>
-            <Option>name</Option>
-            <Option>w</Option>
-            <Option>x</Option>
-            <Option>y</Option>
-          </Options>
-        </Block>
-        <Block name="Texture">
-          <Options>
-            <Option>file</Option>
-            <Option>name</Option>
-          </Options>
-        </Block>
-      </Blocks>
-    </File>
     <File name="Interface Hud Textures">
       <Paths>
         <Path>interface\hud\hud_txm.ini</Path>
@@ -2874,19 +2783,13 @@
             <Option>IDS_HOTSPOT_COMMODITYTRADER</Option>
             <Option>IDS_HOTSPOT_DECK</Option>
             <Option>IDS_HOTSPOT_EQUIPMENTDEALER</Option>
-            <Option>IDS_HOTSPOT_EXIT</Option>
             <Option>IDS_HOTSPOT_LAUNCH</Option>
             <Option>IDS_HOTSPOT_MISSIONVENDOR</Option>
             <Option>IDS_HOTSPOT_NEWSVENDOR</Option>
             <Option>IDS_HOTSPOT_PLANETSCAPE</Option>
             <Option>IDS_HOTSPOT_SHIPDEALER</Option>
             <Option>IDS_NN_REPAIR_YOUR_SHIP</Option>
-            <Option>IDS_NN_SHIP_VIEW</Option>
-            <Option>IDS_PACKAGE_ONE</Option>
-            <Option>IDS_PACKAGE_THREE</Option>
-            <Option>IDS_PACKAGE_TWO</Option>
             <Option>Launch</Option>
-            <Option>Palace</Option>
             <Option>Planetscape</Option>
             <Option>ShipDealer</Option>
             <Option>Trader</Option>
@@ -3705,10 +3608,11 @@
             <Option>ids_info</Option>
             <Option>ids_name</Option>
             <Option>mass</Option>
-            <Option>material_library</Option>
+            <Option multiple="true">material_library</Option>
             <Option>nickname</Option>
             <Option>power_usage</Option>
             <Option>volume</Option>
+            <Option>debris_type</Option>
           </Options>
         </Block>
         <Block name="Explosion" multiple="true" identifier="nickname">
@@ -4069,7 +3973,6 @@
             <Option>comm</Option>
             <Option>comm.anim</Option>
             <Option>nickname</Option>
-            <Option>thumb</Option>
             <Option>voice</Option>
           </Options>
         </Block>
@@ -4136,10 +4039,8 @@
             <Option>ear_doppler_factor</Option>
             <Option>ducking_rtc_down_by</Option>
             <Option>ducking_rtc_down_time</Option>
-            <Option>default_loop_style</Option>
             <Option>default_crv_pitch</Option>
             <Option>default_crv_attenuation</Option>
-            <Option>default_reverb</Option>
             <Option>music_fade_time</Option>
             <Option>cross_fade_silence</Option>
             <Option>cockpit_attenuation</Option>

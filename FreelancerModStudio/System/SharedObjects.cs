@@ -105,7 +105,7 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Box, SharedMaterials.Station);
 
         public static readonly GeometryModel3D Ship =
-            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Ship);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Ship, new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 180)));
 
         public static readonly GeometryModel3D WeaponsPlatform =
             GetGeometry(SharedMeshes.Box, SharedMaterials.WeaponsPlatform);

@@ -73,6 +73,12 @@ namespace FreelancerModStudio.Data.IO
                                 currentBlock.Options.Add(optionName, new INIOption(optionValue, currentOptionIndex));
                                 currentOptionIndex++;
                             }
+                            else
+                            {
+                                // entry without value
+                                currentBlock.Options.Add(line, new INIOption(string.Empty, currentOptionIndex));
+                                currentOptionIndex++;
+                            }
                         }
                     }
                 }
@@ -106,12 +112,17 @@ namespace FreelancerModStudio.Data.IO
                     {
                         for (int h = 0; h < option.Value.Count; h++)
                         {
-                            var key = option.Value[h].Parent ?? option.Key;
+                            //write the key
+                            streamWriter.Write(option.Value[h].Parent ?? option.Key);
 
-                            if (WriteSpaces)
-                                streamWriter.Write(key + " = " + option.Value[h].Value);
-                            else
-                                streamWriter.Write(key + "=" + option.Value[h].Value);
+                            // dont write the '=' for entries with no value
+                            if (option.Value[h].Value != string.Empty)
+                            {
+                                if (WriteSpaces)
+                                    streamWriter.Write(" = " + option.Value[h].Value);
+                                else
+                                    streamWriter.Write("=" + option.Value[h].Value);
+                            }
 
                             if (h < option.Value.Count - 1)
                                 streamWriter.Write(Environment.NewLine);

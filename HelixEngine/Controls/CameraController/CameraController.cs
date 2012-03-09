@@ -10,19 +10,9 @@ using System.Windows.Media.Media3D;
 
 namespace HelixEngine
 {
-    public enum MouseAction
-    {
-        None,
-        Pan,
-        Zoom,
-        Rotate,
-        ShowContextMenu,
-        ResetCamera,
-        ChangeLookAt,
-        Select,
-        SelectFarest
-    }
-
+    /// <summary>
+    ///   A control that manipulates the camera by mouse and keyboard gestures.
+    /// </summary>
     public class CameraController : Border
     {
         /// <summary>
@@ -34,21 +24,11 @@ namespace HelixEngine
             typeof(CameraController),
             new UIPropertyMetadata(null));
 
-        public static readonly DependencyProperty FixedMouseDownPointProperty =
-            DependencyProperty.Register("FixedMouseDownPoint", typeof(bool), typeof(CameraController),
-                                        new UIPropertyMetadata(false));
-
         /// <summary>
         ///   The inertia factor property.
         /// </summary>
         public static readonly DependencyProperty InertiaFactorProperty = DependencyProperty.Register(
             "InertiaFactor", typeof(double), typeof(CameraController), new UIPropertyMetadata(0.9));
-
-        /// <summary>
-        ///   The infinite spin property.
-        /// </summary>
-        public static readonly DependencyProperty InfiniteSpinProperty = DependencyProperty.Register(
-            "InfiniteSpin", typeof(bool), typeof(CameraController), new UIPropertyMetadata(false));
 
         /// <summary>
         ///   The is pan enabled property.
@@ -92,25 +72,71 @@ namespace HelixEngine
                 typeof(CameraController),
                 new UIPropertyMetadata(CameraRotationMode.Turntable));
 
+        /// <summary>
+        ///   The enabled property.
+        /// </summary>
+        public static readonly DependencyProperty EnabledProperty = DependencyProperty.Register(
+            "Enabled", typeof(bool), typeof(CameraController), new UIPropertyMetadata(true));
+
+        /// <summary>
+        ///   The viewport property.
+        /// </summary>
+        public static readonly DependencyProperty ViewportProperty = DependencyProperty.Register(
+            "Viewport", typeof(Viewport3D), typeof(CameraController), new PropertyMetadata(null, ViewportChanged));
+
+        /// <summary>
+        ///   The last tick.
+        /// </summary>
+        private long lastTick;
+
+        /// <summary>
+        ///   The pan speed.
+        /// </summary>
+        private Vector3D panSpeed;
+
+        /// <summary>
+        ///   The rotation speed.
+        /// </summary>
+        private Vector rotationSpeed;
+
+        /// <summary>
+        ///   The target adorner.
+        /// </summary>
+        private Adorner targetAdorner;
+
+        /// <summary>
+        ///   The zoom speed.
+        /// </summary>
+        private double zoomSpeed;
+
+        private readonly Stopwatch _watch = new Stopwatch();
+        private Point3D? lastPoint3D = new Point3D();
+        private Point _lastPosition;
+        //private Point3D? _mouseDownPoint3D;
+        private Point _mouseDownPosition;
+
+        private bool isPanning;
+        private bool isRotating;
+        private bool isZooming;
+
+        public double RotateSensitivity { get; set; }
+        public double PanSensitivity { get; set; }
+
+        public delegate void SelectionChangedType(DependencyObject visual);
+        public SelectionChangedType SelectionChanged;
+
+        private void OnSelectionChanged(DependencyObject visual)
+        {
+            if (this.SelectionChanged != null)
+                this.SelectionChanged(visual);
+        }
+
+        /// <summary>
+        ///   Initializes static members of the <see cref="CameraController" /> class.
+        /// </summary>
         public CameraController()
         {
-            LeftButtonAction = MouseAction.Select;
-            LeftDoubleClickAction = MouseAction.Select;
-            ShiftLeftButtonAction = MouseAction.SelectFarest;
-            ControlLeftButtonAction = MouseAction.Select;
-
-            RightButtonAction = MouseAction.Rotate;
-            RightDoubleClickAction = MouseAction.ChangeLookAt;
-            ShiftRightButtonAction = MouseAction.Pan;
-            ControlRightButtonAction = MouseAction.Zoom;
-
-            MiddleButtonAction = MouseAction.Pan;
-            MiddleDoubleClickAction = MouseAction.ResetCamera;
-            ShiftMiddleButtonAction = MouseAction.Pan;
-            ControlMiddleButtonAction = MouseAction.Pan;
-
             Background = Brushes.Transparent;
-            EventSurface = this;
             SubscribeEvents();
 
             _watch.Start();
@@ -152,23 +178,6 @@ namespace HelixEngine
             }
         }
 
-
-        /// <summary>
-        ///   Gets or sets a value indicating whether InfiniteSpin.
-        /// </summary>
-        public bool InfiniteSpin
-        {
-            get
-            {
-                return (bool)this.GetValue(InfiniteSpinProperty);
-            }
-
-            set
-            {
-                this.SetValue(InfiniteSpinProperty, value);
-            }
-        }
-
         /// <summary>
         ///   Gets or sets a value indicating whether IsPanEnabled.
         /// </summary>
@@ -202,54 +211,6 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   The is spinning flag.
-        /// </summary>
-        private bool isSpinning;
-
-        /// <summary>
-        ///   The last tick.
-        /// </summary>
-        private long lastTick;
-
-        /// <summary>
-        ///   The pan speed.
-        /// </summary>
-        private Vector3D panSpeed;
-
-        /// <summary>
-        ///   The rotation speed.
-        /// </summary>
-        private Vector rotationSpeed;
-
-        /// <summary>
-        ///   The spinning speed.
-        /// </summary>
-        private Vector spinningSpeed;
-
-        /// <summary>
-        ///   The target adorner.
-        /// </summary>
-        private Adorner targetAdorner;
-
-        /// <summary>
-        ///   The zoom speed.
-        /// </summary>
-        private double zoomSpeed;
-
-        private readonly Stopwatch _spinWatch = new Stopwatch();
-        private readonly Stopwatch _watch = new Stopwatch();
-        private bool _isFixed;
-        private Point3D? _lastPoint3D;
-        private Point _lastPosition;
-        private Point3D? _mouseDownPoint3D;
-        private Point _mouseDownPosition;
-
-        private bool _panning;
-
-        private bool _rotating;
-        private bool _zooming;
-
-        /// <summary>
         ///   Show a target adorner when manipulating the camera.
         /// </summary>
         public bool ShowCameraTarget
@@ -266,50 +227,43 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Keep the point (3D) where rotation/zoom started at the same screen position(2D)
+        ///   Gets or sets Camera.
         /// </summary>
-        public bool FixedMouseDownPoint
-        {
-            get { return (bool)GetValue(FixedMouseDownPointProperty); }
-            set { SetValue(FixedMouseDownPointProperty, value); }
-        }
-
         public PerspectiveCamera Camera
         {
-            get { return (PerspectiveCamera)GetValue(CameraProperty); }
-            set { SetValue(CameraProperty, value); }
+            get
+            {
+                return (PerspectiveCamera)this.GetValue(CameraProperty);
+            }
+
+            set
+            {
+                this.SetValue(CameraProperty, value);
+            }
         }
 
-        // Using a DependencyProperty as the backing store for Camera.  This enables animation, styling, binding, etc...
-
-        public MouseAction LeftDoubleClickAction { get; set; }
-        public MouseAction MiddleDoubleClickAction { get; set; }
-        public MouseAction RightDoubleClickAction { get; set; }
-
-        public MouseAction LeftButtonAction { get; set; }
-        public MouseAction ShiftLeftButtonAction { get; set; }
-        public MouseAction ControlLeftButtonAction { get; set; }
-
-        public MouseAction MiddleButtonAction { get; set; }
-        public MouseAction ShiftMiddleButtonAction { get; set; }
-        public MouseAction ControlMiddleButtonAction { get; set; }
-
-        public MouseAction RightButtonAction { get; set; }
-        public MouseAction ShiftRightButtonAction { get; set; }
-        public MouseAction ControlRightButtonAction { get; set; }
-
-        public double ZoomSensitivity { get; set; }
-        public double RotateSensitivity { get; set; }
-        public double PanSensitivity { get; set; }
-
-        public delegate void SelectionChangedType(DependencyObject visual);
-        public SelectionChangedType SelectionChanged;
-
-        private void OnSelectionChanged(DependencyObject visual)
+        /// <summary>
+        ///   Gets or sets ZoomSensitivity.
+        /// </summary>
+        public double ZoomSensitivity
         {
-            if (this.SelectionChanged != null)
-                this.SelectionChanged(visual);
+            get
+            {
+                return (double)this.GetValue(ZoomSensitivityProperty);
+            }
+
+            set
+            {
+                this.SetValue(ZoomSensitivityProperty, value);
+            }
         }
+
+        /// <summary>
+        ///   The zoom sensitivity property.
+        /// </summary>
+        public static readonly DependencyProperty ZoomSensitivityProperty =
+            DependencyProperty.Register(
+                "ZoomSensitivity", typeof(double), typeof(CameraController), new UIPropertyMetadata(1.0));
 
         /// <summary>
         ///   Gets or sets CameraRotationMode.
@@ -341,29 +295,6 @@ namespace HelixEngine
             {
                 this.SetValue(CameraModeProperty, value);
             }
-        }
-
-        #region General properties
-
-        public static readonly DependencyProperty EnabledProperty =
-            DependencyProperty.Register("Enabled", typeof(bool), typeof(CameraController),
-                                        new UIPropertyMetadata(true));
-
-        public static readonly DependencyProperty EventSurfaceProperty =
-            DependencyProperty.Register("EventSurface", typeof(FrameworkElement), typeof(CameraController),
-                                        new UIPropertyMetadata(null));
-
-        public static readonly DependencyProperty ViewportProperty =
-            DependencyProperty.Register("Viewport", typeof(Viewport3D), typeof(CameraController),
-                                        new PropertyMetadata(null, ViewportChanged));
-
-        /// <summary>
-        /// The element that receives mouse events
-        /// </summary>
-        public FrameworkElement EventSurface
-        {
-            get { return (FrameworkElement)GetValue(EventSurfaceProperty); }
-            set { SetValue(EventSurfaceProperty, value); }
         }
 
         /// <summary>
@@ -398,112 +329,122 @@ namespace HelixEngine
             }
         }
 
+        /// <summary>
+        ///   Gets a value indicating whether IsActive.
+        /// </summary>
+        public bool IsActive
+        {
+            get
+            {
+                return this.Enabled && this.Viewport != null && this.Camera != null;
+            }
+        }
+
+        /// <summary>
+        ///   The viewport changed.
+        /// </summary>
+        /// <param name="d"> The sender. </param>
+        /// <param name="e"> The event arguments. </param>
         private static void ViewportChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((CameraController)d).OnViewportChanged();
         }
 
+        /// <summary>
+        ///   The on viewport changed.
+        /// </summary>
         private void OnViewportChanged()
         {
             if (Camera == null && Viewport != null)
                 Camera = Viewport.Camera as PerspectiveCamera;
         }
 
-        #endregion
-
+        /// <summary>
+        ///   The subscribe events.
+        /// </summary>
         private void SubscribeEvents()
         {
-            EventSurface.MouseMove += MouseMoveHandler;
-            EventSurface.MouseDown += MouseDownHandler;
-            EventSurface.MouseUp += MouseUpHandler;
-            EventSurface.MouseWheel += OnMouseWheel;
-            //EventSurface.KeyDown += OnKeyDown;
+            this.MouseMove += MouseMoveHandler;
+            this.MouseDown += MouseDownHandler;
+            this.MouseUp += MouseUpHandler;
+            this.MouseWheel += OnMouseWheel;
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
-        // todo
+        /// <summary>
+        ///   The un subscribe events.
+        /// </summary>
         private void UnSubscribeEvents()
         {
-            EventSurface.MouseMove -= MouseMoveHandler;
-            EventSurface.MouseDown -= MouseDownHandler;
-            EventSurface.MouseUp -= MouseUpHandler;
-            EventSurface.MouseWheel -= OnMouseWheel;
-            //EventSurface.KeyDown -= OnKeyDown;
+            this.MouseMove -= MouseMoveHandler;
+            this.MouseDown -= MouseDownHandler;
+            this.MouseUp -= MouseUpHandler;
+            this.MouseWheel -= OnMouseWheel;
             CompositionTarget.Rendering -= CompositionTarget_Rendering;
         }
 
+        /// <summary>
+        ///   The rendering event handler.
+        /// </summary>
+        /// <param name="sender"> The sender. </param>
+        /// <param name="e"> The event arguments. </param>
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
             // Time in seconds
-            double time = 1.0 * (_watch.ElapsedTicks - lastTick) / Stopwatch.Frequency;
-            lastTick = _watch.ElapsedTicks;
+            double time = 1.0 * (_watch.ElapsedTicks - this.lastTick) / Stopwatch.Frequency;
+            this.lastTick = _watch.ElapsedTicks;
             OnTimeStep(time);
         }
 
-        #region Spinning / inertia handling
-
+        /// <summary>
+        ///   The on time step.
+        /// </summary>
+        /// <param name="time"> The time. </param>
         private void OnTimeStep(double time)
         {
             // should be independent of time
-            double factor = Math.Pow(InertiaFactor, time / 0.012);
-            // factor = InertiaFactor;
+            double factor = Math.Pow(this.InertiaFactor, time / 0.012);
+            factor = this.Clamp(factor, 0.2, 1);
 
-            if (isSpinning && spinningSpeed.LengthSquared > 0)
+            if (this.rotationSpeed.LengthSquared > 0.1)
             {
-                Rotate(spinningSpeed.X * time, spinningSpeed.Y * time);
-
-                if (!InfiniteSpin)
-                    spinningSpeed *= factor;
-                _spinWatch.Reset();
-                _spinWatch.Start();
+                Rotate(this.rotationSpeed.X * time, this.rotationSpeed.Y * time);
+                this.rotationSpeed *= factor;
             }
 
-            if (rotationSpeed.LengthSquared > 0.1)
+            if (Math.Abs(this.panSpeed.LengthSquared) > 0.0001)
             {
-                Rotate(rotationSpeed.X * time, rotationSpeed.Y * time);
-                rotationSpeed *= factor;
+                Pan(this.panSpeed * time);
+                this.panSpeed *= factor;
             }
 
-            if (Math.Abs(panSpeed.LengthSquared) > 0.0001)
+            if (Math.Abs(this.zoomSpeed) > 0.1)
             {
-                Pan(panSpeed * time);
-                panSpeed *= factor;
-            }
-            if (Math.Abs(zoomSpeed) > 0.1)
-            {
-                Zoom(zoomSpeed * time);
-                zoomSpeed *= factor;
+                Zoom(this.zoomSpeed * time);
+                this.zoomSpeed *= factor;
             }
         }
 
-        #endregion
-
-        #region Keyboard handlers
-
-        // todo
-        private void OnKeyDown(object sender, KeyEventArgs e)
+        /// <summary>
+        ///   The clamp.
+        /// </summary>
+        /// <param name="factor"> The factor. </param>
+        /// <param name="min"> The min. </param>
+        /// <param name="max"> The max. </param>
+        /// <returns> The clamp. </returns>
+        private double Clamp(double factor, double min, double max)
         {
-            base.OnKeyDown(e);
-            switch (e.Key)
+            if (factor < min)
             {
-                case Key.Left:
-                    AddRotateForce(-50, 0);
-                    break;
-                case Key.Right:
-                    AddRotateForce(50, 0);
-                    break;
+                return min;
             }
-        }
 
-        #endregion
+            if (factor > max)
+            {
+                return max;
+            }
 
-        #region Mouse handlers
-
-        private Vector3D _fixRelative;
-
-        public bool IsActive
-        {
-            get { return Enabled && Viewport != null && Camera != null; }
+            return factor;
         }
 
         private void MouseDownHandler(object sender, MouseButtonEventArgs e)
@@ -513,130 +454,57 @@ namespace HelixEngine
                 throw new NullReferenceException("Viewport");
 
             _mouseDownPosition = e.GetPosition(this);
-            _fixRelative = new Vector3D();
+
+            var isDoubleClick = e.ClickCount == 2;
+            var isControlKey = Keyboard.IsKeyDown(Key.LeftCtrl);
+            var isShiftKey = Keyboard.IsKeyDown(Key.LeftShift);
 
             // reset camera
-            if (CheckButton(e, MouseAction.ResetCamera))
+            if (e.ChangedButton == MouseButton.Middle && isDoubleClick)
                 ResetCamera();
 
-            Point3D point;
-            Vector3D normal;
-            DependencyObject visual;
-            bool farest = CheckButton(e, MouseAction.SelectFarest);
-            if (Viewport3DHelper.Find(Viewport, _mouseDownPosition, farest, out point, out normal, out visual))
-                _mouseDownPoint3D = point;
-            else
-                _mouseDownPoint3D = null;
-
-            _lastPoint3D = UnProject(_mouseDownPosition, CameraTarget(), Camera.LookDirection);
-
-            // select object
-            if ((CheckButton(e, MouseAction.Select) || farest) && visual != null)
-                OnSelectionChanged(visual);
-
-            // change the 'lookat' point
-            if (_mouseDownPoint3D != null && CheckButton(e, MouseAction.ChangeLookAt))
-                LookAt(_mouseDownPoint3D.Value, 0);
-
-            _zooming = CheckButton(e, MouseAction.Zoom);
-            _panning = CheckButton(e, MouseAction.Pan);
-            _rotating = CheckButton(e, MouseAction.Rotate);
-            _isFixed = false;
-
-            if (_zooming || _panning || _rotating)
+            // select visual
+            if (e.ChangedButton == MouseButton.Left)
             {
-                bool rightWinKey = (Keyboard.IsKeyDown(Key.RWin));
-                if (FixedMouseDownPoint || rightWinKey)
-                {
-                    if (!_panning && _mouseDownPoint3D != null)
-                    {
-                        _fixRelative = _mouseDownPoint3D.Value - CameraTarget();
-                        ShowTargetAdorner(_mouseDownPosition);
-                        _isFixed = true;
-                    }
-                }
-                else
-                {
-                    // show the adorner in the middle
-                    ShowTargetAdorner(new Point(Viewport.ActualWidth / 2, Viewport.ActualHeight / 2));
-                }
+                //Point3D point;
+                //Vector3D normal;
+                //DependencyObject visual;
+                var visual = Viewport3DHelper.FindVisual(Viewport, _mouseDownPosition, isShiftKey);
+                //    _mouseDownPoint3D = point;
+                //else
+                //    _mouseDownPoint3D = null;
 
-                if (_zooming || _panning || _rotating)
-                {
-                    e.Handled = true;
-                    ((UIElement)sender).CaptureMouse();
-                }
+                // select object
+                if (visual != null)
+                    OnSelectionChanged(visual);
 
-                _spinWatch.Reset();
-                _spinWatch.Start();
+                // change the 'lookat' point
+                //if (_mouseDownPoint3D != null && CheckButton(e, MouseAction.ChangeLookAt))
+                //    LookAt(_mouseDownPoint3D.Value, 0);
+            }
 
-                // ProjectToTrackball(EventSurface.ActualWidth, EventSurface.ActualHeight, _mouseDownPosition);
+            // zoom, pan, rotate
+            isZooming = e.ChangedButton == MouseButton.Right && isControlKey;
+            isRotating = e.ChangedButton == MouseButton.Right && !isControlKey;
+            isPanning = e.ChangedButton == MouseButton.Middle && !isDoubleClick;
+
+            if (isZooming || isPanning || isRotating)
+            {
+                // show the adorner in the middle
+                ShowTargetAdorner(new Point(Viewport.ActualWidth * 0.5, Viewport.ActualHeight * 0.5));
+
+                e.Handled = true;
+                ((UIElement)sender).CaptureMouse();
+
                 _lastPosition = _mouseDownPosition;
+                if (isPanning)
+                    lastPoint3D = UnProject(_mouseDownPosition, CameraTarget(), Camera.LookDirection);
             }
-
-            isSpinning = false;
-        }
-
-        private bool CheckButton(MouseButtonEventArgs e, MouseAction a)
-        {
-            bool control = (Keyboard.IsKeyDown(Key.LeftCtrl));
-            bool shift = (Keyboard.IsKeyDown(Key.LeftShift));
-            bool doubleClick = e.ClickCount == 2;
-
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (control)
-                    return a == ControlLeftButtonAction;
-                if (shift)
-                    return a == ShiftLeftButtonAction;
-                if (doubleClick)
-                    return a == LeftDoubleClickAction;
-                return a == LeftButtonAction;
-            }
-
-            if (e.MiddleButton == MouseButtonState.Pressed)
-            {
-                if (control)
-                    return a == ControlMiddleButtonAction;
-                if (shift)
-                    return a == ShiftMiddleButtonAction;
-                if (doubleClick)
-                    return a == MiddleDoubleClickAction;
-                return a == MiddleButtonAction;
-            }
-
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                if (control)
-                    return a == ControlRightButtonAction;
-                if (shift)
-                    return a == ShiftRightButtonAction;
-                if (doubleClick)
-                    return a == RightDoubleClickAction;
-                return a == RightButtonAction;
-            }
-
-            return false;
         }
 
         public Point3D CameraTarget()
         {
             return Camera.Position + Camera.LookDirection;
-        }
-
-        // From 3dtools
-        private static Vector3D ProjectToTrackball(double width, double height, Point point)
-        {
-            double x = point.X / (width / 2); // Scale so bounds map to [0,0] - [2,2]
-            double y = point.Y / (height / 2);
-
-            x = x - 1; // Translate 0,0 to the center
-            y = 1 - y; // Flip so +Y is up instead of down
-
-            double z2 = 1 - x * x - y * y; // z^2 = 1 - x^2 - y^2
-            double z = z2 > 0 ? Math.Sqrt(z2) : 0;
-
-            return new Vector3D(x, z, y);
         }
 
         private void MouseMoveHandler(object sender, MouseEventArgs e)
@@ -648,39 +516,19 @@ namespace HelixEngine
             {
                 Point point = e.MouseDevice.GetPosition(element);
 
-                // move target point to mouse down point (3D)
-                // camera will be positioned back later
-                Camera.Position += _fixRelative;
-
-                Point3D? thisPoint3D = UnProject(point, CameraTarget(), Camera.LookDirection);
-                Vector3D delta3D = _lastPoint3D.Value - thisPoint3D.Value;
-
                 Vector delta = point - _lastPosition;
                 _lastPosition = point;
 
-                // var thisTrack3D = ProjectToTrackball(EventSurface.ActualWidth, EventSurface.ActualHeight, point);
-
-
-                if (_rotating)
-                {
+                if (isRotating)
                     Rotate(delta.X, delta.Y);
-                }
-
-                if (_zooming)
+                if (isZooming)
                     Zoom(delta.Y * 0.01);
-                if (_panning)
-                    Pan(delta3D);
-
-                _lastPoint3D = UnProject(point, CameraTarget(), Camera.LookDirection);
-
-
-                Camera.Position -= _fixRelative;
-
-                if (_isFixed)
+                if (isPanning)
                 {
-                    // todo:
-                    // reposition the camera so mouse down point (3D) matches the mousedown position (2D)
-                    Pan(_mouseDownPoint3D.Value, _mouseDownPosition);
+                    Point3D? thisPoint3D = UnProject(point, CameraTarget(), Camera.LookDirection);
+                    Vector3D delta3D = lastPoint3D.Value - thisPoint3D.Value;
+                    lastPoint3D = thisPoint3D + delta3D;
+                    Pan(delta3D);
                 }
 
                 e.Handled = true;
@@ -701,20 +549,9 @@ namespace HelixEngine
 
             var element = (UIElement)sender;
 
-            if (_spinWatch.ElapsedMilliseconds < SpinReleaseTime)
-            {
-                if (_rotating)
-                {
-                    spinningSpeed = 4 * (_lastPosition - _mouseDownPosition)
-                                     * ((double)SpinReleaseTime / _spinWatch.ElapsedMilliseconds);
-                    _spinWatch.Reset();
-                    _spinWatch.Start();
-                    isSpinning = true;
-                }
-            }
-            _rotating = false;
-            _zooming = false;
-            _panning = false;
+            isRotating = false;
+            isZooming = false;
+            isPanning = false;
 
             if (element.IsMouseCaptured)
             {
@@ -731,13 +568,13 @@ namespace HelixEngine
             AddZoomForce(-e.Delta * 0.001);
         }
 
-        #endregion
-
-        #region Camera operations
-
+        /// <summary>
+        ///   The reset camera.
+        /// </summary>
         public void ResetCamera()
         {
             CameraHelper.Reset(Camera);
+            lastPoint3D = new Point3D();
         }
 
         public void Zoom(double delta)
@@ -755,7 +592,7 @@ namespace HelixEngine
                 case CameraMode.Inspect:
                     Point3D target = Camera.Position + Camera.LookDirection;
                     Vector3D lookDirection = Camera.LookDirection * (1 + delta);
-                    LookAt(target, lookDirection, 0);
+                    CameraHelper.LookAt(Camera, target, lookDirection, 0);
                     //Point3D target = Camera.Position + Camera.LookDirection;
                     //Camera.LookDirection *= (1 + delta);
                     //Camera.Position = target - Camera.LookDirection;
@@ -782,7 +619,6 @@ namespace HelixEngine
             Camera.Position += delta;
         }
 
-
         public void Rotate(double dx, double dy)
         {
             PerspectiveCamera c = Camera;
@@ -795,8 +631,6 @@ namespace HelixEngine
             if ((CameraRotationMode == CameraRotationMode.VirtualTrackball) != alt)
             {
                 RotateRoam(dx, dy);
-                //    Track(thisTrack3D, lastTrack3D);
-                //    lastTrack3D = thisTrack3D;
             }
             else
             {
@@ -895,11 +729,22 @@ namespace HelixEngine
             c.UpDirection = newUpDir;
         }
 
+        /// <summary>
+        ///   The add pan force.
+        /// </summary>
+        /// <param name="dx"> The dx. </param>
+        /// <param name="dy"> The dy. </param>
         public void AddPanForce(double dx, double dy)
         {
-            AddPanForce(FindPanVector(dx, dy));
+            this.AddPanForce(this.FindPanVector(dx, dy));
         }
 
+        /// <summary>
+        ///   The find pan vector.
+        /// </summary>
+        /// <param name="dx"> The dx. </param>
+        /// <param name="dy"> The dy. </param>
+        /// <returns> </returns>
         private Vector3D FindPanVector(double dx, double dy)
         {
             PerspectiveCamera pc = Camera;
@@ -909,29 +754,51 @@ namespace HelixEngine
             axis2.Normalize();
             double l = pc.LookDirection.Length;
             double f = l * 0.001;
-            Vector3D move = -axis1 * f * dx + axis2 * f * dy; // this should be dependent on distance to target?           
+            Vector3D move = -axis1 * f * dx + axis2 * f * dy;
+
+            // this should be dependent on distance to target?           
             return move;
         }
 
+        /// <summary>
+        ///   The add pan force.
+        /// </summary>
+        /// <param name="pan"> The pan. </param>
         public void AddPanForce(Vector3D pan)
         {
-            panSpeed += pan * 40;
+            if (!this.IsPanEnabled)
+            {
+                return;
+            }
+
+            this.panSpeed += pan * 40;
         }
 
+        /// <summary>
+        ///   The add rotate force.
+        /// </summary>
+        /// <param name="dx"> The dx. </param>
+        /// <param name="dy"> The dy. </param>
         public void AddRotateForce(double dx, double dy)
         {
-            rotationSpeed.X += dx * 40;
-            rotationSpeed.Y += dy * 40;
+            this.rotationSpeed.X += dx * 40;
+            this.rotationSpeed.Y += dy * 40;
         }
 
+        /// <summary>
+        ///   Adds the zoom force.
+        /// </summary>
+        /// <param name="dx"> The dx. </param>
         public void AddZoomForce(double dx)
         {
+            if (!this.IsZoomEnabled)
+            {
+                return;
+            }
+
             zoomSpeed += dx * 8;
+            this.zoomSpeed += dx * 8;
         }
-
-        #endregion
-
-        #region Helpers
 
         /// <summary>
         /// Get the ray into the view volume given by the position in 2D (screen coordinates)
@@ -985,57 +852,6 @@ namespace HelixEngine
             //RayMeshGeometry3DHitTestResult result3d =
             //                    result as RayMeshGeometry3DHitTestResult;
         }
-
-        /// <summary>
-        /// Set the camera target point
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="animate"></param>
-        /// <returns></returns>
-        public void LookAt(Point3D target, double animationTime)
-        {
-            PerspectiveCamera camera = Camera;
-            if (camera == null) return;
-
-            LookAt(target, camera.LookDirection, animationTime);
-        }
-
-        public void LookAt(Point3D target, double distance, double animationTime)
-        {
-            var d = Camera.LookDirection;
-            d.Normalize();
-            LookAt(target, d * distance, animationTime);
-        }
-
-        public void LookAt(Point3D target, Vector3D newDirection, double animationTime)
-        {
-            PerspectiveCamera camera = Camera;
-            if (camera == null) return;
-
-            Point3D newPosition = target - newDirection;
-
-            CameraHelper.AnimateTo(camera, newPosition, newDirection, camera.UpDirection, animationTime);
-            /*
-            Point3D newPosition = point3D - newDirection;
-            if (animationTime == 0)
-            {
-                camera.LookDirection = newDirection;
-                camera.Position = newPosition;
-            }
-            else
-            {
-                var a = new Point3DAnimation(newPosition,
-                                             new Duration(TimeSpan.FromMilliseconds(animationTime))) { AccelerationRatio = 0.3, DecelerationRatio = 0.5 };
-                camera.BeginAnimation(ProjectionCamera.PositionProperty, a);
-
-                var a2 = new Vector3DAnimation(newDirection,
-                                               new Duration(TimeSpan.FromMilliseconds(animationTime))) { AccelerationRatio = 0.3, DecelerationRatio = 0.5 };
-                camera.BeginAnimation(ProjectionCamera.LookDirectionProperty, a2);
-            }
-            return newPosition;*/
-        }
-
-        #endregion
 
         /// <summary>
         ///   Shows the target adorner.

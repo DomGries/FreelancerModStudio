@@ -59,7 +59,6 @@
     <Compile Include="Controls\CameraController\CameraRotationMode.cs" />
     <Compile Include="Controls\HelixViewport3D.cs" />
     <Compile Include="Controls\ManipulatorControl.cs" />
-    <Compile Include="Controls\Viewport3DController.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\SelfProvider.cs" />
     <Compile Include="ExtensionMethods\MeshGeometry3DExtensions.cs" />

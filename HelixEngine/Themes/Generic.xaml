@@ -3,10 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:HelixEngine">
 
-    <Style TargetType="{x:Type local:HelixView3D}">
+    <Style TargetType="{x:Type local:HelixViewport3D}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:HelixView3D}">
+                <ControlTemplate TargetType="{x:Type local:HelixViewport3D}">
                     <Grid Background="{TemplateBinding Background}" Focusable="False">
                         <AdornerDecorator x:Name="PART_AdornerLayer" DataContext="{TemplateBinding DataContext}" Focusable="False">
                             <!-- the main viewport3D is inserted here -->
@@ -14,8 +14,7 @@
 
                         <local:CameraController x:Name="PART_CameraController" 
                             CameraRotationMode="{TemplateBinding CameraRotationMode}"
-                            CameraMode="{TemplateBinding CameraMode}"
-                            InfiniteSpin="{TemplateBinding InfiniteSpin}"/>
+                            CameraMode="{TemplateBinding CameraMode}"/>
 
                         <!-- Title -->
                         <TextBlock Text="{TemplateBinding Title}"
@@ -25,7 +24,7 @@
                             Foreground="{TemplateBinding Foreground}"
                             IsHitTestVisible="False" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5"/>
 
-                        <Viewport3D x:Name="PART_ViewCubeView" Width="80" Height="80" Margin="0" Opacity="0.5"
+                        <Viewport3D x:Name="PART_ViewCubeViewport" Width="80" Height="80" Margin="0" Opacity="0.5"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" ClipToBounds="False"
                             Visibility="{TemplateBinding ShowViewCube, Converter={local:BoolToVisibilityConverter}}">
                             <local:ViewCubeVisual3D x:Name="PART_ViewCube"/>

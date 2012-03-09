@@ -44,13 +44,14 @@ namespace FreelancerModStudio
             st.Start();
 #endif
             //create viewport using the Helix Engine
-            var view = new HelixView3D
+            var view = new HelixViewport3D
             {
                 Background = System.Windows.Media.Brushes.Black,
                 Foreground = System.Windows.Media.Brushes.White,
                 FontSize = 16,
                 FontWeight = System.Windows.FontWeights.Bold,
-                ClipToBounds = false
+                ClipToBounds = false,
+                ShowViewCube = true
             };
             view.Camera.NearPlaneDistance = 0.001;
 #if DEBUG

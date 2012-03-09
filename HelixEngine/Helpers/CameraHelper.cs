@@ -143,6 +143,68 @@ namespace HelixEngine
         }
 
         /// <summary>
+        /// Set the camera target point without changing the look direction.
+        /// </summary>
+        /// <param name="camera">
+        /// The camera.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="animationTime">
+        /// The animation time.
+        /// </param>
+        public static void LookAt(PerspectiveCamera camera, Point3D target, double animationTime)
+        {
+            LookAt(camera, target, camera.LookDirection, animationTime);
+        }
+
+        /// <summary>
+        /// Set the camera target point and look direction
+        /// </summary>
+        /// <param name="camera">
+        /// The camera.
+        /// </param>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        /// <param name="newLookDirection">
+        /// The new look direction.
+        /// </param>
+        /// <param name="animationTime">
+        /// The animation time.
+        /// </param>
+        public static void LookAt(
+            PerspectiveCamera camera, Point3D target, Vector3D newLookDirection, double animationTime)
+        {
+            Point3D newPosition = target - newLookDirection;
+
+            CameraHelper.AnimateTo(camera, newPosition, newLookDirection, camera.UpDirection, animationTime);
+        }
+
+        /// <summary>
+        /// Set the camera target point and camera distance.
+        /// </summary>
+        /// <param name="camera">
+        /// The camera.
+        /// </param>
+        /// <param name="target">
+        /// The target point.
+        /// </param>
+        /// <param name="distance">
+        /// The distance to the camera.
+        /// </param>
+        /// <param name="animationTime">
+        /// The animation time.
+        /// </param>
+        public static void LookAt(PerspectiveCamera camera, Point3D target, double distance, double animationTime)
+        {
+            Vector3D d = camera.LookDirection;
+            d.Normalize();
+            LookAt(camera, target, d * distance, animationTime);
+        }
+
+        /// <summary>
         /// Resets the specified perspective camera.
         /// </summary>
         /// <param name="camera">

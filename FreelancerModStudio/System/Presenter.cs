@@ -15,7 +15,7 @@ namespace FreelancerModStudio.SystemPresenter
     public class Presenter
     {
         public Table<int, ContentBase> Objects { get; set; }
-        public HelixView3D Viewport { get; set; }
+        public HelixViewport3D Viewport { get; set; }
         public bool IsUniverse { get; set; }
 
         ModelVisual3D lightning;
@@ -103,7 +103,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         int secondLayerID;
 
-        public Presenter(HelixView3D viewport)
+        public Presenter(HelixViewport3D viewport)
         {
             Objects = new Table<int, ContentBase>();
             Viewport = viewport;

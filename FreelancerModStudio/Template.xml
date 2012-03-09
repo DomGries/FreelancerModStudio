@@ -372,6 +372,7 @@
             <Option>name</Option>
             <Option>space_color</Option>
             <Option>local_faction</Option>
+            <Option>rpop_solar_detection</Option>
           </Options>
         </Block>
         <Block name="Archetype">
@@ -519,8 +520,6 @@
             <Option>path_label</Option>
             <Option>usage</Option>
             <Option>mission_eligible</Option>
-            <Option>zone_creation_distance</Option>
-            <Option multiple="true">faction_weight</Option>
             <Option multiple="true">density_restriction</Option>
             <Option multiple="true">encounter</Option>
             <Option multiple="true" parent="encounter">faction</Option>

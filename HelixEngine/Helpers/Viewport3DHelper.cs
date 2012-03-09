@@ -137,7 +137,9 @@ namespace HelixEngine
                             // then transform the Visual3D hierarchy up to the Viewport3D ancestor
                             var t = GetTransform(viewport, rayHit.VisualHit);
                             if (t != null)
+                            {
                                 p = t.Transform(p);
+                            }
 
                             double distance = (camera.Position - p).LengthSquared;
                             if (farest ? distance > minimumDistance : distance < minimumDistance)
@@ -159,7 +161,9 @@ namespace HelixEngine
             normal = nearestNormal;
 
             if (minimumDistance >= double.MaxValue)
+            {
                 return false;
+            }
 
             normal.Normalize();
             return true;
@@ -177,7 +181,9 @@ namespace HelixEngine
             Vector3D n;
             DependencyObject obj;
             if (Find(viewport, position, farest, out p, out n, out obj))
+            {
                 return p;
+            }
 
             return null;
         }
@@ -386,7 +392,9 @@ namespace HelixEngine
         public static GeneralTransform3D GetTransform(Viewport3D viewport, Visual3D visual)
         {
             if (visual == null)
+            {
                 return null;
+            }
 
             foreach (var ancestor in viewport.Children)
             {
@@ -561,10 +569,14 @@ namespace HelixEngine
             var matrixCamera = GetCameraTransform(viewport);
 
             if (!matrixViewport.HasInverse)
+            {
                 return false;
+            }
 
             if (!matrixCamera.HasInverse)
+            {
                 return false;
+            }
 
             matrixViewport.Invert();
             matrixCamera.Invert();
@@ -673,7 +685,9 @@ namespace HelixEngine
             view.Width = width;
             view.Height = height;
             if (double.IsNaN(width) || double.IsNaN(height))
+            {
                 return;
+            }
 
             view.Measure(new Size(width, height));
             view.Arrange(new Rect(0, 0, width, height));

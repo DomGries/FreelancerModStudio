@@ -3,23 +3,49 @@ using System.Windows.Media.Media3D;
 
 namespace HelixEngine
 {
+    /// <summary>
+    /// Represents a 3D ray.
+    /// </summary>
     public class Ray3D
     {
-        public Point3D Origin { get; set; }
+        #region Public Properties
+
+        /// <summary>
+        ///   Gets or sets the direction.
+        /// </summary>
+        /// <value>The direction.</value>
         public Vector3D Direction { get; set; }
 
-        public Point3D PlaneIntersection(Point3D position, Vector3D normal)
+        /// <summary>
+        ///   Gets or sets the origin.
+        /// </summary>
+        /// <value>The origin.</value>
+        public Point3D Origin { get; set; }
+
+        #endregion
+
+        #region Public Methods
+
+
+        /// <summary>
+        /// Finds the intersection with a plane.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <param name="normal">The normal.</param>
+        /// <returns>The intersection point.</returns>
+        public Point3D? PlaneIntersection(Point3D position, Vector3D normal)
         {
-            var r0 = new Vector3D(Origin.X, Origin.Y, Origin.Z);
-            var p0 = new Vector3D(position.X, position.Y, position.Z);
-            double d = Vector3D.DotProduct(p0, normal);
-            double ddN = Vector3D.DotProduct(Direction, normal);
+            // http://paulbourke.net/geometry/planeline/
+            double dn = Vector3D.DotProduct(normal, this.Direction);
+            if (dn == 0)
+            {
+                return null;
+            }
 
-            if (Math.Abs(ddN) < double.Epsilon)
-                return new Point3D(double.NaN, double.NaN, double.NaN);
-
-            double t = -(Vector3D.DotProduct(r0, normal) + d) / ddN;
-            return Origin + t * Direction;
+            double u = Vector3D.DotProduct(normal, position - this.Origin) / dn;
+            return this.Origin + u * this.Direction;
         }
+
+        #endregion
     }
 }

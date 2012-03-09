@@ -164,7 +164,7 @@ namespace HelixEngine
 
         public static readonly DependencyProperty CameraRotationModeProperty =
             DependencyProperty.Register("CameraRotationMode", typeof(CameraRotationMode), typeof(HelixView3D),
-                                        new UIPropertyMetadata(CameraRotationMode.TwoAxis));
+                                        new UIPropertyMetadata(CameraRotationMode.Turntable));
 
         public bool InfiniteSpin
         {

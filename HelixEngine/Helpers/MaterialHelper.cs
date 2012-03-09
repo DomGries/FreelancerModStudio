@@ -4,41 +4,78 @@ using System.Windows.Media.Media3D;
 namespace HelixEngine
 {
     /// <summary>
-    /// Creates diffuse/specular materials
+    /// Creates diffuse/specular materials.
     /// </summary>
     public static class MaterialHelper
     {
-        public static Brush CreateTransparentBrush(Brush brush, double opacity)
+        #region Public Methods
+        /// <summary>
+        /// Changes the opacity of a material.
+        /// </summary>
+        /// <param name="material">
+        /// The material.
+        /// </param>
+        /// <param name="d">
+        /// The d.
+        /// </param>
+        public static void ChangeOpacity(Material material, double d)
         {
-            brush = brush.Clone();
-            brush.Opacity = opacity;
-            return brush;
+            var dm = material as DiffuseMaterial;
+            if (dm != null)
+            {
+                var scb = dm.Brush as SolidColorBrush;
+                if (scb != null)
+                {
+                    scb.Opacity = d;
+                }
+            }
         }
 
-        public static Material CreateMaterial(Color c)
+        /// <summary>
+        /// Creates a material for the specified color.
+        /// </summary>
+        /// <param name="color">
+        /// The color.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static Material CreateMaterial(Color color)
         {
-            return CreateMaterial(new SolidColorBrush(c));
+            return CreateMaterial(new SolidColorBrush(color));
         }
 
-        public static Material CreateMaterial(Color c, double opacity)
+        /// <summary>
+        /// Creates a material for the specified color and opacity.
+        /// </summary>
+        /// <param name="color">
+        /// The color.
+        /// </param>
+        /// <param name="opacity">
+        /// The opacity.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static Material CreateMaterial(Color color, double opacity)
         {
-            Color c2 = Color.FromArgb((byte)(opacity * 255), c.R, c.G, c.B);
-            return CreateMaterial(c2);
+            return CreateMaterial(Color.FromArgb((byte)(opacity * 255), color.R, color.G, color.B));
         }
 
+        /// <summary>
+        /// Creates a material for the specified brush.
+        /// </summary>
+        /// <param name="brush">
+        /// The brush.
+        /// </param>
+        /// <returns>
+        /// </returns>
         public static Material CreateMaterial(Brush brush)
         {
             return new DiffuseMaterial(brush);
         }
 
-        public static Material CreateMaterial(Brush brush, double opacity)
+        public static Material CreateEmissiveMaterial(Color color)
         {
-            return CreateMaterial(CreateTransparentBrush(brush, opacity));
-        }
-
-        public static Material CreateEmissiveMaterial(Color c)
-        {
-            return CreateEmissiveMaterial(new SolidColorBrush(c));
+            return CreateEmissiveMaterial(new SolidColorBrush(color));
         }
 
         public static Material CreateEmissiveMaterial(Brush brush)
@@ -46,14 +83,9 @@ namespace HelixEngine
             return new EmissiveMaterial(brush);
         }
 
-        public static Material CreateEmissiveMaterial(Brush brush, double opacity)
+        public static Material CreateSpectacularMaterial(Color color, double specularPower)
         {
-            return CreateEmissiveMaterial(CreateTransparentBrush(brush, opacity));
-        }
-
-        public static Material CreateSpectacularMaterial(Color c, double specularPower)
-        {
-            return CreateSpectacularMaterial(new SolidColorBrush(c), specularPower);
+            return CreateSpectacularMaterial(new SolidColorBrush(color), specularPower);
         }
 
         public static Material CreateSpectacularMaterial(Brush brush, double specularPower)
@@ -61,9 +93,6 @@ namespace HelixEngine
             return new SpecularMaterial(brush, specularPower);
         }
 
-        public static Material CreateSpectacularMaterial(Brush brush, double opacity, double specularPower)
-        {
-            return CreateSpectacularMaterial(CreateTransparentBrush(brush, opacity), specularPower);
-        }
+        #endregion
     }
 }

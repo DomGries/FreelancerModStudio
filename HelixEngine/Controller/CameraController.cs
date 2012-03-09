@@ -23,67 +23,74 @@ namespace HelixEngine
         SelectFarest
     }
 
-    // http://en.wikipedia.org/wiki/Virtual_camera_system
-
-    /// <summary>
-    /// Inspect/Examine: orbits around a point (fixed target position, move closer target when zooming)
-    /// WalkAround: walk around (fixed camera position, move in cameradirection when zooming)
-    /// FixedPosition: fixed camera position, change FOV when zooming
-    /// </summary>
-    public enum CameraMode
-    {
-        Inspect,
-        WalkAround,
-        FixedPosition
-    }
-
-    /// <summary>
-    /// TwoAxis: constrained to two axes of rotation
-    /// VirtualTrackball: free rotation
-    /// </summary>
-    public enum CameraRotationMode
-    {
-        TwoAxis,
-        VirtualTrackball
-    } ;
-
     public class CameraController : Border
     {
-        public static readonly DependencyProperty CameraProperty =
-            DependencyProperty.Register("Camera", typeof(PerspectiveCamera), typeof(CameraController),
-                                        new UIPropertyMetadata(null));
+        /// <summary>
+        ///   The camera property.
+        /// </summary>
+        public static readonly DependencyProperty CameraProperty = DependencyProperty.Register(
+            "Camera",
+            typeof(PerspectiveCamera),
+            typeof(CameraController),
+            new UIPropertyMetadata(null));
 
         public static readonly DependencyProperty FixedMouseDownPointProperty =
             DependencyProperty.Register("FixedMouseDownPoint", typeof(bool), typeof(CameraController),
                                         new UIPropertyMetadata(false));
 
-        public static readonly DependencyProperty InertiaFactorProperty =
-            DependencyProperty.Register("InertiaFactor", typeof(double), typeof(CameraController),
-                                        new UIPropertyMetadata(0.93));
+        /// <summary>
+        ///   The inertia factor property.
+        /// </summary>
+        public static readonly DependencyProperty InertiaFactorProperty = DependencyProperty.Register(
+            "InertiaFactor", typeof(double), typeof(CameraController), new UIPropertyMetadata(0.9));
 
-        public static readonly DependencyProperty InfiniteSpinProperty =
-            DependencyProperty.Register("InfiniteSpin", typeof(bool), typeof(CameraController),
-                                        new UIPropertyMetadata(false));
+        /// <summary>
+        ///   The infinite spin property.
+        /// </summary>
+        public static readonly DependencyProperty InfiniteSpinProperty = DependencyProperty.Register(
+            "InfiniteSpin", typeof(bool), typeof(CameraController), new UIPropertyMetadata(false));
 
-        public static readonly DependencyProperty IsPanEnabledProperty =
-            DependencyProperty.Register("IsPanEnabled", typeof(bool), typeof(CameraController),
-                                        new UIPropertyMetadata(true));
+        /// <summary>
+        ///   The is pan enabled property.
+        /// </summary>
+        public static readonly DependencyProperty IsPanEnabledProperty = DependencyProperty.Register(
+            "IsPanEnabled", typeof(bool), typeof(CameraController), new UIPropertyMetadata(true));
 
-        public static readonly DependencyProperty IsZoomEnabledProperty =
-            DependencyProperty.Register("IsZoomEnabled", typeof(bool), typeof(CameraController),
-                                        new UIPropertyMetadata(true));
+        /// <summary>
+        ///   The is zoom enabled property.
+        /// </summary>
+        public static readonly DependencyProperty IsZoomEnabledProperty = DependencyProperty.Register(
+            "IsZoomEnabled", typeof(bool), typeof(CameraController), new UIPropertyMetadata(true));
 
+        /// <summary>
+        ///   The show camera target property.
+        /// </summary>
         public static readonly DependencyProperty ShowCameraTargetProperty =
-            DependencyProperty.Register("ShowCameraTarget", typeof(bool), typeof(CameraController),
-                                        new UIPropertyMetadata(true));
+            DependencyProperty.Register(
+                "ShowCameraTarget", typeof(bool), typeof(CameraController), new UIPropertyMetadata(true));
 
+        /// <summary>
+        ///   The spin release time property.
+        /// </summary>
         public static readonly DependencyProperty SpinReleaseTimeProperty =
-            DependencyProperty.Register("SpinReleaseTime", typeof(int), typeof(CameraController),
-                                        new UIPropertyMetadata(200));
+            DependencyProperty.Register(
+                "SpinReleaseTime", typeof(int), typeof(CameraController), new UIPropertyMetadata(200));
 
-        public static readonly DependencyProperty TargetModelProperty =
-            DependencyProperty.Register("TargetModel", typeof(ModelVisual3D), typeof(CameraController),
-                                        new UIPropertyMetadata(null));
+        /// <summary>
+        ///   The camera mode property.
+        /// </summary>
+        public static readonly DependencyProperty CameraModeProperty = DependencyProperty.Register(
+            "CameraMode", typeof(CameraMode), typeof(CameraController), new UIPropertyMetadata(CameraMode.Inspect));
+
+        /// <summary>
+        ///   The camera rotation mode property.
+        /// </summary>
+        public static readonly DependencyProperty CameraRotationModeProperty =
+            DependencyProperty.Register(
+                "CameraRotationMode",
+                typeof(CameraRotationMode),
+                typeof(CameraController),
+                new UIPropertyMetadata(CameraRotationMode.Turntable));
 
         public CameraController()
         {
@@ -107,60 +114,155 @@ namespace HelixEngine
             SubscribeEvents();
 
             _watch.Start();
-            _lastTick = _watch.ElapsedTicks;
+            lastTick = _watch.ElapsedTicks;
         }
 
+        /// <summary>
+        ///   Gets or sets InertiaFactor.
+        /// </summary>
         public double InertiaFactor
         {
-            get { return (double)GetValue(InertiaFactorProperty); }
-            set { SetValue(InertiaFactorProperty, value); }
+            get
+            {
+                return (double)this.GetValue(InertiaFactorProperty);
+            }
+
+            set
+            {
+                this.SetValue(InertiaFactorProperty, value);
+            }
         }
 
         /// <summary>
-        /// Max time for mousebutton relesae to activate spin
+        ///   Max duration of mouse drag to activate spin
         /// </summary>
+        /// <remarks>
+        ///   If the time between mouse down and mouse up is less than this value, spin is activated.
+        /// </remarks>
         public int SpinReleaseTime
         {
-            get { return (int)GetValue(SpinReleaseTimeProperty); }
-            set { SetValue(SpinReleaseTimeProperty, value); }
+            get
+            {
+                return (int)this.GetValue(SpinReleaseTimeProperty);
+            }
+
+            set
+            {
+                this.SetValue(SpinReleaseTimeProperty, value);
+            }
         }
 
 
+        /// <summary>
+        ///   Gets or sets a value indicating whether InfiniteSpin.
+        /// </summary>
         public bool InfiniteSpin
         {
-            get { return (bool)GetValue(InfiniteSpinProperty); }
-            set { SetValue(InfiniteSpinProperty, value); }
-        }
+            get
+            {
+                return (bool)this.GetValue(InfiniteSpinProperty);
+            }
 
-
-        public bool IsPanEnabled
-        {
-            get { return (bool)GetValue(IsPanEnabledProperty); }
-            set { SetValue(IsPanEnabledProperty, value); }
-        }
-
-        public bool IsZoomEnabled
-        {
-            get { return (bool)GetValue(IsZoomEnabledProperty); }
-            set { SetValue(IsZoomEnabledProperty, value); }
+            set
+            {
+                this.SetValue(InfiniteSpinProperty, value);
+            }
         }
 
         /// <summary>
-        /// Show a 3D model at the target position when manipulating the camera
+        ///   Gets or sets a value indicating whether IsPanEnabled.
+        /// </summary>
+        public bool IsPanEnabled
+        {
+            get
+            {
+                return (bool)this.GetValue(IsPanEnabledProperty);
+            }
+
+            set
+            {
+                this.SetValue(IsPanEnabledProperty, value);
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets a value indicating whether IsZoomEnabled.
+        /// </summary>
+        public bool IsZoomEnabled
+        {
+            get
+            {
+                return (bool)this.GetValue(IsZoomEnabledProperty);
+            }
+
+            set
+            {
+                this.SetValue(IsZoomEnabledProperty, value);
+            }
+        }
+
+        /// <summary>
+        ///   The is spinning flag.
+        /// </summary>
+        private bool isSpinning;
+
+        /// <summary>
+        ///   The last tick.
+        /// </summary>
+        private long lastTick;
+
+        /// <summary>
+        ///   The pan speed.
+        /// </summary>
+        private Vector3D panSpeed;
+
+        /// <summary>
+        ///   The rotation speed.
+        /// </summary>
+        private Vector rotationSpeed;
+
+        /// <summary>
+        ///   The spinning speed.
+        /// </summary>
+        private Vector spinningSpeed;
+
+        /// <summary>
+        ///   The target adorner.
+        /// </summary>
+        private Adorner targetAdorner;
+
+        /// <summary>
+        ///   The zoom speed.
+        /// </summary>
+        private double zoomSpeed;
+
+        private readonly Stopwatch _spinWatch = new Stopwatch();
+        private readonly Stopwatch _watch = new Stopwatch();
+        private bool _isFixed;
+        private Point3D? _lastPoint3D;
+        private Point _lastPosition;
+        private Point3D? _mouseDownPoint3D;
+        private Point _mouseDownPosition;
+
+        private bool _panning;
+
+        private bool _rotating;
+        private bool _zooming;
+
+        /// <summary>
+        ///   Show a target adorner when manipulating the camera.
         /// </summary>
         public bool ShowCameraTarget
         {
-            get { return (bool)GetValue(ShowCameraTargetProperty); }
-            set { SetValue(ShowCameraTargetProperty, value); }
-        }
+            get
+            {
+                return (bool)this.GetValue(ShowCameraTargetProperty);
+            }
 
-        /// <summary>
-        /// Children to show at the camera target position
-        /// </summary>
-        public ModelVisual3D TargetModel
-        {
-            get { return (ModelVisual3D)GetValue(TargetModelProperty); }
-            set { SetValue(TargetModelProperty, value); }
+            set
+            {
+                this.SetValue(ShowCameraTargetProperty, value);
+            }
         }
 
         /// <summary>
@@ -209,29 +311,37 @@ namespace HelixEngine
                 this.SelectionChanged(visual);
         }
 
-        #region Camera properties
-
-        public static readonly DependencyProperty CameraModeProperty =
-            DependencyProperty.Register("CameraMode", typeof(CameraMode), typeof(CameraController),
-                                        new UIPropertyMetadata(CameraMode.Inspect));
-
-        public static readonly DependencyProperty CameraRotationModeProperty =
-            DependencyProperty.Register("CameraRotationMode", typeof(CameraRotationMode), typeof(CameraController),
-                                        new UIPropertyMetadata(CameraRotationMode.TwoAxis));
-
+        /// <summary>
+        ///   Gets or sets CameraRotationMode.
+        /// </summary>
         public CameraRotationMode CameraRotationMode
         {
-            get { return (CameraRotationMode)GetValue(CameraRotationModeProperty); }
-            set { SetValue(CameraRotationModeProperty, value); }
+            get
+            {
+                return (CameraRotationMode)this.GetValue(CameraRotationModeProperty);
+            }
+
+            set
+            {
+                this.SetValue(CameraRotationModeProperty, value);
+            }
         }
 
+        /// <summary>
+        ///   Gets or sets CameraMode.
+        /// </summary>
         public CameraMode CameraMode
         {
-            get { return (CameraMode)GetValue(CameraModeProperty); }
-            set { SetValue(CameraModeProperty, value); }
-        }
+            get
+            {
+                return (CameraMode)this.GetValue(CameraModeProperty);
+            }
 
-        #endregion
+            set
+            {
+                this.SetValue(CameraModeProperty, value);
+            }
+        }
 
         #region General properties
 
@@ -256,16 +366,36 @@ namespace HelixEngine
             set { SetValue(EventSurfaceProperty, value); }
         }
 
+        /// <summary>
+        ///   Gets or sets Viewport.
+        /// </summary>
         public Viewport3D Viewport
         {
-            get { return (Viewport3D)GetValue(ViewportProperty); }
-            set { SetValue(ViewportProperty, value); }
+            get
+            {
+                return (Viewport3D)this.GetValue(ViewportProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewportProperty, value);
+            }
         }
 
+        /// <summary>
+        ///   Gets or sets a value indicating whether Enabled.
+        /// </summary>
         public bool Enabled
         {
-            get { return (bool)GetValue(EnabledProperty); }
-            set { SetValue(EnabledProperty, value); }
+            get
+            {
+                return (bool)this.GetValue(EnabledProperty);
+            }
+
+            set
+            {
+                this.SetValue(EnabledProperty, value);
+            }
         }
 
         private static void ViewportChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -278,29 +408,6 @@ namespace HelixEngine
             if (Camera == null && Viewport != null)
                 Camera = Viewport.Camera as PerspectiveCamera;
         }
-
-        #endregion
-
-        #region Private fields
-
-        private readonly Stopwatch _spinWatch = new Stopwatch();
-        private readonly Stopwatch _watch = new Stopwatch();
-        private bool _isFixed;
-        private bool _isSpinning;
-        private Point3D? _lastPoint3D;
-        private Point _lastPosition;
-        private long _lastTick;
-        private Point3D? _mouseDownPoint3D;
-        private Point _mouseDownPosition;
-
-        private bool _panning;
-
-        private Vector3D _panSpeed;
-        private bool _rotating;
-        private Vector _rotationSpeed;
-        private Vector _spinningSpeed;
-        private bool _zooming;
-        private double _zoomSpeed;
 
         #endregion
 
@@ -328,8 +435,8 @@ namespace HelixEngine
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
             // Time in seconds
-            double time = 1.0 * (_watch.ElapsedTicks - _lastTick) / Stopwatch.Frequency;
-            _lastTick = _watch.ElapsedTicks;
+            double time = 1.0 * (_watch.ElapsedTicks - lastTick) / Stopwatch.Frequency;
+            lastTick = _watch.ElapsedTicks;
             OnTimeStep(time);
         }
 
@@ -341,31 +448,31 @@ namespace HelixEngine
             double factor = Math.Pow(InertiaFactor, time / 0.012);
             // factor = InertiaFactor;
 
-            if (_isSpinning && _spinningSpeed.LengthSquared > 0)
+            if (isSpinning && spinningSpeed.LengthSquared > 0)
             {
-                Rotate(_spinningSpeed.X * time, _spinningSpeed.Y * time);
+                Rotate(spinningSpeed.X * time, spinningSpeed.Y * time);
 
                 if (!InfiniteSpin)
-                    _spinningSpeed *= factor;
+                    spinningSpeed *= factor;
                 _spinWatch.Reset();
                 _spinWatch.Start();
             }
 
-            if (_rotationSpeed.LengthSquared > 0.1)
+            if (rotationSpeed.LengthSquared > 0.1)
             {
-                Rotate(_rotationSpeed.X * time, _rotationSpeed.Y * time);
-                _rotationSpeed *= factor;
+                Rotate(rotationSpeed.X * time, rotationSpeed.Y * time);
+                rotationSpeed *= factor;
             }
 
-            if (Math.Abs(_panSpeed.LengthSquared) > 0.0001)
+            if (Math.Abs(panSpeed.LengthSquared) > 0.0001)
             {
-                Pan(_panSpeed * time);
-                _panSpeed *= factor;
+                Pan(panSpeed * time);
+                panSpeed *= factor;
             }
-            if (Math.Abs(_zoomSpeed) > 0.1)
+            if (Math.Abs(zoomSpeed) > 0.1)
             {
-                Zoom(_zoomSpeed * time);
-                _zoomSpeed *= factor;
+                Zoom(zoomSpeed * time);
+                zoomSpeed *= factor;
             }
         }
 
@@ -454,12 +561,6 @@ namespace HelixEngine
                     ShowTargetAdorner(new Point(Viewport.ActualWidth / 2, Viewport.ActualHeight / 2));
                 }
 
-                /*
-                Camera.Position += _fixRelative;
-                ShowTargetModel();
-                Camera.Position -= _fixRelative;
-                */
-
                 if (_zooming || _panning || _rotating)
                 {
                     e.Handled = true;
@@ -473,7 +574,7 @@ namespace HelixEngine
                 _lastPosition = _mouseDownPosition;
             }
 
-            _isSpinning = false;
+            isSpinning = false;
         }
 
         private bool CheckButton(MouseButtonEventArgs e, MouseAction a)
@@ -570,8 +671,6 @@ namespace HelixEngine
                 if (_panning)
                     Pan(delta3D);
 
-                UpdateTargetModel();
-
                 _lastPoint3D = UnProject(point, CameraTarget(), Camera.LookDirection);
 
 
@@ -606,11 +705,11 @@ namespace HelixEngine
             {
                 if (_rotating)
                 {
-                    _spinningSpeed = 4 * (_lastPosition - _mouseDownPosition)
+                    spinningSpeed = 4 * (_lastPosition - _mouseDownPosition)
                                      * ((double)SpinReleaseTime / _spinWatch.ElapsedMilliseconds);
                     _spinWatch.Reset();
                     _spinWatch.Start();
-                    _isSpinning = true;
+                    isSpinning = true;
                 }
             }
             _rotating = false;
@@ -620,7 +719,6 @@ namespace HelixEngine
             if (element.IsMouseCaptured)
             {
                 e.Handled = true;
-                HideTargetModel();
                 HideTargetAdorner();
                 element.ReleaseMouseCapture();
             }
@@ -750,7 +848,6 @@ namespace HelixEngine
             Vector3D newLookDir = camZ * dist;
             Vector3D newUpDir = camY;
 
-
             Vector3D right = Vector3D.CrossProduct(newLookDir, newUpDir);
             right.Normalize();
             Vector3D modUpDir = Vector3D.CrossProduct(right, newLookDir);
@@ -818,18 +915,18 @@ namespace HelixEngine
 
         public void AddPanForce(Vector3D pan)
         {
-            _panSpeed += pan * 40;
+            panSpeed += pan * 40;
         }
 
         public void AddRotateForce(double dx, double dy)
         {
-            _rotationSpeed.X += dx * 40;
-            _rotationSpeed.Y += dy * 40;
+            rotationSpeed.X += dx * 40;
+            rotationSpeed.Y += dy * 40;
         }
 
         public void AddZoomForce(double dx)
         {
-            _zoomSpeed += dx * 8;
+            zoomSpeed += dx * 8;
         }
 
         #endregion
@@ -940,55 +1037,63 @@ namespace HelixEngine
 
         #endregion
 
-        #region Show/hide LookAt 3D model
-
-        private void UpdateTargetModel()
-        {
-            PerspectiveCamera camera = Camera;
-            Point3D target = camera.Position + camera.LookDirection;
-            if (TargetModel != null)
-                TargetModel.Transform = new TranslateTransform3D(target.X, target.Y, target.Z);
-        }
-
-        public void ShowTargetModel()
-        {
-            if (TargetModel != null && ShowCameraTarget)
-            {
-                if (!Viewport.Children.Contains(TargetModel))
-                    Viewport.Children.Insert(0, TargetModel);
-                UpdateTargetModel();
-            }
-        }
-
-        public void HideTargetModel()
-        {
-            if (TargetModel != null)
-            {
-                if (Viewport.Children.Contains(TargetModel))
-                    Viewport.Children.Remove(TargetModel);
-            }
-        }
-
-        #endregion
-
-        #region Show/hide target adorner
-
-        private Adorner _targetAdorner;
-
+        /// <summary>
+        ///   Shows the target adorner.
+        /// </summary>
+        /// <param name="position"> The position. </param>
         public void ShowTargetAdorner(Point position)
         {
-            AdornerLayer myAdornerLayer = AdornerLayer.GetAdornerLayer(Viewport);
-            _targetAdorner = new TargetSymbolAdorner(Viewport, position);
-            myAdornerLayer.Add(_targetAdorner);
+            if (!this.ShowCameraTarget)
+            {
+                return;
+            }
+
+            if (this.targetAdorner != null)
+            {
+                return;
+            }
+
+            AdornerLayer myAdornerLayer = AdornerLayer.GetAdornerLayer(this.Viewport);
+            this.targetAdorner = new TargetSymbolAdorner(this.Viewport, position);
+            myAdornerLayer.Add(this.targetAdorner);
         }
 
+        /// <summary>
+        ///   Hides the target adorner.
+        /// </summary>
         public void HideTargetAdorner()
         {
-            AdornerLayer myAdornerLayer = AdornerLayer.GetAdornerLayer(Viewport);
-            if (_targetAdorner != null)
-                myAdornerLayer.Remove(_targetAdorner);
+            AdornerLayer myAdornerLayer = AdornerLayer.GetAdornerLayer(this.Viewport);
+            if (this.targetAdorner != null)
+            {
+                myAdornerLayer.Remove(this.targetAdorner);
+            }
+
+            this.targetAdorner = null;
+
+            // the adorner sometimes leaves some 'dust', so refresh the viewport
+            this.RefreshViewport();
         }
 
-        #endregion
+        /// <summary>
+        ///   The refresh viewport.
+        /// </summary>
+        private void RefreshViewport()
+        {
+            // todo: this is a hack, should be improved
+
+            // var mg = new ModelVisual3D { Content = new AmbientLight(Colors.White) };
+            // Viewport.Children.Add(mg);
+            // Viewport.Children.Remove(mg);
+            Camera c = this.Viewport.Camera;
+            this.Viewport.Camera = null;
+            this.Viewport.Camera = c;
+
+            // var w = Viewport.Width;
+            // Viewport.Width = w-1;
+            // Viewport.Width = w;
+
+            // Viewport.InvalidateVisual();
+        }
     }
 }

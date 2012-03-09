@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\CameraController.cs" />
+    <Compile Include="Controller\CameraMode.cs" />
+    <Compile Include="Controller\CameraRotationMode.cs" />
     <Compile Include="Controller\HelixView3D.cs" />
     <Compile Include="Controller\ManipulatorControl.cs" />
     <Compile Include="Controller\Viewport3DController.cs" />

@@ -12,7 +12,7 @@ namespace HelixEngine
         }
 
         public static readonly DependencyProperty CameraRotationModeProperty =
-            DependencyProperty.Register("CameraRotationMode", typeof(CameraRotationMode), typeof(Viewport3DController), new UIPropertyMetadata(CameraRotationMode.TwoAxis));
+            DependencyProperty.Register("CameraRotationMode", typeof(CameraRotationMode), typeof(Viewport3DController), new UIPropertyMetadata(CameraRotationMode.Turntable));
 
         /// <summary>
         /// Select the mode 

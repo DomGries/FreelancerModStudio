@@ -3,29 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:HelixEngine">
 
-    <Style TargetType="{x:Type local:Viewport3DController}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:Viewport3DController}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <Grid>
-                            <AdornerDecorator>
-                                <ContentPresenter/>
-                            </AdornerDecorator>
-
-                            <local:CameraController x:Name="PART_CameraControl" 
-                                CameraRotationMode="{TemplateBinding CameraRotationMode}"
-                                CameraMode="{TemplateBinding CameraMode}"
-                                InfiniteSpin="{TemplateBinding InfiniteSpin}"/>
-                        </Grid>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style TargetType="{x:Type local:HelixView3D}">
         <Setter Property="Template">
             <Setter.Value>

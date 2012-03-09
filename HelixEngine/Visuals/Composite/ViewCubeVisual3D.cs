@@ -74,7 +74,7 @@ namespace HelixEngine
             addFace(new Vector3D(0, 0, -1), new Vector3D(0, -1, 0), Brushes.Blue, "D");
             var circle = new PieSliceVisual3D()
                             {
-                                Center = new Point3D(0, 0, -Size / 2),
+                                Center = new Point3D(0, 0, -Size * 0.5),
                                 InnerRadius = Size,
                                 OuterRadius = Size * 1.3,
                                 StartAngle = 0,
@@ -112,47 +112,12 @@ namespace HelixEngine
             var model = new GeometryModel3D() { Geometry = geometry, Material = material };
             var element = new ModelUIElement3D() { Model = model };
             element.MouseLeftButtonDown += face_MouseLeftButtonDown;
-            //element.MouseEnter += face_MouseEnter;
-            //element.MouseLeave += face_MouseLeave;
 
             _normal.Add(element, normal);
             _up.Add(element, up);
 
             Children.Add(element);
         }
-
-        /*private void face_MouseLeave(object sender, MouseEventArgs e)
-        {
-                        var el = (ModelUIElement3D) sender;
-                        var model = el.Model as GeometryModel3D;
-                        var mg = model.Material as MaterialGroup;
-                        var dm = mg.Children[0] as DiffuseMaterial;
-                        AnimateOpacity(dm.Brush, 0.8, 200);
-        }
-
-        private void face_MouseEnter(object sender, MouseEventArgs e)
-        {
-            var el = (ModelUIElement3D) sender;
-                var model = el.Model as GeometryModel3D;
-                var mg=model.Material as MaterialGroup;
-                var dm=mg.Children[0] as DiffuseMaterial;
-                AnimateOpacity(dm.Brush, 1.0, 200);
-        }*/
-
-
-        private void AnimateOpacity(Animatable obj, double toOpacity, double animationTime)
-        {
-            var a = new DoubleAnimation(toOpacity,
-                                        new Duration(TimeSpan.FromMilliseconds(animationTime))) { AccelerationRatio = 0.3, DecelerationRatio = 0.5 };
-            a.Completed += new EventHandler(a_Completed);
-            obj.BeginAnimation(UIElement.OpacityProperty, a);
-        }
-
-        void a_Completed(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void face_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

@@ -284,19 +284,14 @@ namespace HelixEngine
             CameraHelper.AnimateTo(Camera, newPosition, newDirection, newUpDirection, animationTime);
         }
 
-        public void Save(string fileName)
+        public void SaveBitmap(string fileName)
         {
-            Viewport3DHelper.Save(Viewport, fileName);
+            Viewport3DHelper.SaveBitmap(Viewport, fileName, Brushes.White);
         }
 
         public void Copy()
         {
             Viewport3DHelper.Copy(Viewport, Viewport.ActualWidth * 2, Viewport.ActualHeight * 2, Brushes.White);
-        }
-
-        public void CopyXaml()
-        {
-            Clipboard.SetText(Viewport3DHelper.GetXaml(Viewport));
         }
 
         public void ZoomToFit()

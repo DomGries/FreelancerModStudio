@@ -30,12 +30,11 @@ namespace HelixEngine
     {
         #region Constants and Fields
 
-        public static readonly RoutedEvent CameraChangedEvent =
-            EventManager.RegisterRoutedEvent("CameraChanged",
-                                             RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(HelixViewport3D));
-
-        public static readonly DependencyProperty ShowViewCubeProperty =
-            DependencyProperty.Register("ShowViewCube", typeof(bool), typeof(HelixViewport3D), new UIPropertyMetadata(false));
+        /// <summary>
+        ///   The camera changed event.
+        /// </summary>
+        public static readonly RoutedEvent CameraChangedEvent = EventManager.RegisterRoutedEvent(
+            "CameraChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(HelixViewport3D));
 
         /// <summary>
         ///   The camera mode property.
@@ -54,6 +53,12 @@ namespace HelixEngine
                 new UIPropertyMetadata(CameraRotationMode.Turntable));
 
         /// <summary>
+        /// <summary>
+        ///   The show view cube property.
+        /// </summary>
+        public static readonly DependencyProperty ShowViewCubeProperty = DependencyProperty.Register(
+            "ShowViewCube", typeof(bool), typeof(HelixViewport3D), new UIPropertyMetadata(true));
+
         ///   The title property.
         /// </summary>
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -128,8 +133,12 @@ namespace HelixEngine
         public HelixViewport3D()
         {
             // The Viewport3D must be created here since the Children collection is attached directly
-            this.viewport = new Viewport3D { IsHitTestVisible = false };
-            Camera = CameraHelper.CreateDefaultCamera();
+            this.viewport = new Viewport3D
+                                {
+                                    IsHitTestVisible = false,
+                                    Camera = CameraHelper.CreateDefaultCamera()
+                                };
+            this.Viewport.Camera.Changed += this.CameraPropertyChanged;
         }
 
         #endregion

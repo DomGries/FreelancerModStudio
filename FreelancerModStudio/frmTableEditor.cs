@@ -763,11 +763,6 @@ namespace FreelancerModStudio
             return true;
         }
 
-        public bool CanAddMultiple()
-        {
-            return true;
-        }
-
         public void Save()
         {
             if (File == string.Empty)

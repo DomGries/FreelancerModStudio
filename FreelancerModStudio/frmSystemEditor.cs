@@ -44,15 +44,14 @@ namespace FreelancerModStudio
             st.Start();
 #endif
             //create viewport using the Helix Engine
-            HelixView3D view = new HelixView3D
-                                   {
-                                       Background = System.Windows.Media.Brushes.Black,
-                                       Foreground = System.Windows.Media.Brushes.White,
-                                       FontSize = 16,
-                                       FontWeight = System.Windows.FontWeights.Bold,
-                                       ClipToBounds = false,
-                                       ShowViewCube = true
-                                   };
+            var view = new HelixView3D
+            {
+                Background = System.Windows.Media.Brushes.Black,
+                Foreground = System.Windows.Media.Brushes.White,
+                FontSize = 16,
+                FontWeight = System.Windows.FontWeights.Bold,
+                ClipToBounds = false
+            };
             view.Camera.NearPlaneDistance = 0.001;
 #if DEBUG
             st.Stop();
@@ -220,11 +219,6 @@ namespace FreelancerModStudio
         }
 
         public bool CanAdd()
-        {
-            return false;
-        }
-
-        public bool CanAddMultiple()
         {
             return false;
         }

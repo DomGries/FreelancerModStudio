@@ -138,34 +138,25 @@ namespace FreelancerModStudio
             }
         }
 
-        public bool CanAddMultiple()
-        {
-            return false;
-        }
-
         public void SelectAll()
         {
-            throw new NotImplementedException();
         }
 
         public ToolStripDropDown MultipleAddDropDown()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public void Copy()
         {
-            throw new NotImplementedException();
         }
 
         public void Paste()
         {
-            throw new NotImplementedException();
         }
 
         public void Cut()
         {
-            throw new NotImplementedException();
         }
 
         public bool UseDocument()

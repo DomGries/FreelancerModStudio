@@ -7,14 +7,9 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public class LightSource : ContentBase
     {
-        protected override GeometryModel3D GetGeometry()
+        protected override ModelVisual3D GetShapeModel()
         {
-            return SharedGeometries.LightSource;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Octahedron;
+            return new ModelVisual3D { Content = SharedGeometries.LightSource };
         }
 
         public override bool IsEmissive()
@@ -27,60 +22,34 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public ContentType Type { get; set; }
 
-        protected override GeometryModel3D GetGeometry()
+        protected override ModelVisual3D GetShapeModel()
         {
             switch (Type)
             {
                 case ContentType.Construct:
-                    return SharedGeometries.Construct;
+                    return new ModelVisual3D { Content = SharedGeometries.Construct };
                 case ContentType.Depot:
-                    return SharedGeometries.Depot;
+                    return new ModelVisual3D { Content = SharedGeometries.Depot };
                 case ContentType.DockingRing:
-                    return SharedGeometries.DockingRing;
+                    return new ModelVisual3D { Content = SharedGeometries.DockingRing };
                 case ContentType.JumpGate:
-                    return SharedGeometries.JumpGate;
+                    return new ModelVisual3D { Content = SharedGeometries.JumpGate };
                 case ContentType.JumpHole:
-                    return SharedGeometries.JumpHole;
+                    return new ModelVisual3D { Content = SharedGeometries.JumpHole };
                 case ContentType.Planet:
-                    return SharedGeometries.Planet;
+                    return new ModelVisual3D { Content = SharedGeometries.Planet };
                 case ContentType.Satellite:
-                    return SharedGeometries.Satellite;
+                    return new ModelVisual3D { Content = SharedGeometries.Satellite };
                 case ContentType.Ship:
-                    return SharedGeometries.Ship;
+                    return new ModelVisual3D { Content = SharedGeometries.Ship };
                 case ContentType.Station:
-                    return SharedGeometries.Station;
+                    return new ModelVisual3D { Content = SharedGeometries.Station };
                 case ContentType.Sun:
-                    return SharedGeometries.Sun;
+                    return new ModelVisual3D { Content = SharedGeometries.Sun };
                 case ContentType.TradeLane:
-                    return SharedGeometries.TradeLane;
+                    return new ModelVisual3D { Content = SharedGeometries.TradeLane };
                 case ContentType.WeaponsPlatform:
-                    return SharedGeometries.WeaponsPlatform;
-            }
-
-            return null;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            switch (Type)
-            {
-                case ContentType.Planet:
-                case ContentType.Sun:
-                    return SharedMeshes.Sphere;
-                case ContentType.Construct:
-                case ContentType.Depot:
-                case ContentType.Satellite:
-                case ContentType.Station:
-                case ContentType.WeaponsPlatform:
-                    return SharedMeshes.Box;
-                case ContentType.TradeLane:
-                    return SharedMeshes.BoxTradeLane;
-                case ContentType.DockingRing:
-                case ContentType.JumpHole:
-                    return SharedMeshes.CylinderRing;
-                case ContentType.JumpGate:
-                case ContentType.Ship:
-                    return SharedMeshes.Pyramid;
+                    return new ModelVisual3D { Content = SharedGeometries.WeaponsPlatform };
             }
 
             return null;
@@ -97,54 +66,39 @@ namespace FreelancerModStudio.SystemPresenter
         public ZoneShape Shape { get; set; }
         public ZoneType Type { get; set; }
 
-        protected override GeometryModel3D GetGeometry()
+        protected override ModelVisual3D GetShapeModel()
         {
             //special zones
             switch (Type)
             {
                 case ZoneType.PathPatrol:
-                    return SharedGeometries.ZonePathPatrol;
+                    return new ModelVisual3D { Content = SharedGeometries.ZonePathPatrol };
                 case ZoneType.PathTrade:
-                    return SharedGeometries.ZonePathTrade;
+                    return new ModelVisual3D { Content = SharedGeometries.ZonePathTrade };
                 case ZoneType.Vignette:
-                    return SharedGeometries.ZoneVignette;
+                    return new ModelVisual3D { Content = SharedGeometries.ZoneVignette };
                 case ZoneType.Exclusion:
                     switch (Shape)
                     {
                         case ZoneShape.Box:
-                            return SharedGeometries.ZoneExclusionBox;
+                            return new ModelVisual3D { Content = SharedGeometries.ZoneBoxExclusion };
                         case ZoneShape.Cylinder:
-                            return SharedGeometries.ZoneExclusionCylinder;
                         case ZoneShape.Ring:
-                            return SharedGeometries.ZoneExclusionRing;
+                            return new ModelVisual3D { Content = SharedGeometries.ZoneCylinderOrRingExclusion };
                         default:
-                            return SharedGeometries.ZoneExclusionSphere;
+                            return new ModelVisual3D { Content = SharedGeometries.ZoneSphereExclusion };
                     }
                 default:
                     switch (Shape)
                     {
                         case ZoneShape.Box:
-                            return SharedGeometries.ZoneBox;
+                            return new ModelVisual3D { Content = SharedGeometries.ZoneBox };
                         case ZoneShape.Cylinder:
-                            return SharedGeometries.ZoneCylinder;
                         case ZoneShape.Ring:
-                            return SharedGeometries.ZoneRing;
+                            return new ModelVisual3D { Content = SharedGeometries.ZoneCylinderOrRing };
                         default:
-                            return SharedGeometries.ZoneSphere;
+                            return new ModelVisual3D { Content = SharedGeometries.ZoneSphere };
                     }
-            }
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            switch (Shape)
-            {
-                case ZoneShape.Box:
-                    return SharedMeshes.Box;
-                case ZoneShape.Cylinder:
-                    return SharedMeshes.Cylinder;
-                default:
-                    return SharedMeshes.Sphere;
             }
         }
 
@@ -164,14 +118,9 @@ namespace FreelancerModStudio.SystemPresenter
             Connections = new List<Connection>();
         }
 
-        protected override GeometryModel3D GetGeometry()
+        protected override ModelVisual3D GetShapeModel()
         {
-            return SharedGeometries.System;
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Sphere;
+            return new ModelVisual3D { Content = SharedGeometries.System };
         }
 
         public override bool IsEmissive()
@@ -187,7 +136,7 @@ namespace FreelancerModStudio.SystemPresenter
         public ConnectionType FromType { get; set; }
         public ConnectionType ToType { get; set; }
 
-        protected override GeometryModel3D GetGeometry()
+        protected override ModelVisual3D GetShapeModel()
         {
             Material material;
 
@@ -197,33 +146,25 @@ namespace FreelancerModStudio.SystemPresenter
             else
             {
                 //gradient brush
-                Color startColor = GetColor(FromType);
-                Color endColor = GetColor(ToType);
-
-                material = MaterialHelper.CreateEmissiveMaterial(new LinearGradientBrush(startColor, endColor, 90));
+                material = MaterialHelper.CreateEmissiveMaterial(new LinearGradientBrush(GetColor(FromType), GetColor(ToType), 90));
             }
 
-            return SharedGeometries.GetGeometry(GetMesh(), material);
+            return new ModelVisual3D { Content = SharedGeometries.GetGeometry(SharedMeshes.Surface, material) };
         }
 
         Color GetColor(ConnectionType type)
         {
             switch (type)
             {
-                case ConnectionType.Jumpgate:
+                case ConnectionType.JumpGate:
                     return SharedMaterials.ConnectionJumpgate;
-                case ConnectionType.Jumphole:
+                case ConnectionType.JumpHole:
                     return SharedMaterials.ConnectionJumphole;
                 case ConnectionType.Both:
                     return SharedMaterials.ConnectionBoth;
                 default:
                     return SharedMaterials.ConnectionNone;
             }
-        }
-
-        public override MeshGeometry3D GetMesh()
-        {
-            return SharedMeshes.Surface;
         }
 
         public override bool IsEmissive()
@@ -253,8 +194,8 @@ namespace FreelancerModStudio.SystemPresenter
     public enum ConnectionType
     {
         Both,
-        Jumpgate,
-        Jumphole,
+        JumpGate,
+        JumpHole,
         None
     }
 }

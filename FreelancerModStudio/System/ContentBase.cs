@@ -55,13 +55,12 @@ namespace FreelancerModStudio.SystemPresenter
             return matrix;
         }
 
-        protected abstract GeometryModel3D GetGeometry();
-        public abstract MeshGeometry3D GetMesh();
+        protected abstract ModelVisual3D GetShapeModel();
         public abstract bool IsEmissive();
 
         public void LoadModel()
         {
-            Model = new ModelVisual3D { Content = GetGeometry() };
+            Model = GetShapeModel();
             SetDisplay(Matrix);
         }
 

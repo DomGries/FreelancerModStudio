@@ -252,13 +252,13 @@ namespace FreelancerModStudio.SystemPresenter
 
         ModelVisual3D GetSelectionBox(ContentBase content)
         {
-            WireLines lines = GetWireBox(content.GetMesh().Bounds);
+            WireLines lines = GetWireBox(new Vector3D(1.0d, 1.0d, 1.0d));
             lines.Transform = content.Model.Transform;
 
             return lines;
         }
 
-        WireLines GetWireBox(Rect3D bounds)
+        WireLines GetWireBox(Vector3D bounds)
         {
             var points = new Point3DCollection
                                            {
@@ -423,9 +423,9 @@ namespace FreelancerModStudio.SystemPresenter
         ConnectionType GetConnectionType(bool jumpgate, bool jumphole)
         {
             if (jumpgate && !jumphole)
-                return ConnectionType.Jumpgate;
+                return ConnectionType.JumpGate;
             if (!jumpgate && jumphole)
-                return ConnectionType.Jumphole;
+                return ConnectionType.JumpHole;
             if (jumpgate && jumphole)
                 return ConnectionType.Both;
 

@@ -112,7 +112,6 @@ namespace HelixEngine
         private readonly Stopwatch _watch = new Stopwatch();
         private Point3D? lastPoint3D = new Point3D();
         private Point _lastPosition;
-        //private Point3D? _mouseDownPoint3D;
         private Point _mouseDownPosition;
 
         private bool isPanning;
@@ -453,44 +452,49 @@ namespace HelixEngine
             if (Viewport == null)
                 throw new NullReferenceException("Viewport");
 
-            _mouseDownPosition = e.GetPosition(this);
-
             var isDoubleClick = e.ClickCount == 2;
-            var isControlKey = Keyboard.IsKeyDown(Key.LeftCtrl);
-            var isShiftKey = Keyboard.IsKeyDown(Key.LeftShift);
+            var isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
+            var isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
 
             // reset camera
-            if (e.ChangedButton == MouseButton.Middle && isDoubleClick)
-                ResetCamera();
-
-            // select visual
-            if (e.ChangedButton == MouseButton.Left)
+            if (isDoubleClick &&
+                (e.ChangedButton == MouseButton.Middle ||
+                (e.ChangedButton == MouseButton.Right && isShiftDown)))
             {
-                //Point3D point;
-                //Vector3D normal;
-                //DependencyObject visual;
-                var visual = Viewport3DHelper.FindVisual(Viewport, _mouseDownPosition, isShiftKey);
-                //    _mouseDownPoint3D = point;
-                //else
-                //    _mouseDownPoint3D = null;
-
-                // select object
-                if (visual != null)
-                    OnSelectionChanged(visual);
-
-                // change the 'lookat' point
-                //if (_mouseDownPoint3D != null && CheckButton(e, MouseAction.ChangeLookAt))
-                //    LookAt(_mouseDownPoint3D.Value, 0);
+                ResetCamera();
+                e.Handled = true;
+                return;
             }
 
-            // zoom, pan, rotate
-            isZooming = e.ChangedButton == MouseButton.Right && isControlKey;
-            isRotating = e.ChangedButton == MouseButton.Right && !isControlKey;
-            isPanning = e.ChangedButton == MouseButton.Middle && !isDoubleClick;
+            isZooming = e.ChangedButton == MouseButton.Right && isAltDown;
+            isPanning = !isZooming &&
+                        (e.ChangedButton == MouseButton.Middle ||
+                         (e.ChangedButton == MouseButton.Right && isShiftDown));
+            isRotating = !isZooming && !isPanning && e.ChangedButton == MouseButton.Right;
+            var isLookAt = e.ChangedButton == MouseButton.Right && isDoubleClick;
 
-            if (isZooming || isPanning || isRotating)
+            if (e.ChangedButton == MouseButton.Left || isLookAt)
             {
-                // show the adorner in the middle
+                // select or look at visual
+                Point3D point;
+                Vector3D normal;
+                DependencyObject visual;
+                if (Viewport3DHelper.Find(Viewport, e.GetPosition(this), isShiftDown, out point, out normal, out visual))
+                {
+                    if (isLookAt)
+                        // change the 'lookat' point
+                        CameraHelper.LookAt(Camera, point, 0);
+                    else
+                        // select object
+                        OnSelectionChanged(visual);
+                }
+                e.Handled = true;
+            }
+            else if (isZooming || isPanning || isRotating)
+            {
+                _mouseDownPosition = e.GetPosition(this);
+
+                // zoom, pan, rotate
                 ShowTargetAdorner(new Point(Viewport.ActualWidth * 0.5, Viewport.ActualHeight * 0.5));
 
                 e.Handled = true;
@@ -626,16 +630,16 @@ namespace HelixEngine
             Point3D target = c.Position + c.LookDirection;
 
             // toggle rotation mode if the user presses alt
-            bool alt = (Keyboard.IsKeyDown(Key.LeftAlt));
+            //bool alt = (Keyboard.IsKeyDown(Key.LeftAlt));
 
-            if ((CameraRotationMode == CameraRotationMode.VirtualTrackball) != alt)
-            {
-                RotateRoam(dx, dy);
-            }
-            else
-            {
-                RotateTwoAxes(dx, dy);
-            }
+            //if ((CameraRotationMode == CameraRotationMode.VirtualTrackball) != alt)
+            //{
+            //    RotateRoam(dx, dy);
+            //}
+            //else
+            //{
+            RotateTwoAxes(dx, dy);
+            //}
 
             if (Math.Abs(c.UpDirection.Length - 1) > 1e-8)
                 c.UpDirection.Normalize();

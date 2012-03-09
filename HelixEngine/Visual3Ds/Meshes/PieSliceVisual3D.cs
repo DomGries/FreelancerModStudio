@@ -1,118 +1,231 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media.Media3D;
 
 namespace HelixEngine
 {
     /// <summary>
-    /// A flat pie slice defined by center, normal, up vectors, inner and outer radius, start and end angles
+    /// A visual element that shows a flat pie slice defined by center, normal, up vectors, inner and outer radius, start and end angles.
     /// </summary>
     public class PieSliceVisual3D : MeshElement3D
     {
-        public static readonly DependencyProperty CenterProperty =
-            DependencyProperty.Register("Center", typeof(Point3D), typeof(PieSliceVisual3D),
-                                        new UIPropertyMetadata(new Point3D()));
+        #region Constants and Fields
 
-        public static readonly DependencyProperty DivisionsProperty =
-            DependencyProperty.Register("Divisions", typeof(int), typeof(PieSliceVisual3D), new UIPropertyMetadata(20));
+        /// <summary>
+        /// The center property.
+        /// </summary>
+        public static readonly DependencyProperty CenterProperty = DependencyProperty.Register(
+            "Center", typeof(Point3D), typeof(PieSliceVisual3D), new UIPropertyMetadata(new Point3D(), GeometryChanged));
 
-        public static readonly DependencyProperty EndAngleProperty =
-            DependencyProperty.Register("EndAngle", typeof(double), typeof(PieSliceVisual3D),
-                                        new UIPropertyMetadata(90.0));
+        /// <summary>
+        /// The end angle property.
+        /// </summary>
+        public static readonly DependencyProperty EndAngleProperty = DependencyProperty.Register(
+            "EndAngle", typeof(double), typeof(PieSliceVisual3D), new UIPropertyMetadata(90.0, GeometryChanged));
 
-        public static readonly DependencyProperty InnerRadiusProperty =
-            DependencyProperty.Register("InnerRadius", typeof(double), typeof(PieSliceVisual3D),
-                                        new UIPropertyMetadata(0.5));
+        /// <summary>
+        /// The inner radius property.
+        /// </summary>
+        public static readonly DependencyProperty InnerRadiusProperty = DependencyProperty.Register(
+            "InnerRadius", typeof(double), typeof(PieSliceVisual3D), new UIPropertyMetadata(0.5, GeometryChanged));
 
+        /// <summary>
+        /// The normal property.
+        /// </summary>
+        public static readonly DependencyProperty NormalProperty = DependencyProperty.Register(
+            "Normal", typeof(Vector3D), typeof(PieSliceVisual3D), new UIPropertyMetadata(new Vector3D(0, 0, 1), GeometryChanged));
 
-        public static readonly DependencyProperty NormalProperty =
-            DependencyProperty.Register("Normal", typeof(Vector3D), typeof(PieSliceVisual3D),
-                                        new UIPropertyMetadata(new Vector3D(0, 0, 1)));
+        /// <summary>
+        /// The outer radius property.
+        /// </summary>
+        public static readonly DependencyProperty OuterRadiusProperty = DependencyProperty.Register(
+            "OuterRadius", typeof(double), typeof(PieSliceVisual3D), new UIPropertyMetadata(1.0, GeometryChanged));
 
-        public static readonly DependencyProperty OuterRadiusProperty =
-            DependencyProperty.Register("OuterRadius", typeof(double), typeof(PieSliceVisual3D),
-                                        new UIPropertyMetadata(1.0));
+        /// <summary>
+        /// The start angle property.
+        /// </summary>
+        public static readonly DependencyProperty StartAngleProperty = DependencyProperty.Register(
+            "StartAngle", typeof(double), typeof(PieSliceVisual3D), new UIPropertyMetadata(0.0, GeometryChanged));
 
-        public static readonly DependencyProperty StartAngleProperty =
-            DependencyProperty.Register("StartAngle", typeof(double), typeof(PieSliceVisual3D),
-                                        new UIPropertyMetadata(0.0));
+        /// <summary>
+        /// The theta div property.
+        /// </summary>
+        public static readonly DependencyProperty ThetaDivProperty = DependencyProperty.Register(
+            "ThetaDiv", typeof(int), typeof(PieSliceVisual3D), new UIPropertyMetadata(20, GeometryChanged));
 
+        /// <summary>
+        /// The up vector property.
+        /// </summary>
+        public static readonly DependencyProperty UpVectorProperty = DependencyProperty.Register(
+            "UpVector", typeof(Vector3D), typeof(PieSliceVisual3D), new UIPropertyMetadata(new Vector3D(0, 1, 0), GeometryChanged));
 
-        public static readonly DependencyProperty UpVectorProperty =
-            DependencyProperty.Register("UpVector", typeof(Vector3D), typeof(PieSliceVisual3D),
-                                        new UIPropertyMetadata(new Vector3D(0, 1, 0)));
+        #endregion
 
+        #region Public Properties
+
+        /// <summary>
+        ///   Gets or sets the center.
+        /// </summary>
+        /// <value>The center.</value>
         public Point3D Center
         {
-            get { return (Point3D)GetValue(CenterProperty); }
-            set { SetValue(CenterProperty, value); }
+            get
+            {
+                return (Point3D)this.GetValue(CenterProperty);
+            }
+
+            set
+            {
+                this.SetValue(CenterProperty, value);
+            }
         }
 
-        public Vector3D Normal
-        {
-            get { return (Vector3D)GetValue(NormalProperty); }
-            set { SetValue(NormalProperty, value); }
-        }
-
-        public Vector3D UpVector
-        {
-            get { return (Vector3D)GetValue(UpVectorProperty); }
-            set { SetValue(UpVectorProperty, value); }
-        }
-
-
-        public double InnerRadius
-        {
-            get { return (double)GetValue(InnerRadiusProperty); }
-            set { SetValue(InnerRadiusProperty, value); }
-        }
-
-
-        public double OuterRadius
-        {
-            get { return (double)GetValue(OuterRadiusProperty); }
-            set { SetValue(OuterRadiusProperty, value); }
-        }
-
-
-        public double StartAngle
-        {
-            get { return (double)GetValue(StartAngleProperty); }
-            set { SetValue(StartAngleProperty, value); }
-        }
-
-
+        /// <summary>
+        ///   Gets or sets the end angle.
+        /// </summary>
+        /// <value>The end angle.</value>
         public double EndAngle
         {
-            get { return (double)GetValue(EndAngleProperty); }
-            set { SetValue(EndAngleProperty, value); }
+            get
+            {
+                return (double)this.GetValue(EndAngleProperty);
+            }
+
+            set
+            {
+                this.SetValue(EndAngleProperty, value);
+            }
         }
 
-
-        public int Divisions
+        /// <summary>
+        ///   Gets or sets the inner radius.
+        /// </summary>
+        /// <value>The inner radius.</value>
+        public double InnerRadius
         {
-            get { return (int)GetValue(DivisionsProperty); }
-            set { SetValue(DivisionsProperty, value); }
+            get
+            {
+                return (double)this.GetValue(InnerRadiusProperty);
+            }
+
+            set
+            {
+                this.SetValue(InnerRadiusProperty, value);
+            }
         }
 
+        /// <summary>
+        ///   Gets or sets the normal.
+        /// </summary>
+        /// <value>The normal.</value>
+        public Vector3D Normal
+        {
+            get
+            {
+                return (Vector3D)this.GetValue(NormalProperty);
+            }
 
+            set
+            {
+                this.SetValue(NormalProperty, value);
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the outer radius.
+        /// </summary>
+        /// <value>The outer radius.</value>
+        public double OuterRadius
+        {
+            get
+            {
+                return (double)this.GetValue(OuterRadiusProperty);
+            }
+
+            set
+            {
+                this.SetValue(OuterRadiusProperty, value);
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the start angle.
+        /// </summary>
+        /// <value>The start angle.</value>
+        public double StartAngle
+        {
+            get
+            {
+                return (double)this.GetValue(StartAngleProperty);
+            }
+
+            set
+            {
+                this.SetValue(StartAngleProperty, value);
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the number of angular divisions of the slice.
+        /// </summary>
+        /// <value>The theta div.</value>
+        public int ThetaDiv
+        {
+            get
+            {
+                return (int)this.GetValue(ThetaDivProperty);
+            }
+
+            set
+            {
+                this.SetValue(ThetaDivProperty, value);
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets up vector.
+        /// </summary>
+        /// <value>Up vector.</value>
+        public Vector3D UpVector
+        {
+            get
+            {
+                return (Vector3D)this.GetValue(UpVectorProperty);
+            }
+
+            set
+            {
+                this.SetValue(UpVectorProperty, value);
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Do the tesselation and return the <see cref="MeshGeometry3D"/>.
+        /// </summary>
+        /// <returns>A triangular mesh geometry.</returns>
         protected override MeshGeometry3D Tessellate()
         {
-            var pc1 = new Point3DCollection();
-            var pc2 = new Point3DCollection();
-            var right = Vector3D.CrossProduct(UpVector, Normal);
-            for (int i = 0; i < Divisions; i++)
+            var pts = new List<Point3D>();
+            var right = Vector3D.CrossProduct(this.UpVector, this.Normal);
+            for (int i = 0; i < this.ThetaDiv; i++)
             {
-                double angle = StartAngle + (EndAngle - StartAngle) * i / (Divisions - 1);
+                double angle = this.StartAngle + (this.EndAngle - this.StartAngle) * i / (this.ThetaDiv - 1);
                 double angleRad = angle / 180 * Math.PI;
-                Vector3D dir = right * Math.Cos(angleRad) + UpVector * Math.Sin(angleRad);
-                pc1.Add(Center + dir * InnerRadius);
-                pc2.Add(Center + dir * OuterRadius);
+                Vector3D dir = right * Math.Cos(angleRad) + this.UpVector * Math.Sin(angleRad);
+                pts.Add(this.Center + dir * this.InnerRadius);
+                pts.Add(this.Center + dir * this.OuterRadius);
             }
-            var mesh = new MeshGeometry3D();
 
-            MeshGeometryHelper.AddTriangleStrip(mesh, pc1, pc2, null, null, null, null);
-            return mesh;
+            var b = new MeshBuilder(false, false);
+            b.AddTriangleStrip(pts, null, null);
+            return b.ToMesh(false);
         }
+
+        #endregion
     }
 }

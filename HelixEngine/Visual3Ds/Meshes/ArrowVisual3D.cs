@@ -4,83 +4,192 @@ using System.Windows.Media.Media3D;
 
 namespace HelixEngine
 {
+    /// <summary>
+    /// A visual element that shows an arrow.
+    /// </summary>
     public class ArrowVisual3D : MeshElement3D
     {
-        public static readonly DependencyProperty DiameterProperty =
-            DependencyProperty.Register("Diameter", typeof (double), typeof (ArrowVisual3D),
-                                        new UIPropertyMetadata(1.0, GeometryChanged));
+        #region Constants and Fields
 
-        public static readonly DependencyProperty HeadLengthProperty =
-            DependencyProperty.Register("HeadLength", typeof (double), typeof (ArrowVisual3D),
-                                        new UIPropertyMetadata(3.0, GeometryChanged));
+        /// <summary>
+        /// The diameter property.
+        /// </summary>
+        public static readonly DependencyProperty DiameterProperty = DependencyProperty.Register(
+            "Diameter", typeof(double), typeof(ArrowVisual3D), new UIPropertyMetadata(1.0, GeometryChanged));
 
-        public static readonly DependencyProperty Point1Property =
-            DependencyProperty.Register("Point1", typeof (Point3D), typeof (ArrowVisual3D),
-                                        new UIPropertyMetadata(new Point3D(0, 0, 0), GeometryChanged));
+        /// <summary>
+        /// The head length property.
+        /// </summary>
+        public static readonly DependencyProperty HeadLengthProperty = DependencyProperty.Register(
+            "HeadLength", typeof(double), typeof(ArrowVisual3D), new UIPropertyMetadata(3.0, GeometryChanged));
 
-        public static readonly DependencyProperty Point2Property =
-            DependencyProperty.Register("Point2", typeof (Point3D), typeof (ArrowVisual3D),
-                                        new UIPropertyMetadata(new Point3D(0, 0, 10), GeometryChanged));
+        /// <summary>
+        /// The point 1 property.
+        /// </summary>
+        public static readonly DependencyProperty Point1Property = DependencyProperty.Register(
+            "Point1",
+            typeof(Point3D),
+            typeof(ArrowVisual3D),
+            new UIPropertyMetadata(new Point3D(0, 0, 0), GeometryChanged));
 
-        public static readonly DependencyProperty SidesProperty =
-            DependencyProperty.Register("Sides", typeof (int), typeof (ArrowVisual3D),
-                                        new UIPropertyMetadata(36, GeometryChanged));
+        /// <summary>
+        /// The point 2 property.
+        /// </summary>
+        public static readonly DependencyProperty Point2Property = DependencyProperty.Register(
+            "Point2",
+            typeof(Point3D),
+            typeof(ArrowVisual3D),
+            new UIPropertyMetadata(new Point3D(0, 0, 10), GeometryChanged));
 
+        /// <summary>
+        /// The theta div property.
+        /// </summary>
+        public static readonly DependencyProperty ThetaDivProperty = DependencyProperty.Register(
+            "ThetaDiv", typeof(int), typeof(ArrowVisual3D), new UIPropertyMetadata(36, GeometryChanged));
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///   Gets or sets the diameter.
+        /// </summary>
+        /// <value>The diameter.</value>
         public double Diameter
         {
-            get { return (double) GetValue(DiameterProperty); }
-            set { SetValue(DiameterProperty, value); }
-        }
-        public double HeadLength
-        {
-            get { return (double) GetValue(HeadLengthProperty); }
-            set { SetValue(HeadLengthProperty, value); }
+            get
+            {
+                return (double)this.GetValue(DiameterProperty);
+            }
+
+            set
+            {
+                this.SetValue(DiameterProperty, value);
+            }
         }
 
-        public int Sides
-        {
-            get { return (int) GetValue(SidesProperty); }
-            set { SetValue(SidesProperty, value); }
-        }
-
-        public Point3D Point1
-        {
-            get { return (Point3D) GetValue(Point1Property); }
-            set { SetValue(Point1Property, value); }
-        }
-
-        public Point3D Point2
-        {
-            get { return (Point3D) GetValue(Point2Property); }
-            set { SetValue(Point2Property, value); }
-        }
-
-        public Point3D Origin
-        {
-            get { return Point1; }
-            set { Point1 = value; }
-        }
-
+        /// <summary>
+        ///   Gets or sets the direction.
+        /// </summary>
+        /// <value>The direction.</value>
         public Vector3D Direction
         {
-            get { return Point2 - Point1; }
-            set { Point2 = Point1 + value; }
+            get
+            {
+                return this.Point2 - this.Point1;
+            }
+
+            set
+            {
+                this.Point2 = this.Point1 + value;
+            }
         }
 
+        /// <summary>
+        ///   Gets or sets the length of the head.
+        /// </summary>
+        /// <value>The length of the head.</value>
+        public double HeadLength
+        {
+            get
+            {
+                return (double)this.GetValue(HeadLengthProperty);
+            }
+
+            set
+            {
+                this.SetValue(HeadLengthProperty, value);
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the origin.
+        /// </summary>
+        /// <value>The origin.</value>
+        public Point3D Origin
+        {
+            get
+            {
+                return this.Point1;
+            }
+
+            set
+            {
+                this.Point1 = value;
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the start point of the arrow.
+        /// </summary>
+        /// <value>The start point.</value>
+        public Point3D Point1
+        {
+            get
+            {
+                return (Point3D)this.GetValue(Point1Property);
+            }
+
+            set
+            {
+                this.SetValue(Point1Property, value);
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the end point of the arrow.
+        /// </summary>
+        /// <value>The end point.</value>
+        public Point3D Point2
+        {
+            get
+            {
+                return (Point3D)this.GetValue(Point2Property);
+            }
+
+            set
+            {
+                this.SetValue(Point2Property, value);
+            }
+        }
+
+        /// <summary>
+        ///   Gets or sets the number of divisions around the arrow.
+        /// </summary>
+        /// <value>The number of divisions.</value>
+        public int ThetaDiv
+        {
+            get
+            {
+                return (int)this.GetValue(ThetaDivProperty);
+            }
+
+            set
+            {
+                this.SetValue(ThetaDivProperty, value);
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Do the tesselation and return the <see cref="MeshGeometry3D"/>.
+        /// </summary>
+        /// <returns>A triangular mesh geometry.</returns>
         protected override MeshGeometry3D Tessellate()
         {
-            Vector3D dir = Point2 - Point1;
-            double length = dir.Length;
-            double r = Diameter/2;
+            if (this.Diameter <= 0)
+            {
+                return null;
+            }
 
-            var pc = new PointCollection();
-            pc.Add(new Point(0, 0));
-            pc.Add(new Point(0, r));
-            pc.Add(new Point(length - HeadLength, r));
-            pc.Add(new Point(length - HeadLength, r*2));
-            pc.Add(new Point(length, 0));
-
-            return MeshGeometryHelper.CreateRevolvedGeometry(pc, Point1, dir, Sides);
+            var builder = new MeshBuilder(true, true);
+            builder.AddArrow(this.Point1, this.Point2, this.Diameter, this.HeadLength, this.ThetaDiv);
+            return builder.ToMesh(false);
         }
+
+        #endregion
     }
 }

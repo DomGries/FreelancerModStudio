@@ -180,7 +180,7 @@ namespace FreelancerModStudio.SystemPresenter
                 tempRotation.Z *= 2;
             }
 
-            return new Vector3D(tempRotation.X, tempRotation.Z, tempRotation.Y);
+            return new Vector3D(tempRotation.X, -tempRotation.Z, tempRotation.Y);
         }
 
         public static ZoneShape ParseShape(string shape)

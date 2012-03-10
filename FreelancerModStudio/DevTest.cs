@@ -1346,6 +1346,24 @@ namespace FreelancerModStudio
                 "cockpits\\bretonia\\b_fighter.ini",
                 "cockpits\\bretonia\\b_freighter.ini"
             },
+            // ships
+            new[] {
+                "ships\\shiparch.ini",
+                "ships\\rtc_shiparch.ini",
+            },
+            };
+        #endregion
+
+        #region "Excluded Files"
+        private static string[] excludedFiles = {
+                "concave.ini",
+                "fx\\fuse_li_battleship.ini",
+                "interface\\hud\\hudtarget.ini",
+                "missions\\factionsets.ini",
+                "missions\\mshipprops.ini",
+                "missions\\encounters\\new_encounter_example.ini",
+                "solar\\asteroids\\shapes.ini",
+                "universe\\systems\\intro\\intro.ini",
             };
         #endregion
 
@@ -1355,7 +1373,7 @@ namespace FreelancerModStudio
             {
                 foreach (string sameFile in fileGroups[i])
                 {
-                    if (sameFile.ToLower() == filePath.ToLower())
+                    if (sameFile == filePath)
                         return i;
                 }
             }
@@ -1364,7 +1382,11 @@ namespace FreelancerModStudio
 
         static void CreateTemplateFromFile(string file, int dataPathIndex)
         {
-            var newTemplate = new INIDataTemplate();
+            var filePath = file.Substring(dataPathIndex).ToLower();
+            if (Array.IndexOf(excludedFiles, filePath) != -1)
+                return;
+
+            var newTemplate = new INIDataTemplate { Path = filePath };
             var biniManager = new BINIManager(file);
             if (biniManager.Read())
                 newTemplate.Blocks = biniManager.Data;
@@ -1377,9 +1399,7 @@ namespace FreelancerModStudio
             if (newTemplate.Blocks == null || newTemplate.Blocks.Count == 0)
                 return;
 
-            newTemplate.Path = file.Substring(dataPathIndex);
-
-            var selectedFileGroup = GetTemplateFileGroup(newTemplate.Path);
+            var selectedFileGroup = GetTemplateFileGroup(filePath);
             if (selectedFileGroup != -1)
             {
                 var selectedFileGroupData = new List<string>(fileGroups[selectedFileGroup]);

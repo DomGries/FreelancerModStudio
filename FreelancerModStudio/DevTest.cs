@@ -1351,6 +1351,11 @@ namespace FreelancerModStudio
                 "ships\\shiparch.ini",
                 "ships\\rtc_shiparch.ini",
             },
+            // pilots
+            new[] {
+                "missions\\pilots_population.ini",
+                "missions\\pilots_story.ini",
+            },
             };
         #endregion
 

@@ -12,7 +12,7 @@ namespace FreelancerModStudio
             public static void Start()
             {
 #if DEBUG
-                //DevTest.CreateTemplate(@"E:\Games\FL\DATA"); return;
+                //DevTest.CreateTemplate(@"E:\DAT\DWN\fl\jflp\DATA"); return;
                 System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
                 st.Start();
 #endif
@@ -108,12 +108,16 @@ namespace FreelancerModStudio
 
             public static void Load()
             {
-                string File = System.IO.Path.Combine(Application.StartupPath, Properties.Resources.TemplatePath);
+                Load(System.IO.Path.Combine(Application.StartupPath, Properties.Resources.TemplatePath));
+            }
+
+            public static void Load(string file)
+            {
                 data = new FreelancerModStudio.Data.Template();
 
                 try
                 {
-                    data.Load(File);
+                    data.Load(file);
                     Data.SetSpecialFiles();
                 }
                 catch (Exception ex)

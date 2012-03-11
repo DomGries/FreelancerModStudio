@@ -105,7 +105,7 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Box, SharedMaterials.Station);
 
         public static readonly GeometryModel3D Ship =
-            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Ship, new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 180)));
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Ship);
 
         public static readonly GeometryModel3D WeaponsPlatform =
             GetGeometry(SharedMeshes.Box, SharedMaterials.WeaponsPlatform);
@@ -120,7 +120,7 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Pyramid, SharedMaterials.JumpGate);
 
         public static readonly GeometryModel3D DockingRing =
-            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.DockingRing, new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 180)));
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.DockingRing);
 
         public static readonly GeometryModel3D Satellite =
             GetGeometry(SharedMeshes.Box, SharedMaterials.Satellite);

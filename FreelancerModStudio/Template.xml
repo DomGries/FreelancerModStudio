@@ -862,6 +862,7 @@
             <Option>ids_info</Option>
             <Option>DA_archetype</Option>
             <Option>material_library</Option>
+            <Option>hit_pts</Option>
             <Option>mass</Option>
             <Option>volume</Option>
             <Option>capacity</Option>
@@ -933,6 +934,7 @@
             <Option>constant_power_draw</Option>
             <Option>rebuild_power_draw</Option>
             <Option>max_capacity</Option>
+            <Option>hp_type</Option>
             <Option>offline_rebuild_time</Option>
             <Option>offline_threshold</Option>
             <Option multiple="true">shield_hit_effects</Option>
@@ -945,6 +947,7 @@
             <Option>toughness</Option>
             <Option>separation_explosion</Option>
             <Option>shield_type</Option>
+            <Option>lootable</Option>
           </Options>
         </Block>
         <Block name="Thruster" multiple="true" identifier="nickname">

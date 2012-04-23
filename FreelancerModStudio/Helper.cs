@@ -18,6 +18,14 @@ namespace FreelancerModStudio
 #endif
                 //load settings
                 Settings.Load();
+
+                //install downloaded update if it exists
+                if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
+                {
+                    if (AutoUpdate.AutoUpdate.InstallUpdate())
+                        return;
+                }
+
                 Template.Load();
 #if DEBUG
                 st.Stop();
@@ -28,14 +36,7 @@ namespace FreelancerModStudio
                 var whidbeyColorTable = new ProfessionalColorTable { UseSystemColors = true };
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer(whidbeyColorTable);
 
-                //install downloaded update
-                if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
-                {
-                    if (AutoUpdate.AutoUpdate.InstallUpdate())
-                        return;
-                }
-
-                //remove installed update
+                //remove installed update if it exists
                 if (Settings.Data.Data.General.AutoUpdate.Update.Installed)
                     AutoUpdate.AutoUpdate.RemoveUpdate();
 

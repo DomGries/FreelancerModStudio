@@ -12,7 +12,7 @@ namespace FreelancerModStudio.AutoUpdate
             Icon = Resources.LogoIcon;
         }
 
-        PageType _currentPage = PageType.Checking;
+        StatusType _currentPage = StatusType.Checking;
 
         public delegate void ActionRequiredType(ActionType value);
         public ActionRequiredType ActionRequired;
@@ -20,14 +20,17 @@ namespace FreelancerModStudio.AutoUpdate
         void OnAction(ActionType action)
         {
             if (ActionRequired != null)
+            {
                 ActionRequired(action);
+            }
         }
 
-        public void SetPage(PageType page)
+        public void SetPage(StatusType page)
         {
             switch (page)
             {
-                case PageType.Checking:
+                case StatusType.Waiting:
+                case StatusType.Checking:
                     pnlDownload.Visible = true;
                     lblDownloaded.Visible = false;
                     btnNext.Visible = false;
@@ -44,7 +47,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     break;
 
-                case PageType.Aviable:
+                case StatusType.UpdateAvailable:
                     pnlDownload.Visible = false;
                     lblDownloaded.Visible = false;
                     btnNext.Visible = true;
@@ -60,7 +63,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     break;
 
-                case PageType.NotAviable:
+                case StatusType.UpdateNotAvailable:
                     pnlDownload.Visible = false;
                     lblDownloaded.Visible = false;
                     btnNext.Visible = false;
@@ -75,7 +78,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     break;
 
-                case PageType.Downloading:
+                case StatusType.Downloading:
                     pnlDownload.Visible = true;
                     lblDownloaded.Visible = true;
                     btnNext.Visible = true;
@@ -93,7 +96,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     break;
 
-                case PageType.DownloadFinished:
+                case StatusType.DownloadFinished:
                     pnlDownload.Visible = false;
                     lblDownloaded.Visible = true;
                     btnNext.Visible = true;
@@ -115,11 +118,11 @@ namespace FreelancerModStudio.AutoUpdate
 
         public void ChangeProgress(long bytes, long bytesTotal, int percent)
         {
-            int kbRead = Convert.ToInt32(bytes / 1024);
-            int kbTotal = Convert.ToInt32(bytesTotal / 1024);
+            int kbRead = Convert.ToInt32(bytes/1024);
+            int kbTotal = Convert.ToInt32(bytesTotal/1024);
 
             pgbDownload.Value = percent;
-            lblDownloaded.Text = String.Format(Strings.UpdatesDownloadSpeed, (Convert.ToDouble(kbRead) / 1024).ToString("N1"), (Convert.ToDouble(kbTotal) / 1024).ToString("N1"));
+            lblDownloaded.Text = String.Format(Strings.UpdatesDownloadSpeed, (Convert.ToDouble(kbRead)/1024).ToString("N1"), (Convert.ToDouble(kbTotal)/1024).ToString("N1"));
 
             Text = String.Format(Strings.UpdatesFormDownloadText, percent);
         }
@@ -133,17 +136,17 @@ namespace FreelancerModStudio.AutoUpdate
         {
             switch (_currentPage)
             {
-                case PageType.Aviable:
+                case StatusType.UpdateAvailable:
                     OnAction(ActionType.Download);
                     break;
 
-                case PageType.Downloading:
+                case StatusType.Downloading:
+                    _currentPage = StatusType.DownloadFinished;
                     //hide form
-                    _currentPage = PageType.DownloadFinished;
                     Close();
                     break;
 
-                case PageType.DownloadFinished:
+                case StatusType.DownloadFinished:
                     OnAction(ActionType.Install);
                     Close();
                     break;
@@ -152,12 +155,11 @@ namespace FreelancerModStudio.AutoUpdate
 
         void frmAutoUpdate_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((_currentPage == PageType.Checking || _currentPage == PageType.Downloading))
+            if (_currentPage == StatusType.Checking ||
+                _currentPage == StatusType.Downloading)
+            {
                 OnAction(ActionType.Abort);
+            }
         }
     }
-
-    public enum ActionType { Abort, Download, Install }
-
-    public enum PageType { Checking, Aviable, NotAviable, Downloading, DownloadFinished };
 }

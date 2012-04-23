@@ -77,8 +77,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoUpdate\ActionType.cs" />
     <Compile Include="AutoUpdate\AutoUpdate.cs">
     </Compile>
+    <Compile Include="AutoUpdate\StatusType.cs" />
+    <Compile Include="AutoUpdate\UpdateInformation.cs" />
+    <Compile Include="AutoUpdate\UpdateInformationParser.cs" />
     <Compile Include="Clipboard.cs" />
     <Compile Include="Clone.cs" />
     <Compile Include="ContentInterface.cs" />

@@ -28,11 +28,10 @@ namespace FreelancerModStudio
                 var whidbeyColorTable = new ProfessionalColorTable { UseSystemColors = true };
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer(whidbeyColorTable);
 
+                //install downloaded update
                 if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
                 {
-                    //install update
-                    AutoUpdate.AutoUpdate autoUpdate = new AutoUpdate.AutoUpdate(string.Empty, string.Empty, string.Empty, null);
-                    if (autoUpdate.Install())
+                    if (AutoUpdate.AutoUpdate.InstallUpdate())
                         return;
                 }
 
@@ -40,7 +39,7 @@ namespace FreelancerModStudio
                 if (Settings.Data.Data.General.AutoUpdate.Update.Installed)
                     AutoUpdate.AutoUpdate.RemoveUpdate();
 
-                //download update
+                //check for update
                 if (Settings.Data.Data.General.AutoUpdate.Enabled && Settings.Data.Data.General.AutoUpdate.UpdateFile != null && Settings.Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Settings.Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
                     Update.BackgroundCheck();
 

@@ -139,7 +139,7 @@ namespace FreelancerModStudio.AutoUpdate
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "frmAutoUpdate";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmAutoUpdate_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmAutoUpdate_FormClosed);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);

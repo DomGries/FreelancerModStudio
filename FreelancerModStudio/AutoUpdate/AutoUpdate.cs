@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 using FreelancerModStudio.Properties;
 
@@ -10,60 +11,53 @@ namespace FreelancerModStudio.AutoUpdate
 {
     public class AutoUpdate
     {
+        public StatusType Status { get; set; }
+
         public Uri CheckFileUri { get; set; }
         public bool SilentDownload { get; set; }
         public bool SilentCheck { get; set; }
 
         UpdateInformation _updateInfo;
-
-        StatusType _status = StatusType.Waiting;
-        frmAutoUpdate _updaterForm;
+        IAutoUpdateUI _UI;
 
         readonly WebClient _webClient = new WebClient();
 
-        public event EventHandler<CancelEventArgs> RestartingApplication;
-
-        delegate void ProgressChangedInvoker(long bytes, long bytesTotal, int percent);
-        delegate void SetStatusInvoker(StatusType status);
-
         public AutoUpdate()
         {
+            Status = StatusType.Waiting;
         }
 
-        public AutoUpdate(string proxy, string username, string password)
-        {
-            SetCredentials(username, password);
-            SetProxy(proxy);
-        }
+        public event EventHandler<CancelEventArgs> RestartingApplication;
 
         public void Check()
         {
-            if (_status == StatusType.Waiting)
+            if (Status != StatusType.Waiting)
             {
-                _status = StatusType.Checking;
-
-                //display checking form
-                if (!SilentCheck)
-                {
-                    SetPage(_status, false);
-                }
-
-                //set event handlers
-                _webClient.DownloadStringCompleted += Download_CheckFile_Completed;
-
-                //download the checkfile
-                _webClient.DownloadStringAsync(CheckFileUri);
+                return;
             }
-            else
+
+            Status = StatusType.Checking;
+
+            //display checking form
+            if (!SilentCheck)
             {
-                if (!SilentCheck)
-                {
-                    SetPage(_status, false);
-                }
+                ShowUI();
             }
+
+            //set event handlers
+            _webClient.DownloadStringCompleted += Download_CheckFile_Completed;
+
+            //download the checkfile
+            _webClient.DownloadStringAsync(CheckFileUri);
         }
 
-        void UpdateAviable(bool value)
+        public void ShowUI()
+        {
+            //start UI in new thread as this function is always called from main thread
+            new Thread(() => SetPage(Status)).Start();
+        }
+
+        void UpdateAvailable(bool value)
         {
             if (value)
             {
@@ -73,40 +67,32 @@ namespace FreelancerModStudio.AutoUpdate
                 }
                 else
                 {
-                    _status = StatusType.UpdateAvailable;
-                    SetPage(_status, false);
+                    Status = StatusType.UpdateAvailable;
+                    SetPage(Status);
                 }
             }
             else
             {
-                _status = StatusType.UpdateNotAvailable;
+                Status = StatusType.UpdateNotAvailable;
                 if (!SilentCheck)
                 {
-                    SetPage(_status, false);
+                    SetPage(Status);
                 }
             }
         }
 
-        void SetPage(StatusType value, bool wait)
+        void SetPage(StatusType value)
         {
-            if (_updaterForm == null || _updaterForm.IsDisposed || !_updaterForm.IsHandleCreated)
+            if (_UI == null)
             {
-                _updaterForm = new frmAutoUpdate();
-                _updaterForm.ActionRequired += AutoUpdateForm_ActionRequired;
-                _updaterForm.SetPage(value);
-
-                if (wait)
-                {
-                    _updaterForm.ShowDialog();
-                }
-                else
-                {
-                    _updaterForm.Show();
-                }
+                _UI = new frmAutoUpdate();
+                _UI.ActionRequired += UI_ActionRequired;
+                _UI.SetPage(value, false);
+                _UI.ShowUI();
             }
             else
             {
-                _updaterForm.Invoke(new SetStatusInvoker(_updaterForm.SetPage), value);
+                _UI.SetPage(value, true);
             }
         }
 
@@ -130,12 +116,12 @@ namespace FreelancerModStudio.AutoUpdate
 
         void DownloadUpdate()
         {
-            _status = StatusType.Downloading;
+            Status = StatusType.Downloading;
 
             //display download form
             if (!SilentDownload || !SilentCheck)
             {
-                SetPage(_status, false);
+                SetPage(Status);
             }
 
             string destPath = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.UpdateDownloadPath);
@@ -167,12 +153,12 @@ namespace FreelancerModStudio.AutoUpdate
                 if (e.Error == null)
                 {
                     //check if file is newer
-                    UpdateAviable(IsNewer(e.Result));
+                    UpdateAvailable(IsNewer(e.Result));
                 }
                 else
                 {
                     //exception occured while downloading
-                    _status = StatusType.Waiting;
+                    Status = StatusType.Waiting;
 
                     if (!SilentCheck)
                     {
@@ -182,7 +168,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
             else
             {
-                _status = StatusType.Waiting;
+                Status = StatusType.Waiting;
             }
         }
 
@@ -197,18 +183,19 @@ namespace FreelancerModStudio.AutoUpdate
                 if (e.Error == null)
                 {
                     //download update completed
-                    _status = StatusType.DownloadFinished;
-                    SetPage(_status, SilentCheck);
+                    Status = StatusType.DownloadFinished;
 
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName = Path.GetFileName(_updateInfo.FileUri.AbsolutePath);
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = false;
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Downloaded = true;
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.SilentInstall = _updateInfo.Silent;
+
+                    SetPage(Status);
                 }
                 else
                 {
                     //exception occured while downloading
-                    _status = StatusType.UpdateAvailable;
+                    Status = StatusType.UpdateAvailable;
 
                     if (!SilentCheck)
                     {
@@ -218,15 +205,15 @@ namespace FreelancerModStudio.AutoUpdate
             }
             else
             {
-                _status = StatusType.UpdateAvailable;
+                Status = StatusType.UpdateAvailable;
             }
         }
 
         void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            if (!SilentDownload && _updaterForm != null && !_updaterForm.IsDisposed && _updaterForm.IsHandleCreated)
+            if (_UI != null)
             {
-                _updaterForm.BeginInvoke(new ProgressChangedInvoker(_updaterForm.ChangeProgress), new object[] {e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage});
+                _UI.SetProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
             }
         }
 
@@ -235,15 +222,20 @@ namespace FreelancerModStudio.AutoUpdate
             _webClient.CancelAsync();
         }
 
-        void AutoUpdateForm_ActionRequired(ActionType action)
+        void UI_ActionRequired(ActionType action)
         {
             switch (action)
             {
-                case ActionType.Abort:
+                case ActionType.Close:
+                    _UI = null;
+                    break;
+                case ActionType.CloseAndAbort:
+                    _UI = null;
                     Abort();
                     break;
                 case ActionType.Download:
-                    DownloadUpdate();
+                    //start download in new thread to prevent cancel on UI close
+                    new Thread(DownloadUpdate).Start();
                     break;
                 case ActionType.Install:
                     InstallUpdate(RestartingApplication);

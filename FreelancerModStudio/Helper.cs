@@ -42,7 +42,7 @@ namespace FreelancerModStudio
 
                 //check for update
                 if (Settings.Data.Data.General.AutoUpdate.Enabled && Settings.Data.Data.General.AutoUpdate.UpdateFile != null && Settings.Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Settings.Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
-                    Update.BackgroundCheck();
+                    Update.Check(true, Settings.Data.Data.General.AutoUpdate.SilentDownload);
 
                 //start main form
                 Application.Run(new frmMain());
@@ -56,20 +56,14 @@ namespace FreelancerModStudio
         {
             public static AutoUpdate.AutoUpdate AutoUpdate = new AutoUpdate.AutoUpdate();
 
-            public static void BackgroundCheck()
-            {
-                //download in thread with lowest performance
-                System.Threading.Thread autoUpdateThread = new System.Threading.Thread(new System.Threading.ThreadStart(delegate
-                {
-                    Check(true, Settings.Data.Data.General.AutoUpdate.SilentDownload);
-                }));
-                autoUpdateThread.Priority = System.Threading.ThreadPriority.Lowest;
-                autoUpdateThread.IsBackground = true;
-                autoUpdateThread.Start();
-            }
-
             public static void Check(bool silentCheck, bool silentDownload)
             {
+                if (AutoUpdate.Status != FreelancerModStudio.AutoUpdate.StatusType.Waiting)
+                {
+                    AutoUpdate.ShowUI();
+                    return;
+                }
+
                 Uri checkFileUri;
                 if (!Uri.TryCreate(Settings.Data.Data.General.AutoUpdate.UpdateFile, UriKind.Absolute, out checkFileUri))
                 {

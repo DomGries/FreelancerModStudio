@@ -80,6 +80,7 @@
     <Compile Include="AutoUpdate\ActionType.cs" />
     <Compile Include="AutoUpdate\AutoUpdate.cs">
     </Compile>
+    <Compile Include="AutoUpdate\IAutoUpdateUI.cs" />
     <Compile Include="AutoUpdate\StatusType.cs" />
     <Compile Include="AutoUpdate\UpdateInformation.cs" />
     <Compile Include="AutoUpdate\UpdateInformationParser.cs" />

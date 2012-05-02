@@ -4,24 +4,41 @@ using FreelancerModStudio.Properties;
 
 namespace FreelancerModStudio.AutoUpdate
 {
-    public partial class frmAutoUpdate : Form
+    public partial class frmAutoUpdate : Form, IAutoUpdateUI
     {
+        StatusType _currentPage;
+
         public frmAutoUpdate()
         {
             InitializeComponent();
             Icon = Resources.LogoIcon;
         }
 
-        StatusType _currentPage = StatusType.Checking;
-
-        public delegate void ActionRequiredType(ActionType value);
-        public ActionRequiredType ActionRequired;
+        delegate void SetStatusInvoker(StatusType status);
+        public event ActionRequired ActionRequired;
 
         void OnAction(ActionType action)
         {
             if (ActionRequired != null)
             {
                 ActionRequired(action);
+            }
+        }
+
+        public void ShowUI()
+        {
+            ShowDialog();
+        }
+
+        public void SetPage(StatusType page, bool async)
+        {
+            if (async)
+            {
+                Invoke(new SetStatusInvoker(SetPage), page);
+            }
+            else
+            {
+                SetPage(page);
             }
         }
 
@@ -92,7 +109,7 @@ namespace FreelancerModStudio.AutoUpdate
                     btnNext.Text = Strings.UpdatesHideButton;
                     btnAbort.Text = Strings.UpdatesAbortButton;
 
-                    Text = String.Format(Strings.UpdatesFormDownloadText, 0);
+                    Text = Strings.UpdatesFormText;
 
                     break;
 
@@ -116,15 +133,17 @@ namespace FreelancerModStudio.AutoUpdate
             _currentPage = page;
         }
 
-        public void ChangeProgress(long bytes, long bytesTotal, int percent)
+        public void SetProgress(long bytes, long bytesTotal, int percent)
         {
-            int kbRead = Convert.ToInt32(bytes/1024);
-            int kbTotal = Convert.ToInt32(bytesTotal/1024);
+            BeginInvoke((MethodInvoker)delegate
+                {
+                    pgbDownload.Value = percent;
 
-            pgbDownload.Value = percent;
-            lblDownloaded.Text = String.Format(Strings.UpdatesDownloadSpeed, (Convert.ToDouble(kbRead)/1024).ToString("N1"), (Convert.ToDouble(kbTotal)/1024).ToString("N1"));
+                    // 1MB = 1048576 (1024 * 1024) bytes
+                    lblDownloaded.Text = String.Format(Strings.UpdatesDownloadSpeed, ((double)bytes / 1048576).ToString("N1"), ((double)bytesTotal / 1048576).ToString("N1"));
 
-            Text = String.Format(Strings.UpdatesFormDownloadText, percent);
+                    Text = String.Format(Strings.UpdatesFormDownloadText, percent);
+                });
         }
 
         void btnAbort_Click(object sender, EventArgs e)
@@ -139,13 +158,10 @@ namespace FreelancerModStudio.AutoUpdate
                 case StatusType.UpdateAvailable:
                     OnAction(ActionType.Download);
                     break;
-
                 case StatusType.Downloading:
-                    _currentPage = StatusType.DownloadFinished;
                     //hide form
                     Close();
                     break;
-
                 case StatusType.DownloadFinished:
                     OnAction(ActionType.Install);
                     Close();
@@ -153,12 +169,16 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        void frmAutoUpdate_FormClosing(object sender, FormClosingEventArgs e)
+        void frmAutoUpdate_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (_currentPage == StatusType.Checking ||
                 _currentPage == StatusType.Downloading)
             {
-                OnAction(ActionType.Abort);
+                OnAction(ActionType.CloseAndAbort);
+            }
+            else
+            {
+                OnAction(ActionType.Close);
             }
         }
     }

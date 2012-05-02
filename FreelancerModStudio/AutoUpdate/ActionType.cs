@@ -2,7 +2,8 @@ namespace FreelancerModStudio.AutoUpdate
 {
     public enum ActionType
     {
-        Abort,
+        Close,
+        CloseAndAbort,
         Download,
         Install
     }

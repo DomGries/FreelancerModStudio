@@ -79,7 +79,7 @@ namespace FreelancerModStudio.SystemPresenter
             set
             {
                 if (selectedContent != value)
-                    SetSelectedContent(value, true);
+                    SetSelectedContent(value, false);
             }
         }
 
@@ -468,7 +468,7 @@ namespace FreelancerModStudio.SystemPresenter
             if (selectedContent == content)
             {
                 //update selection if changed content is selected
-                SetSelectedContent(content, true);
+                SetSelectedContent(content, false);
             }
         }
 

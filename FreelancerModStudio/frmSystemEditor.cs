@@ -53,7 +53,6 @@ namespace FreelancerModStudio
                 ClipToBounds = false,
                 ShowViewCube = true
             };
-            view.Camera.NearPlaneDistance = 0.001;
 #if DEBUG
             st.Stop();
             System.Diagnostics.Debug.WriteLine("init HelixView: " + st.ElapsedMilliseconds + "ms");

@@ -586,9 +586,8 @@ namespace HelixEngine
             if (!IsZoomEnabled)
                 return;
 
-            bool alt = (Keyboard.IsKeyDown(Key.LeftAlt));
             CameraMode cm = CameraMode;
-            if (alt)
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 cm = (CameraMode)(((int)CameraMode + 1) % 2);
 
             switch (cm)
@@ -650,10 +649,8 @@ namespace HelixEngine
 
         public bool IsFixedPosition()
         {
-            bool leftWinKey = Keyboard.IsKeyDown(Key.LWin);
-
-            // fix the camera position if user presses left Windows key
-            if (leftWinKey)
+            // fix the camera position if user presses a specific key
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 return CameraMode != CameraMode.Inspect;
 
             return CameraMode == CameraMode.Inspect;

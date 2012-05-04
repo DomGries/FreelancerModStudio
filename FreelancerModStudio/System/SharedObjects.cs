@@ -63,11 +63,6 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static readonly MeshGeometry3D Box = GetMesh(new BoxMesh());
 
-        public static readonly MeshGeometry3D BoxTradeLane = GetMesh(new BoxMesh
-        {
-            Height = 0.3,
-        });
-
         public static readonly MeshGeometry3D Cylinder = GetMesh(new CylinderMesh
         {
             Slices = 18,
@@ -102,16 +97,16 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.Planet);
 
         public static readonly GeometryModel3D Station =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.Station);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Station);
 
         public static readonly GeometryModel3D Ship =
             GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Ship);
 
         public static readonly GeometryModel3D WeaponsPlatform =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.WeaponsPlatform);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.WeaponsPlatform);
 
         public static readonly GeometryModel3D TradeLane =
-            GetGeometry(SharedMeshes.BoxTradeLane, SharedMaterials.TradeLane);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.TradeLane);
 
         public static readonly GeometryModel3D JumpHole =
             GetGeometry(SharedMeshes.Pyramid, SharedMaterials.JumpHole);
@@ -123,13 +118,13 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.Pyramid, SharedMaterials.DockingRing);
 
         public static readonly GeometryModel3D Satellite =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.Satellite);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Satellite);
 
         public static readonly GeometryModel3D Construct =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.Construct);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Construct);
 
         public static readonly GeometryModel3D Depot =
-            GetGeometry(SharedMeshes.Box, SharedMaterials.Depot);
+            GetGeometry(SharedMeshes.Pyramid, SharedMaterials.Depot);
 
         public static readonly GeometryModel3D ZoneBox =
             GetGeometry(SharedMeshes.Box, SharedMaterials.Zone);

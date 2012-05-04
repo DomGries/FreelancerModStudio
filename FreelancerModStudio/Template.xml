@@ -3773,7 +3773,7 @@
             <Option>burn_color</Option>
             <Option>prev_ring</Option>
             <Option>next_ring</Option>
-            <Option>ids_info</Option>
+            <Option renameFrom="info_ids,info_card,info_card_ids">ids_info</Option>
             <Option>ring</Option>
             <Option>base</Option>
             <Option>dock_with</Option>
@@ -3817,8 +3817,8 @@
             <Option>property_fog_color</Option>
             <Option>damage</Option>
             <Option>visit</Option>
-            <Option>spacedust</Option>
-            <Option>spacedust_maxparticles</Option>
+            <Option renameFrom="pacedust">spacedust</Option>
+            <Option renameFrom="spacedust_masparticles,spacedusr_maxparticles,spacedust _maxparticles,spacedust_maxdust">spacedust_maxparticles</Option>
             <Option>interference</Option>
             <Option>drag_modifier</Option>
             <Option>edge_fraction</Option>

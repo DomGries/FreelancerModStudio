@@ -87,6 +87,9 @@ namespace FreelancerModStudio.Data
             //[XmlAttribute("enum")]
             //public string EnumName;
 
+            [XmlAttribute("renameFrom")]
+            public string RenameFrom;
+
             [XmlAttribute("category")]
             public string Category;
 

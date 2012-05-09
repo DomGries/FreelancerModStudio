@@ -64,7 +64,14 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
-            modelGroup.Transform = new ScaleTransform3D(SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR);
+            modelGroup.Transform = new Transform3DGroup
+            {
+                Children = new Transform3DCollection
+                    {
+                        new ScaleTransform3D(SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR),
+                        new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 180))
+                    }
+            };
             return modelGroup;
         }
 

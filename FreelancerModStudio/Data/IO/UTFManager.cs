@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using FreelancerModStudio.Data.UTF;
 
 namespace FreelancerModStudio.Data.IO
 {
     public class UTFManager
     {
         public string File { get; set; }
+
+        const string FILE_TYPE = "UTF ";
+        const int FILE_VERSION = 257;
 
         public UTFManager(string file)
         {
@@ -20,35 +24,39 @@ namespace FreelancerModStudio.Data.IO
             using (var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new BinaryReader(stream))
             {
-                int signature = reader.ReadInt32();
-                int version = reader.ReadInt32();
-                if (signature == 0x20465455 || version == 0x101)
+                if (stream.Length < 4 + 4 ||
+                    Encoding.ASCII.GetString(reader.ReadBytes(4)) != FILE_TYPE ||
+                    reader.ReadInt32() != FILE_VERSION)
                 {
-                    // get node chunk info
-                    int nodeBlockOffset = reader.ReadInt32();
-                    int nodeSize = reader.ReadInt32();
-
-                    int unknown1 = reader.ReadInt32();
-                    int header_size = reader.ReadInt32();
-
-                    // get string chunk info
-                    int stringBlockOffset = reader.ReadInt32();
-                    int stringBlockSize = reader.ReadInt32();
-
-                    int unknown2 = reader.ReadInt32();
-
-                    // get data chunk info
-                    int dataBlockOffset = reader.ReadInt32();
-
-                    reader.BaseStream.Position = stringBlockOffset;
-
-                    //read string table
-                    StringTable stringTable =
-                        new StringTable(Encoding.ASCII.GetString(reader.ReadBytes(stringBlockSize)));
-
-                    info = new UTFNode();
-                    ParseNode(reader, stringTable, nodeBlockOffset, 0, dataBlockOffset, info);
+                    return null;
                 }
+
+                // get node info
+                int nodeBlockOffset = reader.ReadInt32();
+                //int nodeBlockSize = reader.ReadInt32();
+
+                //int unknown1 = reader.ReadInt32();
+                //int header_size = reader.ReadInt32();
+                reader.BaseStream.Seek(12, SeekOrigin.Current);
+
+                // get string info
+                int stringBlockOffset = reader.ReadInt32();
+                int stringBlockSize = reader.ReadInt32();
+
+                //int unknown2 = reader.ReadInt32();
+                reader.BaseStream.Seek(4, SeekOrigin.Current);
+
+                // get data info
+                int dataBlockOffset = reader.ReadInt32();
+
+                reader.BaseStream.Position = stringBlockOffset;
+
+                // read string table
+                StringTable stringTable =
+                    new StringTable(Encoding.ASCII.GetString(reader.ReadBytes(stringBlockSize)));
+
+                info = new UTFNode();
+                ParseNode(reader, stringTable, nodeBlockOffset, 0, dataBlockOffset, info);
             }
             return info;
         }
@@ -62,15 +70,17 @@ namespace FreelancerModStudio.Data.IO
 
             int peerOffset = reader.ReadInt32();                // next node on same level
             int nameOffset = reader.ReadInt32();                // string for this node
-            int flags = reader.ReadInt32();                     // bit 4 set = intermediate, bit 7 set = leaf
+            NodeFlags flags = (NodeFlags)reader.ReadInt32();
+
             int zero = reader.ReadInt32();                      // always seems to be zero
             int childOffset = reader.ReadInt32();               // next node in if intermediate, offset to data if leaf
             int allocatedSize = reader.ReadInt32();             // leaf node only, 0 for intermediate
             //int size = reader.ReadInt32();                      // leaf node only, 0 for intermediate
             //int size2 = reader.ReadInt32();                     // leaf node only, 0 for intermediate
-            //int u1 = reader.ReadInt32();                        // seems to be timestamps. can be zero
-            //int u2 = reader.ReadInt32();
-            //int u3 = reader.ReadInt32();
+
+            //int timestamp1 = reader.ReadInt32();
+            //int timestamp2 = reader.ReadInt32();
+            //int timestamp3 = reader.ReadInt32();
 
             UTFNode node = new UTFNode();
             if (parent.Name != null)
@@ -78,7 +88,7 @@ namespace FreelancerModStudio.Data.IO
             node.Name = stringTable.GetString(nameOffset - 1);
 
             // Extract data if this is a leaf
-            if ((flags & 0xFF) == 0x80)
+            if ((flags & NodeFlags.Leaf) == NodeFlags.Leaf)
             {
                 //if (size != size2) Compression might be used
 
@@ -88,13 +98,14 @@ namespace FreelancerModStudio.Data.IO
 
             parent.Nodes.Add(node);
 
-            if (childOffset > 0 && flags == 0x10)
+            if (childOffset > 0 && (flags & NodeFlags.Intermediate) == NodeFlags.Intermediate)
                 ParseNode(reader, stringTable, nodeBlockStart, childOffset, dataBlockOffset, node);
 
             if (peerOffset > 0)
                 ParseNode(reader, stringTable, nodeBlockStart, peerOffset, dataBlockOffset, parent);
         }
     }
+
     public class UTFNode
     {
         public string Name { get; set; }

@@ -90,7 +90,7 @@ namespace FreelancerModStudio.Data.UTF
                     matrixRotationXX, matrixRotationZX, matrixRotationYX, 0.0f,
                     matrixRotationXZ, matrixRotationZZ, matrixRotationYZ, 0.0f,
                     matrixRotationXY, matrixRotationZY, matrixRotationYY, 0.0f,
-                    offsetX, offsetZ, offsetY, 1.0f);
+                    originX + offsetX, originZ + offsetZ, originY + offsetY, 1.0f);
 
                 if (!IsFixed)
                 {

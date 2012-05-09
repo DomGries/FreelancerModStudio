@@ -8,6 +8,8 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public bool ModelChanged { get; set; }
 
+        public const float SIZE_FACTOR = 0.005f;
+
         public void SetValues(ContentBase content, TableBlock block)
         {
             var positionString = "0,0,0";
@@ -102,17 +104,14 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
+                scale = new Vector3D(1, 1, 1);
+                rotation = ParseRotation(rotationString, false);
+
                 if (block.Archetype != null)
                 {
-                    scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) / 1000;
-
-                    //clamp scale of objects which size is actually not being defined by archetype radius
-                    if (block.ObjectType != ContentType.Planet && block.ObjectType != ContentType.Sun)
+                    if (block.Archetype.Radius != 0d)
                     {
-                        if (scale.X < 0.1)
-                            scale = new Vector3D(0.1, 0.1, 0.1);
-                        else if (scale.X > 1)
-                            scale = new Vector3D(1, 1, 1);
+                        scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) * SIZE_FACTOR;
                     }
 
                     //update system object type
@@ -122,22 +121,7 @@ namespace FreelancerModStudio.SystemPresenter
                         contentObject.Type = block.ObjectType;
                         ModelChanged = true;
                     }
-
-                    //string ext = Path.GetExtension(block.Archetype.ModelPath).ToLower();
-                    //if (ext == ".cmp" || ext == ".3db")
-                    //{
-                    //    var path = Path.Combine(@"E:\Games\FL\DATA", block.Archetype.ModelPath);
-                    //    if (File.Exists(path))
-                    //    {
-                    //        var cmpModel = new CmpModelContent();
-                    //        content.Model = cmpModel.LoadModel(path);
-                    //    }
-                    //}
                 }
-                else
-                    scale = new Vector3D(1, 1, 1);
-
-                rotation = ParseRotation(rotationString, false);
             }
 
             content.SetDisplay(position, rotation, scale);
@@ -150,16 +134,16 @@ namespace FreelancerModStudio.SystemPresenter
             if (shape == ZoneShape.Sphere && values.Length > 0)
             {
                 var tempScale = Parser.ParseDouble(values[0], 1);
-                return new Vector3D(tempScale, tempScale, tempScale) / 1000;
+                return new Vector3D(tempScale, tempScale, tempScale) * SIZE_FACTOR;
             }
             if (shape == ZoneShape.Cylinder && values.Length > 1)
             {
                 var tempScale1 = Parser.ParseDouble(values[0], 1);
                 var tempScale2 = Parser.ParseDouble(values[1], 1);
-                return new Vector3D(tempScale1, tempScale2, tempScale1) / 1000;
+                return new Vector3D(tempScale1, tempScale2, tempScale1) * SIZE_FACTOR;
             }
             if (values.Length > 2)
-                return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) / 1000;
+                return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) * SIZE_FACTOR;
 
             return new Vector3D(1, 1, 1);
         }
@@ -167,7 +151,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static Vector3D ParsePosition(string vector)
         {
             Vector3D tempVector = Parser.ParseVector(vector);
-            return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y) / 1000;
+            return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y) * SIZE_FACTOR;
         }
 
         public static Vector3D ParseRotation(string vector, bool pathRotation)

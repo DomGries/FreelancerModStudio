@@ -53,7 +53,7 @@ namespace FreelancerModStudio.Data
                 {
                     ContentType type = ContentType.None;
                     string name = null;
-                    double radius = -1;
+                    double radius = 0d;
                     string cmpFile = null;
 
                     foreach (EditorINIOption option in block.Block.Options)
@@ -78,8 +78,27 @@ namespace FreelancerModStudio.Data
                         }
                     }
 
-                    if (name != null && type != ContentType.None)
-                        contentTable[name] = new ArchetypeInfo { Type = type, Radius = radius, ModelPath = cmpFile };
+                    if (name != null)
+                    {
+                        if ((type == ContentType.Planet || type == ContentType.Sun) && radius != 0d)
+                        {
+                            //save radius only for planets and suns
+                            contentTable[name] = new ArchetypeInfo
+                                {
+                                    Type = type,
+                                    Radius = radius
+                                };
+                        }
+                        else if (type != ContentType.None && cmpFile != null)
+                        {
+                            //save model path only for supported objects (not planets and suns)
+                            contentTable[name] = new ArchetypeInfo
+                                {
+                                    Type = type,
+                                    ModelPath = cmpFile
+                                };
+                        }
+                    }
                 }
             }
         }

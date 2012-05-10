@@ -50,6 +50,16 @@ namespace HelixEngine
             "LeftText", typeof(string), typeof(ViewCubeVisual3D), new UIPropertyMetadata("L", VisualModelChanged));
 
         /// <summary>
+        /// The model up direction property.
+        /// </summary>
+        public static readonly DependencyProperty ModelUpDirectionProperty =
+            DependencyProperty.Register(
+                "ModelUpDirection",
+                typeof(Vector3D),
+                typeof(ViewCubeVisual3D),
+                new UIPropertyMetadata(new Vector3D(0, 0, 1), VisualModelChanged));
+
+        /// <summary>
         /// The right text property.
         /// </summary>
         public static readonly DependencyProperty RightTextProperty = DependencyProperty.Register(
@@ -185,6 +195,23 @@ namespace HelixEngine
         }
 
         /// <summary>
+        ///   Gets or sets the model up direction.
+        /// </summary>
+        /// <value>The model up direction.</value>
+        public Vector3D ModelUpDirection
+        {
+            get
+            {
+                return (Vector3D)this.GetValue(ModelUpDirectionProperty);
+            }
+
+            set
+            {
+                this.SetValue(ModelUpDirectionProperty, value);
+            }
+        }
+
+        /// <summary>
         ///   Gets or sets the right text.
         /// </summary>
         /// <value>The right text.</value>
@@ -302,8 +329,15 @@ namespace HelixEngine
             var frontColor = Brushes.Red;
             var rightColor = Brushes.Green;
             var upColor = Brushes.Blue;
-            var up = new Vector3D(0, 0, 1);
+            var up = this.ModelUpDirection;
             var right = new Vector3D(0, 1, 0);
+            if (up.Z != 1)
+            {
+                right = new Vector3D(0, 0, 1);
+                rightColor = Brushes.Blue;
+                upColor = Brushes.Green;
+            }
+
             var front = Vector3D.CrossProduct(right, up);
 
             this.AddFace(front, up, frontColor, this.FrontText);
@@ -315,7 +349,11 @@ namespace HelixEngine
 
             var circle = new PieSliceVisual3D();
             circle.BeginEdit();
-            circle.Center = (up * (-this.Size * 0.5)).ToPoint3D();
+            circle.Center = (this.ModelUpDirection * (-this.Size * 0.5)).ToPoint3D();
+            circle.Normal = this.ModelUpDirection;
+            circle.UpVector = this.ModelUpDirection.Equals(new Vector3D(0, 0, 1))
+                                  ? new Vector3D(0, 1, 0)
+                                  : new Vector3D(0, 0, 1);
             circle.InnerRadius = this.Size;
             circle.OuterRadius = this.Size * 1.3;
             circle.StartAngle = 0;
@@ -404,6 +442,16 @@ namespace HelixEngine
             lookdir.Normalize();
             lookdir = lookdir * dist;
             var updir = faceUp;
+
+            if (e.ClickCount == 2)
+            {
+                lookdir *= -1;
+                if (updir != this.ModelUpDirection)
+                {
+                    updir *= -1;
+                }
+            }
+
             var pos = target - lookdir;
             updir.Normalize();
 

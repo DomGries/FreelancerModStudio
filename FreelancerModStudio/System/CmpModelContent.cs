@@ -117,7 +117,7 @@ namespace FreelancerModStudio.SystemPresenter
             return gm;
         }
 
-        public ModelVisual3D LoadModel(string file)
+        public Model3D LoadModel(string file)
         {
             UTFManager utfManager = new UTFManager(file);
             UTFNode root = utfManager.Read();
@@ -167,7 +167,7 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
-            return new ModelVisual3D { Content = GetCmpModelGroup(vmesh, meshGroups) };
+            return GetCmpModelGroup(vmesh, meshGroups);
         }
     }
 }

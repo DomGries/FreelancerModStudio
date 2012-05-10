@@ -1,38 +1,26 @@
 ﻿using System.Windows.Media.Media3D;
-using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public abstract class ContentBase : ITableRow<int>
+    public abstract class ContentBase : ModelVisual3D
     {
         public int ID { get; set; }
 
-        public ModelVisual3D Model { get; set; }
-        public Matrix3D Matrix { get; set; }
-
-        public string Title { get; set; }
-        public bool Visibility { get; set; }
-
-        protected ContentBase()
-        {
-            Matrix = Matrix3D.Identity;
-
-            Visibility = true;
-        }
-
         public void SetDisplay(Matrix3D matrix)
         {
-            if (Model != null)
+            if (Content != null)
             {
                 ContentAnimation animation = new ContentAnimation
-                                                 {
-                                                     OldMatrix = Matrix,
-                                                     NewMatrix = matrix,
-                                                 };
-                Animator.Animate(Model, animation);
+                    {
+                        OldMatrix = Transform.Value,
+                        NewMatrix = matrix,
+                    };
+                Animator.Animate(this, animation);
             }
-
-            Matrix = matrix;
+            else
+            {
+                Transform = new MatrixTransform3D(matrix);
+            }
         }
 
         public void SetDisplay(Vector3D position, Vector3D rotation, Vector3D scale)
@@ -47,31 +35,32 @@ namespace FreelancerModStudio.SystemPresenter
             matrix.Scale(scale);
 
             matrix.Rotate(new Quaternion(new Vector3D(1, 0, 0), rotation.X));
-            matrix.Rotate(new Quaternion(new Vector3D(0, 1, 0) * matrix, rotation.Y));
-            matrix.Rotate(new Quaternion(new Vector3D(0, 0, 1) * matrix, rotation.Z));
+            matrix.Rotate(new Quaternion(new Vector3D(0, 1, 0)*matrix, rotation.Y));
+            matrix.Rotate(new Quaternion(new Vector3D(0, 0, 1)*matrix, rotation.Z));
 
             matrix.Translate(position);
 
             return matrix;
         }
 
-        protected abstract ModelVisual3D GetShapeModel();
+        protected abstract Model3D GetShapeModel();
         public abstract bool IsEmissive();
 
         public void LoadModel()
         {
-            Model = GetShapeModel();
-            SetDisplay(Matrix);
+            Content = GetShapeModel();
         }
 
         public Vector3D GetPosition()
         {
-            return new Vector3D(Matrix.OffsetX, Matrix.OffsetY, Matrix.OffsetZ);
+            Matrix3D matrix = Transform.Value;
+            return new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
         }
 
         public Point3D GetPositionPoint()
         {
-            return new Point3D(Matrix.OffsetX, Matrix.OffsetY, Matrix.OffsetZ);
+            Matrix3D matrix = Transform.Value;
+            return new Point3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
         }
     }
 }

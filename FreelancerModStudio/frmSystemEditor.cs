@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.SystemPresenter;
 using HelixEngine;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace FreelancerModStudio
 {
-    public partial class frmSystemEditor : WeifenLuo.WinFormsUI.Docking.DockContent, IContentForm
+    public partial class frmSystemEditor : DockContent, IContentForm
     {
         Presenter systemPresenter;
         Thread universeLoadingThread;
@@ -40,31 +44,34 @@ namespace FreelancerModStudio
         void InitializeView()
         {
 #if DEBUG
-            System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
+            Stopwatch st = new Stopwatch();
             st.Start();
 #endif
             //create viewport using the Helix Engine
-            var view = new HelixViewport3D
-            {
-                Background = System.Windows.Media.Brushes.Black,
-                Foreground = System.Windows.Media.Brushes.White,
-                FontSize = 16,
-                FontWeight = System.Windows.FontWeights.Bold,
-                ClipToBounds = false,
-                ShowViewCube = true
-            };
+            HelixViewport3D viewport = new HelixViewport3D
+                {
+                    Background = Brushes.Black,
+                    Foreground = Brushes.White,
+                    FontSize = 16,
+                    ClipToBounds = false,
+                    ShowViewCube = true
+                };
 #if DEBUG
             st.Stop();
-            System.Diagnostics.Debug.WriteLine("init HelixView: " + st.ElapsedMilliseconds + "ms");
+            Debug.WriteLine("init HelixView: " + st.ElapsedMilliseconds + "ms");
             st.Start();
 #endif
-            ElementHost host = new ElementHost { Child = view, Dock = DockStyle.Fill };
+            ElementHost host = new ElementHost
+                {
+                    Child = viewport,
+                    Dock = DockStyle.Fill
+                };
             Controls.Add(host);
 #if DEBUG
             st.Stop();
-            System.Diagnostics.Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");
+            Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");
 #endif
-            systemPresenter = new Presenter(view);
+            systemPresenter = new Presenter(viewport);
             systemPresenter.SelectionChanged += systemPresenter_SelectionChanged;
             systemPresenter.FileOpen += systemPresenter_FileOpen;
         }
@@ -87,22 +94,23 @@ namespace FreelancerModStudio
             systemPresenter.Add(data.Blocks);
 
             if (archetype != null)
+            {
                 DisplayUniverse(file, data.Blocks, archetype);
+            }
             else
+            {
                 systemPresenter.IsUniverse = false;
+            }
         }
 
         void DisplayUniverse(string file, List<TableBlock> blocks, ArchetypeManager archetype)
         {
             systemPresenter.IsUniverse = true;
-            if (System.IO.File.Exists(file))
+            if (File.Exists(file))
             {
-                string path = System.IO.Path.GetDirectoryName(file);
+                string path = Path.GetDirectoryName(file);
 
-                ThreadStart threadStart = delegate
-                                              {
-                                                  systemPresenter.DisplayUniverse(path, Helper.Template.Data.SystemFile, blocks, archetype);
-                                              };
+                ThreadStart threadStart = delegate { systemPresenter.DisplayUniverse(path, Helper.Template.Data.SystemFile, blocks, archetype); };
 
                 Helper.Thread.Start(ref universeLoadingThread, threadStart, ThreadPriority.Normal, true);
             }
@@ -113,7 +121,9 @@ namespace FreelancerModStudio
             base.Dispose();
 
             if (systemPresenter != null)
+            {
                 Clear(true);
+            }
         }
 
         void Clear(bool clearLight)
@@ -121,7 +131,6 @@ namespace FreelancerModStudio
             Helper.Thread.Abort(ref universeLoadingThread, true);
 
             systemPresenter.ClearDisplay(clearLight);
-            systemPresenter.Objects.Clear();
         }
 
         public void Clear()
@@ -129,13 +138,39 @@ namespace FreelancerModStudio
             Clear(false);
         }
 
-        public void Select(int id)
+        ContentBase GetContent(int id)
         {
-            ContentBase content;
-            if (systemPresenter.Objects.TryGetValue(id, out content))
+            for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; i++)
+            {
+                ContentBase content = (ContentBase)systemPresenter.Viewport.Children[i];
+                if (content.ID == id)
+                {
+                    return content;
+                }
+            }
+            return null;
+        }
+
+        public void Select(TableBlock block)
+        {
+            // always set title from table editor selection change
+            systemPresenter.Viewport.Title = block.Name;
+
+            // return if object is already selected
+            if (systemPresenter.SelectedContent != null && systemPresenter.SelectedContent.ID == block.UniqueID)
+            {
+                return;
+            }
+
+            ContentBase content = GetContent(block.UniqueID);
+            if (content != null)
+            {
                 systemPresenter.SelectedContent = content;
+            }
             else
+            {
                 Deselect();
+            }
         }
 
         public void Deselect()
@@ -143,11 +178,20 @@ namespace FreelancerModStudio
             systemPresenter.SelectedContent = null;
         }
 
-        public void SetVisibility(int id, bool value)
+        public void SetVisibility(TableBlock block)
         {
-            ContentBase content;
-            if (systemPresenter.Objects.TryGetValue(id, out content))
-                systemPresenter.SetVisibility(content, value);
+            if (block.Visibility)
+            {
+                systemPresenter.Add(block);
+            }
+            else
+            {
+                ContentBase content = GetContent(block.UniqueID);
+                if (content != null)
+                {
+                    systemPresenter.Delete(content);
+                }
+            }
         }
 
         public void SetValues(List<TableBlock> blocks)
@@ -156,15 +200,29 @@ namespace FreelancerModStudio
 
             foreach (TableBlock block in blocks)
             {
-                ContentBase content;
-                if (systemPresenter.Objects.TryGetValue(block.UniqueID, out content))
-                    systemPresenter.ChangeValues(content, block);
+                ContentBase content = GetContent(block.UniqueID);
+                if (content != null)
+                {
+                    // visual is visibile as it was found so we need to remove it
+                    if (block.Visibility)
+                    {
+                        systemPresenter.ChangeValues(content, block);
+                    }
+                    else
+                    {
+                        systemPresenter.Delete(content);
+                    }
+                }
                 else
+                {
                     newBlocks.Add(block);
+                }
             }
 
             if (newBlocks.Count > 0)
+            {
                 Add(newBlocks);
+            }
         }
 
         public void Add(List<TableBlock> blocks)
@@ -179,16 +237,15 @@ namespace FreelancerModStudio
 
         public void Delete(List<TableBlock> blocks)
         {
-            systemPresenter.Delete(blocks);
+            foreach (TableBlock block in blocks)
+            {
+                ContentBase content = GetContent(block.UniqueID);
+                if (content != null)
+                {
+                    systemPresenter.Delete(content);
+                }
+            }
         }
-
-        //void PositionUpdater_Tick(object sender, EventArgs e)
-        //{
-        //    Vector3D position = (systemPresenter.Viewport.Camera.Position.ToVector3D() * 1000);
-        //    string status = Math.Floor(position.X).ToString() + ", " + Math.Floor(position.Y).ToString() + ", " + Math.Floor(position.Z).ToString();
-
-        //    systemPresenter.Viewport.Status = status;
-        //}
 
         public bool UseDocument()
         {
@@ -198,7 +255,9 @@ namespace FreelancerModStudio
         public void FocusSelected()
         {
             if (systemPresenter.SelectedContent != null)
+            {
                 systemPresenter.LookAt(systemPresenter.SelectedContent);
+            }
         }
 
         #region ContentInterface Members

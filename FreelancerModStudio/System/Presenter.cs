@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
+using FreelancerModStudio.Properties;
 using HelixEngine;
 using HelixEngine.Wires;
 using ContextMenu = System.Windows.Controls.ContextMenu;
@@ -14,9 +16,10 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public class Presenter
     {
-        public Table<int, ContentBase> Objects { get; set; }
         public HelixViewport3D Viewport { get; set; }
         public bool IsUniverse { get; set; }
+
+        int secondLayerID;
 
         ModelVisual3D lightning;
         public ModelVisual3D Lightning
@@ -101,11 +104,8 @@ namespace FreelancerModStudio.SystemPresenter
                 FileOpen(file);
         }
 
-        int secondLayerID;
-
         public Presenter(HelixViewport3D viewport)
         {
-            Objects = new Table<int, ContentBase>();
             Viewport = viewport;
             Viewport.SelectionChanged += camera_SelectionChanged;
             Lightning = new SystemLightsVisual3D();
@@ -119,17 +119,16 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 //goto content
                 if (lookAt)
+                {
                     LookAt(content);
+                }
 
                 //select content visually
                 Selection = GetSelectionBox(content);
-
-                Viewport.Title = content.Title;
             }
             else
             {
                 Selection = null;
-                Viewport.Title = string.Empty;
             }
         }
 
@@ -141,19 +140,17 @@ namespace FreelancerModStudio.SystemPresenter
         void AddContent(ContentBase content)
         {
             //load model it was is not loaded yet
-            if (content.Model == null)
-                content.LoadModel();
-
-            //only add it to viewpoint if its actually visible
-            if (content.Visibility)
+            if (content.Content == null)
             {
-                AddModel(content);
-
-                if (content == SelectedContent)
-                    Selection = GetSelectionBox(content);
+                content.LoadModel();
             }
 
-            Objects.Add(content);
+            AddModel(content);
+
+            if (content == selectedContent)
+            {
+                Selection = GetSelectionBox(content);
+            }
         }
 
         public void Add(List<TableBlock> blocks)
@@ -162,33 +159,40 @@ namespace FreelancerModStudio.SystemPresenter
 
             foreach (TableBlock block in blocks)
             {
-                ContentBase content = GetContent(block);
-
-                if (content != null)
-                    AddContent(content);
+                AddBlock(block);
             }
 
             Animator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
-        void AddModel(ContentBase content)
+        public void Add(TableBlock block)
         {
-            if (content.IsEmissive())
-                Viewport.Children.Add(content.Model);
-            else
+            Animator.AnimationDuration = new Duration(TimeSpan.Zero);
+
+            AddBlock(block);
+
+            Animator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
+        }
+
+        void AddBlock(TableBlock block)
+        {
+            ContentBase content = GetContent(block);
+            if (content != null)
             {
-                Viewport.Children.Insert(secondLayerID, content.Model);
-                secondLayerID++;
+                AddContent(content);
             }
         }
 
-        public void Delete(List<TableBlock> blocks)
+        void AddModel(ContentBase content)
         {
-            foreach (TableBlock block in blocks)
+            if (content.IsEmissive())
             {
-                ContentBase content;
-                if (Objects.TryGetValue(block.UniqueID, out content))
-                    Delete(content);
+                Viewport.Children.Add(content);
+            }
+            else
+            {
+                Viewport.Children.Insert(secondLayerID, content);
+                secondLayerID++;
             }
         }
 
@@ -196,49 +200,53 @@ namespace FreelancerModStudio.SystemPresenter
         {
             //if we delete a system also delete all universe connections to and from it
             if (IsUniverse && content is System)
+            {
                 DeleteConnections(content as System);
+            }
 
-            Objects.Remove(content);
             RemoveModel(content);
         }
 
         void RemoveModel(ContentBase content)
         {
-            Viewport.Children.Remove(content.Model);
+            Viewport.Children.Remove(content);
 
             if (!content.IsEmissive())
+            {
                 secondLayerID--;
+            }
         }
 
         void camera_SelectionChanged(DependencyObject visual)
         {
-            ModelVisual3D model = (ModelVisual3D)visual;
-            foreach (ContentBase content in Objects)
+            ContentBase content = visual as ContentBase;
+            if (selectedContent == content)
             {
-                if (content.Model == model)
+                if (IsUniverse)
                 {
-                    if (SelectedContent == content)
+                    System system = content as System;
+                    if (system != null)
                     {
-                        if (IsUniverse && content is System)
-                            DisplayContextMenu(((System)content).Path);
+                        DisplayContextMenu(system.Path);
                     }
-                    else
-                        SetSelectedContent(content, false);
-
-                    OnSelectionChanged(content);
-                    return;
                 }
             }
+            else
+            {
+                SetSelectedContent(content, false);
+            }
+
+            OnSelectionChanged(content);
         }
 
         void DisplayContextMenu(string path)
         {
             ContextMenu menu = new ContextMenu();
             MenuItem item = new MenuItem
-                                {
-                                    Header = string.Format(Properties.Strings.SystemPresenterOpen, global::System.IO.Path.GetFileName(path)),
-                                    Tag = path
-                                };
+                {
+                    Header = string.Format(Strings.SystemPresenterOpen, Path.GetFileName(path)),
+                    Tag = path
+                };
             item.Click += item_Click;
 
             menu.Items.Add(item);
@@ -253,7 +261,7 @@ namespace FreelancerModStudio.SystemPresenter
         ModelVisual3D GetSelectionBox(ContentBase content)
         {
             WireLines lines = GetWireBox(new Vector3D(1.0d, 1.0d, 1.0d));
-            lines.Transform = content.Model.Transform;
+            lines.Transform = content.Transform;
 
             return lines;
         }
@@ -291,32 +299,30 @@ namespace FreelancerModStudio.SystemPresenter
             return new WireLines { Lines = points, Color = Colors.Yellow };
         }
 
-        public void SetVisibility(ContentBase content, bool visibility)
-        {
-            if (content.Visibility != visibility)
-            {
-                content.Visibility = visibility;
-
-                if (visibility)
-                    //show model
-                    AddModel(content);
-                else
-                    //hide model
-                    RemoveModel(content);
-            }
-        }
-
         public void ClearDisplay(bool light)
         {
             Viewport.Children.Clear();
 
             if (light || Lightning == null)
+            {
                 secondLayerID = 0;
+            }
             else
             {
                 Viewport.Children.Add(Lightning);
                 secondLayerID = 1;
             }
+        }
+
+        public int GetContentStartId()
+        {
+            int index = 0;
+            if (Selection != null)
+                index++;
+            if (Lightning != null)
+                index++;
+
+            return index;
         }
 
         public void DisplayUniverse(string path, int systemTemplate, List<TableBlock> blocks, ArchetypeManager archetype)
@@ -326,40 +332,48 @@ namespace FreelancerModStudio.SystemPresenter
             foreach (TableBlock block in blocks)
             {
                 if (block.ObjectType == ContentType.System)
+                {
                     systems.Add(block);
+                }
             }
 
             Analyzer analyzer = new Analyzer
-                                    {
-                                        Universe = systems,
-                                        UniversePath = path,
-                                        SystemTemplate = systemTemplate,
-                                        Archetype = archetype
-                                    };
+                {
+                    Universe = systems,
+                    UniversePath = path,
+                    SystemTemplate = systemTemplate,
+                    Archetype = archetype
+                };
             analyzer.Analyze();
 
             DisplayUniverseConnections(analyzer.Connections);
         }
 
-        void DisplayUniverseConnections(Table<UniverseConnectionID, UniverseConnection> connections)
+        void DisplayUniverseConnections(Dictionary<int, UniverseConnection> connections)
         {
             Viewport.Dispatcher.Invoke((MethodInvoker)(delegate
-            {
-                foreach (UniverseConnection connection in connections)
-                    Viewport.Children.Add(GetConnection(connection).Model);
-            }));
+                {
+                    foreach (UniverseConnection connection in connections.Values)
+                    {
+                        Viewport.Children.Add(GetConnection(connection));
+                    }
+                }));
         }
 
         void DeleteConnections(System system)
         {
             foreach (Connection connection in system.Connections)
+            {
                 Delete(connection);
+            }
         }
 
         void UpdateConnections(System system)
         {
             foreach (Connection connection in system.Connections)
+            {
                 SetConnection(connection);
+            }
         }
 
         Connection GetConnection(UniverseConnection connection)
@@ -373,8 +387,19 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetConnection(Connection line, UniverseConnection connection)
         {
-            line.From = Objects[connection.From.ID];
-            line.To = Objects[connection.To.ID];
+            for (int i = GetContentStartId(); i < Viewport.Children.Count; i++)
+            {
+                ContentBase content = (ContentBase)Viewport.Children[i];
+                if (content.ID == connection.From.ID)
+                {
+                    line.From = content;
+                }
+                else if (content.ID == connection.To.ID)
+                {
+                    line.To = content;
+                }
+            }
+
             line.FromType = GetConnectionType(connection.From.Jumpgate, connection.From.Jumphole);
             line.ToType = GetConnectionType(connection.To.Jumpgate, connection.To.Jumphole);
 
@@ -457,29 +482,39 @@ namespace FreelancerModStudio.SystemPresenter
         {
             SystemParser parser = new SystemParser();
             parser.SetValues(content, block);
-            content.Title = block.Name;
 
-            if (parser.ModelChanged && content.Model != null)
+            if (parser.ModelChanged && content.Content != null)
+            {
                 ReloadModel(content);
+            }
 
-            if (IsUniverse && content is System)
-                UpdateConnections(content as System);
+            if (IsUniverse)
+            {
+                System system = content as System;
+                if (system != null)
+                {
+                    UpdateConnections(system);
+                }
+            }
 
             if (selectedContent == content)
             {
                 //update selection if changed content is selected
                 SetSelectedContent(content, false);
+
+                // set title when block name was changed in properties window
+                Viewport.Title = block.Name;
             }
         }
 
         void ReloadModel(ContentBase content)
         {
-            int index = Viewport.Children.IndexOf(content.Model);
+            int index = Viewport.Children.IndexOf(content);
             if (index != -1)
             {
                 Viewport.Children.RemoveAt(index);
                 content.LoadModel();
-                Viewport.Children.Insert(index, content.Model);
+                Viewport.Children.Insert(index, content);
             }
         }
 
@@ -487,9 +522,10 @@ namespace FreelancerModStudio.SystemPresenter
         {
             ContentBase content = CreateContent(block.ObjectType);
             if (content == null)
+            {
                 return null;
+            }
 
-            content.Visibility = block.Visibility;
             SetValues(content, block);
 
             content.ID = block.UniqueID;

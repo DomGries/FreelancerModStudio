@@ -28,7 +28,7 @@ namespace FreelancerModStudio
         public delegate void SelectionChangedType(List<TableBlock> data, int templateIndex);
         public SelectionChangedType SelectionChanged;
 
-        public delegate void DataVisibilityChangedType(TableBlock block, bool visibility);
+        public delegate void DataVisibilityChangedType(TableBlock block);
         public DataVisibilityChangedType DataVisibilityChanged;
 
         public delegate void ContentChangedType(IContentForm content);
@@ -49,10 +49,10 @@ namespace FreelancerModStudio
                 SelectionChanged(data, templateIndex);
         }
 
-        void OnDataVisibilityChanged(TableBlock block, bool visibility)
+        void OnDataVisibilityChanged(TableBlock block)
         {
             if (DataVisibilityChanged != null)
-                DataVisibilityChanged(block, visibility);
+                DataVisibilityChanged(block);
         }
 
         void OnContentChanged(IContentForm content)
@@ -330,8 +330,7 @@ namespace FreelancerModStudio
                     if (block.ObjectType != SystemPresenter.ContentType.None)
                     {
                         block.Visibility = newValue;
-
-                        OnDataVisibilityChanged(block, newValue);
+                        OnDataVisibilityChanged(block);
                         return newValue;
                     }
 
@@ -932,7 +931,7 @@ namespace FreelancerModStudio
                 if (block.ObjectType != SystemPresenter.ContentType.None)
                 {
                     block.Visibility = visibility;
-                    OnDataVisibilityChanged(block, visibility);
+                    OnDataVisibilityChanged(block);
                 }
             }
 

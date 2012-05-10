@@ -217,8 +217,8 @@ namespace HelixEngine
                 return;
             }
 
-            camera.Position = new Point3D(0, 0, 300);
-            camera.LookDirection = new Vector3D(0, 0, -300);
+            camera.Position = new Point3D(0, 0, 1500);
+            camera.LookDirection = new Vector3D(0, 0, -1500);
             camera.UpDirection = new Vector3D(0, 1, 0);
         }
 

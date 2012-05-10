@@ -274,7 +274,7 @@ namespace FreelancerModStudio.Data.IO
             return -1;
         }
 
-        object ConvertToTemplate(Template.OptionType type, string value)
+        /*object ConvertToTemplate(Template.OptionType type, string value)
         {
             try
             {
@@ -313,7 +313,7 @@ namespace FreelancerModStudio.Data.IO
             catch { }
 
             return value;
-        }
+        }*/
 
         object ConvertToArray(ArrayType type, string value)
         {

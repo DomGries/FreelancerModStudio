@@ -387,16 +387,20 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetConnection(Connection line, UniverseConnection connection)
         {
-            for (int i = GetContentStartId(); i < Viewport.Children.Count; i++)
+            int count = 2;
+
+            for (int i = GetContentStartId(); i < Viewport.Children.Count && count > 0; i++)
             {
                 ContentBase content = (ContentBase)Viewport.Children[i];
                 if (content.ID == connection.From.Id)
                 {
                     line.From = content;
+                    --count;
                 }
                 else if (content.ID == connection.To.Id)
                 {
                     line.To = content;
+                    --count;
                 }
             }
 

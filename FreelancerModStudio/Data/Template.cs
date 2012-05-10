@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace FreelancerModStudio.Data
@@ -8,7 +10,7 @@ namespace FreelancerModStudio.Data
     {
         public TemplateData Data = new TemplateData();
 
-        public void Load(System.IO.Stream stream)
+        public void Load(Stream stream)
         {
             Data = (TemplateData)Serializer.Load(stream, Data.GetType());
         }
@@ -18,7 +20,7 @@ namespace FreelancerModStudio.Data
             Data = (TemplateData)Serializer.Load(path, Data.GetType());
         }
 
-        public void Save(System.IO.Stream stream)
+        public void Save(Stream stream)
         {
             Serializer.Save(stream, Data);
         }
@@ -48,7 +50,7 @@ namespace FreelancerModStudio.Data
             public List<string> Paths;
 
             [XmlArrayItem("Block")]
-            public Table<string, Block> Blocks = new Table<string,Block>(StringComparer.OrdinalIgnoreCase);
+            public Table<string, Block> Blocks = new Table<string, Block>(StringComparer.OrdinalIgnoreCase);
         }
 
         public class Block : ITableRow<string>
@@ -56,8 +58,8 @@ namespace FreelancerModStudio.Data
             [XmlAttribute("name")]
             public string Name;
 
-            [XmlAttribute("multiple"),
-                System.ComponentModel.DefaultValueAttribute(false)]
+            [XmlAttribute("multiple")]
+            [DefaultValue(false)]
             public bool Multiple;
 
             [XmlAttribute("identifier")]
@@ -66,16 +68,19 @@ namespace FreelancerModStudio.Data
             [XmlArrayItem("Option")]
             public Options Options;
 
-            public string ID
+            public string Id
             {
-                get { return Name; }
+                get
+                {
+                    return Name;
+                }
             }
         }
 
         public class Option : IComparable<Option>
         {
-            [XmlAttribute("multiple"),
-                System.ComponentModel.DefaultValueAttribute(false)]
+            [XmlAttribute("multiple")]
+            [DefaultValue(false)]
             public bool Multiple;
 
             [XmlAttribute("parent")]
@@ -105,7 +110,7 @@ namespace FreelancerModStudio.Data
             }
         }
 
-        public class Language
+        /*public class Language
         {
             [XmlAttribute("id")]
             public string ID;
@@ -159,15 +164,19 @@ namespace FreelancerModStudio.Data
 
         public enum FileType { ini, dll, exe, thn, utf, wav, db, threedb, cmp, mat, sur, txm, ale, vms, txt, hta, fl, other };
 
-        public enum OptionType { String, Int, Bool, Point, Double, Enum, RGB, StringArray, IntArray, DoubleArray };
+        public enum OptionType { String, Int, Bool, Point, Double, Enum, RGB, StringArray, IntArray, DoubleArray };*/
 
         public class Files : List<File>
         {
             public int IndexOf(string name)
             {
                 for (int i = 0; i < Count; i++)
+                {
                     if (this[i].Name.ToLower() == name.ToLower())
+                    {
                         return i;
+                    }
+                }
 
                 return -1;
             }
@@ -178,8 +187,12 @@ namespace FreelancerModStudio.Data
             public int IndexOf(string name)
             {
                 for (int i = 0; i < Count; i++)
+                {
                     if (this[i].Name.ToLower() == name.ToLower())
+                    {
                         return i;
+                    }
+                }
 
                 return -1;
             }

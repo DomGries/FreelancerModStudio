@@ -105,6 +105,7 @@
     <Compile Include="Data\UTF\CmpData.cs" />
     <Compile Include="Data\IO\UTFManager.cs" />
     <Compile Include="Data\UTF\D3DFVF.cs" />
+    <Compile Include="Data\UTF\NodeFlags.cs" />
     <Compile Include="Data\UTF\VMeshData.cs" />
     <Compile Include="Data\UTF\VMeshRef.cs" />
     <Compile Include="DevTest.cs">

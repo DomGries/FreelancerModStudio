@@ -11,7 +11,7 @@ namespace FreelancerModStudio
         [STAThread]
         static void Main()
         {
-            //DevTest.CreateTemplate(@"D:\BrigitteDaten\Eigene Musik\1.5b15-sdk_20050627"); return;
+            //DevTest.CreateTemplate(@""); return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

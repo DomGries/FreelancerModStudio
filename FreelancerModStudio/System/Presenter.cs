@@ -390,11 +390,11 @@ namespace FreelancerModStudio.SystemPresenter
             for (int i = GetContentStartId(); i < Viewport.Children.Count; i++)
             {
                 ContentBase content = (ContentBase)Viewport.Children[i];
-                if (content.ID == connection.From.ID)
+                if (content.ID == connection.From.Id)
                 {
                     line.From = content;
                 }
-                else if (content.ID == connection.To.ID)
+                else if (content.ID == connection.To.Id)
                 {
                     line.To = content;
                 }

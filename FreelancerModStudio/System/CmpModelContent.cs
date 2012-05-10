@@ -133,7 +133,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             // Find Cons(truct) nodes. They contain data that links each mesh to the
             // root mesh.
-            var mapFileToObj = new SortedList<string, string> { { "\\", "\\" } };
+            var mapFileToObj = new Dictionary<string, string> { { "\\", "\\" } };
             foreach (UTFNode nodeObj in root.FindNodes("Object Name", true))
             {
                 UTFNode nodeFileName = nodeObj.ParentNode.FindNode("File Name", false);
@@ -141,7 +141,7 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     string objectName = Encoding.ASCII.GetString(nodeObj.Data).Trim('\0');
                     string fileName = Encoding.ASCII.GetString(nodeFileName.Data).Trim('\0');
-                    mapFileToObj.Add(fileName, objectName);
+                    mapFileToObj[fileName] = objectName;
                 }
             }
 
@@ -157,13 +157,16 @@ namespace FreelancerModStudio.SystemPresenter
                     fileName = meshRefNode.ParentNode.ParentNode.ParentNode.Name;
                 else
                     fileName = "\\";
-                if (mapFileToObj.ContainsKey(fileName))
+
+                string meshGroupName;
+                if (mapFileToObj.TryGetValue(fileName, out meshGroupName))
                 {
-                    MeshGroup mg = new MeshGroup();
-                    mg.Name = mapFileToObj[fileName];
-                    mg.RefData = new VMeshRef(meshRefNode.Data);
-                    mg.Transform = GetTransform(root, mapFileToObj[fileName]);
-                    meshGroups.Add(mg);
+                    meshGroups.Add(new MeshGroup
+                        {
+                            Name = meshGroupName,
+                            RefData = new VMeshRef(meshRefNode.Data),
+                            Transform = GetTransform(root, mapFileToObj[fileName])
+                        });
                 }
             }
 

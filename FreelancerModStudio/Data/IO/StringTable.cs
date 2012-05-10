@@ -4,7 +4,7 @@ namespace FreelancerModStudio.Data.IO
 {
     public class StringTable
     {
-        readonly SortedList<int, string> _strings = new SortedList<int, string>();
+        readonly Dictionary<int, string> _strings = new Dictionary<int, string>();
 
         public StringTable(string content)
         {

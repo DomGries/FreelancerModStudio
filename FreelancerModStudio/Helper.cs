@@ -12,7 +12,6 @@ namespace FreelancerModStudio
             public static void Start()
             {
 #if DEBUG
-                //DevTest.CreateTemplate(@"E:\DAT\DWN\fl\jflp\DATA"); return;
                 System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
                 st.Start();
 #endif

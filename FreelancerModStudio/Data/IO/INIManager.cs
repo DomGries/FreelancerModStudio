@@ -70,13 +70,13 @@ namespace FreelancerModStudio.Data.IO
                                 string optionName = line.Substring(0, valueIndex).Trim();
                                 string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
 
-                                currentBlock.Options.Add(optionName, new INIOption(optionValue, currentOptionIndex));
+                                currentBlock.Options.Add(optionName, new INIOption { Value = optionValue, Index = currentOptionIndex } );
                                 currentOptionIndex++;
                             }
                             else
                             {
                                 // entry without value
-                                currentBlock.Options.Add(line, new INIOption(string.Empty, currentOptionIndex));
+                                currentBlock.Options.Add(line, new INIOption { Value = string.Empty, Index = currentOptionIndex });
                                 currentOptionIndex++;
                             }
                         }
@@ -175,22 +175,5 @@ namespace FreelancerModStudio.Data.IO
         public string Value;
         public string Parent; //used to save nested options in correct order
         public int Index; //used to load nested options in correct order
-
-        public INIOption(string value)
-        {
-            Value = value;
-        }
-
-        public INIOption(string value, int index)
-        {
-            Value = value;
-            Index = index;
-        }
-
-        public INIOption(string value, string parent)
-        {
-            Value = value;
-            Parent = parent;
-        }
     }
 }

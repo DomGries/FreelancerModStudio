@@ -8,7 +8,7 @@ namespace FreelancerModStudio.Data
 {
     public class ArchetypeManager
     {
-        SortedList<string, ArchetypeInfo> contentTable;
+        Dictionary<string, ArchetypeInfo> contentTable;
 
         public ArchetypeInfo TypeOf(string archetype)
         {
@@ -45,7 +45,7 @@ namespace FreelancerModStudio.Data
 
         public void CreateContentTable(List<TableBlock> blocks)
         {
-            contentTable = new SortedList<string, ArchetypeInfo>(StringComparer.OrdinalIgnoreCase);
+            contentTable = new Dictionary<string, ArchetypeInfo>(StringComparer.OrdinalIgnoreCase);
 
             foreach (TableBlock block in blocks)
             {

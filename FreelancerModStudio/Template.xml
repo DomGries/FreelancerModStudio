@@ -649,16 +649,16 @@
             <Option>reverse_fraction</Option>
             <Option>flame_effect</Option>
             <Option>trail_effect</Option>
-            <Option>cruise_disrupt_effect</Option>
             <Option>trail_effect_player</Option>
+            <Option>cruise_disrupt_effect</Option>
             <Option>cruise_charge_time</Option>
             <Option>cruise_power_usage</Option>
             <Option>character_start_sound</Option>
             <Option>character_loop_sound</Option>
             <Option>character_pitch_range</Option>
             <Option>rumble_sound</Option>
-            <Option>rumble_atten_range</Option>
             <Option>rumble_pitch_range</Option>
+            <Option>rumble_atten_range</Option>
             <Option>engine_kill_sound</Option>
             <Option>cruise_start_sound</Option>
             <Option>cruise_loop_sound</Option>
@@ -666,9 +666,9 @@
             <Option>cruise_disrupt_sound</Option>
             <Option>cruise_backfire_sound</Option>
             <Option>indestructible</Option>
-            <Option>outside_cone_attenuation</Option>
             <Option>inside_sound_cone</Option>
             <Option>outside_sound_cone</Option>
+            <Option>outside_cone_attenuation</Option>
           </Options>
         </Block>
         <Block name="Explosion" multiple="true" identifier="nickname">

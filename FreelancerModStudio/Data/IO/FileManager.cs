@@ -225,15 +225,15 @@ namespace FreelancerModStudio.Data.IO
                             var optionValue = entry.Value.ToString();
                             if (optionValue == "=")
                                 //use an empty value for options which dont have values and are simply defined when using the option key followed by a colon equal
-                                newOption.Add(new INIOption(string.Empty));
+                                newOption.Add(new INIOption { Value = string.Empty });
                             else
-                                newOption.Add(new INIOption(optionValue));
+                                newOption.Add(new INIOption { Value = optionValue });
 
                             //add suboptions as options with defined parent
                             if (entry.SubOptions != null)
                             {
                                 for (int k = 0; k < entry.SubOptions.Count; k++)
-                                    newOption.Add(new INIOption(entry.SubOptions[k].ToString(), option.ChildName));
+                                    newOption.Add(new INIOption { Value = entry.SubOptions[k].ToString(), Parent = option.ChildName });
                             }
                         }
 

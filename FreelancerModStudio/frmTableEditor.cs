@@ -930,7 +930,7 @@ namespace FreelancerModStudio
 
             foreach (TableBlock block in objectListView1.SelectedObjects)
             {
-                if (block.ObjectType != SystemPresenter.ContentType.None)
+                if (block.ObjectType != SystemPresenter.ContentType.None && block.Visibility != visibility)
                 {
                     block.Visibility = visibility;
                     OnDataVisibilityChanged(block);

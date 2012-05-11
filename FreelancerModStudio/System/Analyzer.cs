@@ -184,12 +184,14 @@ namespace FreelancerModStudio.SystemPresenter
 
     public class UniverseConnection
     {
+        const int ID_OFFSET = 0x1000;
+
         public int ID
         {
             get
             {
                 if (From != null && To != null)
-                    return From.Id * To.Id;
+                    return (From.Id + ID_OFFSET) * (To.Id + ID_OFFSET);
 
                 return -1;
             }

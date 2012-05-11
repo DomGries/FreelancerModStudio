@@ -903,13 +903,15 @@ namespace FreelancerModStudio
 
         public void SelectByUID(int id)
         {
-            foreach (TableBlock block in Data.Blocks)
+            int itemIndex = 0;
+            foreach (TableBlock block in objectListView1.Objects)
             {
                 if (block.UniqueID == id)
                 {
-                    Select(block.ID);
+                    Select(itemIndex);
                     return;
                 }
+                ++itemIndex;
             }
         }
 

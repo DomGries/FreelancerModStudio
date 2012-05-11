@@ -66,15 +66,16 @@ namespace FreelancerModStudio.SystemPresenter
                             }
                     };
 
+                int connectionHash = connection.GetHashCode();
                 UniverseConnection existingConnection;
-                if (Connections.TryGetValue(connection.ID, out existingConnection))
+                if (Connections.TryGetValue(connectionHash, out existingConnection))
                 {
                     existingConnection.To.Jumpgate = connection.From.Jumpgate;
                     existingConnection.To.Jumphole = connection.From.Jumphole;
                 }
                 else
                 {
-                    Connections[connection.ID] = connection;
+                    Connections[connectionHash] = connection;
                 }
             }
         }
@@ -184,16 +185,20 @@ namespace FreelancerModStudio.SystemPresenter
 
     public class UniverseConnection
     {
-        const int ID_OFFSET = 0x1000;
-
-        public int ID
+        public override int GetHashCode()
         {
-            get
+            unchecked // Overflow is fine, just wrap
             {
-                if (From != null && To != null)
-                    return (From.Id + ID_OFFSET) * (To.Id + ID_OFFSET);
-
-                return -1;
+                int hash = 17;
+                if (From != null)
+                {
+                    hash = hash*29 + From.Id;
+                }
+                if (To != null)
+                {
+                    hash = hash*29 + To.Id;
+                }
+                return hash;
             }
         }
 

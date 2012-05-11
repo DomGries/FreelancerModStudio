@@ -260,7 +260,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         ModelVisual3D GetSelectionBox(ContentBase content)
         {
-            WireLines lines = GetWireBox(new Vector3D(1.0d, 1.0d, 1.0d));
+            WireLines lines = GetWireBox(content.GetBaseScale());
             lines.Transform = content.Transform;
 
             return lines;

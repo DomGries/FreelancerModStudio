@@ -12,6 +12,11 @@ namespace FreelancerModStudio.SystemPresenter
             return SharedGeometries.LightSource;
         }
 
+        public override Vector3D GetBaseScale()
+        {
+            return new Vector3D(0.5, 0.5, 0.5);
+        }
+
         public override bool IsEmissive()
         {
             return true;
@@ -53,6 +58,17 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             return null;
+        }
+
+        public override Vector3D GetBaseScale()
+        {
+            switch (Type)
+            {
+                case ContentType.Planet:
+                case ContentType.Sun:
+                    return new Vector3D(1, 1, 1);
+            }
+            return new Vector3D(0.5, 0.5, 0.5);
         }
 
         public override bool IsEmissive()
@@ -102,6 +118,19 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
+        public override Vector3D GetBaseScale()
+        {
+            switch (Shape)
+            {
+                case ZoneShape.Box:
+                    return new Vector3D(0.5, 0.5, 0.5);
+                case ZoneShape.Cylinder:
+                case ZoneShape.Ring:
+                    return new Vector3D(1, 0.5, 1);
+            }
+            return new Vector3D(1, 1, 1);
+        }
+
         public override bool IsEmissive()
         {
             return true;
@@ -121,6 +150,11 @@ namespace FreelancerModStudio.SystemPresenter
         protected override Model3D GetShapeModel()
         {
             return SharedGeometries.System;
+        }
+
+        public override Vector3D GetBaseScale()
+        {
+            return new Vector3D(1, 1, 1);
         }
 
         public override bool IsEmissive()
@@ -154,7 +188,7 @@ namespace FreelancerModStudio.SystemPresenter
             return SharedGeometries.GetGeometry(SharedMeshes.Surface, material);
         }
 
-        Color GetColor(ConnectionType type)
+        static Color GetColor(ConnectionType type)
         {
             switch (type)
             {
@@ -167,6 +201,11 @@ namespace FreelancerModStudio.SystemPresenter
                 default:
                     return SharedMaterials.ConnectionNone;
             }
+        }
+
+        public override Vector3D GetBaseScale()
+        {
+            return new Vector3D(1, 1, 1);
         }
 
         public override bool IsEmissive()

@@ -6,6 +6,10 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public int ID { get; set; }
 
+        protected abstract Model3D GetShapeModel();
+        public abstract Vector3D GetBaseScale();
+        public abstract bool IsEmissive();
+
         public void SetDisplay(Matrix3D matrix)
         {
             if (Content != null)
@@ -42,9 +46,6 @@ namespace FreelancerModStudio.SystemPresenter
 
             return matrix;
         }
-
-        protected abstract Model3D GetShapeModel();
-        public abstract bool IsEmissive();
 
         public void LoadModel()
         {

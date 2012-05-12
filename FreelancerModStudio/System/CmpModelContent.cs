@@ -114,6 +114,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             gm.Material = SharedMaterials.CmpModel;
             gm.Transform = new MatrixTransform3D(transform);
+            gm.Freeze();
             return gm;
         }
 

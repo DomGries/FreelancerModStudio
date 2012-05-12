@@ -161,7 +161,10 @@ namespace FreelancerModStudio.SystemPresenter
 
             foreach (TableBlock block in blocks)
             {
-                AddBlock(block);
+                if (block.Visibility)
+                {
+                    AddBlock(block);
+                }
             }
 
             Animator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
@@ -222,6 +225,12 @@ namespace FreelancerModStudio.SystemPresenter
         void camera_SelectionChanged(DependencyObject visual)
         {
             ContentBase content = visual as ContentBase;
+            if (content == null)
+            {
+                //return if user selected wirebox
+                return;
+            }
+
             if (selectedContent == content)
             {
                 if (IsUniverse)

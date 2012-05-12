@@ -97,11 +97,14 @@
     <Compile Include="Controls\UICultureChanger.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Data\ArchetypeInfo.cs" />
     <Compile Include="Data\ArchetypeManager.cs" />
     <Compile Include="Data\IO\StringTable.cs" />
     <Compile Include="Data\Parser.cs" />
     <Compile Include="Data\Table.cs" />
+    <Compile Include="Data\TableBlock.cs" />
     <Compile Include="Data\TableData.cs" />
+    <Compile Include="Data\TableModified.cs" />
     <Compile Include="Data\UTF\CmpData.cs" />
     <Compile Include="Data\IO\UTFManager.cs" />
     <Compile Include="Data\UTF\D3DFVF.cs" />
@@ -222,12 +225,18 @@
     <Compile Include="StringLogicalComparer.cs" />
     <Compile Include="System\Animator.cs" />
     <Compile Include="System\CmpModelContent.cs" />
-    <Compile Include="System\ContentBase.cs" />
+    <Compile Include="System\Content\Connection.cs" />
+    <Compile Include="System\Content\ConnectionType.cs" />
+    <Compile Include="System\Content\ContentBase.cs" />
+    <Compile Include="System\Content\ContentType.cs" />
+    <Compile Include="System\Content\System.cs" />
+    <Compile Include="System\Content\SystemObject.cs" />
+    <Compile Include="System\Content\Zone.cs" />
     <Compile Include="System\DefaultLightsVisual3D.cs" />
+    <Compile Include="System\Content\LightSource.cs" />
     <Compile Include="System\Matrix3DAnimation.cs" />
     <Compile Include="System\SharedObjects.cs" />
     <Compile Include="System\Analyzer.cs" />
-    <Compile Include="System\Content.cs" />
     <Compile Include="System\Presenter.cs" />
     <Compile Include="System\SystemParser.cs" />
   </ItemGroup>
@@ -292,6 +301,14 @@
     <Content Include="Resources\SystemLegend\TradeLane.ico" />
     <Content Include="Resources\SystemLegend\WeaponsPlatform.ico" />
     <Content Include="Resources\SystemLegend\Zone.ico" />
+    <Content Include="Resources\SystemLegend\ZoneBox.ico" />
+    <Content Include="Resources\SystemLegend\ZoneBoxExclusion.ico" />
+    <Content Include="Resources\SystemLegend\ZoneCylinder.ico" />
+    <Content Include="Resources\SystemLegend\ZoneCylinderExclusion.ico" />
+    <Content Include="Resources\SystemLegend\ZoneExclusion.ico" />
+    <Content Include="Resources\SystemLegend\ZonePath.ico" />
+    <Content Include="Resources\SystemLegend\ZonePathTrade.ico" />
+    <Content Include="Resources\SystemLegend\ZoneVignette.ico" />
     <Content Include="Resources\TableView.ico" />
     <Content Include="Resources\ToDo.ico" />
     <Content Include="Resources\UnDo.ico" />

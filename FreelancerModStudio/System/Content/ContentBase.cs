@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 
-namespace FreelancerModStudio.SystemPresenter
+namespace FreelancerModStudio.SystemPresenter.Content
 {
     public abstract class ContentBase : ModelVisual3D
     {
@@ -11,7 +11,7 @@ namespace FreelancerModStudio.SystemPresenter
         public abstract Vector3D GetBaseScale();
         public abstract bool IsEmissive();
 
-        public void SetDisplay(Matrix3D matrix)
+        public void SetTransform(Matrix3D matrix)
         {
             if (Content != null)
             {
@@ -28,9 +28,9 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public void SetDisplay(Vector3D position, Vector3D rotation, Vector3D scale)
+        public void SetTransform(Vector3D position, Vector3D rotation, Vector3D scale)
         {
-            SetDisplay(GetMatrix(position, rotation, scale));
+            SetTransform(GetMatrix(position, rotation, scale));
         }
 
         Matrix3D GetMatrix(Vector3D position, Vector3D rotation, Vector3D scale)

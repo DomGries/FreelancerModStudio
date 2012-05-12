@@ -1,6 +1,7 @@
 ﻿using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.SystemPresenter.Content;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -10,16 +11,110 @@ namespace FreelancerModStudio.SystemPresenter
 
         public const float SIZE_FACTOR = 0.005f;
 
+        public static void SetObjectType(TableBlock block, ArchetypeManager archetypeManager)
+        {
+            switch (block.Block.Name.ToLower())
+            {
+                case "system":
+                    block.ObjectType = ContentType.System;
+                    return;
+                case "lightsource":
+                    block.ObjectType = ContentType.LightSource;
+                    return;
+                case "object":
+                    {
+                        if (archetypeManager != null)
+                        {
+                            //get type of object based on archetype
+                            foreach (EditorINIOption option in block.Block.Options)
+                            {
+                                if (option.Name.ToLower() == "archetype")
+                                {
+                                    if (option.Values.Count > 0)
+                                    {
+                                        block.Archetype = archetypeManager.TypeOf(option.Values[0].Value.ToString());
+                                        if (block.Archetype != null)
+                                        {
+                                            block.ObjectType = block.Archetype.Type;
+                                            return;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+
+                            block.ObjectType = ContentType.None;
+                        }
+                        return;
+                    }
+                case "zone":
+                    {
+                        string shape = "box";
+                        int flags = 0;
+
+                        const int exlusionFlag = 0x20000;
+
+                        foreach (EditorINIOption option in block.Block.Options)
+                        {
+                            if (option.Values.Count > 0)
+                            {
+                                string value = option.Values[0].Value.ToString();
+                                switch (option.Name.ToLower())
+                                {
+                                    case "usage":
+                                        block.ObjectType = value.ToLower().Contains("trade") ? ContentType.ZonePathTrade : ContentType.ZonePath;
+                                        return;
+                                    case "vignette_type":
+                                        switch (value.ToLower())
+                                        {
+                                            case "open":
+                                            case "field":
+                                            case "exclusion":
+                                                block.ObjectType = ContentType.ZoneVignette;
+                                                return;
+                                        }
+                                        break;
+                                    case "shape":
+                                        shape = value;
+                                        break;
+                                    case "property_flags":
+                                        flags = Parser.ParseInt(value, 0);
+                                        break;
+                                }
+                            }
+                        }
+
+                        bool isExclusion = (flags & exlusionFlag) == exlusionFlag;
+
+                        // parse shape and flags
+                        switch (shape.ToLower())
+                        {
+                            case "sphere":
+                                block.ObjectType = isExclusion ? ContentType.ZoneSphereExclusion : ContentType.ZoneSphere;
+                                break;
+                            default: // ellipsoid
+                                block.ObjectType = isExclusion ? ContentType.ZoneEllipsoidExclusion : ContentType.ZoneEllipsoid;
+                                break;
+                            case "cylinder":
+                            case "ring":
+                                block.ObjectType = isExclusion ? ContentType.ZoneCylinderOrRingExclusion : ContentType.ZoneCylinderOrRing;
+                                break;
+                            case "box":
+                                block.ObjectType = isExclusion ? ContentType.ZoneBoxExclusion : ContentType.ZoneBox;
+                                break;
+                        }
+
+                        return;
+                    }
+            }
+        }
+
         public void SetValues(ContentBase content, TableBlock block)
         {
-            var positionString = "0,0,0";
-            var rotationString = "0,0,0";
-            var shapeString = "box";
-            var scaleString = "1,1,1";
-            var usageString = string.Empty;
-            var vignetteString = string.Empty;
-            var flagsString = string.Empty;
-            var fileString = string.Empty;
+            string positionString = "0,0,0";
+            string rotationString = "0,0,0";
+            string scaleString = "1,1,1";
+            string fileString = string.Empty;
 
             //get properties of content
             foreach (EditorINIOption option in block.Block.Options)
@@ -35,20 +130,8 @@ namespace FreelancerModStudio.SystemPresenter
                         case "rotate":
                             rotationString = value;
                             break;
-                        case "shape":
-                            shapeString = value;
-                            break;
                         case "size":
                             scaleString = value;
-                            break;
-                        case "usage":
-                            usageString = value.ToLower();
-                            break;
-                        case "vignette_type":
-                            vignetteString = value.ToLower();
-                            break;
-                        case "property_flags":
-                            flagsString = value;
                             break;
                         case "file":
                             fileString = value;
@@ -62,89 +145,93 @@ namespace FreelancerModStudio.SystemPresenter
             Vector3D scale;
 
             //set content values
-            if (block.ObjectType == ContentType.Zone)
+            switch (block.ObjectType)
             {
-                Zone zone = (Zone)content;
+                case ContentType.System:
+                    position = ParseUniverseVector(positionString);
+                    scale = new Vector3D(5, 5, 5);
+                    rotation = ParseRotation(rotationString, false);
 
-                ZoneShape oldShape = zone.Shape;
-                ZoneType oldType = zone.Type;
+                    Content.System system = (Content.System)content;
+                    system.Path = fileString;
+                    break;
+                case ContentType.LightSource:
+                    scale = new Vector3D(1, 1, 1);
+                    rotation = ParseRotation(rotationString, false);
+                    break;
+                case ContentType.Construct:
+                case ContentType.Depot:
+                case ContentType.DockingRing:
+                case ContentType.JumpGate:
+                case ContentType.JumpHole:
+                case ContentType.Planet:
+                case ContentType.Satellite:
+                case ContentType.Ship:
+                case ContentType.Station:
+                case ContentType.Sun:
+                case ContentType.TradeLane:
+                case ContentType.WeaponsPlatform:
+                    scale = new Vector3D(1, 1, 1);
+                    rotation = ParseRotation(rotationString, false);
 
-                zone.Shape = ParseShape(shapeString);
-
-                if (usageString.Contains("trade"))
-                    zone.Type = ZoneType.PathTrade;
-                else if (usageString.Contains("patrol"))
-                    zone.Type = ZoneType.PathPatrol;
-                else if (vignetteString == "open" || vignetteString == "field" || vignetteString == "exclusion")
-                    zone.Type = ZoneType.Vignette;
-                else if (flagsString == "131072")
-                    zone.Type = ZoneType.Exclusion;
-                else
-                    zone.Type = ZoneType.Zone;
-
-                rotation = ParseRotation(rotationString, zone.Type == ZoneType.PathPatrol || zone.Type == ZoneType.PathTrade);
-                scale = ParseScale(scaleString, zone.Shape);
-
-                if (zone.Shape != oldShape || zone.Type != oldType)
-                    ModelChanged = true;
-            }
-            else if (block.ObjectType == ContentType.LightSource)
-            {
-                scale = new Vector3D(1, 1, 1);
-                rotation = ParseRotation(rotationString, false);
-            }
-            else if (block.ObjectType == ContentType.System)
-            {
-                position = ParseUniverseVector(positionString);
-                scale = new Vector3D(2, 2, 2);
-                rotation = ParseRotation(rotationString, false);
-
-                System system = (System)content;
-                system.Path = fileString;
-            }
-            else
-            {
-                scale = new Vector3D(1, 1, 1);
-                rotation = ParseRotation(rotationString, false);
-
-                if (block.Archetype != null)
-                {
-                    if (block.Archetype.Radius != 0d)
+                    if (block.Archetype != null)
                     {
-                        scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) * SIZE_FACTOR;
+                        if (block.Archetype.Radius != 0d)
+                        {
+                            scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius)*SIZE_FACTOR;
+                        }
                     }
-
-                    //update system object type
-                    SystemObject contentObject = content as SystemObject;
-                    if (contentObject != null && block.ObjectType != contentObject.Type)
-                    {
-                        contentObject.Type = block.ObjectType;
-                        ModelChanged = true;
-                    }
-                }
+                    break;
+                default: // all zones
+                    rotation = ParseRotation(rotationString, block.ObjectType == ContentType.ZonePath || block.ObjectType == ContentType.ZonePathTrade);
+                    scale = ParseScale(scaleString, block.ObjectType);
+                    break;
             }
 
+            // update the model if the object type was changed
+            if (content.Block == null || content.Block.ObjectType != block.ObjectType)
+            {
+                ModelChanged = true;
+            }
+
+            // set reference to block (this one is different than the one passed in the argument because a new copy was create in the undomanager)
             content.Block = block;
-            content.SetDisplay(position, rotation, scale);
+
+            content.SetTransform(position, rotation, scale);
         }
 
-        public static Vector3D ParseScale(string scale, ZoneShape shape)
+        public static Vector3D ParseScale(string scale, ContentType type)
         {
             string[] values = scale.Split(new[] { ',' });
 
-            if (shape == ZoneShape.Sphere && values.Length > 0)
+            switch (type)
             {
-                var tempScale = Parser.ParseDouble(values[0], 1);
-                return new Vector3D(tempScale, tempScale, tempScale) * SIZE_FACTOR;
+                case ContentType.ZoneSphere:
+                case ContentType.ZoneSphereExclusion:
+                case ContentType.ZoneVignette:
+                    if (values.Length > 0)
+                    {
+                        double tempScale = Parser.ParseDouble(values[0], 1);
+                        return new Vector3D(tempScale, tempScale, tempScale)*SIZE_FACTOR;
+                    }
+                    break;
+                case ContentType.ZoneCylinderOrRing:
+                case ContentType.ZoneCylinderOrRingExclusion:
+                case ContentType.ZonePath:
+                case ContentType.ZonePathTrade:
+                    if (values.Length > 1)
+                    {
+                        double tempScale1 = Parser.ParseDouble(values[0], 1);
+                        double tempScale2 = Parser.ParseDouble(values[1], 1);
+                        return new Vector3D(tempScale1, tempScale2, tempScale1)*SIZE_FACTOR;
+                    }
+                    break;
             }
-            if (shape == ZoneShape.Cylinder && values.Length > 1)
-            {
-                var tempScale1 = Parser.ParseDouble(values[0], 1);
-                var tempScale2 = Parser.ParseDouble(values[1], 1);
-                return new Vector3D(tempScale1, tempScale2, tempScale1) * SIZE_FACTOR;
-            }
+
             if (values.Length > 2)
-                return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) * SIZE_FACTOR;
+            {
+                return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1))*SIZE_FACTOR;
+            }
 
             return new Vector3D(1, 1, 1);
         }
@@ -152,7 +239,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static Vector3D ParsePosition(string vector)
         {
             Vector3D tempVector = Parser.ParseVector(vector);
-            return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y) * SIZE_FACTOR;
+            return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y)*SIZE_FACTOR;
         }
 
         public static Vector3D ParseRotation(string vector, bool pathRotation)
@@ -168,41 +255,20 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(tempRotation.X, -tempRotation.Z, tempRotation.Y);
         }
 
-        public static ZoneShape ParseShape(string shape)
-        {
-            switch (shape.ToLower())
-            {
-                case "box":
-                    return ZoneShape.Box;
-                case "sphere":
-                    return ZoneShape.Sphere;
-                case "cylinder":
-                    return ZoneShape.Cylinder;
-                case "ring":
-                    return ZoneShape.Ring;
-                default:
-                    return ZoneShape.Ellipsoid;
-            }
-        }
-
         public Vector3D ParseUniverseVector(string vector)
         {
+            const double axisCenter = 7.5;
+            const double positionScale = 1 / SIZE_FACTOR / 4;
+
             //Use Point.Parse after implementation of type handling
             string[] values = vector.Split(new[] { ',' });
             if (values.Length > 1)
             {
-                var tempScale1 = Parser.ParseDouble(values[0], 0);
-                var tempScale2 = Parser.ParseDouble(values[1], 0);
-                return new Vector3D(tempScale1 - 7, -tempScale2 + 7, 0) / 0.09;
+                double tempScale1 = Parser.ParseDouble(values[0], 0);
+                double tempScale2 = Parser.ParseDouble(values[1], 0);
+                return new Vector3D(tempScale1 - axisCenter, -tempScale2 + axisCenter, 0)*positionScale;
             }
             return new Vector3D(0, 0, 0);
-        }
-
-        public double GetFactor(double number)
-        {
-            if (number < 0)
-                return -1;
-            return 1;
         }
 
         public static ContentType ParseContentType(string type)

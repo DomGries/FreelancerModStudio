@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Properties;
+using FreelancerModStudio.SystemPresenter.Content;
 using HelixEngine;
 using HelixEngine.Wires;
 using ContextMenu = System.Windows.Controls.ContextMenu;
@@ -181,7 +182,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         void AddBlock(TableBlock block)
         {
-            ContentBase content = GetContent(block);
+            ContentBase content = CreateContent(block);
             if (content != null)
             {
                 AddContent(content);
@@ -204,9 +205,9 @@ namespace FreelancerModStudio.SystemPresenter
         public void Delete(ContentBase content)
         {
             //if we delete a system also delete all universe connections to and from it
-            if (IsUniverse && content is System)
+            if (IsUniverse && content is Content.System)
             {
-                DeleteConnections(content as System);
+                DeleteConnections(content as Content.System);
             }
 
             RemoveModel(content);
@@ -235,7 +236,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 if (IsUniverse)
                 {
-                    System system = content as System;
+                    Content.System system = content as Content.System;
                     if (system != null)
                     {
                         DisplayContextMenu(system.Path);
@@ -371,7 +372,7 @@ namespace FreelancerModStudio.SystemPresenter
                 }));
         }
 
-        void DeleteConnections(System system)
+        void DeleteConnections(Content.System system)
         {
             foreach (Connection connection in system.Connections)
             {
@@ -379,7 +380,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void UpdateConnections(System system)
+        void UpdateConnections(Content.System system)
         {
             foreach (Connection connection in system.Connections)
             {
@@ -403,12 +404,12 @@ namespace FreelancerModStudio.SystemPresenter
             for (int i = GetContentStartId(); i < Viewport.Children.Count && count > 0; i++)
             {
                 ContentBase content = (ContentBase)Viewport.Children[i];
-                if (content.Block.ID == connection.From.Id)
+                if (content.Block.Index == connection.From.Id)
                 {
                     line.From = content;
                     --count;
                 }
-                else if (content.Block.ID == connection.To.Id)
+                else if (content.Block.Index == connection.To.Id)
                 {
                     line.To = content;
                     --count;
@@ -418,8 +419,8 @@ namespace FreelancerModStudio.SystemPresenter
             line.FromType = GetConnectionType(connection.From.Jumpgate, connection.From.Jumphole);
             line.ToType = GetConnectionType(connection.To.Jumpgate, connection.To.Jumphole);
 
-            ((System)line.From).Connections.Add(line);
-            ((System)line.To).Connections.Add(line);
+            ((Content.System)line.From).Connections.Add(line);
+            ((Content.System)line.To).Connections.Add(line);
 
             SetConnection(line);
         }
@@ -432,7 +433,7 @@ namespace FreelancerModStudio.SystemPresenter
             Vector3D position = (fromPosition + toPosition) / 2;
             Vector3D scale = new Vector3D(0.4, (fromPosition - toPosition).Length, 1);
 
-            if (line.FromType == ConnectionType.Both || line.ToType == ConnectionType.Both)
+            if (line.FromType == ConnectionType.JumpGateAndHole || line.ToType == ConnectionType.JumpGateAndHole)
                 scale.X = 0.7;
 
             Vector v1 = new Vector(fromPosition.X, fromPosition.Y);
@@ -457,7 +458,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             Vector3D rotation = new Vector3D(0, 0, (angle + angleOffset) * factor);
 
-            line.SetDisplay(position, rotation, scale);
+            line.SetTransform(position, rotation, scale);
         }
 
         ConnectionType GetConnectionType(bool jumpgate, bool jumphole)
@@ -467,7 +468,7 @@ namespace FreelancerModStudio.SystemPresenter
             if (!jumpgate && jumphole)
                 return ConnectionType.JumpHole;
             if (jumpgate && jumphole)
-                return ConnectionType.Both;
+                return ConnectionType.JumpGateAndHole;
 
             return ConnectionType.None;
         }
@@ -505,7 +506,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (IsUniverse)
             {
-                System system = content as System;
+                Content.System system = content as Content.System;
                 if (system != null)
                 {
                     UpdateConnections(system);
@@ -533,7 +534,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        ContentBase GetContent(TableBlock block)
+        ContentBase CreateContent(TableBlock block)
         {
             ContentBase content = CreateContent(block.ObjectType);
             if (content == null)
@@ -546,20 +547,31 @@ namespace FreelancerModStudio.SystemPresenter
             return content;
         }
 
-        ContentBase CreateContent(ContentType type)
+        static ContentBase CreateContent(ContentType type)
         {
             switch (type)
             {
                 case ContentType.None:
                     return null;
+                case ContentType.System:
+                    return new Content.System();
                 case ContentType.LightSource:
                     return new LightSource();
-                case ContentType.Zone:
-                    return new Zone();
-                case ContentType.System:
-                    return new System();
-                default:
+                case ContentType.Construct:
+                case ContentType.Depot:
+                case ContentType.DockingRing:
+                case ContentType.JumpGate:
+                case ContentType.JumpHole:
+                case ContentType.Planet:
+                case ContentType.Satellite:
+                case ContentType.Ship:
+                case ContentType.Station:
+                case ContentType.Sun:
+                case ContentType.TradeLane:
+                case ContentType.WeaponsPlatform:
                     return new SystemObject();
+                default: // zone
+                    return new Zone();
             }
         }
     }

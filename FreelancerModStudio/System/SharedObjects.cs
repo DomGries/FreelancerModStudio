@@ -5,26 +5,6 @@ using HelixEngine.Meshes;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public enum ContentType
-    {
-        None,
-        LightSource,
-        Sun,
-        Planet,
-        Station,
-        Satellite,
-        Construct,
-        Depot,
-        Ship,
-        WeaponsPlatform,
-        DockingRing,
-        JumpHole,
-        JumpGate,
-        TradeLane,
-        Zone,
-        System
-    }
-
     public static class SharedMaterials
     {
         public static readonly Material LightSource = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(120, 120, 0));
@@ -129,7 +109,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static readonly GeometryModel3D ZoneBox =
             GetGeometry(SharedMeshes.Box, SharedMaterials.Zone);
 
-        public static readonly GeometryModel3D ZoneSphere =
+        public static readonly GeometryModel3D ZoneSphereOrEllipsoid =
             GetGeometry(SharedMeshes.Sphere, SharedMaterials.Zone);
 
         public static readonly GeometryModel3D ZoneCylinderOrRing =

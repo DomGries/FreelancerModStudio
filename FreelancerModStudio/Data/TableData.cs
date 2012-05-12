@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using FreelancerModStudio.Data.IO;
-using FreelancerModStudio.SystemPresenter;
 
 namespace FreelancerModStudio.Data
 {
     public class TableData
     {
-        public List<TableBlock> Blocks { get; set; }
-        public int TemplateIndex { get; set; }
-        public int MaxID { get; set; }
+        public List<TableBlock> Blocks;
+        public int TemplateIndex;
+        public int MaxId;
 
         public TableData()
         {
@@ -22,9 +19,9 @@ namespace FreelancerModStudio.Data
             Blocks = new List<TableBlock>();
             TemplateIndex = data.TemplateIndex;
 
-            MaxID = data.Blocks.Count;
+            MaxId = data.Blocks.Count;
 
-            for (int i = 0; i < MaxID; i++)
+            for (int i = 0; i < MaxId; i++)
                 Blocks.Add(new TableBlock(i, i, data.Blocks[i], TemplateIndex));
         }
 
@@ -38,125 +35,10 @@ namespace FreelancerModStudio.Data
             return data;
         }
 
-        public void RefreshID(int index)
+        public void RefreshIndices(int startIndex)
         {
-            for (int i = index; i < Blocks.Count; i++)
-                Blocks[i].ID = i;
+            for (int i = startIndex; i < Blocks.Count; i++)
+                Blocks[i].Index = i;
         }
-    }
-
-    [Serializable]
-    public class TableBlock : IComparable<TableBlock>
-    {
-        public int ID { get; set; }
-        public int UniqueID { get; set; }
-        public string Name { get; set; }
-        public string Group { get; set; }
-        public ContentType ObjectType { get; set; }
-
-        public EditorINIBlock Block;
-        public TableModified Modified = TableModified.Normal;
-
-        public ArchetypeInfo Archetype { get; set; }
-        public bool Visibility { get; set; }
-
-        public TableBlock(int id, int uid)
-        {
-            ID = id;
-            UniqueID = uid;
-            ObjectType = ContentType.None;
-        }
-
-        public TableBlock(int id, int uid, EditorINIBlock block, int templateIndex)
-        {
-            ID = id;
-            UniqueID = uid;
-            ObjectType = ContentType.None;
-
-            //name of block
-            if (block.MainOptionIndex > -1 && block.Options.Count >= block.MainOptionIndex + 1)
-            {
-                if (block.Options[block.MainOptionIndex].Values.Count > 0)
-                    Name = block.Options[block.MainOptionIndex].Values[0].Value.ToString();
-                else
-                    Name = block.Name;
-            }
-            else
-            {
-                //if (Helper.Template.Data.Files[Data.TemplateIndex].Blocks[block.TemplateIndex].Multiple)
-                //    blockName = blockName + i.ToString();
-                //else
-                Name = block.Name;
-                //todo: different block name if they are all the same
-            }
-
-            //name of group
-            if (Helper.Template.Data.Files[templateIndex].Blocks.Values[block.TemplateIndex].Multiple)
-                Group = block.Name;
-            else
-                Group = Properties.Strings.FileDefaultCategory;
-
-            Block = block;
-        }
-
-        public string ToolTip
-        {
-            get
-            {
-                if (Block != null)
-                {
-                    StringBuilder values = new StringBuilder();
-                    foreach (EditorINIOption option in Block.Options)
-                    {
-                        string append = null;
-                        if (option.Values.Count > 1)
-                            append = option.Name + " = [" + option.Values.Count.ToString() + "]";
-                        else if (option.Values.Count == 1)
-                            append = option.Name + " = " + option.Values[0];
-
-                        if (append != null)
-                        {
-                            if (values.Length > 0)
-                                values.Append(Environment.NewLine + append);
-                            else
-                                values.Append(append);
-                        }
-                    }
-
-                    if (values.Length > 0)
-                        return values.ToString();
-                }
-                return null;
-            }
-        }
-
-        public int CompareTo(TableBlock other)
-        {
-            //sort by group, object type, name, modified
-            int groupComparison = Group.CompareTo(other.Group);
-            if (groupComparison == 0)
-            {
-                int objectTypeComparison = ObjectType.CompareTo(other.ObjectType);
-                if (objectTypeComparison == 0)
-                {
-                    int nameComparison = StringLogicalComparer.Compare(Name, other.Name);
-                    if (nameComparison == 0)
-                        return Modified.CompareTo(other.Modified);
-
-                    return nameComparison;
-                }
-
-                return objectTypeComparison;
-            }
-
-            return groupComparison;
-        }
-    }
-
-    public enum TableModified
-    {
-        Normal,
-        Changed,
-        ChangedSaved
     }
 }

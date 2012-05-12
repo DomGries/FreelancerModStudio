@@ -7,6 +7,7 @@ using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
+using FreelancerModStudio.SystemPresenter.Content;
 using FreelancerModStudio.SystemPresenter;
 using HelixEngine;
 using WeifenLuo.WinFormsUI.Docking;
@@ -143,7 +144,7 @@ namespace FreelancerModStudio
             for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; i++)
             {
                 ContentBase content = (ContentBase)systemPresenter.Viewport.Children[i];
-                if (content.Block.ID == block.ID)
+                if (content.Block.Id == block.Id)
                 {
                     return content;
                 }

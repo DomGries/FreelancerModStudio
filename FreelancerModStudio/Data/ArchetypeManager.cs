@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.SystemPresenter.Content;
 using FreelancerModStudio.SystemPresenter;
 
 namespace FreelancerModStudio.Data
@@ -113,19 +114,6 @@ namespace FreelancerModStudio.Data
 
                 CreateContentTable(solarArch.Blocks);
             }
-        }
-    }
-
-    [Serializable]
-    public class ArchetypeInfo
-    {
-        public ContentType Type { get; set; }
-        public double Radius { get; set; }
-        public string ModelPath { get; set; }
-
-        public override string ToString()
-        {
-            return Type.ToString() + ", " + Radius.ToString();
         }
     }
 }

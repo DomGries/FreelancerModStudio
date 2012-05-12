@@ -2,6 +2,7 @@
 using System.IO;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.SystemPresenter.Content;
 
 namespace FreelancerModStudio.SystemPresenter
 {
@@ -32,10 +33,10 @@ namespace FreelancerModStudio.SystemPresenter
                         // GetConnections throws an exception if the file cant be read
                         try
                         {
-                            Table<int, ConnectionPart> systemConnections = GetConnections(block.UniqueID, Path.Combine(UniversePath, option.Values[0].Value.ToString()));
+                            Table<int, ConnectionPart> systemConnections = GetConnections(block.Id, Path.Combine(UniversePath, option.Values[0].Value.ToString()));
                             if (systemConnections != null)
                             {
-                                AddConnections(block.UniqueID, systemConnections);
+                                AddConnections(block.Id, systemConnections);
                             }
                         }
                         catch
@@ -176,7 +177,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 if (block.Name.ToLower() == blockName)
                 {
-                    return block.UniqueID;
+                    return block.Id;
                 }
             }
             return -1;

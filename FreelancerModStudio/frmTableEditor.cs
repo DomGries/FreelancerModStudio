@@ -8,6 +8,8 @@ using BrightIdeasSoftware;
 using FreelancerModStudio.Controls;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.SystemPresenter;
+using FreelancerModStudio.SystemPresenter.Content;
 
 namespace FreelancerModStudio
 {
@@ -110,24 +112,35 @@ namespace FreelancerModStudio
         {
             Icon = Properties.Resources.FileINIIcon;
 
+            // synchronized with ContentType enum
             ImageList imageList = new ImageList { ColorDepth = ColorDepth.Depth32Bit };
             imageList.Images.AddRange(new Image[]
             {
+                Properties.Resources.System,
                 Properties.Resources.LightSource,
-                Properties.Resources.Sun,
-                Properties.Resources.Planet,
-                Properties.Resources.Station,
-                Properties.Resources.Satellite,
                 Properties.Resources.Construct,
                 Properties.Resources.Depot,
-                Properties.Resources.Ship,
-                Properties.Resources.WeaponsPlatform,
                 Properties.Resources.DockingRing,
-                Properties.Resources.JumpHole,
                 Properties.Resources.JumpGate,
+                Properties.Resources.JumpHole,
+                Properties.Resources.Planet,
+                Properties.Resources.Satellite,
+                Properties.Resources.Ship,
+                Properties.Resources.Station,
+                Properties.Resources.Sun,
                 Properties.Resources.TradeLane,
+                Properties.Resources.WeaponsPlatform,
                 Properties.Resources.Zone,
-                Properties.Resources.System,
+                Properties.Resources.Zone,
+                Properties.Resources.ZoneCylinder,
+                Properties.Resources.ZoneBox,
+                Properties.Resources.ZoneExclusion,
+                Properties.Resources.ZoneExclusion,
+                Properties.Resources.ZoneCylinderExclusion,
+                Properties.Resources.ZoneBoxExclusion,
+                Properties.Resources.ZoneVignette,
+                Properties.Resources.ZonePath,
+                Properties.Resources.ZonePathTrade
             });
             objectListView1.SmallImageList = imageList;
         }
@@ -145,7 +158,7 @@ namespace FreelancerModStudio
                 else if (block.Modified == TableModified.ChangedSaved)
                     lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
 
-                if (block.ObjectType != SystemPresenter.ContentType.None && !block.Visibility)
+                if (block.ObjectType != ContentType.None && !block.Visibility)
                     lvi.ForeColor = Helper.Settings.Data.Data.General.EditorHiddenColor;
             };
 
@@ -197,54 +210,14 @@ namespace FreelancerModStudio
                 Archetype = new ArchetypeManager(archetypeFile, archetypeTemplate);
 
             foreach (TableBlock block in Data.Blocks)
-                SetObjectType(block, Archetype);
-        }
-
-        void SetObjectType(TableBlock block, ArchetypeManager archetypeManager)
-        {
-            switch (block.Block.Name.ToLower())
             {
-                case "lightsource":
-                    block.ObjectType = SystemPresenter.ContentType.LightSource;
-                    break;
-                case "zone":
-                    block.ObjectType = SystemPresenter.ContentType.Zone;
-                    break;
-                case "system":
-                    block.ObjectType = SystemPresenter.ContentType.System;
-                    break;
-                case "object":
-                    if (archetypeManager != null)
-                    {
-                        bool hasArchetype = false;
+                SystemParser.SetObjectType(block, Archetype);
 
-                        //get type of object based on archetype
-                        foreach (EditorINIOption option in block.Block.Options)
-                        {
-                            if (option.Name.ToLower() == "archetype")
-                            {
-                                if (option.Values.Count > 0)
-                                {
-                                    block.Archetype = archetypeManager.TypeOf(option.Values[0].Value.ToString());
-                                    if (block.Archetype != null)
-                                    {
-                                        block.ObjectType = block.Archetype.Type;
-                                        hasArchetype = true;
-                                    }
-
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (!hasArchetype)
-                            block.ObjectType = SystemPresenter.ContentType.None;
-                    }
-                    break;
+                if (block.ObjectType != ContentType.None)
+                {
+                    block.Visibility = true;
+                }
             }
-
-            if (block.ObjectType != SystemPresenter.ContentType.None)
-                block.Visibility = true;
         }
 
         public void ShowData()
@@ -327,7 +300,7 @@ namespace FreelancerModStudio
                 objectListView1.BooleanCheckStatePutter = delegate(object x, bool newValue)
                 {
                     TableBlock block = (TableBlock)x;
-                    if (block.ObjectType != SystemPresenter.ContentType.None)
+                    if (block.ObjectType != ContentType.None)
                     {
                         block.Visibility = newValue;
                         OnDataVisibilityChanged(block);
@@ -341,7 +314,7 @@ namespace FreelancerModStudio
                 cols[2].AspectGetter = delegate(object x)
                 {
                     TableBlock block = (TableBlock)x;
-                    if (block.ObjectType != SystemPresenter.ContentType.None)
+                    if (block.ObjectType != ContentType.None)
                         return block.ObjectType.ToString();
 
                     return block.Group;
@@ -356,7 +329,7 @@ namespace FreelancerModStudio
             //show ID + 1
             cols[1].AspectGetter = delegate(object x)
             {
-                return ((TableBlock)x).ID + 1;
+                return ((TableBlock)x).Index + 1;
             };
 
             //show all options of a block in the tooltip
@@ -456,7 +429,7 @@ namespace FreelancerModStudio
 
                 //set archetype of block
                 if (tableBlock.Archetype == null)
-                    SetObjectType(tableBlock, Archetype);
+                    SystemParser.SetObjectType(tableBlock, Archetype);
 
                 bool existSingle = false;
 
@@ -468,8 +441,8 @@ namespace FreelancerModStudio
                         //block already exists
                         if (Data.Blocks[j].Block.TemplateIndex == block.Block.TemplateIndex)
                         {
-                            tableBlock.ID = Data.Blocks[j].ID;
-                            tableBlock.UniqueID = Data.Blocks[j].UniqueID;
+                            tableBlock.Index = Data.Blocks[j].Index;
+                            tableBlock.Id = Data.Blocks[j].Id;
 
                             //overwrite data if we add blocks which are single then they are overwritten which means they have to be changed to edit in the undo history
                             undoManager.CurrentData[undoBlock] = new ChangedData
@@ -490,16 +463,16 @@ namespace FreelancerModStudio
 
                 if (!existSingle)
                 {
-                    if (block.ID >= Data.Blocks.Count)
+                    if (block.Index >= Data.Blocks.Count)
                         Data.Blocks.Add(block);
                     else
-                        Data.Blocks.Insert(block.ID, block);
+                        Data.Blocks.Insert(block.Index, block);
                 }
 
                 selectedData.Add(tableBlock);
             }
 
-            Data.RefreshID(blocks[0].ID);
+            Data.RefreshIndices(blocks[0].Index);
 
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.SelectedObjects = selectedData;
@@ -532,7 +505,7 @@ namespace FreelancerModStudio
                 id = Data.Blocks.Count;
 
             //add actual block
-            undoManager.Execute(new ChangedData { NewBlocks = new List<TableBlock> { new TableBlock(id, Data.MaxID++, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
+            undoManager.Execute(new ChangedData { NewBlocks = new List<TableBlock> { new TableBlock(id, Data.MaxId++, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
         }
 
         public List<TableBlock> GetSelectedBlocks()
@@ -612,7 +585,7 @@ namespace FreelancerModStudio
             }
 
             foreach (TableBlock block in newBlocks)
-                SetObjectType(block, Archetype);
+                SystemParser.SetObjectType(block, Archetype);
 
             undoManager.Execute(new ChangedData { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Edit });
         }
@@ -639,15 +612,15 @@ namespace FreelancerModStudio
             List<TableBlock> blocks = new List<TableBlock>();
             for (int i = oldBlocks.Count - 1; i >= 0; i--)
             {
-                blocks.Add(Data.Blocks[oldBlocks[i].ID]);
-                Data.Blocks.RemoveAt(oldBlocks[i].ID);
+                blocks.Add(Data.Blocks[oldBlocks[i].Index]);
+                Data.Blocks.RemoveAt(oldBlocks[i].Index);
             }
 
             //insert blocks at new position
             for (int i = 0; i < oldBlocks.Count; i++)
-                Data.Blocks.Insert(newBlocks[i].ID, blocks[oldBlocks.Count - i - 1]);
+                Data.Blocks.Insert(newBlocks[i].Index, blocks[oldBlocks.Count - i - 1]);
 
-            Data.RefreshID(Math.Min(oldBlocks[0].ID, newBlocks[0].ID));
+            Data.RefreshIndices(Math.Min(oldBlocks[0].Index, newBlocks[0].Index));
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.RefreshObjects(Data.Blocks);
 
@@ -663,7 +636,7 @@ namespace FreelancerModStudio
             foreach (TableBlock tableBlock in blocks)
                 Data.Blocks.Remove(tableBlock);
 
-            Data.RefreshID(blocks[0].ID);
+            Data.RefreshIndices(blocks[0].Index);
             objectListView1.RemoveObjects(blocks);
 
             //select objects which were selected before
@@ -829,7 +802,7 @@ namespace FreelancerModStudio
 
                 List<TableBlock> blocks = new List<TableBlock>();
                 for (int i = 0; i < editorData.Blocks.Count; i++)
-                    blocks.Add(new TableBlock(id + i, Data.MaxID++, editorData.Blocks[i], Data.TemplateIndex));
+                    blocks.Add(new TableBlock(id + i, Data.MaxId++, editorData.Blocks[i], Data.TemplateIndex));
 
                 undoManager.Execute(new ChangedData { NewBlocks = blocks, Type = ChangedType.Add });
             }
@@ -901,20 +874,20 @@ namespace FreelancerModStudio
             EnsureSelectionVisible();
         }
 
-        public void Select(int index)
+        public void SelectItemIndex(int value)
         {
-            objectListView1.SelectedIndex = index;
+            objectListView1.SelectedIndex = value;
             EnsureSelectionVisible();
         }
 
-        public void SelectByUID(int id)
+        public void Select(int id)
         {
             int itemIndex = 0;
             foreach (TableBlock block in objectListView1.Objects)
             {
-                if (block.UniqueID == id)
+                if (block.Id == id)
                 {
-                    Select(itemIndex);
+                    SelectItemIndex(itemIndex);
                     return;
                 }
                 ++itemIndex;
@@ -936,7 +909,7 @@ namespace FreelancerModStudio
 
             foreach (TableBlock block in objectListView1.SelectedObjects)
             {
-                if (block.ObjectType != SystemPresenter.ContentType.None && block.Visibility != visibility)
+                if (block.ObjectType != ContentType.None && block.Visibility != visibility)
                 {
                     block.Visibility = visibility;
                     OnDataVisibilityChanged(block);
@@ -1003,15 +976,15 @@ namespace FreelancerModStudio
                 //decrease index if old blocks id is lower than the new index because they will be deleted first
                 for (int j = i - newBlocks.Count; j < blocks.Count; j++)
                 {
-                    if (blocks[j].ID < newIndex)
+                    if (blocks[j].Index < newIndex)
                         newIndex--;
                 }
 
                 //skip block if the id was not changed
-                if (blocks[i].ID != newIndex)
+                if (blocks[i].Index != newIndex)
                 {
                     newBlocks.Add(new TableBlock(newIndex, 0));
-                    oldBlocks.Add(new TableBlock(blocks[i].ID, 0));
+                    oldBlocks.Add(new TableBlock(blocks[i].Index, 0));
                 }
             }
 

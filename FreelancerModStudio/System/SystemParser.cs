@@ -124,6 +124,7 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
+            content.Block = block;
             content.SetDisplay(position, rotation, scale);
         }
 

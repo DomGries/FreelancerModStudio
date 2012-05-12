@@ -125,10 +125,12 @@ namespace FreelancerModStudio.SystemPresenter
 
                 //select content visually
                 Selection = GetSelectionBox(content);
+                Viewport.Title = content.Block.Name;
             }
             else
             {
                 Selection = null;
+                Viewport.Title = null;
             }
         }
 
@@ -392,12 +394,12 @@ namespace FreelancerModStudio.SystemPresenter
             for (int i = GetContentStartId(); i < Viewport.Children.Count && count > 0; i++)
             {
                 ContentBase content = (ContentBase)Viewport.Children[i];
-                if (content.ID == connection.From.Id)
+                if (content.Block.ID == connection.From.Id)
                 {
                     line.From = content;
                     --count;
                 }
-                else if (content.ID == connection.To.Id)
+                else if (content.Block.ID == connection.To.Id)
                 {
                     line.To = content;
                     --count;
@@ -507,7 +509,7 @@ namespace FreelancerModStudio.SystemPresenter
                 SetSelectedContent(content, false);
 
                 // set title when block name was changed in properties window
-                Viewport.Title = block.Name;
+                Viewport.Title = content.Block.Name;
             }
         }
 
@@ -532,7 +534,6 @@ namespace FreelancerModStudio.SystemPresenter
 
             SetValues(content, block);
 
-            content.ID = block.UniqueID;
             return content;
         }
 

@@ -988,11 +988,11 @@ namespace FreelancerModStudio
             }
         }
 
-        void systemEditor_SelectionChanged(int id)
+        void systemEditor_SelectionChanged(TableBlock block)
         {
             var tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
-                tableEditor.SelectByUID(id);
+                tableEditor.Select(block);
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System.Windows.Media.Media3D;
+using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio.SystemPresenter
 {
     public abstract class ContentBase : ModelVisual3D
     {
-        public int ID { get; set; }
+        public TableBlock Block;
 
         protected abstract Model3D GetShapeModel();
         public abstract Vector3D GetBaseScale();

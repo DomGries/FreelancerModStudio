@@ -18,13 +18,13 @@ namespace FreelancerModStudio
         Presenter systemPresenter;
         Thread universeLoadingThread;
 
-        public delegate void SelectionChangedType(int id);
+        public delegate void SelectionChangedType(TableBlock block);
         public SelectionChangedType SelectionChanged;
 
-        void OnSelectionChanged(int id)
+        void OnSelectionChanged(TableBlock block)
         {
             if (SelectionChanged != null)
-                SelectionChanged(id);
+                SelectionChanged(block);
         }
 
         public Presenter.FileOpenType FileOpen;
@@ -78,7 +78,7 @@ namespace FreelancerModStudio
 
         void systemPresenter_SelectionChanged(ContentBase content)
         {
-            OnSelectionChanged(content.ID);
+            OnSelectionChanged(content.Block);
         }
 
         void systemPresenter_FileOpen(string file)
@@ -138,12 +138,12 @@ namespace FreelancerModStudio
             Clear(false);
         }
 
-        ContentBase GetContent(int id)
+        ContentBase GetContent(TableBlock block)
         {
             for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; i++)
             {
                 ContentBase content = (ContentBase)systemPresenter.Viewport.Children[i];
-                if (content.ID == id)
+                if (content.Block.ID == block.ID)
                 {
                     return content;
                 }
@@ -153,16 +153,13 @@ namespace FreelancerModStudio
 
         public void Select(TableBlock block)
         {
-            // always set title from table editor selection change
-            systemPresenter.Viewport.Title = block.Name;
-
             // return if object is already selected
-            if (systemPresenter.SelectedContent != null && systemPresenter.SelectedContent.ID == block.UniqueID)
+            if (systemPresenter.SelectedContent != null && systemPresenter.SelectedContent.Block == block)
             {
                 return;
             }
 
-            ContentBase content = GetContent(block.UniqueID);
+            ContentBase content = GetContent(block);
             if (content != null)
             {
                 systemPresenter.SelectedContent = content;
@@ -186,7 +183,7 @@ namespace FreelancerModStudio
             }
             else
             {
-                ContentBase content = GetContent(block.UniqueID);
+                ContentBase content = GetContent(block);
                 if (content != null)
                 {
                     systemPresenter.Delete(content);
@@ -200,7 +197,7 @@ namespace FreelancerModStudio
 
             foreach (TableBlock block in blocks)
             {
-                ContentBase content = GetContent(block.UniqueID);
+                ContentBase content = GetContent(block);
                 if (content != null)
                 {
                     // visual is visibile as it was found so we need to remove it
@@ -239,7 +236,7 @@ namespace FreelancerModStudio
         {
             foreach (TableBlock block in blocks)
             {
-                ContentBase content = GetContent(block.UniqueID);
+                ContentBase content = GetContent(block);
                 if (content != null)
                 {
                     systemPresenter.Delete(content);

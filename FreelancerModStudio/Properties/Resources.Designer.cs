@@ -590,6 +590,13 @@ namespace FreelancerModStudio.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap ZonePathTradeLane {
+            get {
+                object obj = ResourceManager.GetObject("ZonePathTradeLane", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap ZoneVignette {
             get {
                 object obj = ResourceManager.GetObject("ZoneVignette", resourceCulture);

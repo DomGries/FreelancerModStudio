@@ -140,7 +140,8 @@ namespace FreelancerModStudio
                 Properties.Resources.ZoneBoxExclusion,
                 Properties.Resources.ZoneVignette,
                 Properties.Resources.ZonePath,
-                Properties.Resources.ZonePathTrade
+                Properties.Resources.ZonePathTrade,
+                Properties.Resources.ZonePathTradeLane
             });
             objectListView1.SmallImageList = imageList;
         }

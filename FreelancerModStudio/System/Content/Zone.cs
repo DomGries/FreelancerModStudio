@@ -19,7 +19,7 @@ namespace FreelancerModStudio.SystemPresenter.Content
 
                 case ContentType.ZoneSphereExclusion:
                 case ContentType.ZoneEllipsoidExclusion:
-                    return SharedGeometries.ZoneSphereExclusion;
+                    return SharedGeometries.ZoneSphereOrEllipsoidExclusion;
                 case ContentType.ZoneCylinderOrRingExclusion:
                     return SharedGeometries.ZoneCylinderOrRingExclusion;
                 case ContentType.ZoneBoxExclusion:
@@ -28,9 +28,11 @@ namespace FreelancerModStudio.SystemPresenter.Content
                 case ContentType.ZoneVignette:
                     return SharedGeometries.ZoneVignette;
                 case ContentType.ZonePath:
-                    return SharedGeometries.ZonePathPatrol;
+                    return SharedGeometries.ZonePath;
                 case ContentType.ZonePathTrade:
                     return SharedGeometries.ZonePathTrade;
+                case ContentType.ZonePathTradeLane:
+                    return SharedGeometries.ZonePathTradeLane;
             }
         }
 
@@ -40,6 +42,7 @@ namespace FreelancerModStudio.SystemPresenter.Content
             {
                 case ContentType.ZoneBox:
                 case ContentType.ZoneBoxExclusion:
+                case ContentType.ZonePathTradeLane:
                     return new Vector3D(0.5, 0.5, 0.5);
                 case ContentType.ZoneCylinderOrRing:
                 case ContentType.ZoneCylinderOrRingExclusion:

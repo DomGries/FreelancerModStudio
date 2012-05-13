@@ -308,6 +308,7 @@
     <Content Include="Resources\SystemLegend\ZoneExclusion.ico" />
     <Content Include="Resources\SystemLegend\ZonePath.ico" />
     <Content Include="Resources\SystemLegend\ZonePathTrade.ico" />
+    <Content Include="Resources\SystemLegend\ZonePathTradeLane.ico" />
     <Content Include="Resources\SystemLegend\ZoneVignette.ico" />
     <Content Include="Resources\TableView.ico" />
     <Content Include="Resources\ToDo.ico" />

@@ -37,6 +37,7 @@ namespace FreelancerModStudio.SystemPresenter.Content
 
         ZoneVignette,
         ZonePath,
-        ZonePathTrade
+        ZonePathTrade,
+        ZonePathTradeLane
     }
 }

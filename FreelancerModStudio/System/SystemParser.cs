@@ -42,10 +42,8 @@ namespace FreelancerModStudio.SystemPresenter
                                     break;
                                 }
                             }
-
-                            block.ObjectType = ContentType.None;
                         }
-                        return;
+                        break;
                     }
                 case "zone":
                     {
@@ -61,8 +59,21 @@ namespace FreelancerModStudio.SystemPresenter
                                 string value = option.Values[0].Value.ToString();
                                 switch (option.Name.ToLower())
                                 {
+                                    case "lane_id":
+                                        // overrides exclusion zones as those are set after the loop
+                                        block.ObjectType = ContentType.ZonePathTradeLane;
+                                        return;
                                     case "usage":
-                                        block.ObjectType = value.ToLower().Contains("trade") ? ContentType.ZonePathTrade : ContentType.ZonePath;
+                                        string[] values = value.Split(new[] { ',' });
+                                        foreach (string valueEntry in values)
+                                        {
+                                            if (valueEntry.ToLower() == "trade")
+                                            {
+                                                block.ObjectType = ContentType.ZonePathTrade;
+                                                return;
+                                            }
+                                        }
+                                        block.ObjectType = ContentType.ZonePath;
                                         return;
                                     case "vignette_type":
                                         switch (value.ToLower())
@@ -86,27 +97,26 @@ namespace FreelancerModStudio.SystemPresenter
 
                         bool isExclusion = (flags & exlusionFlag) == exlusionFlag;
 
-                        // parse shape and flags
+                        // set type based on shape and flags
                         switch (shape.ToLower())
                         {
                             case "sphere":
                                 block.ObjectType = isExclusion ? ContentType.ZoneSphereExclusion : ContentType.ZoneSphere;
-                                break;
+                                return;
                             default: // ellipsoid
                                 block.ObjectType = isExclusion ? ContentType.ZoneEllipsoidExclusion : ContentType.ZoneEllipsoid;
-                                break;
+                                return;
                             case "cylinder":
                             case "ring":
                                 block.ObjectType = isExclusion ? ContentType.ZoneCylinderOrRingExclusion : ContentType.ZoneCylinderOrRing;
-                                break;
+                                return;
                             case "box":
                                 block.ObjectType = isExclusion ? ContentType.ZoneBoxExclusion : ContentType.ZoneBox;
-                                break;
+                                return;
                         }
-
-                        return;
                     }
             }
+            block.ObjectType = ContentType.None;
         }
 
         public void SetValues(ContentBase content, TableBlock block)

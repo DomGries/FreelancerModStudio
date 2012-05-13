@@ -10,7 +10,7 @@ namespace FreelancerModStudio.Data.IO
         public string File { get; set; }
 
         const string FILE_TYPE = "UTF ";
-        const int FILE_VERSION = 257;
+        const int FILE_VERSION = 0x101;
 
         public UTFManager(string file)
         {
@@ -19,13 +19,11 @@ namespace FreelancerModStudio.Data.IO
 
         public UTFNode Read()
         {
-            UTFNode info = null;
-
             using (var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new BinaryReader(stream))
             {
-                if (stream.Length < 4 + 4 ||
-                    Encoding.ASCII.GetString(reader.ReadBytes(4)) != FILE_TYPE ||
+                if (stream.Length < ByteLen.FILE_TAG + ByteLen.INT ||
+                    Encoding.ASCII.GetString(reader.ReadBytes(ByteLen.FILE_TAG)) != FILE_TYPE ||
                     reader.ReadInt32() != FILE_VERSION)
                 {
                     return null;
@@ -37,14 +35,14 @@ namespace FreelancerModStudio.Data.IO
 
                 //int unknown1 = reader.ReadInt32();
                 //int header_size = reader.ReadInt32();
-                reader.BaseStream.Seek(12, SeekOrigin.Current);
+                reader.BaseStream.Seek(ByteLen.INT * 3, SeekOrigin.Current);
 
                 // get string info
                 int stringBlockOffset = reader.ReadInt32();
                 int stringBlockSize = reader.ReadInt32();
 
                 //int unknown2 = reader.ReadInt32();
-                reader.BaseStream.Seek(4, SeekOrigin.Current);
+                reader.BaseStream.Seek(ByteLen.INT, SeekOrigin.Current);
 
                 // get data info
                 int dataBlockOffset = reader.ReadInt32();
@@ -55,10 +53,10 @@ namespace FreelancerModStudio.Data.IO
                 StringTable stringTable =
                     new StringTable(Encoding.ASCII.GetString(reader.ReadBytes(stringBlockSize)));
 
-                info = new UTFNode();
+                UTFNode info = new UTFNode();
                 ParseNode(reader, stringTable, nodeBlockOffset, 0, dataBlockOffset, info);
+                return info;
             }
-            return info;
         }
 
         private void ParseNode(BinaryReader reader, StringTable stringTable, int nodeBlockStart, int nodeStart, int dataBlockOffset, UTFNode parent)

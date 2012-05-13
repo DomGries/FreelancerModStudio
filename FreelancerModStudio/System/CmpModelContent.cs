@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
@@ -17,9 +16,9 @@ namespace FreelancerModStudio.SystemPresenter
 
     public class CmpModelContent
     {
-        private Matrix3D GetTransform(UTFNode root, CmpData data, string partName)
+        private Matrix3D GetTransform(UTFNode root, List<CmpPart> parts, string partName)
         {
-            foreach (CmpPart part in data.Parts)
+            foreach (CmpPart part in parts)
             {
                 if (part.ChildName == partName)
                     return part.Matrix * GetTransform(root, part.ParentName);
@@ -31,19 +30,15 @@ namespace FreelancerModStudio.SystemPresenter
         {
             UTFNode cmpNode = root.FindNode("Fix", true);
             if (cmpNode != null)
-                return GetTransform(root, new CmpData(cmpNode.Data, true), partName);
-
-            //cmpNode = root.FindNode("Loose", true);
-            //if (cmpNode != null)
-            //    return GetTransform(root, new CmpData(cmpNode.Data, true), partName);
+                return GetTransform(root, FixConstruct.Parse(cmpNode.Data), partName);
 
             cmpNode = root.FindNode("Rev", true);
             if (cmpNode != null)
-                return GetTransform(root, new CmpData(cmpNode.Data, false), partName);
+                return GetTransform(root, RevConstruct.Parse(cmpNode.Data), partName);
 
             cmpNode = root.FindNode("Pris", true);
             if (cmpNode != null)
-                return GetTransform(root, new CmpData(cmpNode.Data, false), partName);
+                return GetTransform(root, PrisConstruct.Parse(cmpNode.Data), partName);
 
             return Matrix3D.Identity;
         }

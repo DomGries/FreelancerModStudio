@@ -99,15 +99,20 @@
     </Compile>
     <Compile Include="Data\ArchetypeInfo.cs" />
     <Compile Include="Data\ArchetypeManager.cs" />
+    <Compile Include="Data\ByteLen.cs" />
     <Compile Include="Data\IO\StringTable.cs" />
     <Compile Include="Data\Parser.cs" />
     <Compile Include="Data\Table.cs" />
     <Compile Include="Data\TableBlock.cs" />
     <Compile Include="Data\TableData.cs" />
     <Compile Include="Data\TableModified.cs" />
-    <Compile Include="Data\UTF\CmpData.cs" />
+    <Compile Include="Data\UTF\FixConstruct.cs" />
     <Compile Include="Data\IO\UTFManager.cs" />
+    <Compile Include="Data\UTF\CmpPart.cs" />
     <Compile Include="Data\UTF\D3DFVF.cs" />
+    <Compile Include="Data\UTF\CmpParser.cs" />
+    <Compile Include="Data\UTF\RevConstruct.cs" />
+    <Compile Include="Data\UTF\PrisConstruct.cs" />
     <Compile Include="Data\UTF\NodeFlags.cs" />
     <Compile Include="Data\UTF\VMeshData.cs" />
     <Compile Include="Data\UTF\VMeshRef.cs" />

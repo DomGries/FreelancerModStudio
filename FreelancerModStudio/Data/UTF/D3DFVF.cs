@@ -53,7 +53,7 @@ namespace FreelancerModStudio.Data.UTF
         /// </summary>
         TEX4 = 0x0400,
 
-        //TEX5 = 0x0500,
+        TEX5 = 0x0500,
         //TEX6 = 0x0600,
         //TEX7 = 0x0700,
         //TEX8 = 0x0800

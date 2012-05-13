@@ -32,31 +32,28 @@ namespace FreelancerModStudio.Data.UTF
         public void Read(byte[] data)
         {
             int pos = 0;
-            HeaderSize = BitConverter.ToUInt32(data, pos); pos += 4;
-            VMeshLibId = BitConverter.ToUInt32(data, pos); pos += 4;
-            VertexStart = BitConverter.ToUInt16(data, pos); pos += 2;
-            VertexCount = BitConverter.ToUInt16(data, pos); pos += 2;
-            IndexStart = BitConverter.ToUInt16(data, pos); pos += 2;
-            IndexCount = BitConverter.ToUInt16(data, pos); pos += 2;
-            MeshStart = BitConverter.ToUInt16(data, pos); pos += 2;
-            MeshCount = BitConverter.ToUInt16(data, pos); pos += 2;
+            HeaderSize = CmpParser.ParseUInt32(data, ref pos);
+            VMeshLibId = CmpParser.ParseUInt32(data, ref pos);
+            VertexStart = CmpParser.ParseUInt16(data, ref pos);
+            VertexCount = CmpParser.ParseUInt16(data, ref pos);
+            IndexStart = CmpParser.ParseUInt16(data, ref pos);
+            IndexCount = CmpParser.ParseUInt16(data, ref pos);
+            MeshStart = CmpParser.ParseUInt16(data, ref pos);
+            MeshCount = CmpParser.ParseUInt16(data, ref pos);
 
-            float boundingBoxMaxX = BitConverter.ToSingle(data, pos); pos += 4;
-            float boundingBoxMinX = BitConverter.ToSingle(data, pos); pos += 4;
-            float boundingBoxMaxY = BitConverter.ToSingle(data, pos); pos += 4;
-            float boundingBoxMinY = BitConverter.ToSingle(data, pos); pos += 4;
-            float boundingBoxMaxZ = BitConverter.ToSingle(data, pos); pos += 4;
-            float boundingBoxMinZ = BitConverter.ToSingle(data, pos); pos += 4;
+            float boundingBoxMaxX = CmpParser.ParseFloat(data, ref pos);
+            float boundingBoxMinX = CmpParser.ParseFloat(data, ref pos);
+            float boundingBoxMaxY = CmpParser.ParseFloat(data, ref pos);
+            float boundingBoxMinY = CmpParser.ParseFloat(data, ref pos);
+            float boundingBoxMaxZ = CmpParser.ParseFloat(data, ref pos);
+            float boundingBoxMinZ = CmpParser.ParseFloat(data, ref pos);
 
             BoundingBoxMin = new Vector3D(boundingBoxMinX, boundingBoxMinZ, boundingBoxMinY);
             BoundingBoxMax = new Vector3D(boundingBoxMaxX, boundingBoxMaxZ, boundingBoxMaxY);
 
-            float centerX = BitConverter.ToSingle(data, pos); pos += 4;
-            float centerY = BitConverter.ToSingle(data, pos); pos += 4;
-            float centerZ = BitConverter.ToSingle(data, pos); pos += 4;
-            Center = new Vector3D(centerX, centerZ, centerY);
+            Center = CmpParser.ParseVector3D(data, ref pos);
 
-            Radius = BitConverter.ToSingle(data, pos); pos += 4;
+            Radius = CmpParser.ParseFloat(data, ref pos);
         }
 
         public byte[] Write()

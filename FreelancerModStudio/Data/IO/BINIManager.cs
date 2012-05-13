@@ -4,14 +4,13 @@ using System.Text;
 
 namespace FreelancerModStudio.Data.IO
 {
-    //format: http://nullprogram.com/projects/bini/binitools.html#The-BINI-Format
     public class BINIManager
     {
         public string File { get; set; }
         public List<INIBlock> Data { get; set; }
 
         const string FILE_TYPE = "BINI";
-        const int FILE_VERSION = 1;
+        const int FILE_VERSION = 0x1;
 
         public BINIManager(string file)
         {
@@ -25,8 +24,8 @@ namespace FreelancerModStudio.Data.IO
             using (var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var binaryReader = new BinaryReader(stream, Encoding.Default))
             {
-                if (stream.Length < 4 + 4 ||
-                    Encoding.ASCII.GetString(binaryReader.ReadBytes(4)) != FILE_TYPE ||
+                if (stream.Length < ByteLen.FILE_TAG + ByteLen.INT ||
+                    Encoding.ASCII.GetString(binaryReader.ReadBytes(ByteLen.FILE_TAG)) != FILE_TYPE ||
                     binaryReader.ReadInt32() != FILE_VERSION)
                 {
                     // return false if it is not a bini file

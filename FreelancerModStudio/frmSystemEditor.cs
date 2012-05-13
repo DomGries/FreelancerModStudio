@@ -52,8 +52,8 @@ namespace FreelancerModStudio
             HelixViewport3D viewport = new HelixViewport3D
                 {
                     Background = Brushes.Black,
-                    Foreground = Brushes.White,
-                    FontSize = 16,
+                    Foreground = Brushes.Yellow,
+                    FontSize = 14,
                     ClipToBounds = false,
                     ShowViewCube = true
                 };

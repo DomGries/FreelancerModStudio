@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.SystemPresenter.Content;
@@ -22,23 +23,14 @@ namespace FreelancerModStudio.Data
 
         public static string GetRelativeArchetype(string file, int fileTemplate, int archetypeTemplate)
         {
-            //get archetype path
-            if (fileTemplate > 0 && fileTemplate < Helper.Template.Data.Files.Count)
+            string dataPath = Helper.Template.Data.GetDataPath(file, fileTemplate);
+            if (dataPath != null)
             {
-                string[] directories = Helper.Template.Data.Files[fileTemplate].Paths[0].Split(new[] { System.IO.Path.DirectorySeparatorChar });
-                StringBuilder archetypePath = new StringBuilder(file);
-                for (int i = 0; i < directories.Length; i++)
+                string archetypePath = dataPath + @"\Solar\SolarArch.ini";
+                if (File.Exists(archetypePath))
                 {
-                    int lastIndex = archetypePath.ToString().LastIndexOf(System.IO.Path.DirectorySeparatorChar);
-                    if (lastIndex == -1)
-                        break;
-                    archetypePath.Remove(lastIndex, archetypePath.Length - lastIndex);
+                    return archetypePath;
                 }
-
-                archetypePath.Append(@"\Solar\SolarArch.ini");
-
-                if (System.IO.File.Exists(archetypePath.ToString()))
-                    return archetypePath.ToString();
             }
 
             return null;

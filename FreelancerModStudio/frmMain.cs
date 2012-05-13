@@ -657,29 +657,6 @@ namespace FreelancerModStudio
                 Document_DisplayChanged((IDocumentForm)activeDocument);
         }
 
-        void SetDocumentMenus(bool value)
-        {
-            mnuSave.Visible = value;
-            mnuSaveAs.Visible = value;
-            mnuSaveAll.Visible = value;
-            mnuSaveSeperator.Visible = value;
-            mnuWindowsSeperator.Visible = value;
-            mnuClose.Visible = value;
-
-            mnuSave.Enabled = value;
-            mnuSaveAs.Enabled = value;
-            mnuSaveAll.Enabled = value;
-            mnuClose.Enabled = value;
-            mnuCloseAllDocuments.Enabled = value;
-
-            if (!value)
-            {
-                mnuChangeVisibility.Visible = false;
-                mnuFocusSelected.Visible = false;
-                mnu3dEditor.Enabled = false;
-            }
-        }
-
         int FileOpened(string file)
         {
             int i = 0;
@@ -831,6 +808,17 @@ namespace FreelancerModStudio
                 content.SelectAll();
         }
 
+        void mnuShowModels_Click(object sender, EventArgs e)
+        {
+            if (systemEditor == null)
+            {
+                return;
+            }
+
+            systemEditor.ShowModels();
+            mnuShowModels.Checked = !mnuShowModels.Checked;
+        }
+
         private void mnuFocusSelected_Click(object sender, EventArgs e)
         {
             if (systemEditor != null)
@@ -883,9 +871,33 @@ namespace FreelancerModStudio
             }
         }
 
-        void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
+        void SetDocumentMenus(bool value)
         {
-            Content_DisplayChanged(GetContent());
+            mnuSave.Visible = value;
+            mnuSaveAs.Visible = value;
+            mnuSaveAll.Visible = value;
+            mnuSaveSeperator.Visible = value;
+            mnuWindowsSeperator.Visible = value;
+            mnuClose.Visible = value;
+
+            mnuSave.Enabled = value;
+            mnuSaveAs.Enabled = value;
+            mnuSaveAll.Enabled = value;
+            mnuClose.Enabled = value;
+            mnuCloseAllDocuments.Enabled = value;
+
+            if (!value)
+            {
+                mnu3dEditor.Enabled = false;
+
+                mnuFocusSelected.Visible = false;
+                mnuFocusSelectedSeperator.Visible = false;
+
+                mnuShowModels.Visible = false;
+                mnuShowModels.Enabled = false;
+                mnuChangeVisibility.Visible = false;
+                mnuShowModelsSeperator.Visible = false;
+            }
         }
 
         void Document_DisplayChanged(IDocumentForm document)
@@ -896,21 +908,32 @@ namespace FreelancerModStudio
                 return;
             }
 
+            if (systemEditor != null)
+            {
+                systemEditor.SetFile(document.GetFilePath());
+            }
+
             if (document.CanSave())
             {
-                mnuSave.Text = String.Format(Properties.Strings.FileEditorSave, document.GetTitle());
-                mnuSaveAs.Text = String.Format(Properties.Strings.FileEditorSaveAs, document.GetTitle());
+                string title = document.GetTitle();
+                mnuSave.Text = String.Format(Properties.Strings.FileEditorSave, title);
+                mnuSaveAs.Text = String.Format(Properties.Strings.FileEditorSaveAs, title);
             }
 
             mnuUndo.Enabled = document.CanUndo();
             mnuRedo.Enabled = document.CanRedo();
 
-            mnuChangeVisibility.Visible = document.CanChangeVisibility(false);
-            mnuFocusSelected.Visible = document.CanFocusSelected(false);
-
-            toolStripSeparator4.Visible = document.CanChangeVisibility(false) || document.CanFocusSelected(false);
-
             mnu3dEditor.Enabled = document.CanDisplay3DViewer();
+
+            bool showFocus = document.CanFocusSelected(false);
+            mnuFocusSelected.Visible = showFocus;
+            mnuFocusSelectedSeperator.Visible = showFocus;
+
+            bool showVisibility = document.CanChangeVisibility(false);
+            mnuShowModels.Visible = showVisibility;
+            mnuShowModels.Enabled = showVisibility;
+            mnuChangeVisibility.Visible = showVisibility;
+            mnuShowModelsSeperator.Visible = showVisibility;
         }
 
         void Content_DisplayChanged(IContentForm content)
@@ -952,6 +975,11 @@ namespace FreelancerModStudio
 
                 mnuAdd.DropDown = content.MultipleAddDropDown();
             }
+        }
+
+        void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
+        {
+            Content_DisplayChanged(GetContent());
         }
 
         void mnu3dEditor_Click(object sender, EventArgs e)

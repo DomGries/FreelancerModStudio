@@ -771,6 +771,11 @@ namespace FreelancerModStudio
             return File == string.Empty ? Properties.Strings.FileEditorNewFile : Path.GetFileName(File);
         }
 
+        public string GetFilePath()
+        {
+            return File;
+        }
+
         public void Copy()
         {
             EditorINIData data = new EditorINIData(Data.TemplateIndex);

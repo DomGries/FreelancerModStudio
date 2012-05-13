@@ -17,8 +17,10 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public class Presenter
     {
-        public HelixViewport3D Viewport { get; set; }
-        public bool IsUniverse { get; set; }
+        public HelixViewport3D Viewport;
+        public bool IsUniverse;
+        public bool IsModelMode;
+        public string File;
 
         int secondLayerID;
 
@@ -145,7 +147,7 @@ namespace FreelancerModStudio.SystemPresenter
             //load model it was is not loaded yet
             if (content.Content == null)
             {
-                content.LoadModel();
+                LoadModel(content);
             }
 
             AddModel(content);
@@ -501,7 +503,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (parser.ModelChanged && content.Content != null)
             {
-                ReloadModel(content);
+                LoadModel(content);
             }
 
             if (IsUniverse)
@@ -523,15 +525,32 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void ReloadModel(ContentBase content)
+        public void LoadModel(ContentBase content)
         {
-            int index = Viewport.Children.IndexOf(content);
-            if (index != -1)
+            if (IsModelMode)
             {
-                Viewport.Children.RemoveAt(index);
-                content.LoadModel();
-                Viewport.Children.Insert(index, content);
+                if (content.Block.Archetype != null && content.Block.Archetype.ModelPath != null)
+                {
+                    string ext = Path.GetExtension(content.Block.Archetype.ModelPath);
+                    if (ext != null && (ext.ToLower() == ".cmp" || ext.ToLower() == ".3db"))
+                    {
+                        string dataPath = Helper.Template.Data.GetDataPath(File, Helper.Template.Data.SystemFile);
+                        string file = Path.Combine(dataPath, content.Block.Archetype.ModelPath);
+                        if (System.IO.File.Exists(file))
+                        {
+                            content.Content = new CmpModelContent().LoadModel(file);
+
+                            // return if model was loaded successfully
+                            if (content.Content != null)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
             }
+
+            content.LoadModel();
         }
 
         ContentBase CreateContent(TableBlock block)

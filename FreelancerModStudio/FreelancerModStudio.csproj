@@ -85,7 +85,6 @@
     <Compile Include="AutoUpdate\UpdateInformation.cs" />
     <Compile Include="AutoUpdate\UpdateInformationParser.cs" />
     <Compile Include="Clipboard.cs" />
-    <Compile Include="Clone.cs" />
     <Compile Include="ContentInterface.cs" />
     <Compile Include="Controls\PropertyGridExtension.cs" />
     <Compile Include="Controls\SeperatorLine.cs">

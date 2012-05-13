@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace FreelancerModStudio
@@ -137,6 +138,31 @@ namespace FreelancerModStudio
                 //    get { return data.Data.CostumTypes; }
                 //    set { data.Data.CostumTypes = value; }
                 //}
+
+                public static string GetDataPath(string filePath, int fileTemplate)
+                {
+                    // return if invalid file template or template path
+                    if (fileTemplate < 0 ||
+                        fileTemplate > Files.Count - 1 ||
+                        Files[fileTemplate].Paths == null ||
+                        Files[fileTemplate].Paths.Count == 0)
+                    {
+                        return null;
+                    }
+
+                    string[] directories = Files[fileTemplate].Paths[0].Split(new[] { Path.DirectorySeparatorChar });
+                    StringBuilder builder = new StringBuilder(filePath);
+                    for (int i = 0; i < directories.Length; i++)
+                    {
+                        int lastIndex = builder.ToString().LastIndexOf(Path.DirectorySeparatorChar);
+                        if (lastIndex == -1)
+                        {
+                            break;
+                        }
+                        builder.Remove(lastIndex, builder.Length - lastIndex);
+                    }
+                    return builder.ToString();
+                }
 
                 public static void SetSpecialFiles()
                 {

@@ -33,7 +33,7 @@ namespace FreelancerModStudio.SystemPresenter.Content
             SetTransform(GetMatrix(position, rotation, scale));
         }
 
-        Matrix3D GetMatrix(Vector3D position, Vector3D rotation, Vector3D scale)
+        static Matrix3D GetMatrix(Vector3D position, Vector3D rotation, Vector3D scale)
         {
             Matrix3D matrix = new Matrix3D();
 

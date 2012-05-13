@@ -94,8 +94,10 @@ namespace FreelancerModStudio
             Clear();
             systemPresenter.Add(data.Blocks);
 
+            systemPresenter.File = file;
             if (archetype != null)
             {
+                systemPresenter.IsUniverse = true;
                 DisplayUniverse(file, data.Blocks, archetype);
             }
             else
@@ -106,7 +108,6 @@ namespace FreelancerModStudio
 
         void DisplayUniverse(string file, List<TableBlock> blocks, ArchetypeManager archetype)
         {
-            systemPresenter.IsUniverse = true;
             if (File.Exists(file))
             {
                 string path = Path.GetDirectoryName(file);
@@ -250,12 +251,29 @@ namespace FreelancerModStudio
             return true;
         }
 
+        public void ShowModels()
+        {
+            // switch show models mode
+            systemPresenter.IsModelMode = !systemPresenter.IsModelMode;
+
+            for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; i++)
+            {
+                ContentBase content = (ContentBase)systemPresenter.Viewport.Children[i];
+                systemPresenter.LoadModel(content);
+            }
+        }
+
         public void FocusSelected()
         {
             if (systemPresenter.SelectedContent != null)
             {
                 systemPresenter.LookAt(systemPresenter.SelectedContent);
             }
+        }
+
+        public void SetFile(string file)
+        {
+            systemPresenter.File = file;
         }
 
         #region ContentInterface Members

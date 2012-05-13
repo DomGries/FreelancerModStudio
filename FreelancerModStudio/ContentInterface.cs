@@ -33,6 +33,7 @@
         bool CanDisplay3DViewer();
 
         string GetTitle();
+        string GetFilePath();
 
         void Save();
         void SaveAs();

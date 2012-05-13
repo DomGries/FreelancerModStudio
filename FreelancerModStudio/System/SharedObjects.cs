@@ -20,17 +20,17 @@ namespace FreelancerModStudio.SystemPresenter
     public static class SharedMeshes
     {
         public static readonly MeshGeometry3D Sphere = GetMesh(new SphereMesh
-        {
-            Slices = 18,
-            Stacks = 9
-        });
+            {
+                Slices = 18,
+                Stacks = 9
+            });
 
         public static readonly MeshGeometry3D Box = GetMesh(new BoxMesh());
 
         public static readonly MeshGeometry3D Cylinder = GetMesh(new CylinderMesh
-        {
-            Slices = 18,
-        });
+            {
+                Slices = 18,
+            });
 
         public static readonly MeshGeometry3D Pyramid = GetMesh(new PyramidMesh());
 
@@ -39,13 +39,13 @@ namespace FreelancerModStudio.SystemPresenter
         public static readonly MeshGeometry3D Surface = GetMesh(new SurfaceMesh());
 
         public static readonly MeshGeometry3D SurfaceCylinder = GetMesh(new SurfaceMesh
-        {
-            Width = 2
-        });
+            {
+                Width = 2
+            });
 
         static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
         {
-            var geometry = mesh.Geometry;
+            MeshGeometry3D geometry = mesh.Geometry;
             geometry.Freeze();
             return geometry;
         }
@@ -132,7 +132,10 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static GeometryModel3D GetGeometry(Geometry3D geometry, Material material, Transform3D transform)
         {
-            var model = new GeometryModel3D(geometry, material) { Transform = transform };
+            GeometryModel3D model = new GeometryModel3D(geometry, material)
+                {
+                    Transform = transform
+                };
             model.Freeze();
             return model;
         }

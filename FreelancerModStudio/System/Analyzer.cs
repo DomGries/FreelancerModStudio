@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
@@ -28,7 +29,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 foreach (EditorINIOption option in block.Block.Options)
                 {
-                    if (option.Name.ToLower() == "file" && option.Values.Count > 0)
+                    if (option.Name.Equals("file", StringComparison.OrdinalIgnoreCase) && option.Values.Count > 0)
                     {
                         // GetConnections throws an exception if the file cant be read
                         try
@@ -95,7 +96,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             foreach (EditorINIBlock block in iniContent.Blocks)
             {
-                if (block.Name.ToLower() == "object")
+                if (block.Name.Equals("object", StringComparison.OrdinalIgnoreCase))
                 {
                     string archetypeString = null;
                     string gotoString = null;
@@ -122,16 +123,19 @@ namespace FreelancerModStudio.SystemPresenter
                         ArchetypeInfo archetypeInfo = Archetype.TypeOf(archetypeString);
                         if (archetypeInfo != null)
                         {
-                            ConnectionPart connection = new ConnectionPart();
-                            connection.Id = GetConnectionID(BeforeSeperator(gotoString, ","));
+                            ConnectionPart connection = new ConnectionPart
+                                {
+                                    Id = GetConnectionId(BeforeSeperator(gotoString, ","))
+                                };
 
-                            if (archetypeInfo.Type == ContentType.JumpGate)
+                            switch (archetypeInfo.Type)
                             {
-                                connection.Jumpgate = true;
-                            }
-                            else if (archetypeInfo.Type == ContentType.JumpHole)
-                            {
-                                connection.Jumphole = true;
+                                case ContentType.JumpGate:
+                                    connection.Jumpgate = true;
+                                    break;
+                                case ContentType.JumpHole:
+                                    connection.Jumphole = true;
+                                    break;
                             }
 
                             ConnectionPart existingConnection;
@@ -161,7 +165,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         static string BeforeSeperator(string value, string seperator)
         {
-            int index = value.IndexOf(seperator);
+            int index = value.IndexOf(seperator, StringComparison.Ordinal);
             if (index != -1)
             {
                 return value.Substring(0, index);
@@ -170,12 +174,11 @@ namespace FreelancerModStudio.SystemPresenter
             return value;
         }
 
-        int GetConnectionID(string blockName)
+        int GetConnectionId(string blockName)
         {
-            blockName = blockName.ToLower();
             foreach (TableBlock block in Universe)
             {
-                if (block.Name.ToLower() == blockName)
+                if (block.Name.Equals(blockName, StringComparison.OrdinalIgnoreCase))
                 {
                     return block.Id;
                 }
@@ -188,19 +191,14 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public override int GetHashCode()
         {
-            unchecked // Overflow is fine, just wrap
+            const int idOffset = 0x1000;
+
+            if (From != null && To != null)
             {
-                int hash = 17;
-                if (From != null)
-                {
-                    hash = hash*29 + From.Id;
-                }
-                if (To != null)
-                {
-                    hash = hash*29 + To.Id;
-                }
-                return hash;
+                return (From.Id + idOffset)*(To.Id + idOffset);
             }
+
+            return -1;
         }
 
         public ConnectionPart From { get; set; }

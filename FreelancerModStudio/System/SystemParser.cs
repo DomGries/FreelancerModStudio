@@ -9,7 +9,7 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public bool ModelChanged { get; set; }
 
-        public const float SIZE_FACTOR = 0.005f;
+        public const double SIZE_FACTOR = 0.005;
 
         public static void SetObjectType(TableBlock block, ArchetypeManager archetypeManager)
         {

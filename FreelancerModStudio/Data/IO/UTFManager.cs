@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using FreelancerModStudio.Data.UTF;
 
@@ -101,72 +100,6 @@ namespace FreelancerModStudio.Data.IO
 
             if (peerOffset > 0)
                 ParseNode(reader, stringTable, nodeBlockStart, peerOffset, dataBlockOffset, parent);
-        }
-    }
-
-    public class UTFNode
-    {
-        public string Name { get; set; }
-        public byte[] Data { get; set; }
-        public UTFNode ParentNode { get; set; }
-        public List<UTFNode> Nodes { get; set; }
-
-        public UTFNode()
-        {
-            Nodes = new List<UTFNode>();
-        }
-
-        public UTFNode GetNode(string name)
-        {
-            int index = IndexOf(name);
-            if (index != -1)
-                return Nodes[index];
-
-            return null;
-        }
-
-        public int IndexOf(string name)
-        {
-            for (int index = 0; index < Nodes.Count; index++)
-            {
-                if (Nodes[index].Name.ToLower() == name.ToLower())
-                    return index;
-            }
-            return -1;
-        }
-
-        public UTFNode FindNode(string name, bool searchAllChildren)
-        {
-            foreach (UTFNode node in Nodes)
-            {
-                if (node.Name.ToLower() == name.ToLower())
-                    return node;
-
-                if (searchAllChildren)
-                {
-                    UTFNode foundNode = node.FindNode(name, true);
-                    if (foundNode != null)
-                        return foundNode;
-                }
-            }
-
-            return null;
-        }
-
-        public List<UTFNode> FindNodes(string name, bool searchAllChildren)
-        {
-            List<UTFNode> foundNodes = new List<UTFNode>();
-
-            foreach (var node in Nodes)
-            {
-                if (searchAllChildren)
-                    foundNodes.AddRange(node.FindNodes(name, true));
-
-                if (node.Name.ToLower() == name.ToLower())
-                    foundNodes.Add(node);
-            }
-
-            return foundNodes;
         }
     }
 }

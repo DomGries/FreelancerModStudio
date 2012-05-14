@@ -32,8 +32,8 @@
 
         bool CanDisplay3DViewer();
 
-        string GetTitle();
-        string GetFilePath();
+        string Title { get; }
+        string DataPath { get; }
 
         void Save();
         void SaveAs();

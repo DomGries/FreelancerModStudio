@@ -20,7 +20,7 @@ namespace FreelancerModStudio.SystemPresenter
         public HelixViewport3D Viewport;
         public bool IsUniverse;
         public bool IsModelMode;
-        public string File;
+        public string DataPath;
 
         int secondLayerID;
 
@@ -534,8 +534,7 @@ namespace FreelancerModStudio.SystemPresenter
                     string ext = Path.GetExtension(content.Block.Archetype.ModelPath);
                     if (ext != null && (ext.ToLower() == ".cmp" || ext.ToLower() == ".3db"))
                     {
-                        string dataPath = Helper.Template.Data.GetDataPath(File, Helper.Template.Data.SystemFile);
-                        string file = Path.Combine(dataPath, content.Block.Archetype.ModelPath);
+                        string file = Path.Combine(DataPath, content.Block.Archetype.ModelPath);
                         if (System.IO.File.Exists(file))
                         {
                             content.Content = new CmpModelContent().LoadModel(file);

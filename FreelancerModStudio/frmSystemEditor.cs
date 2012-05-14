@@ -94,7 +94,6 @@ namespace FreelancerModStudio
             Clear();
             systemPresenter.Add(data.Blocks);
 
-            systemPresenter.File = file;
             if (archetype != null)
             {
                 systemPresenter.IsUniverse = true;
@@ -251,15 +250,23 @@ namespace FreelancerModStudio
             return true;
         }
 
-        public void ShowModels()
+        public bool IsModelMode
         {
-            // switch show models mode
-            systemPresenter.IsModelMode = !systemPresenter.IsModelMode;
-
-            for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; i++)
+            set
             {
-                ContentBase content = (ContentBase)systemPresenter.Viewport.Children[i];
-                systemPresenter.LoadModel(content);
+                if (systemPresenter.IsModelMode == value)
+                {
+                    return;
+                }
+
+                // switch model mode
+                systemPresenter.IsModelMode = value;
+
+                for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; i++)
+                {
+                    ContentBase content = (ContentBase)systemPresenter.Viewport.Children[i];
+                    systemPresenter.LoadModel(content);
+                }
             }
         }
 
@@ -271,9 +278,12 @@ namespace FreelancerModStudio
             }
         }
 
-        public void SetFile(string file)
+        public string DataPath
         {
-            systemPresenter.File = file;
+            set
+            {
+                systemPresenter.DataPath = value;
+            }
         }
 
         #region ContentInterface Members

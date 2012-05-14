@@ -16,8 +16,10 @@ namespace FreelancerModStudio
     public partial class frmTableEditor : WeifenLuo.WinFormsUI.Docking.DockContent, IDocumentForm, IContentForm
     {
         public TableData Data;
-        public string File { get; set; }
-        public bool IsBINI { get; set; }
+        public string File;
+        public string DataPath { get; private set; }
+
+        bool _isBINI;
 
         UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
 
@@ -82,14 +84,14 @@ namespace FreelancerModStudio
                 EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, templateIndex);
 
                 Data = new TableData(iniContent);
-                IsBINI = fileManager.IsBINI;
+                _isBINI = fileManager.IsBINI;
 
                 SetFile(file);
             }
             else
             {
                 Data = new TableData { TemplateIndex = templateIndex };
-                IsBINI = false;
+                _isBINI = false;
 
                 SetFile(string.Empty);
             }
@@ -206,6 +208,8 @@ namespace FreelancerModStudio
             //user interaction required to get the path of the archetype file
             if (archetypeFile == null)
                 archetypeFile = ShowSolarArchetypeSelector();
+
+            DataPath = Helper.Template.Data.GetDataPath(archetypeFile, Helper.Template.Data.SolarArchetypeFile);
 
             if (Archetype == null)
                 Archetype = new ArchetypeManager(archetypeFile, archetypeTemplate);
@@ -350,7 +354,7 @@ namespace FreelancerModStudio
 
         void Save(string file)
         {
-            var fileManager = new FileManager(file, IsBINI)
+            var fileManager = new FileManager(file, _isBINI)
                                           {
                                               WriteSpaces = Helper.Settings.Data.Data.General.FormattingSpaces,
                                               WriteEmptyLine = Helper.Settings.Data.Data.General.FormattingEmptyLine
@@ -373,7 +377,7 @@ namespace FreelancerModStudio
         {
             File = file;
 
-            var title = GetTitle();
+            var title = Title;
             if (undoManager.IsModified())
                 title += "*";
 
@@ -406,7 +410,7 @@ namespace FreelancerModStudio
         {
             if (undoManager.IsModified())
             {
-                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, GetTitle()), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, Title), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Cancel)
                     return true;
                 if (dialogResult == DialogResult.Yes)
@@ -766,14 +770,12 @@ namespace FreelancerModStudio
             return mnuAdd.DropDown;
         }
 
-        public string GetTitle()
+        public string Title
         {
-            return File == string.Empty ? Properties.Strings.FileEditorNewFile : Path.GetFileName(File);
-        }
-
-        public string GetFilePath()
-        {
-            return File;
+            get
+            {
+                return File == string.Empty ? Properties.Strings.FileEditorNewFile : Path.GetFileName(File);
+            }
         }
 
         public void Copy()
@@ -871,7 +873,7 @@ namespace FreelancerModStudio
                 ExecuteDataChanged(undo ? data[i].GetUndoData() : data[i], i, undo);
 
             SetFile(File);
-            OnDocumentChanged(this);
+            //OnDocumentChanged(this); is already called in SetFile
         }
 
         public void Select(TableBlock block)

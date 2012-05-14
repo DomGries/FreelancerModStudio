@@ -83,6 +83,9 @@ namespace FreelancerModStudio
             systemEditor = new frmSystemEditor();
             systemEditor.SelectionChanged += systemEditor_SelectionChanged;
             systemEditor.FileOpen += systemEditor_FileOpen;
+
+            // set model mode as it was reset if the editor was closed
+            systemEditor.IsModelMode = mnuShowModels.Checked;
         }
 
         IDockContent GetContentFromPersistString(string persistString)
@@ -571,6 +574,7 @@ namespace FreelancerModStudio
                 else
                     ShowSystemEditor(tableEditor);
 
+                // set selection changed after showing/closing the system editor as this needs to be forwarded to system editor
                 DefaultEditor_SelectionChanged(tableEditor.GetSelectedBlocks(), tableEditor.Data.TemplateIndex);
                 Document_DisplayChanged(tableEditor);
             }
@@ -587,6 +591,9 @@ namespace FreelancerModStudio
         {
             if (systemEditor != null)
             {
+                // set data path before showing the models
+                systemEditor.DataPath = editor.DataPath;
+
                 if (editor.ViewerType == ViewerType.Universe)
                     systemEditor.ShowData(editor.Data, editor.File, editor.Archetype);
                 else
@@ -810,13 +817,13 @@ namespace FreelancerModStudio
 
         void mnuShowModels_Click(object sender, EventArgs e)
         {
-            if (systemEditor == null)
-            {
-                return;
-            }
+            bool isModelMode = !mnuShowModels.Checked;
+            mnuShowModels.Checked = isModelMode;
 
-            systemEditor.ShowModels();
-            mnuShowModels.Checked = !mnuShowModels.Checked;
+            if (systemEditor != null)
+            {
+                systemEditor.IsModelMode = isModelMode;
+            }
         }
 
         private void mnuFocusSelected_Click(object sender, EventArgs e)
@@ -910,12 +917,12 @@ namespace FreelancerModStudio
 
             if (systemEditor != null)
             {
-                systemEditor.SetFile(document.GetFilePath());
+                systemEditor.DataPath = document.DataPath;
             }
 
             if (document.CanSave())
             {
-                string title = document.GetTitle();
+                string title = document.Title;
                 mnuSave.Text = String.Format(Properties.Strings.FileEditorSave, title);
                 mnuSaveAs.Text = String.Format(Properties.Strings.FileEditorSaveAs, title);
             }
@@ -985,13 +992,17 @@ namespace FreelancerModStudio
         void mnu3dEditor_Click(object sender, EventArgs e)
         {
             if (systemEditor == null)
+            {
                 InitSystemEditor();
+            }
 
             systemEditor.Show(dockPanel1);
 
-            var tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
+            frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
+            {
                 ShowSystemEditor(tableEditor);
+            }
         }
 
         void systemEditor_FileOpen(string path)

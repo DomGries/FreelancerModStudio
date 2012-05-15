@@ -25,7 +25,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 if (part.ChildName == partName)
                 {
-                    return matrix*part.Matrix;
+                    return matrix*part.Matrix*GetTransform(parts, part.ParentName);
                 }
             }
             return matrix;

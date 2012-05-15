@@ -173,7 +173,6 @@
             resources.ApplyResources(this.mnuNewMod, "mnuNewMod");
             this.mnuNewMod.Image = global::FreelancerModStudio.Properties.Resources.NewMod;
             this.mnuNewMod.Name = "mnuNewMod";
-            this.mnuNewMod.Click += new System.EventHandler(this.mnuNewMod_Click);
             // 
             // mnuNewFile
             // 

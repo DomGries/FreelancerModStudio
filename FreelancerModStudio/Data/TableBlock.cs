@@ -7,7 +7,7 @@ using FreelancerModStudio.SystemPresenter.Content;
 namespace FreelancerModStudio.Data
 {
     [Serializable]
-    public class TableBlock : IComparable<TableBlock>
+    public class TableBlock /*: IComparable<TableBlock>*/
     {
         public int Index;
         public int Id;
@@ -109,7 +109,7 @@ namespace FreelancerModStudio.Data
             }
         }
 
-        public int CompareTo(TableBlock other)
+        /*public int CompareTo(TableBlock other)
         {
             //sort by group, object type, name, modified
             int groupComparison = Group.CompareTo(other.Group);
@@ -131,6 +131,6 @@ namespace FreelancerModStudio.Data
             }
 
             return groupComparison;
-        }
+        }*/
     }
 }

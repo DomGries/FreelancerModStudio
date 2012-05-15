@@ -16,8 +16,8 @@ namespace FreelancerModStudio
 {
     public partial class frmMain : Form
     {
-        Mod mod;
-        bool modChanged;
+        //Mod mod;
+        //bool modChanged;
 
         frmProperties propertiesForm;
         //frmSolutionExplorer solutionExplorerForm = null;
@@ -510,17 +510,16 @@ namespace FreelancerModStudio
                 return;
             }
 
-            if (CancelModClose())
+            /*if (CancelModClose())
             {
                 e.Cancel = true;
-            }
-            else
-            {
-                SetSettings();
-            }
+                return;
+            }*/
+
+            SetSettings();
         }
 
-        bool CancelModClose()
+        /*bool CancelModClose()
         {
             if (mod == null || mod.Data.About == null || mod.Data.About.Name == null || !modChanged)
             {
@@ -618,7 +617,7 @@ namespace FreelancerModStudio
 
             //set size
             Helper.Settings.Data.Data.Forms.NewMod.Size = frmNewMod.Size;
-        }
+        }*/
 
         void mnuExit_Click(object sender, EventArgs e)
         {

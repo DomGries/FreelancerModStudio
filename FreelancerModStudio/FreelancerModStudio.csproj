@@ -91,9 +91,6 @@
     <Compile Include="Controls\SeperatorLine.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\SimpleTreeView.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\UICultureChanger.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -133,12 +130,6 @@
     <Compile Include="AutoUpdate\frmAutoUpdate.Designer.cs">
       <DependentUpon>frmAutoUpdate.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmErrorList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmErrorList.Designer.cs">
-      <DependentUpon>frmErrorList.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmSystemEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,12 +154,6 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmNewMod.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmNewMod.Designer.cs">
-      <DependentUpon>frmNewMod.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmOptions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -186,7 +171,6 @@
     <Compile Include="Data\IO\FileManager.cs" />
     <Compile Include="Data\IO\INIManager.cs" />
     <Compile Include="Data\UndoManager.cs" />
-    <Compile Include="Data\Mod.cs" />
     <Compile Include="Data\Settings.cs">
     </Compile>
     <Compile Include="Program.cs" />
@@ -220,16 +204,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="frmSolutionExplorer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSolutionExplorer.Designer.cs">
-      <DependentUpon>frmSolutionExplorer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Data\Template.cs">
     </Compile>
     <Compile Include="Data\ChangedData.cs" />
-    <Compile Include="StringLogicalComparer.cs" />
     <Compile Include="System\Animator.cs" />
     <Compile Include="System\CmpModelContent.cs" />
     <Compile Include="System\Content\Connection.cs" />
@@ -248,81 +225,7 @@
     <Compile Include="System\SystemParser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\About.ico" />
-    <Content Include="Resources\Add.ico" />
-    <Content Include="Resources\BuildMod.ico" />
-    <Content Include="Resources\Close.ico" />
-    <Content Include="Resources\CloseMod.ico" />
-    <Content Include="Resources\CodeView.ico" />
-    <Content Include="Resources\Copy.ico" />
-    <Content Include="Resources\Cut.ico" />
-    <Content Include="Resources\Delete.ico" />
-    <Content Include="Resources\DeleteFolder.ico" />
-    <Content Include="Resources\Document.ico" />
-    <Content Include="Resources\Error.ico" />
-    <Content Include="Resources\File.ico" />
-    <Content Include="Resources\Filedll.ico" />
-    <Content Include="Resources\Fileini.ico" />
-    <Content Include="Resources\Filetxt.ico" />
-    <Content Include="Resources\Filewav.ico" />
-    <Content Include="Resources\Filter.ico" />
-    <Content Include="Resources\Folder.ico" />
-    <Content Include="Resources\FullScreen.ico" />
-    <Content Include="Resources\GoTo.ico" />
-    <Content Include="Resources\HiddenFile.ico" />
-    <Content Include="Resources\HiddenFolder.ico" />
-    <Content Include="Resources\HiddenFolderOpen.ico" />
-    <Content Include="Resources\HomePage.ico" />
-    <Content Include="Resources\Link.ico" />
-    <Content Include="Resources\LogoAbout.png" />
     <Content Include="Resources\LogoIcon.ico" />
-    <Content Include="Resources\Mod.ico" />
-    <Content Include="Resources\NewDocument.ico" />
-    <Content Include="Resources\NewFolder.ico" />
-    <Content Include="Resources\NewMod.ico" />
-    <Content Include="Resources\NewWindow.ico" />
-    <Content Include="Resources\Note.ico" />
-    <Content Include="Resources\Open.ico" />
-    <Content Include="Resources\OpenFolder.ico" />
-    <Content Include="Resources\OpenMod.ico" />
-    <Content Include="Resources\Paste.ico" />
-    <Content Include="Resources\Properties.ico" />
-    <Content Include="Resources\ReDo.ico" />
-    <Content Include="Resources\ReportIssue.ico" />
-    <Content Include="Resources\Save.ico" />
-    <Content Include="Resources\SaveAll.ico" />
-    <Content Include="Resources\Settings.ico" />
-    <Content Include="Resources\SolutionExplorer.ico" />
-    <Content Include="Resources\SystemLegend\Construct.ico" />
-    <Content Include="Resources\SystemLegend\Depot.ico" />
-    <Content Include="Resources\SystemLegend\DockingRing.ico" />
-    <Content Include="Resources\SystemLegend\JumpGate.ico" />
-    <Content Include="Resources\SystemLegend\JumpHole.ico" />
-    <Content Include="Resources\SystemLegend\LightSource.ico" />
-    <Content Include="Resources\SystemLegend\Planet.ico" />
-    <Content Include="Resources\SystemLegend\Satellite.ico" />
-    <Content Include="Resources\SystemLegend\Ship.ico" />
-    <Content Include="Resources\SystemLegend\Station.ico" />
-    <Content Include="Resources\SystemLegend\Sun.ico" />
-    <Content Include="Resources\SystemLegend\System.ico" />
-    <Content Include="Resources\SystemLegend\TradeLane.ico" />
-    <Content Include="Resources\SystemLegend\WeaponsPlatform.ico" />
-    <Content Include="Resources\SystemLegend\Zone.ico" />
-    <Content Include="Resources\SystemLegend\ZoneBox.ico" />
-    <Content Include="Resources\SystemLegend\ZoneBoxExclusion.ico" />
-    <Content Include="Resources\SystemLegend\ZoneCylinder.ico" />
-    <Content Include="Resources\SystemLegend\ZoneCylinderExclusion.ico" />
-    <Content Include="Resources\SystemLegend\ZoneExclusion.ico" />
-    <Content Include="Resources\SystemLegend\ZonePath.ico" />
-    <Content Include="Resources\SystemLegend\ZonePathTrade.ico" />
-    <Content Include="Resources\SystemLegend\ZonePathTradeLane.ico" />
-    <Content Include="Resources\SystemLegend\ZoneVignette.ico" />
-    <Content Include="Resources\TableView.ico" />
-    <Content Include="Resources\ToDo.ico" />
-    <Content Include="Resources\UnDo.ico" />
-    <Content Include="Resources\UpFolder.ico" />
-    <Content Include="Resources\WebSearch.ico" />
-    <Content Include="Resources\WebSearch_Large.ico" />
     <Content Include="Template.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -333,10 +236,6 @@
     <EmbeddedResource Include="AutoUpdate\frmAutoUpdate.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmAutoUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmErrorList.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmErrorList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSystemEditor.resx">
       <DependentUpon>frmSystemEditor.cs</DependentUpon>
@@ -353,14 +252,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmFileType.resx">
       <DependentUpon>frmFileType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmNewMod.de.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmNewMod.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmNewMod.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmNewMod.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmOptions.de.resx">
       <DependentUpon>frmOptions.cs</DependentUpon>
@@ -381,10 +272,6 @@
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSolutionExplorer.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmSolutionExplorer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

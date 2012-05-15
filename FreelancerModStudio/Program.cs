@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 
-#if !DEBUG
-#endif
-
 namespace FreelancerModStudio
 {
     internal static class Program
@@ -30,7 +27,7 @@ namespace FreelancerModStudio
                 string details = Helper.Exceptions.Get(ex) + Environment.NewLine + ex.StackTrace;
                 if (MessageBox.Show(text + Environment.NewLine + Environment.NewLine + details, Helper.Assembly.Name, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                 {
-                    Process.Start("http://code.google.com/p/freelancermodstudio/issues");
+                    System.Diagnostics.Process.Start("http://code.google.com/p/freelancermodstudio/issues");
                 }
             }
 #endif

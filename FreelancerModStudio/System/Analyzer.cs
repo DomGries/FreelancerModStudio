@@ -34,10 +34,10 @@ namespace FreelancerModStudio.SystemPresenter
                         // GetConnections could throw an exception if the file can't be opened
                         try
                         {
-                            Table<int, ConnectionPart> systemConnections = GetConnections(block.Id, Path.Combine(UniversePath, option.Values[0].Value.ToString()));
+                            Table<int, ConnectionPart> systemConnections = GetConnections(block.Index, Path.Combine(UniversePath, option.Values[0].Value.ToString()));
                             if (systemConnections != null)
                             {
-                                AddConnections(block.Id, systemConnections);
+                                AddConnections(block.Index, systemConnections);
                             }
                         }
                             // ReSharper disable EmptyGeneralCatchClause
@@ -182,7 +182,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 if (block.Name.Equals(blockName, StringComparison.OrdinalIgnoreCase))
                 {
-                    return block.Id;
+                    return block.Index;
                 }
             }
             return -1;

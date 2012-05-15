@@ -207,9 +207,13 @@ namespace FreelancerModStudio.SystemPresenter
         public void Delete(ContentBase content)
         {
             //if we delete a system also delete all universe connections to and from it
-            if (IsUniverse && content is Content.System)
+            if (IsUniverse)
             {
-                DeleteConnections(content as Content.System);
+                Content.System system = content as Content.System;
+                if (system != null)
+                {
+                    DeleteConnections(system);
+                }
             }
 
             RemoveModel(content);
@@ -432,11 +436,13 @@ namespace FreelancerModStudio.SystemPresenter
             Vector3D fromPosition = line.From.GetPosition();
             Vector3D toPosition = line.To.GetPosition();
 
-            Vector3D position = (fromPosition + toPosition) / 2;
-            Vector3D scale = new Vector3D(0.4, (fromPosition - toPosition).Length, 1);
+            Vector3D position = (fromPosition + toPosition)/2;
+            Vector3D scale = new Vector3D(2.5, (fromPosition - toPosition).Length, 1);
 
             if (line.FromType == ConnectionType.JumpGateAndHole || line.ToType == ConnectionType.JumpGateAndHole)
-                scale.X = 0.7;
+            {
+                scale.X = 4.5;
+            }
 
             Vector v1 = new Vector(fromPosition.X, fromPosition.Y);
             Vector v2 = new Vector(toPosition.X, toPosition.Y);
@@ -447,7 +453,9 @@ namespace FreelancerModStudio.SystemPresenter
             double angleOffset = 90;
 
             if (v2.X < v1.X)
+            {
                 factor = -1;
+            }
 
             if (v2.Y < v1.Y)
             {
@@ -455,10 +463,10 @@ namespace FreelancerModStudio.SystemPresenter
                 factor *= -1;
             }
 
-            double c = Math.Sqrt(a * a + b * b);
-            double angle = Math.Acos(a / c) * 180 / Math.PI;
+            double c = Math.Sqrt(a*a + b*b);
+            double angle = Math.Acos(a/c)*180/Math.PI;
 
-            Vector3D rotation = new Vector3D(0, 0, (angle + angleOffset) * factor);
+            Vector3D rotation = new Vector3D(0, 0, (angle + angleOffset)*factor);
 
             line.SetTransform(position, rotation, scale);
         }

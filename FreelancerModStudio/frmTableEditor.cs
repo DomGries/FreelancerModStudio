@@ -202,17 +202,21 @@ namespace FreelancerModStudio
 
         public void LoadArchetypes()
         {
-            int archetypeTemplate = Helper.Template.Data.SolarArchetypeFile;
-            string archetypeFile = ArchetypeManager.GetRelativeArchetype(File, Data.TemplateIndex, archetypeTemplate);
+            string archetypeFile = ArchetypeManager.GetRelativeArchetype(File, Data.TemplateIndex, Helper.Template.Data.SolarArchetypeFile);
 
             //user interaction required to get the path of the archetype file
             if (archetypeFile == null)
+            {
                 archetypeFile = ShowSolarArchetypeSelector();
+            }
 
+            //set data path based on archetype file and not system file
             DataPath = Helper.Template.Data.GetDataPath(archetypeFile, Helper.Template.Data.SolarArchetypeFile);
 
             if (Archetype == null)
-                Archetype = new ArchetypeManager(archetypeFile, archetypeTemplate);
+            {
+                Archetype = new ArchetypeManager(archetypeFile, Helper.Template.Data.SolarArchetypeFile);
+            }
 
             foreach (TableBlock block in Data.Blocks)
             {

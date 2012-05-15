@@ -159,7 +159,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 case ContentType.System:
                     position = ParseUniverseVector(positionString);
-                    scale = new Vector3D(5, 5, 5);
+                    scale = new Vector3D(8, 8, 8);
                     rotation = ParseRotation(rotationString, false);
 
                     Content.System system = (Content.System)content;

@@ -110,6 +110,7 @@
     <Compile Include="Data\UTF\CmpPart.cs" />
     <Compile Include="Data\UTF\D3DFVF.cs" />
     <Compile Include="Data\UTF\CmpParser.cs" />
+    <Compile Include="Data\UTF\SphereConstruct.cs" />
     <Compile Include="Data\UTF\RevConstruct.cs" />
     <Compile Include="Data\UTF\PrisConstruct.cs" />
     <Compile Include="Data\UTF\NodeFlags.cs" />

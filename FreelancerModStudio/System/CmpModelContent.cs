@@ -23,7 +23,7 @@ namespace FreelancerModStudio.SystemPresenter
             Matrix3D matrix = Matrix3D.Identity;
             foreach (CmpPart part in parts)
             {
-                if (part.ChildName == partName)
+                if (part.Name == partName)
                 {
                     return matrix*part.Matrix*GetTransform(parts, part.ParentName);
                 }
@@ -53,8 +53,8 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     Children = new Transform3DCollection
                         {
-                            new ScaleTransform3D(SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR),
-                            new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 180))
+                            new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 180)),
+                            new ScaleTransform3D(SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR)
                         }
                 };
             return modelGroup;
@@ -117,9 +117,8 @@ namespace FreelancerModStudio.SystemPresenter
             // select root (\) node
             root = root.Nodes[0];
 
-            Dictionary<uint, VMeshData> meshes = new Dictionary<uint, VMeshData>();
+            Dictionary<uint, VMeshData> meshes = null;
             List<CmpPart> constructs = new List<CmpPart>();
-            List<MeshGroup> meshGroups = new List<MeshGroup>();
             Dictionary<string, string> mapFileToObj = new Dictionary<string, string>
                 {
                     { "\\", "Model" }
@@ -130,6 +129,7 @@ namespace FreelancerModStudio.SystemPresenter
                 switch (node.Name.ToLowerInvariant())
                 {
                     case "vmeshlibrary":
+                        meshes = new Dictionary<uint, VMeshData>(node.Nodes.Count);
                         foreach (UTFNode vmsNode in node.Nodes)
                         {
                             if (vmsNode.Nodes.Count > 0)
@@ -143,18 +143,21 @@ namespace FreelancerModStudio.SystemPresenter
                         {
                             if (cmpndNode.Name.Equals("cons", StringComparison.OrdinalIgnoreCase))
                             {
-                                foreach (UTFNode construct in cmpndNode.Nodes)
+                                foreach (UTFNode constructNode in cmpndNode.Nodes)
                                 {
-                                    switch (construct.Name.ToLowerInvariant())
+                                    switch (constructNode.Name.ToLowerInvariant())
                                     {
                                         case "fix":
-                                            constructs.AddRange(FixConstruct.Parse(construct.Data));
+                                            FixConstruct.Parse(constructs, constructNode.Data);
                                             break;
                                         case "rev":
-                                            constructs.AddRange(RevConstruct.Parse(construct.Data));
+                                            RevConstruct.Parse(constructs, constructNode.Data);
                                             break;
                                         case "pris":
-                                            constructs.AddRange(PrisConstruct.Parse(construct.Data));
+                                            PrisConstruct.Parse(constructs, constructNode.Data);
+                                            break;
+                                        case "sphere":
+                                            SphereConstruct.Parse(constructs, constructNode.Data);
                                             break;
                                     }
                                 }
@@ -213,23 +216,30 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
+            if (meshes == null)
+            {
+                return null;
+            }
+
+            List<MeshGroup> meshGroups = new List<MeshGroup>();
+
             // Scan the level 0 VMeshRefs to build mesh group list for each 
             // of the construction nodes identified in the previous search.
             foreach (UTFNode meshReferenceNode in root.FindNodes("VMeshRef", true))
             {
                 string fileName;
-                string levelName = meshReferenceNode.ParentNode.ParentNode.Name.ToLowerInvariant();
-                if (levelName == "level0")
+                string levelName = meshReferenceNode.ParentNode.ParentNode.Name;
+                if (levelName.Equals("level0", StringComparison.OrdinalIgnoreCase))
                 {
                     fileName = meshReferenceNode.ParentNode.ParentNode.ParentNode.ParentNode.Name;
                 }
-                else if (levelName != "\\")
+                else if (levelName == "\\")
                 {
-                    fileName = meshReferenceNode.ParentNode.ParentNode.ParentNode.Name;
+                    fileName = levelName;
                 }
                 else
                 {
-                    fileName = "\\";
+                    fileName = meshReferenceNode.ParentNode.ParentNode.ParentNode.Name;
                 }
 
                 string meshGroupName;

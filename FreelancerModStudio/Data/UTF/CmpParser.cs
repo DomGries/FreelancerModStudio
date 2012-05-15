@@ -6,18 +6,6 @@ namespace FreelancerModStudio.Data.UTF
 {
     internal class CmpParser
     {
-        public static CmpPart ParseBaseConstruct(byte[] data, ref int pos)
-        {
-            CmpPart part = new CmpPart();
-
-            part.ParentName = ParseString(data, ref pos);
-            part.ChildName = ParseString(data, ref pos);
-
-            part.Origin = ParseVector3D(data, ref pos);
-
-            return part;
-        }
-
         public static string ParseString(byte[] data, ref int pos)
         {
             string value = Encoding.ASCII.GetString(data, pos, ByteLen.CONSTANT_STRING);

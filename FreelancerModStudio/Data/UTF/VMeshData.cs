@@ -7,48 +7,48 @@ namespace FreelancerModStudio.Data.UTF
         // repeated <no_meshes> times in segment - 12 bytes
         public class TMeshHeader
         {
-            public uint MaterialId { get; set; } // crc of texture name for mesh
-            public ushort StartVertex { get; set; }
-            public ushort EndVertex { get; set; }
-            public ushort NumRefVertices { get; set; }
-            public ushort Padding { get; set; } // 0x00CC
+            //public uint MaterialId;
+            public ushort StartVertex;
+            public ushort EndVertex;
+            public ushort NumRefVertices;
+           // public ushort Padding;
 
-            public int BaseVertex { get; set; }
-            public int TriangleStart { get; set; }
+            public int BaseVertex;
+            public int TriangleStart;
         }
 
         // triangle definition - 6 bytes
         public class TTriangle
         {
-            public int Vertex1 { get; set; }
-            public int Vertex2 { get; set; }
-            public int Vertex3 { get; set; }
+            public int Vertex1;
+            public int Vertex2;
+            public int Vertex3;
         }
 
         // vertex definition - 32 bytes
         public class TVertex
         {
-            public D3DFVF FVF { get; set; }
-            public Point3D Position { get; set; }
-            public Vector3D Normal { get; set; }
-            public uint Diffuse { get; set; }
-            public float S { get; set; }
-            public float T { get; set; }
-            public float U { get; set; }
-            public float V { get; set; }
+            public D3DFVF FVF;
+            public Point3D Position;
+            public Vector3D Normal;
+            //public uint Diffuse;
+            //public float S;
+            //public float T;
+            //public float U;
+            //public float V;
         }
 
         // Data header - 16 bytes long
-        public uint MeshType { get; set; } // 0x00000001
-        public uint SurfaceType { get; set; } // 0x00000004
-        public ushort MeshCount { get; set; }
-        public ushort NumRefVertices { get; set; }
-        public D3DFVF FlexibleVertexFormat { get; set; } // 0x0112
-        public ushort VertexCount { get; set; }
+        //public uint MeshType;
+        //public uint SurfaceType;
+        public ushort MeshCount;
+        public ushort NumRefVertices;
+        public D3DFVF FlexibleVertexFormat;
+        public ushort VertexCount;
 
-        public TMeshHeader[] Meshes { get; set; }
-        public TTriangle[] Triangles { get; set; }
-        public TVertex[] Vertices { get; set; }
+        public TMeshHeader[] Meshes;
+        public TTriangle[] Triangles;
+        public TVertex[] Vertices;
 
         public VMeshData()
         {
@@ -64,8 +64,8 @@ namespace FreelancerModStudio.Data.UTF
             int pos = 0;
 
             // read the data header
-            MeshType = CmpParser.ParseUInt32(data, ref pos);
-            SurfaceType = CmpParser.ParseUInt32(data, ref pos);
+            CmpParser.ParseUInt32(data, ref pos); //MeshType
+            CmpParser.ParseUInt32(data, ref pos); //SurfaceType
             MeshCount = CmpParser.ParseUInt16(data, ref pos);
             NumRefVertices = CmpParser.ParseUInt16(data, ref pos);
             FlexibleVertexFormat = (D3DFVF)CmpParser.ParseUInt16(data, ref pos);
@@ -94,11 +94,11 @@ namespace FreelancerModStudio.Data.UTF
             for (int i = 0; i < MeshCount; ++i)
             {
                 TMeshHeader mesh = new TMeshHeader();
-                mesh.MaterialId = CmpParser.ParseUInt32(data, ref pos);
+                CmpParser.ParseUInt32(data, ref pos); //MaterialId
                 mesh.StartVertex = CmpParser.ParseUInt16(data, ref pos);
                 mesh.EndVertex = CmpParser.ParseUInt16(data, ref pos);
                 mesh.NumRefVertices = CmpParser.ParseUInt16(data, ref pos);
-                mesh.Padding = CmpParser.ParseUInt16(data, ref pos);
+                CmpParser.ParseUInt16(data, ref pos); //Padding
 
                 mesh.TriangleStart = triangleStartOffset;
                 triangleStartOffset += mesh.NumRefVertices;
@@ -138,54 +138,43 @@ namespace FreelancerModStudio.Data.UTF
                     }
                     if ((FlexibleVertexFormat & D3DFVF.Diffuse) == D3DFVF.Diffuse)
                     {
-                        vertex.Diffuse = CmpParser.ParseUInt32(data, ref pos);
+                        CmpParser.ParseUInt32(data, ref pos); //Diffuse
                     }
                     if ((FlexibleVertexFormat & D3DFVF.Tex1) == D3DFVF.Tex1)
                     {
-                        vertex.S = CmpParser.ParseFloat(data, ref pos);
-                        vertex.T = CmpParser.ParseFloat(data, ref pos);
+                        CmpParser.ParseFloat(data, ref pos); //S
+                        CmpParser.ParseFloat(data, ref pos); //T
                     }
                     if ((FlexibleVertexFormat & D3DFVF.Tex2) == D3DFVF.Tex2)
                     {
-                        vertex.S = CmpParser.ParseFloat(data, ref pos);
-                        vertex.T = CmpParser.ParseFloat(data, ref pos);
-                        vertex.U = CmpParser.ParseFloat(data, ref pos);
-                        vertex.V = CmpParser.ParseFloat(data, ref pos);
+                        CmpParser.ParseFloat(data, ref pos); //S
+                        CmpParser.ParseFloat(data, ref pos); //T
+                        CmpParser.ParseFloat(data, ref pos); //U
+                        CmpParser.ParseFloat(data, ref pos); //V
                     }
                     if ((FlexibleVertexFormat & D3DFVF.Tex4) == D3DFVF.Tex4)
                     {
-                        vertex.S = CmpParser.ParseFloat(data, ref pos);
-                        vertex.T = CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                    }
-                    if ((FlexibleVertexFormat & D3DFVF.Tex4) == D3DFVF.Tex4)
-                    {
-                        vertex.S = CmpParser.ParseFloat(data, ref pos);
-                        vertex.T = CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
+                        CmpParser.ParseFloat(data, ref pos); //S
+                        CmpParser.ParseFloat(data, ref pos); //T
+                        CmpParser.ParseFloat(data, ref pos); //TangentX
+                        CmpParser.ParseFloat(data, ref pos); //TangentY
+                        CmpParser.ParseFloat(data, ref pos); //TangentZ
+                        CmpParser.ParseFloat(data, ref pos); //BinormalX
+                        CmpParser.ParseFloat(data, ref pos); //BinormalY
+                        CmpParser.ParseFloat(data, ref pos); //BinormalZ
                     }
                     if ((FlexibleVertexFormat & D3DFVF.Tex5) == D3DFVF.Tex5)
                     {
-                        vertex.S = CmpParser.ParseFloat(data, ref pos);
-                        vertex.T = CmpParser.ParseFloat(data, ref pos);
-                        vertex.U = CmpParser.ParseFloat(data, ref pos);
-                        vertex.V = CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
-                        CmpParser.ParseFloat(data, ref pos);
+                        CmpParser.ParseFloat(data, ref pos); //S
+                        CmpParser.ParseFloat(data, ref pos); //T
+                        CmpParser.ParseFloat(data, ref pos); //U
+                        CmpParser.ParseFloat(data, ref pos); //V
+                        CmpParser.ParseFloat(data, ref pos); //TangentX
+                        CmpParser.ParseFloat(data, ref pos); //TangentY
+                        CmpParser.ParseFloat(data, ref pos); //TangentZ
+                        CmpParser.ParseFloat(data, ref pos); //BinormalX
+                        CmpParser.ParseFloat(data, ref pos); //BinormalY
+                        CmpParser.ParseFloat(data, ref pos); //BinormalZ
                     }
 
                     Vertices[i] = vertex;

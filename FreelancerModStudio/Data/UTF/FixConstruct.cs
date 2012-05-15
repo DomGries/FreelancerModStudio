@@ -1,24 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media.Media3D;
 
 namespace FreelancerModStudio.Data.UTF
 {
     internal class FixConstruct
     {
-        public static List<CmpPart> Parse(byte[] data)
+        public static void Parse(List<CmpPart> constructs, byte[] data)
         {
-            List<CmpPart> parts = new List<CmpPart>();
             int pos = 0;
-
             while (pos != data.Length)
             {
-                CmpPart part = CmpParser.ParseBaseConstruct(data, ref pos);
+                CmpPart part = new CmpPart();
+
+                part.ParentName = CmpParser.ParseString(data, ref pos);
+                part.Name = CmpParser.ParseString(data, ref pos);
+
+                Vector3D origin = CmpParser.ParseVector3D(data, ref pos);
 
                 part.Matrix = CmpParser.ParseRotation(data, ref pos);
-                part.Matrix.Translate(part.Origin);
+                part.Matrix.Translate(origin);
 
-                parts.Add(part);
+                constructs.Add(part);
             }
-            return parts;
         }
     }
 }

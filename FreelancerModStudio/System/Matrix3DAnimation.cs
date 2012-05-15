@@ -34,7 +34,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static DependencyProperty FromProperty =
             DependencyProperty.Register("From", typeof(Matrix3D?), typeof(Matrix3DAnimation),
-                                        new PropertyMetadata(null));
+                new PropertyMetadata(null));
 
         public Matrix3D? To
         {
@@ -50,7 +50,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static DependencyProperty ToProperty =
             DependencyProperty.Register("To", typeof(Matrix3D?), typeof(Matrix3DAnimation),
-                                        new PropertyMetadata(null));
+                new PropertyMetadata(null));
 
         public Matrix3DAnimation()
         {

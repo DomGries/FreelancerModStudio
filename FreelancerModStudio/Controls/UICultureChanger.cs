@@ -12,10 +12,11 @@ using System.Windows.Forms;
 /// <summary>
 /// Enables changes of the UI culture of a collection of <see cref="Form"/> objects at runtime.
 /// </summary>
-[DesignerSerializer(typeof(UICultureChanger.UICultureChangerCodeDomSerializer), typeof(CodeDomSerializer))]
+[DesignerSerializer(typeof(UICultureChangerCodeDomSerializer), typeof(CodeDomSerializer))]
 public class UICultureChanger : Component
 {
     #region UICultureChangerCodeDomSerializer class
+
     /// <summary>
     /// Serializes an object graph of <see cref="UICultureChanger"/> class to a series of CodeDOM statements.
     /// </summary>
@@ -53,6 +54,12 @@ public class UICultureChanger : Component
                 typeof(UICultureChanger).BaseType, typeof(CodeDomSerializer));
             CodeStatementCollection codeStatementCollection = (CodeStatementCollection)baseClassSerializer.Serialize(
                 manager, value);
+
+            if (codeStatementCollection == null)
+            {
+                return null;
+            }
+
             string variableName = ((Component)value).Site.Name;
 
             // If the CodeStatementCollection only contains the constructor and/or member variable definition, 
@@ -66,63 +73,77 @@ public class UICultureChanger : Component
 
             // Add a call to the UICultureChanger.AddForm method.
             CodeMethodInvokeExpression codeMethodInvokeExpression = new CodeMethodInvokeExpression(
-                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), variableName),
-                    "AddForm", new CodeExpression[] { new CodeThisReferenceExpression() });
+                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), variableName),
+                "AddForm", new CodeExpression[] { new CodeThisReferenceExpression() });
             codeStatementCollection.Add(codeMethodInvokeExpression);
 
             return codeStatementCollection;
         }
     }
+
     #endregion
 
     #region ChangeInfo class
+
     /// <summary>
     /// Encapsulates all information needed to apply localized resources to a form or field.
     /// </summary>
     class ChangeInfo
     {
         #region instance fields
+
         /// <summary>
         /// Gets the name of the form or field.
         /// </summary>
         public string Name
         {
-            get { return name; }
+            get
+            {
+                return _name;
+            }
         }
 
         /// <summary>
         /// Stores the name of the form or field.
         /// </summary>
-        string name;
+        readonly string _name;
 
         /// <summary>
         /// Gets the instance of the form or field.
         /// </summary>
         public object Value
         {
-            get { return value; }
+            get
+            {
+                return _value;
+            }
         }
 
         /// <summary>
         /// Stores the instance of the form or field.
         /// </summary>
-        object value;
+        readonly object _value;
 
         /// <summary>
         /// Gets the <see cref="Type"/> object of the form or field.
         /// </summary>
         public Type Type
         {
-            get { return type; }
+            get
+            {
+                return _type;
+            }
         }
 
         /// <summary>
         /// Stores the <see cref="Type"/> object of the form or field.
         /// </summary>
-        Type type;
+        readonly Type _type;
+
         #endregion
 
         #region construction
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeInfo"/> class.
         /// </summary>
@@ -131,138 +152,190 @@ public class UICultureChanger : Component
         /// <param name="type">The <see cref="Type"/> object of the form or field.</param>
         public ChangeInfo(string name, object value, Type type)
         {
-            this.name = name;
-            this.value = value;
-            this.type = type;
+            _name = name;
+            _value = value;
+            _type = type;
         }
+
         #endregion
     }
+
     #endregion
 
     #region instance fields
+
     /// <summary>
     /// Stores a collection of <see cref="Form"/> objects whose UI culture will be changed.
     /// </summary>
-    List<Form> forms;
+    readonly List<Form> _forms;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized Text values are applied when changing the UI culture.
     /// </summary>
-    [Browsable(true), DefaultValue(true)]
-    [Description("Indicates whether localized Text values are applied when changing the UI culture."),
-     Category("Behavior")]
+    [Browsable(true)]
+    [DefaultValue(true)]
+    [Description("Indicates whether localized Text values are applied when changing the UI culture.")]
+    [Category("Behavior")]
     public bool ApplyText
     {
-        get { return applyText; }
-        set { applyText = value; }
+        get
+        {
+            return _applyText;
+        }
+        set
+        {
+            _applyText = value;
+        }
     }
 
     /// <summary>
     /// Stores a value indicating whether localized Text values are applied when changing the UI culture.
     /// </summary>
-    bool applyText;
+    bool _applyText;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized Size values are applied when changing the UI culture.
     /// </summary>
-    [Browsable(true), DefaultValue(false)]
-    [Description("Indicates whether localized Size values are applied when changing the UI culture."),
-     Category("Behavior")]
+    [Browsable(true)]
+    [DefaultValue(false)]
+    [Description("Indicates whether localized Size values are applied when changing the UI culture.")]
+    [Category("Behavior")]
     public bool ApplySize
     {
-        get { return applySize; }
-        set { applySize = value; }
+        get
+        {
+            return _applySize;
+        }
+        set
+        {
+            _applySize = value;
+        }
     }
 
     /// <summary>
     /// Stores a value indicating whether localized Size values are applied when changing the UI culture.
     /// </summary>
-    bool applySize;
+    bool _applySize;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized Location values are applied when changing the UI culture.
     /// </summary>
-    [Browsable(true), DefaultValue(false)]
-    [Description("Indicates whether localized Location values are applied when changing the UI culture."),
-     Category("Behavior")]
+    [Browsable(true)]
+    [DefaultValue(false)]
+    [Description("Indicates whether localized Location values are applied when changing the UI culture.")]
+    [Category("Behavior")]
     public bool ApplyLocation
     {
-        get { return applyLocation; }
-        set { applyLocation = value; }
+        get
+        {
+            return _applyLocation;
+        }
+        set
+        {
+            _applyLocation = value;
+        }
     }
 
     /// <summary>
     /// Stores a value indicating whether localized Location values are applied when changing the UI culture.
     /// </summary>
-    bool applyLocation;
+    bool _applyLocation;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized RightToLeft values are applied when changing the UI culture.
     /// </summary>
-    [Browsable(true), DefaultValue(false)]
-    [Description("Indicates whether localized RightToLeft values are applied when changing the UI culture."),
-     Category("Behavior")]
+    [Browsable(true)]
+    [DefaultValue(false)]
+    [Description("Indicates whether localized RightToLeft values are applied when changing the UI culture.")]
+    [Category("Behavior")]
     public bool ApplyRightToLeft
     {
-        get { return applyRightToLeft; }
-        set { applyRightToLeft = value; }
+        get
+        {
+            return _applyRightToLeft;
+        }
+        set
+        {
+            _applyRightToLeft = value;
+        }
     }
 
     /// <summary>
     /// Stores a value indicating whether localized RightToLeft values are applied when changing the UI culture.
     /// </summary>
-    bool applyRightToLeft;
+    bool _applyRightToLeft;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized RightToLeftLayout values are applied when changing the UI culture.
     /// </summary>
-    [Browsable(true), DefaultValue(false)]
-    [Description("Indicates whether localized RightToLeftLayout values are applied when changing the UI culture."),
-     Category("Behavior")]
+    [Browsable(true)]
+    [DefaultValue(false)]
+    [Description("Indicates whether localized RightToLeftLayout values are applied when changing the UI culture.")]
+    [Category("Behavior")]
     public bool ApplyRightToLeftLayout
     {
-        get { return applyRightToLeftLayout; }
-        set { applyRightToLeftLayout = value; }
+        get
+        {
+            return _applyRightToLeftLayout;
+        }
+        set
+        {
+            _applyRightToLeftLayout = value;
+        }
     }
 
     /// <summary>
     /// Stores a value indicating whether localized RightToLeftLayout values are applied when changing the UI culture.
     /// </summary>
-    bool applyRightToLeftLayout;
+    bool _applyRightToLeftLayout;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized ToolTip values are applied when changing the UI culture.
     /// </summary>
-    [Browsable(true), DefaultValue(false)]
-    [Description("Indicates whether localized tooltips are applied when changing the UI culture."),
-     Category("Behavior")]
+    [Browsable(true)]
+    [DefaultValue(false)]
+    [Description("Indicates whether localized tooltips are applied when changing the UI culture.")]
+    [Category("Behavior")]
     public bool ApplyToolTip
     {
-        get { return applyToolTip; }
-        set { applyToolTip = value; }
+        get
+        {
+            return _applyToolTip;
+        }
+        set
+        {
+            _applyToolTip = value;
+        }
     }
 
     /// <summary>
     /// Stores a value indicating whether localized ToolTip values are applied when changing the UI culture.
     /// </summary>
-    bool applyToolTip;
+    bool _applyToolTip;
 
     /// <summary>
     /// Gets or sets a value indicating whether localized Help values are applied when changing the UI culture.
     /// </summary>
-    [Browsable(true), DefaultValue(false)]
-    [Description("Indicates whether localized help contents are applied when changing the UI culture."),
-     Category("Behavior")]
+    [Browsable(true)]
+    [DefaultValue(false)]
+    [Description("Indicates whether localized help contents are applied when changing the UI culture.")]
+    [Category("Behavior")]
     public bool ApplyHelp
     {
-        get { return applyHelp; }
-        set { applyHelp = value; }
+        get
+        {
+            return _applyHelp;
+        }
+        set
+        {
+            _applyHelp = value;
+        }
     }
 
     /// <summary>
     /// Stores a value indicating whether localized Help values are applied when changing the UI culture.
     /// </summary>
-    bool applyHelp;
+    bool _applyHelp;
 
     /// <summary>
     /// Gets or sets a value indicating whether the Size values of forms remain unchanged when changing the UI culture.
@@ -270,19 +343,26 @@ public class UICultureChanger : Component
     /// <remarks>
     /// This property has no effect unless <see cref="ApplySize"/> is <see langword="true"/>.
     /// </remarks>
-    [Browsable(true), DefaultValue(true)]
-    [Description("Indicates whether the Size values of forms are preserved when changing the UI culture."),
-     Category("Behavior")]
+    [Browsable(true)]
+    [DefaultValue(true)]
+    [Description("Indicates whether the Size values of forms are preserved when changing the UI culture.")]
+    [Category("Behavior")]
     public bool PreserveFormSize
     {
-        get { return preserveFormSize; }
-        set { preserveFormSize = value; }
+        get
+        {
+            return _preserveFormSize;
+        }
+        set
+        {
+            _preserveFormSize = value;
+        }
     }
 
     /// <summary>
     /// Stores a value indicating whether the Size values of forms remain unchanged when changing the UI culture.
     /// </summary>
-    bool preserveFormSize;
+    bool _preserveFormSize;
 
     /// <summary>
     /// Gets or sets a value indicating whether the Location values of forms remain unchanged when changing the UI culture.
@@ -290,39 +370,48 @@ public class UICultureChanger : Component
     /// <remarks>
     /// This property has no effect unless <see cref="ApplyLocation"/> is <see langword="true"/>.
     /// </remarks>
-    [Browsable(true), DefaultValue(true)]
-    [Description("Indicates whether the Location values of forms are preserved when changing the UI culture."),
-     Category("Behavior")]
+    [Browsable(true)]
+    [DefaultValue(true)]
+    [Description("Indicates whether the Location values of forms are preserved when changing the UI culture.")]
+    [Category("Behavior")]
     public bool PreserveFormLocation
     {
-        get { return preserveFormLocation; }
-        set { preserveFormLocation = value; }
+        get
+        {
+            return _preserveFormLocation;
+        }
+        set
+        {
+            _preserveFormLocation = value;
+        }
     }
 
     /// <summary>
     /// Stores a value indicating whether the Location values of forms remain unchanged when changing the UI culture.
     /// </summary>
-    bool preserveFormLocation;
+    bool _preserveFormLocation;
+
     #endregion
 
     #region construction, deconstruction
+
     /// <summary>
     /// Initializes a new instance of the <see cref="UICultureChanger"/> class.
     /// </summary>
     public UICultureChanger()
     {
         // Create List with size 1, so it can take the container form of the component without resizing.
-        forms = new List<Form>(1);
+        _forms = new List<Form>(1);
 
-        applyText = true;
-        applySize = false;
-        applyLocation = false;
-        applyRightToLeft = false;
-        applyRightToLeftLayout = false;
-        applyToolTip = false;
-        applyHelp = false;
-        preserveFormSize = true;
-        preserveFormLocation = true;
+        _applyText = true;
+        _applySize = false;
+        _applyLocation = false;
+        _applyRightToLeft = false;
+        _applyRightToLeftLayout = false;
+        _applyToolTip = false;
+        _applyHelp = false;
+        _preserveFormSize = true;
+        _preserveFormLocation = true;
     }
 
     /// <summary> 
@@ -337,15 +426,19 @@ public class UICultureChanger : Component
     {
         if (disposing)
         {
-            for (int index = 0; index < forms.Count; index++)
-                RemoveForm(forms[index]);
+            for (int index = 0; index < _forms.Count; index++)
+            {
+                RemoveForm(_forms[index]);
+            }
         }
 
         base.Dispose(disposing);
     }
+
     #endregion
 
     #region instance methods
+
     /// <summary>
     /// Adds the specified <see cref="Form"/> object to the collection of forms whose UI cultures will be changed.
     /// </summary>
@@ -358,7 +451,7 @@ public class UICultureChanger : Component
     {
         if (form != null)
         {
-            forms.Add(form);
+            _forms.Add(form);
             form.FormClosed += Form_FormClosed;
         }
     }
@@ -376,12 +469,12 @@ public class UICultureChanger : Component
     public bool RemoveForm(Form form)
     {
         if (form == null)
-            return false;
-        else
         {
-            form.FormClosed -= Form_FormClosed;
-            return forms.Remove(form);
+            return false;
         }
+
+        form.FormClosed -= Form_FormClosed;
+        return _forms.Remove(form);
     }
 
     /// <summary>
@@ -409,9 +502,9 @@ public class UICultureChanger : Component
         // Applies culture to current Thread.
         Thread.CurrentThread.CurrentUICulture = cultureInfo;
 
-        for (int index = 0; index < forms.Count; index++)
+        for (int index = 0; index < _forms.Count; index++)
         {
-            ApplyCultureToForm(forms[index]);
+            ApplyCultureToForm(_forms[index]);
         }
     }
 
@@ -426,17 +519,21 @@ public class UICultureChanger : Component
         // Create and fill a collection, containing all infos needed to apply localized resources.
         ComponentResourceManager resources = new ComponentResourceManager(form.GetType());
         FieldInfo[] fields = form.GetType().GetFields(BindingFlags.Instance | BindingFlags.DeclaredOnly |
-            BindingFlags.NonPublic);
-		List<ChangeInfo> changeInfos = new List<ChangeInfo>(fields.Length + 1);
-        changeInfos.Add(new ChangeInfo("$this", form, form.GetType()));
+                                                      BindingFlags.NonPublic);
+        List<ChangeInfo> changeInfos = new List<ChangeInfo>(fields.Length + 1)
+            {
+                new ChangeInfo("$this", form, form.GetType())
+            };
         for (int index = 0; index < fields.Length; index++)
         {
             object value = fields[index].GetValue(form);
             if (value != null)
+            {
                 changeInfos.Add(new ChangeInfo(fields[index].Name, value, fields[index].FieldType));
+            }
         }
-		changeInfos.TrimExcess();
-        
+        changeInfos.TrimExcess();
+
         // Call SuspendLayout for Form and all fields derived from Control, so assignment of 
         //   localized resources doesn't change layout immediately.
         for (int index = 0; index < changeInfos.Count; index++)
@@ -448,17 +545,16 @@ public class UICultureChanger : Component
             }
         }
 
-        if (applyText)
+        if (_applyText)
         {
             // If available, assign localized text to Form and fields.
-            String text;
             for (int index = 0; index < changeInfos.Count; index++)
             {
                 if (changeInfos[index].Type.GetProperty("Text", typeof(String)) != null &&
                     changeInfos[index].Type.GetProperty("Text", typeof(String)).CanWrite)
                 {
-                    text = resources.GetString(changeInfos[index].Name + ".Text");
-                    if (text != null && text != "")
+                    String text = resources.GetString(changeInfos[index].Name + ".Text");
+                    if (!string.IsNullOrEmpty(text))
                     {
                         changeInfos[index].Type.InvokeMember("Text", BindingFlags.SetProperty, null,
                             changeInfos[index].Value, new object[] { text });
@@ -467,34 +563,35 @@ public class UICultureChanger : Component
             }
         }
 
-        if (applySize)
+        if (_applySize)
         {
             // If available, assign localized sizes to Form and fields.
-            object size;
-            Control control;
             int index = 0;
-            if (preserveFormSize)
+            if (_preserveFormSize)
             {
                 // Skip the form entry in changeInfos collection.
                 index = 1;
             }
             for (; index < changeInfos.Count; index++)
             {
+                object size;
+                Control control;
                 if (changeInfos[index].Type.GetProperty("Size", typeof(Size)) != null &&
                     changeInfos[index].Type.GetProperty("Size", typeof(Size)).CanWrite)
                 {
                     size = resources.GetObject(changeInfos[index].Name + ".Size");
-                    if (size != null && size.GetType() == typeof(Size))
+                    if (size != null && size is Size)
                     {
                         if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
-                        {// In case of an inheritor of Control take into account the Anchor property.
+                        {
+                            // In case of an inheritor of Control take into account the Anchor property.
                             control = (Control)changeInfos[index].Value;
                             if ((control.Anchor & (AnchorStyles.Left | AnchorStyles.Right)) == (AnchorStyles.Left | AnchorStyles.Right))
                             {
                                 // Control is bound to the left and right edge, so preserve its width.
                                 size = new Size(control.Width, ((Size)size).Height);
                             }
-                            if ((control.Anchor & (AnchorStyles.Top | AnchorStyles.Bottom))== (AnchorStyles.Top | AnchorStyles.Bottom))
+                            if ((control.Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == (AnchorStyles.Top | AnchorStyles.Bottom))
                             {
                                 // Control is bound to the top and bottom edge, so preserve its height.
                                 size = new Size(((Size)size).Width, control.Height);
@@ -513,7 +610,7 @@ public class UICultureChanger : Component
                     changeInfos[index].Type.GetProperty("ClientSize", typeof(Size)).CanWrite)
                 {
                     size = resources.GetObject(changeInfos[index].Name + ".ClientSize");
-                    if (size != null && size.GetType() == typeof(Size))
+                    if (size != null && size is Size)
                     {
                         if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
                         {
@@ -541,13 +638,11 @@ public class UICultureChanger : Component
             }
         }
 
-        if (applyLocation)
+        if (_applyLocation)
         {
             // If available, assign localized locations to Form and fields.
-            object location;
-            Control control;
             int index = 0;
-            if (preserveFormLocation)
+            if (_preserveFormLocation)
             {
                 // Skip the form entry in changeInfos collection.
                 index = 1;
@@ -557,12 +652,13 @@ public class UICultureChanger : Component
                 if (changeInfos[index].Type.GetProperty("Location", typeof(Point)) != null &&
                     changeInfos[index].Type.GetProperty("Location", typeof(Point)).CanWrite)
                 {
-                    location = resources.GetObject(changeInfos[index].Name + ".Location");
-                    if (location != null && location.GetType() == typeof(Point))
+                    object location = resources.GetObject(changeInfos[index].Name + ".Location");
+                    if (location != null && location is Point)
                     {
                         if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
-                        {// In case of an inheritor of Control take into account the Anchor property.
-                            control = (Control)changeInfos[index].Value;
+                        {
+                            // In case of an inheritor of Control take into account the Anchor property.
+                            Control control = (Control)changeInfos[index].Value;
                             if ((control.Anchor & (AnchorStyles.Left | AnchorStyles.Right)) == AnchorStyles.Right)
                             {
                                 // Control is bound to the right but not the left edge, so preserve its x-coordinate.
@@ -585,16 +681,15 @@ public class UICultureChanger : Component
             }
         }
 
-        if (applyRightToLeft)
+        if (_applyRightToLeft)
         {
             // If available, assign localized RightToLeft values to Form and fields.
-            object rightToLeft;
             for (int index = 0; index < changeInfos.Count; index++)
             {
                 if (changeInfos[index].Type.GetProperty("RightToLeft", typeof(RightToLeft)) != null &&
                     changeInfos[index].Type.GetProperty("RightToLeft", typeof(RightToLeft)).CanWrite)
                 {
-                    rightToLeft = resources.GetObject(changeInfos[index].Name + ".RightToLeft");
+                    object rightToLeft = resources.GetObject(changeInfos[index].Name + ".RightToLeft");
                     if (rightToLeft != null && rightToLeft.GetType() == typeof(RightToLeft))
                     {
                         changeInfos[index].Type.InvokeMember("RightToLeft", BindingFlags.SetProperty, null,
@@ -604,17 +699,16 @@ public class UICultureChanger : Component
             }
         }
 
-        if (applyRightToLeftLayout)
+        if (_applyRightToLeftLayout)
         {
             // If available, assign localized RightToLeftLayout values to Form and fields.
-            object rightToLeftLayout;
             for (int index = 0; index < changeInfos.Count; index++)
             {
                 if (changeInfos[index].Type.GetProperty("RightToLeftLayout", typeof(bool)) != null &&
                     changeInfos[index].Type.GetProperty("RightToLeftLayout", typeof(bool)).CanWrite)
                 {
-                    rightToLeftLayout = resources.GetObject(changeInfos[index].Name + ".RightToLeftLayout");
-                    if (rightToLeftLayout != null && rightToLeftLayout.GetType() == typeof(bool))
+                    object rightToLeftLayout = resources.GetObject(changeInfos[index].Name + ".RightToLeftLayout");
+                    if (rightToLeftLayout != null && rightToLeftLayout is bool)
                     {
                         changeInfos[index].Type.InvokeMember("RightToLeftLayout", BindingFlags.SetProperty, null,
                             changeInfos[index].Value, new[] { rightToLeftLayout });
@@ -623,7 +717,7 @@ public class UICultureChanger : Component
             }
         }
 
-        if (applyToolTip)
+        if (_applyToolTip)
         {
             // If available, assign localized ToolTipText to fields.
             // Also search for a ToolTip component in the current form.
@@ -636,11 +730,10 @@ public class UICultureChanger : Component
                     resources.ApplyResources(toolTip, changeInfos[index].Name);
                     changeInfos.Remove(changeInfos[index]);
                 }
-                String text;
                 if (changeInfos[index].Type.GetProperty("ToolTipText", typeof(String)) != null &&
                     changeInfos[index].Type.GetProperty("ToolTipText", typeof(String)).CanWrite)
                 {
-                    text = resources.GetString(changeInfos[index].Name + ".ToolTipText");
+                    String text = resources.GetString(changeInfos[index].Name + ".ToolTipText");
                     if (text != null)
                     {
                         changeInfos[index].Type.InvokeMember("ToolTipText", BindingFlags.SetProperty, null,
@@ -650,22 +743,24 @@ public class UICultureChanger : Component
             }
 
             if (toolTip != null)
-            {// Form contains a ToolTip component.
+            {
+                // Form contains a ToolTip component.
                 // If available, assign localized tooltips to Form and fields.
-                String text;
                 for (int index = 0; index < changeInfos.Count; index++)
                 {
                     if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
                     {
-                        text = resources.GetString(changeInfos[index].Name + ".ToolTip");
+                        String text = resources.GetString(changeInfos[index].Name + ".ToolTip");
                         if (text != null)
+                        {
                             toolTip.SetToolTip((Control)changeInfos[index].Value, text);
+                        }
                     }
                 }
             }
         }
 
-        if (applyHelp)
+        if (_applyHelp)
         {
             // Search for a HelpProvider component in the current form.
             HelpProvider helpProvider = null;
@@ -683,27 +778,33 @@ public class UICultureChanger : Component
             if (helpProvider != null)
             {
                 // If available, assign localized help to Form and fields.
-                String text;
-                object help;
                 for (int index = 0; index < changeInfos.Count; index++)
                 {
                     if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
                     {
-                        text = resources.GetString(changeInfos[index].Name + ".HelpKeyword");
+                        String text = resources.GetString(changeInfos[index].Name + ".HelpKeyword");
                         if (text != null)
+                        {
                             helpProvider.SetHelpKeyword((Control)changeInfos[index].Value, text);
+                        }
 
-                        help = resources.GetObject(changeInfos[index].Name + ".HelpNavigator");
+                        object help = resources.GetObject(changeInfos[index].Name + ".HelpNavigator");
                         if (help != null && help.GetType() == typeof(HelpNavigator))
+                        {
                             helpProvider.SetHelpNavigator((Control)changeInfos[index].Value, (HelpNavigator)help);
+                        }
 
                         text = resources.GetString(changeInfos[index].Name + ".HelpString");
                         if (text != null)
+                        {
                             helpProvider.SetHelpString((Control)changeInfos[index].Value, text);
+                        }
 
                         help = resources.GetObject(changeInfos[index].Name + ".ShowHelp");
-                        if (help != null && help.GetType() == typeof(bool))
+                        if (help != null && help is bool)
+                        {
                             helpProvider.SetShowHelp((Control)changeInfos[index].Value, (bool)help);
+                        }
                     }
                 }
             }
@@ -719,5 +820,6 @@ public class UICultureChanger : Component
             }
         }
     }
+
     #endregion
 }

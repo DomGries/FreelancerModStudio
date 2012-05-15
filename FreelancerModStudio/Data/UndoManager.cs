@@ -34,7 +34,7 @@ namespace FreelancerModStudio.Data
 
         public void Undo(int levels)
         {
-            for (int i = 0; i < levels; i++)
+            for (int i = 0; i < levels; ++i)
             {
                 if (current > 0)
                 {
@@ -48,12 +48,12 @@ namespace FreelancerModStudio.Data
 
         public void Redo(int levels)
         {
-            for (int i = 0; i < levels; i++)
+            for (int i = 0; i < levels; ++i)
             {
                 if (current < changes.Count)
                 {
                     List<T> data = changes[current];
-                    current++;
+                    ++current;
 
                     OnDataChanged(data, false);
                 }
@@ -69,7 +69,7 @@ namespace FreelancerModStudio.Data
 
             //add the data
             changes.Add(newData);
-            current++;
+            ++current;
 
             //raise event that the data was changed
             OnDataChanged(newData, false);

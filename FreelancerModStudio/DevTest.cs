@@ -37,7 +37,7 @@ namespace FreelancerModStudio
                             });
                     }
 
-                    int blockIndex = templateBlocks.IndexOf(block.Name.ToLower());
+                    int blockIndex = templateBlocks.IndexOf(block.Name);
                     if (blockIndex != -1)
                     {
                         //integration options
@@ -1374,7 +1374,7 @@ namespace FreelancerModStudio
 
         static int GetTemplateFileGroup(string filePath)
         {
-            for (int i = 0; i < fileGroups.Length; i++)
+            for (int i = 0; i < fileGroups.Length; ++i)
             {
                 foreach (string sameFile in fileGroups[i])
                 {
@@ -1419,16 +1419,6 @@ namespace FreelancerModStudio
             }
 
             dataList.Add(newTemplate);
-        }
-
-        static int IndexOfName(List<INIBlock> blocks, string name)
-        {
-            for (int i = 0; i < blocks.Count; i++)
-            {
-                if (blocks[i].Name.ToLower() == name.ToLower())
-                    return i;
-            }
-            return -1;
         }
     }
 }

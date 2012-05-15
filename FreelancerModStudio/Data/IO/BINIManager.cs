@@ -54,7 +54,7 @@ namespace FreelancerModStudio.Data.IO
                     string sectionName = stringTable.GetString(sectionStringPosition);
                     INIOptions block = new INIOptions();
                     //read each entry
-                    for (int i = 0; i < sectionEntriesCount; i++)
+                    for (int i = 0; i < sectionEntriesCount; ++i)
                     {
                         //read entry
                         int entryStringPosition = binaryReader.ReadInt16();
@@ -63,7 +63,7 @@ namespace FreelancerModStudio.Data.IO
 
                         //read each value
                         List<string> options = new List<string>();
-                        for (int j = 0; j < entryValuesCount; j++)
+                        for (int j = 0; j < entryValuesCount; ++j)
                         {
                             //read value
                             int valueType = binaryReader.ReadByte();

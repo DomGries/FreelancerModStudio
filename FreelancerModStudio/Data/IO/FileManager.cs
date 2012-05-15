@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace FreelancerModStudio.Data.IO
 {
@@ -76,7 +77,7 @@ namespace FreelancerModStudio.Data.IO
                     EditorINIBlock editorBlock = new EditorINIBlock(templateBlock.Name, templateBlockIndex);
 
                     //loop each template option
-                    for (int j = 0; j < templateBlock.Options.Count; j++)
+                    for (int j = 0; j < templateBlock.Options.Count; ++j)
                     {
                         //handle nested options
                         Template.Option childTemplateOption = null;
@@ -113,7 +114,7 @@ namespace FreelancerModStudio.Data.IO
                             if (templateOption.Multiple)
                             {
                                 //loop each ini option
-                                for (int k = 0; k < iniOptions.Count; k++)
+                                for (int k = 0; k < iniOptions.Count; ++k)
                                 {
                                     List<object> editorChildOptions = null;
                                     List<INIOption> iniChildOptions;
@@ -126,7 +127,7 @@ namespace FreelancerModStudio.Data.IO
                                         editorChildOptions = new List<object>();
 
                                         //loop each ini option of child
-                                        for (; h < iniChildOptions.Count; h++)
+                                        for (; h < iniChildOptions.Count; ++h)
                                         {
                                             INIOption childOption = iniChildOptions[h];
                                             if (k < iniOptions.Count - 1 && childOption.Index > iniOptions[k + 1].Index)
@@ -162,12 +163,12 @@ namespace FreelancerModStudio.Data.IO
                             editorBlock.Options.Add(new EditorINIOption(templateOption.Name, j));
 
                         //set index of main option (value displayed in table view)
-                        if (templateBlock.Identifier != null && templateBlock.Identifier.ToLower() == editorBlock.Options[editorBlock.Options.Count - 1].Name.ToLower())
+                        if (templateBlock.Identifier != null && templateBlock.Identifier.Equals(editorBlock.Options[editorBlock.Options.Count - 1].Name, StringComparison.OrdinalIgnoreCase))
                             editorBlock.MainOptionIndex = editorBlock.Options.Count - 1;
 
                         //ignore next option because we already added it as children to the current option
                         if (childTemplateOption != null)
-                            j++;
+                            ++j;
                     }
 
                     //add block
@@ -192,13 +193,13 @@ namespace FreelancerModStudio.Data.IO
         public void Write(EditorINIData data)
         {
             //sort blocks first
-            //for (int i = 0; i < Helper.Template.Data.Files.Values[data.TemplateIndex].Blocks.Count; i++)
+            //for (int i = 0; i < Helper.Template.Data.Files[data.TemplateIndex].Blocks.Count; ++i)
             //{
-            //    Template.Block templateBlock = Helper.Template.Data.Files.Values[data.TemplateIndex].Blocks[i];
+            //    Template.Block templateBlock = Helper.Template.Data.Files[data.TemplateIndex].Blocks.Values[i];
 
-            //    for (int j = i; j < data.Blocks.Count; j++)
+            //    for (int j = i; j < data.Blocks.Count; ++j)
             //    {
-            //        if (data.Blocks[j].Name.ToLower() == templateBlock.Name.ToLower())
+            //        if (data.Blocks[j].Name.Equals(templateBlock.Name, StringComparison.OrdinalIgnoreCase))
             //        {
             //            //swap blocks
             //            EditorINIBlock temporaryBlock = data.Blocks[i];
@@ -232,7 +233,7 @@ namespace FreelancerModStudio.Data.IO
                             //add suboptions as options with defined parent
                             if (entry.SubOptions != null)
                             {
-                                for (int k = 0; k < entry.SubOptions.Count; k++)
+                                for (int k = 0; k < entry.SubOptions.Count; ++k)
                                     newOption.Add(new INIOption { Value = entry.SubOptions[k].ToString(), Parent = option.ChildName });
                             }
                         }
@@ -262,13 +263,15 @@ namespace FreelancerModStudio.Data.IO
 
         public static int GetTemplateIndex(string file)
         {
-            for (int i = 0; i < Helper.Template.Data.Files.Count; i++)
+            for (int i = 0; i < Helper.Template.Data.Files.Count; ++i)
             {
                 foreach (string path in Helper.Template.Data.Files[i].Paths)
                 {
                     string pattern = ".*" + path.Replace("\\", "\\\\").Replace("*", "[^\\\\]*");
-                    if (System.Text.RegularExpressions.Regex.Match(file.ToLower(), pattern).Success)
+                    if (Regex.Match(file, pattern, RegexOptions.IgnoreCase).Success)
+                    {
                         return i;
+                    }
                 }
             }
             return -1;

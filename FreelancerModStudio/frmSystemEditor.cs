@@ -141,7 +141,7 @@ namespace FreelancerModStudio
 
         ContentBase GetContent(TableBlock block)
         {
-            for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; i++)
+            for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; ++i)
             {
                 ContentBase content = (ContentBase)systemPresenter.Viewport.Children[i];
                 if (content.Block.Id == block.Id)
@@ -262,7 +262,7 @@ namespace FreelancerModStudio
                 // switch model mode
                 systemPresenter.IsModelMode = value;
 
-                for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; i++)
+                for (int i = systemPresenter.GetContentStartId(); i < systemPresenter.Viewport.Children.Count; ++i)
                 {
                     ContentBase content = (ContentBase)systemPresenter.Viewport.Children[i];
                     systemPresenter.LoadModel(content);

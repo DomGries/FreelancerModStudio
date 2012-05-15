@@ -41,10 +41,10 @@ namespace FreelancerModStudio
                 if (ValidChars(txtSaveLocation.Text))
                     DialogResult = DialogResult.OK;
                 else
-                    MessageBox.Show(Properties.Strings.ModInvalidPathChars, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(Properties.Strings.ModInvalidPathChars, Helper.Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
-                MessageBox.Show(Properties.Strings.ModInvalidNameChars, Helper.Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(Properties.Strings.ModInvalidNameChars, Helper.Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
         void btnBrowse_Click(object sender, EventArgs e)

@@ -37,7 +37,7 @@ namespace FreelancerModStudio.SystemPresenter
             foreach (MeshGroup meshGroup in meshGroups)
             {
                 int endMesh = meshGroup.MeshReference.MeshStart + meshGroup.MeshReference.MeshCount;
-                for (int meshIndex = meshGroup.MeshReference.MeshStart; meshIndex < endMesh; meshIndex++)
+                for (int meshIndex = meshGroup.MeshReference.MeshStart; meshIndex < endMesh; ++meshIndex)
                 {
                     if (meshIndex >= meshGroup.Mesh.Meshes.Length)
                     {
@@ -69,7 +69,7 @@ namespace FreelancerModStudio.SystemPresenter
             //PointCollection texture = new PointCollection();
 
             int vertexCount = mesh.BaseVertex + mesh.EndVertex - mesh.StartVertex + 1;
-            for (int i = mesh.BaseVertex; i < vertexCount; i++)
+            for (int i = mesh.BaseVertex; i < vertexCount; ++i)
             {
                 positions.Add(vmesh.Vertices[i].Position);
                 normals.Add(vmesh.Vertices[i].Normal);
@@ -81,7 +81,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             int triangleCount = (mesh.TriangleStart + mesh.NumRefVertices)/3;
-            for (int i = mesh.TriangleStart/3; i < triangleCount; i++)
+            for (int i = mesh.TriangleStart/3; i < triangleCount; ++i)
             {
                 indices.Add(vmesh.Triangles[i].Vertex1);
                 indices.Add(vmesh.Triangles[i].Vertex2);

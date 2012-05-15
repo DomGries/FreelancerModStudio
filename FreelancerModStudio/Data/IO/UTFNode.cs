@@ -26,9 +26,9 @@ namespace FreelancerModStudio.Data.IO
 
         public int IndexOf(string name)
         {
-            for (int index = 0; index < Nodes.Count; index++)
+            for (int index = 0; index < Nodes.Count; ++index)
             {
-                if (Nodes[index].Name.ToLower() == name.ToLower())
+                if (Nodes[index].Name.Equals(name, System.StringComparison.OrdinalIgnoreCase))
                 {
                     return index;
                 }
@@ -40,7 +40,7 @@ namespace FreelancerModStudio.Data.IO
         {
             foreach (UTFNode node in Nodes)
             {
-                if (node.Name.ToLower() == name.ToLower())
+                if (node.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase))
                 {
                     return node;
                 }
@@ -64,7 +64,7 @@ namespace FreelancerModStudio.Data.IO
 
             foreach (UTFNode node in Nodes)
             {
-                if (node.Name.ToLower() == name.ToLower())
+                if (node.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase))
                 {
                     foundNodes.Add(node);
                 }

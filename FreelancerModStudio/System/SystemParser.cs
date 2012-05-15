@@ -1,4 +1,5 @@
-﻿using System.Windows.Media.Media3D;
+﻿using System;
+using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.SystemPresenter.Content;
@@ -28,7 +29,7 @@ namespace FreelancerModStudio.SystemPresenter
                             //get type of object based on archetype
                             foreach (EditorINIOption option in block.Block.Options)
                             {
-                                if (option.Name.ToLower() == "archetype")
+                                if (option.Name.Equals("archetype", StringComparison.OrdinalIgnoreCase))
                                 {
                                     if (option.Values.Count > 0)
                                     {
@@ -67,7 +68,7 @@ namespace FreelancerModStudio.SystemPresenter
                                         string[] values = value.Split(new[] { ',' });
                                         foreach (string valueEntry in values)
                                         {
-                                            if (valueEntry.ToLower() == "trade")
+                                            if (valueEntry.Equals("trade", StringComparison.OrdinalIgnoreCase))
                                             {
                                                 block.ObjectType = ContentType.ZonePathTrade;
                                                 return;
@@ -268,7 +269,7 @@ namespace FreelancerModStudio.SystemPresenter
         public Vector3D ParseUniverseVector(string vector)
         {
             const double axisCenter = 7.5;
-            const double positionScale = 1 / SIZE_FACTOR / 4;
+            const double positionScale = 1/SIZE_FACTOR/4;
 
             //Use Point.Parse after implementation of type handling
             string[] values = vector.Split(new[] { ',' });

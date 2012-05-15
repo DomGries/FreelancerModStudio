@@ -71,13 +71,13 @@ namespace FreelancerModStudio.Data.IO
                                 string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
 
                                 currentBlock.Options.Add(optionName, new INIOption { Value = optionValue, Index = currentOptionIndex } );
-                                currentOptionIndex++;
+                                ++currentOptionIndex;
                             }
                             else
                             {
                                 // entry without value
                                 currentBlock.Options.Add(line, new INIOption { Value = string.Empty, Index = currentOptionIndex });
-                                currentOptionIndex++;
+                                ++currentOptionIndex;
                             }
                         }
                     }
@@ -110,13 +110,13 @@ namespace FreelancerModStudio.Data.IO
                     int k = 0;
                     foreach (KeyValuePair<string, List<INIOption>> option in block.Options)
                     {
-                        for (int h = 0; h < option.Value.Count; h++)
+                        for (int h = 0; h < option.Value.Count; ++h)
                         {
                             //write the key
                             streamWriter.Write(option.Value[h].Parent ?? option.Key);
 
                             // dont write the '=' for entries with no value
-                            if (option.Value[h].Value != string.Empty)
+                            if (option.Value[h].Value.Length != 0)
                             {
                                 if (WriteSpaces)
                                     streamWriter.Write(" = " + option.Value[h].Value);
@@ -131,9 +131,9 @@ namespace FreelancerModStudio.Data.IO
                         if (k < block.Options.Count - 1)
                             streamWriter.Write(Environment.NewLine);
 
-                        k++;
+                        ++k;
                     }
-                    i++;
+                    ++i;
                 }
             }
         }

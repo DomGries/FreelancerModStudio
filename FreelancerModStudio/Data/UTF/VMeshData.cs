@@ -92,7 +92,7 @@ namespace FreelancerModStudio.Data.UTF
             int triangleStartOffset = 0;
             int vertexBaseOffset = 0;
             Meshes = new TMeshHeader[MeshCount];
-            for (int i = 0; i < MeshCount; i++)
+            for (int i = 0; i < MeshCount; ++i)
             {
                 TMeshHeader mesh = new TMeshHeader();
                 mesh.MaterialId = CmpParser.ParseUInt32(data, ref pos);
@@ -113,7 +113,7 @@ namespace FreelancerModStudio.Data.UTF
             // read the triangle data
             int triangleCount = NumRefVertices / 3;
             Triangles = new TTriangle[triangleCount];
-            for (int i = 0; i < triangleCount; i++)
+            for (int i = 0; i < triangleCount; ++i)
             {
                 TTriangle triangle = new TTriangle();
                 triangle.Vertex1 = CmpParser.ParseUInt16(data, ref pos);
@@ -126,7 +126,7 @@ namespace FreelancerModStudio.Data.UTF
             try
             {
                 Vertices = new TVertex[VertexCount];
-                for (int i = 0; i < VertexCount; i++)
+                for (int i = 0; i < VertexCount; ++i)
                 {                 
                     TVertex vertex = new TVertex();
                     vertex.FVF = FlexibleVertexFormat;

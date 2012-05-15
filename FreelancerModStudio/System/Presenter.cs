@@ -44,7 +44,7 @@ namespace FreelancerModStudio.SystemPresenter
                 else if (value != null)
                 {
                     Viewport.Children.Insert(0, value);
-                    secondLayerID++;
+                    ++secondLayerID;
                 }
 
                 lightning = value;
@@ -200,7 +200,7 @@ namespace FreelancerModStudio.SystemPresenter
             else
             {
                 Viewport.Children.Insert(secondLayerID, content);
-                secondLayerID++;
+                ++secondLayerID;
             }
         }
 
@@ -336,9 +336,9 @@ namespace FreelancerModStudio.SystemPresenter
         {
             int index = 0;
             if (Selection != null)
-                index++;
+                ++index;
             if (Lightning != null)
-                index++;
+                ++index;
 
             return index;
         }
@@ -407,7 +407,7 @@ namespace FreelancerModStudio.SystemPresenter
         {
             int count = 2;
 
-            for (int i = GetContentStartId(); i < Viewport.Children.Count && count > 0; i++)
+            for (int i = GetContentStartId(); i < Viewport.Children.Count && count > 0; ++i)
             {
                 ContentBase content = (ContentBase)Viewport.Children[i];
                 if (content.Block.Index == connection.From.Id)
@@ -539,11 +539,14 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 if (content.Block.Archetype != null && content.Block.Archetype.ModelPath != null)
                 {
-                    string ext = Path.GetExtension(content.Block.Archetype.ModelPath);
-                    if (ext != null && (ext.ToLower() == ".cmp" || ext.ToLower() == ".3db"))
+                    string extension = Path.GetExtension(content.Block.Archetype.ModelPath);
+
+                    if (extension != null &&
+                        (extension.Equals(".cmp", StringComparison.OrdinalIgnoreCase) ||
+                         extension.Equals(".3db", StringComparison.OrdinalIgnoreCase)))
                     {
                         string file = Path.Combine(DataPath, content.Block.Archetype.ModelPath);
-                        if (System.IO.File.Exists(file))
+                        if (File.Exists(file))
                         {
                             content.Content = new CmpModelContent().LoadModel(file);
 

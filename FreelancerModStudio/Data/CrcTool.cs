@@ -91,7 +91,7 @@ namespace FreelancerModStudio.Data
             byte[] data = Encoding.ASCII.GetBytes(name.ToLowerInvariant());
 
             uint crc = 0xFFFFFFFF;
-            for (uint i = 0; i < name.Length; i++)
+            for (uint i = 0; i < name.Length; ++i)
             {
                 crc = (crc >> 8) ^ CrcTable[(byte)crc ^ data[i]];
             }

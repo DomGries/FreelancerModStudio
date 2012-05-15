@@ -114,7 +114,7 @@ namespace FreelancerModStudio.Controls
             foreach (EditorINIEntry entry in options)
             {
                 List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), entry.Value, entry.SubOptions, children));
-                index++;
+                ++index;
             }
 
             List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), string.Empty, null, children));
@@ -195,7 +195,7 @@ namespace FreelancerModStudio.Controls
         {
             PropertyDescriptor[] properties = new PropertyDescriptor[List.Count];
 
-            for (int i = 0; i < List.Count; i++)
+            for (int i = 0; i < List.Count; ++i)
             {
                 PropertyOption propertyValue = this[i];
                 properties[i] = new PropertyOptionDescriptor(propertyValue, propertyValue.Attributes);

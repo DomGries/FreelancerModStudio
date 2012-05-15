@@ -1,19 +1,26 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using FreelancerModStudio.AutoUpdate;
+using FreelancerModStudio.Data;
+using FreelancerModStudio.Properties;
 
 namespace FreelancerModStudio
 {
-    class Helper
+    internal class Helper
     {
         public struct Program
         {
             public static void Start()
             {
 #if DEBUG
-                System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
+                Stopwatch st = new Stopwatch();
                 st.Start();
 #endif
                 //load settings
@@ -23,26 +30,35 @@ namespace FreelancerModStudio
                 if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
                 {
                     if (AutoUpdate.AutoUpdate.InstallUpdate())
+                    {
                         return;
+                    }
                 }
 
                 Template.Load();
 #if DEBUG
                 st.Stop();
-                System.Diagnostics.Debug.WriteLine("loading settings.xml and template.xml: " + st.ElapsedMilliseconds + "ms");
+                Debug.WriteLine("loading settings.xml and template.xml: " + st.ElapsedMilliseconds + "ms");
 #endif
 
                 //whidbey color table (gray colors of menustrip and tabstrip)
-                var whidbeyColorTable = new ProfessionalColorTable { UseSystemColors = true };
+                ProfessionalColorTable whidbeyColorTable = new ProfessionalColorTable
+                    {
+                        UseSystemColors = true
+                    };
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer(whidbeyColorTable);
 
                 //remove installed update if it exists
                 if (Settings.Data.Data.General.AutoUpdate.Update.Installed)
+                {
                     AutoUpdate.AutoUpdate.RemoveUpdate();
+                }
 
                 //check for update
                 if (Settings.Data.Data.General.AutoUpdate.Enabled && Settings.Data.Data.General.AutoUpdate.UpdateFile != null && Settings.Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Settings.Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
+                {
                     Update.Check(true, Settings.Data.Data.General.AutoUpdate.SilentDownload);
+                }
 
                 //start main form
                 Application.Run(new frmMain());
@@ -58,7 +74,7 @@ namespace FreelancerModStudio
 
             public static void Check(bool silentCheck, bool silentDownload)
             {
-                if (AutoUpdate.Status != FreelancerModStudio.AutoUpdate.StatusType.Waiting)
+                if (AutoUpdate.Status != StatusType.Waiting)
                 {
                     AutoUpdate.ShowUI();
                     return;
@@ -68,7 +84,9 @@ namespace FreelancerModStudio
                 if (!Uri.TryCreate(Settings.Data.Data.General.AutoUpdate.UpdateFile, UriKind.Absolute, out checkFileUri))
                 {
                     if (!silentCheck)
-                        MessageBox.Show(String.Format(Properties.Strings.UpdatesDownloadException, Assembly.Title), Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    {
+                        MessageBox.Show(String.Format(Strings.UpdatesDownloadException, Assembly.Name), Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
 
                     Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
                     return;
@@ -98,25 +116,25 @@ namespace FreelancerModStudio
 
         public struct Template
         {
-            static FreelancerModStudio.Data.Template data;
+            static FreelancerModStudio.Data.Template _data;
 
             public static void Load()
             {
-                Load(System.IO.Path.Combine(Application.StartupPath, Properties.Resources.TemplatePath));
+                Load(Path.Combine(Application.StartupPath, Resources.TemplatePath));
             }
 
             public static void Load(string file)
             {
-                data = new FreelancerModStudio.Data.Template();
+                _data = new FreelancerModStudio.Data.Template();
 
                 try
                 {
-                    data.Load(file);
+                    _data.Load(file);
                     Data.SetSpecialFiles();
                 }
                 catch (Exception ex)
                 {
-                    Exceptions.Show(String.Format(Properties.Strings.TemplateLoadException, Properties.Resources.TemplatePath), ex);
+                    Exceptions.Show(String.Format(Strings.TemplateLoadException, Resources.TemplatePath), ex);
                     Environment.Exit(0);
                 }
             }
@@ -127,10 +145,16 @@ namespace FreelancerModStudio
                 public static int UniverseFile { get; set; }
                 public static int SolarArchetypeFile { get; set; }
 
-                public static FreelancerModStudio.Data.Template.Files Files
+                public static List<FreelancerModStudio.Data.Template.File> Files
                 {
-                    get { return data.Data.Files; }
-                    set { data.Data.Files = value; }
+                    get
+                    {
+                        return _data.Data.Files;
+                    }
+                    set
+                    {
+                        _data.Data.Files = value;
+                    }
                 }
 
                 //public static FreelancerModStudio.Data.Template.CostumTypes CostumTypes
@@ -152,7 +176,7 @@ namespace FreelancerModStudio
 
                     string[] directories = Files[fileTemplate].Paths[0].Split(new[] { Path.DirectorySeparatorChar });
                     StringBuilder builder = new StringBuilder(filePath);
-                    for (int i = 0; i < directories.Length; i++)
+                    for (int i = 0; i < directories.Length; ++i)
                     {
                         int lastIndex = builder.ToString().LastIndexOf(Path.DirectorySeparatorChar);
                         if (lastIndex == -1)
@@ -168,7 +192,7 @@ namespace FreelancerModStudio
                 {
                     int count = 3;
 
-                    for (int i = 0; i < Files.Count && count > 0; i++)
+                    for (int i = 0; i < Files.Count && count > 0; ++i)
                     {
                         switch (Files[i].Name.ToLower())
                         {
@@ -196,26 +220,29 @@ namespace FreelancerModStudio
 
             public static void Save()
             {
-                string file = System.IO.Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Properties.Resources.SettingsPath);
+                string file = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.SettingsPath);
                 try
                 {
-                    if (!Directory.Exists(Path.GetDirectoryName(file)))
-                        Directory.CreateDirectory(Path.GetDirectoryName(file));
+                    string directory = Path.GetDirectoryName(file);
+                    if (directory != null && !Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
 
                     Data.Save(file);
                 }
                 catch (Exception ex)
                 {
-                    Exceptions.Show(String.Format(Properties.Strings.SettingsSaveException, Properties.Resources.SettingsPath), ex);
+                    Exceptions.Show(String.Format(Strings.SettingsSaveException, Resources.SettingsPath), ex);
                 }
             }
 
             public static void Load()
             {
-                string file = System.IO.Path.Combine(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Properties.Resources.SettingsPath);
+                string file = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.SettingsPath);
                 Data = new Data.Settings();
 
-                if (System.IO.File.Exists(file))
+                if (File.Exists(file))
                 {
                     try
                     {
@@ -223,35 +250,45 @@ namespace FreelancerModStudio
                     }
                     catch (Exception ex)
                     {
-                        Exceptions.Show(String.Format(Properties.Strings.SettingsLoadException, Properties.Resources.SettingsPath), ex);
+                        Exceptions.Show(String.Format(Strings.SettingsLoadException, Resources.SettingsPath), ex);
                     }
                 }
             }
 
             public static string GetShortLanguage()
             {
-                if (Data.Data.General.Language == FreelancerModStudio.Data.LanguageType.German)
+                if (Data.Data.General.Language == LanguageType.German)
+                {
                     return "de";
+                }
 
                 return "en";
             }
 
             public static void SetShortLanguage(string language)
             {
-                if (language.ToLower() == "de")
-                    Data.Data.General.Language = FreelancerModStudio.Data.LanguageType.German;
+                if (language.Equals("de", StringComparison.OrdinalIgnoreCase))
+                {
+                    Data.Data.General.Language = LanguageType.German;
+                }
                 else
-                    Data.Data.General.Language = FreelancerModStudio.Data.LanguageType.English;
+                {
+                    Data.Data.General.Language = LanguageType.English;
+                }
             }
         }
 
         public struct Thread
         {
-            public static void Start(ref System.Threading.Thread thread, System.Threading.ThreadStart threadDelegate, System.Threading.ThreadPriority priority, bool isBackground)
+            public static void Start(ref System.Threading.Thread thread, ThreadStart threadDelegate, ThreadPriority priority, bool isBackground)
             {
                 Abort(ref thread, true);
 
-                thread = new System.Threading.Thread(threadDelegate) { Priority = priority, IsBackground = isBackground };
+                thread = new System.Threading.Thread(threadDelegate)
+                    {
+                        Priority = priority,
+                        IsBackground = isBackground
+                    };
                 thread.Start();
             }
 
@@ -262,7 +299,9 @@ namespace FreelancerModStudio
                     thread.Abort();
 
                     if (wait)
+                    {
                         thread.Join();
+                    }
                 }
             }
 
@@ -282,7 +321,9 @@ namespace FreelancerModStudio
             public static bool Size(Size checkSize, Size currentSize, bool bigger)
             {
                 if (bigger)
+                {
                     return (checkSize.Width >= currentSize.Width && checkSize.Height >= currentSize.Height);
+                }
 
                 return (checkSize.Width <= currentSize.Width && checkSize.Height <= currentSize.Height);
             }
@@ -292,20 +333,22 @@ namespace FreelancerModStudio
         {
             public static void Show(Exception exception)
             {
-                MessageBox.Show(Get(exception), Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Get(exception), Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             public static void Show(string errorDescription, Exception exception)
             {
-                MessageBox.Show(errorDescription + Environment.NewLine + Environment.NewLine + Get(exception), Assembly.Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(errorDescription + Environment.NewLine + Environment.NewLine + Get(exception), Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             public static string Get(Exception exception)
             {
-                System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder(exception.Message);
+                StringBuilder stringBuilder = new StringBuilder(exception.Message);
 
                 if (exception.InnerException != null)
+                {
                     stringBuilder.Append(Environment.NewLine + Environment.NewLine + Get(exception.InnerException));
+                }
 
                 return stringBuilder.ToString();
             }
@@ -313,20 +356,11 @@ namespace FreelancerModStudio
 
         public struct Assembly
         {
-            public static string Title
+            public static string Name
             {
                 get
                 {
-                    object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyTitleAttribute), false);
-                    if (attributes.Length > 0)
-                    {
-                        System.Reflection.AssemblyTitleAttribute titleAttribute = (System.Reflection.AssemblyTitleAttribute)attributes[0];
-
-                        if (titleAttribute.Title != string.Empty)
-                            return titleAttribute.Title;
-                    }
-
-                    return System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+                    return Application.ProductName;
                 }
             }
 
@@ -334,43 +368,7 @@ namespace FreelancerModStudio
             {
                 get
                 {
-                    return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-                }
-            }
-
-            public static string Description
-            {
-                get
-                {
-                    object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyDescriptionAttribute), false);
-                    if (attributes.Length == 0)
-                        return string.Empty;
-
-                    return ((System.Reflection.AssemblyDescriptionAttribute)attributes[0]).Description;
-                }
-            }
-
-            public static string Product
-            {
-                get
-                {
-                    object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyProductAttribute), false);
-                    if (attributes.Length == 0)
-                        return string.Empty;
-
-                    return ((System.Reflection.AssemblyProductAttribute)attributes[0]).Product;
-                }
-            }
-
-            public static string Copyright
-            {
-                get
-                {
-                    object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyCopyrightAttribute), false);
-                    if (attributes.Length == 0)
-                        return string.Empty;
-
-                    return ((System.Reflection.AssemblyCopyrightAttribute)attributes[0]).Copyright;
+                    return new Version(Application.ProductVersion);
                 }
             }
 
@@ -378,11 +376,35 @@ namespace FreelancerModStudio
             {
                 get
                 {
-                    object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(System.Reflection.AssemblyCompanyAttribute), false);
-                    if (attributes.Length == 0)
-                        return string.Empty;
+                    return Application.CompanyName;
+                }
+            }
 
-                    return ((System.Reflection.AssemblyCompanyAttribute)attributes[0]).Company;
+            public static string Description
+            {
+                get
+                {
+                    object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
+                    if (attributes.Length == 0)
+                    {
+                        return string.Empty;
+                    }
+
+                    return ((AssemblyDescriptionAttribute)attributes[0]).Description;
+                }
+            }
+
+            public static string Copyright
+            {
+                get
+                {
+                    object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+                    if (attributes.Length == 0)
+                    {
+                        return string.Empty;
+                    }
+
+                    return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
                 }
             }
         }

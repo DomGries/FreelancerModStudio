@@ -173,7 +173,7 @@ namespace FreelancerModStudio
             }
 
             //update 'New file' to new language
-            if (File == string.Empty)
+            if (File.Length == 0)
                 SetFile(string.Empty);
 
             objectListView1.Refresh();
@@ -183,21 +183,13 @@ namespace FreelancerModStudio
         {
             var openFile = new OpenFileDialog
                                           {
-                                              Title = string.Format(Properties.Strings.FileEditorOpenSolarArch, PathGetFileName(File)),
+                                              Title = string.Format(Properties.Strings.FileEditorOpenSolarArch, GetFileName()),
                                               Filter = "Solar Archetype INI|*.ini"
                                           };
             if (openFile.ShowDialog() == DialogResult.OK)
                 return openFile.FileName;
 
             return null;
-        }
-
-        string PathGetFileName(string path)
-        {
-            if (path.Trim() == string.Empty)
-                return path;
-
-            return System.IO.Path.GetFileName(path);
         }
 
         public void LoadArchetypes()
@@ -250,7 +242,7 @@ namespace FreelancerModStudio
             objectListView1.SetObjects(Data.Blocks);
 
             //add block types to add menu
-            for (int i = 0; i < Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Count; i++)
+            for (int i = 0; i < Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Count; ++i)
             {
                 var addItem = new ToolStripMenuItem
                                                 {
@@ -414,7 +406,7 @@ namespace FreelancerModStudio
         {
             if (undoManager.IsModified())
             {
-                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, Title), Helper.Assembly.Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, Title), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Cancel)
                     return true;
                 if (dialogResult == DialogResult.Yes)
@@ -445,7 +437,7 @@ namespace FreelancerModStudio
                 //check if block already exists if it is a single block
                 if (!templateBlock.Multiple)
                 {
-                    for (int j = 0; j < Data.Blocks.Count; j++)
+                    for (int j = 0; j < Data.Blocks.Count; ++j)
                     {
                         //block already exists
                         if (Data.Blocks[j].Block.TemplateIndex == block.Block.TemplateIndex)
@@ -494,12 +486,12 @@ namespace FreelancerModStudio
 
             //add options to new block
             EditorINIBlock editorBlock = new EditorINIBlock(blockName, templateIndex);
-            for (int i = 0; i < templateBlock.Options.Count; i++)
+            for (int i = 0; i < templateBlock.Options.Count; ++i)
             {
                 Template.Option option = templateBlock.Options[i];
                 editorBlock.Options.Add(new EditorINIOption(option.Name, i));
 
-                if (templateBlock.Identifier != null && templateBlock.Identifier.ToLower() == editorBlock.Options[editorBlock.Options.Count - 1].Name.ToLower())
+                if (templateBlock.Identifier != null && templateBlock.Identifier.Equals(editorBlock.Options[editorBlock.Options.Count - 1].Name, StringComparison.OrdinalIgnoreCase))
                 {
                     editorBlock.MainOptionIndex = editorBlock.Options.Count - 1;
                     editorBlock.Options[editorBlock.Options.Count - 1].Values.Add(new EditorINIEntry(blockName));
@@ -534,12 +526,12 @@ namespace FreelancerModStudio
             List<TableBlock> newBlocks = new List<TableBlock>();
             List<TableBlock> oldBlocks = new List<TableBlock>();
 
-            for (int i = 0; i < blocks.Length; i++)
+            for (int i = 0; i < blocks.Length; ++i)
             {
                 oldBlocks.Add((TableBlock)objectListView1.SelectedObjects[i]);
                 newBlocks.Add(ObjectClone.Clone(oldBlocks[i]));
 
-                for (int j = 0; j < blocks[i].Count; j++)
+                for (int j = 0; j < blocks[i].Count; ++j)
                 {
                     List<EditorINIEntry> options = newBlocks[i].Block.Options[j].Values;
 
@@ -551,13 +543,13 @@ namespace FreelancerModStudio
                         foreach (PropertyOption value in (PropertySubOptions)blocks[i][j].Value)
                         {
                             string text = ((string)value.Value).Trim();
-                            if (text != string.Empty)
+                            if (text.Length != 0)
                             {
                                 if (text.Contains(Environment.NewLine))
                                 {
                                     string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                                     List<object> subOptions = new List<object>();
-                                    for (int k = 1; k < lines.Length; k++)
+                                    for (int k = 1; k < lines.Length; ++k)
                                         subOptions.Add(lines[k].Trim());
 
                                     options.Add(new EditorINIEntry(lines[0], subOptions));
@@ -570,7 +562,7 @@ namespace FreelancerModStudio
                     else
                     {
                         string text = ((string)blocks[i][j].Value).Trim();
-                        if (text != string.Empty)
+                        if (text.Length != 0)
                         {
                             if (options.Count > 0)
                             {
@@ -601,7 +593,7 @@ namespace FreelancerModStudio
 
         void ChangeBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
         {
-            for (int i = 0; i < oldBlocks.Count; i++)
+            for (int i = 0; i < oldBlocks.Count; ++i)
             {
                 int index = Data.Blocks.IndexOf(oldBlocks[i]);
                 Data.Blocks[index] = newBlocks[i];
@@ -626,7 +618,7 @@ namespace FreelancerModStudio
             }
 
             //insert blocks at new position
-            for (int i = 0; i < oldBlocks.Count; i++)
+            for (int i = 0; i < oldBlocks.Count; ++i)
                 Data.Blocks.Insert(newBlocks[i].Index, blocks[oldBlocks.Count - i - 1]);
 
             Data.RefreshIndices(Math.Min(oldBlocks[0].Index, newBlocks[0].Index));
@@ -746,7 +738,7 @@ namespace FreelancerModStudio
 
         public void Save()
         {
-            if (File == string.Empty)
+            if (File.Length == 0)
                 SaveAs();
             else
                 Save(File);
@@ -774,11 +766,21 @@ namespace FreelancerModStudio
             return mnuAdd.DropDown;
         }
 
+        string GetFileName()
+        {
+            if (File.Length == 0)
+            {
+                return File;
+            }
+
+            return Path.GetFileName(File);
+        }
+
         public string Title
         {
             get
             {
-                return File == string.Empty ? Properties.Strings.FileEditorNewFile : Path.GetFileName(File);
+                return File.Length == 0 ? Properties.Strings.FileEditorNewFile : Path.GetFileName(File);
             }
         }
 
@@ -813,7 +815,7 @@ namespace FreelancerModStudio
                     id = Data.Blocks.Count;
 
                 List<TableBlock> blocks = new List<TableBlock>();
-                for (int i = 0; i < editorData.Blocks.Count; i++)
+                for (int i = 0; i < editorData.Blocks.Count; ++i)
                     blocks.Add(new TableBlock(id + i, Data.MaxId++, editorData.Blocks[i], Data.TemplateIndex));
 
                 undoManager.Execute(new ChangedData { NewBlocks = blocks, Type = ChangedType.Add });
@@ -873,7 +875,7 @@ namespace FreelancerModStudio
 
         void UndoManager_DataChanged(List<ChangedData> data, bool undo)
         {
-            for (int i = 0; i < data.Count; i++)
+            for (int i = 0; i < data.Count; ++i)
                 ExecuteDataChanged(undo ? data[i].GetUndoData() : data[i], i, undo);
 
             SetFile(File);
@@ -980,13 +982,13 @@ namespace FreelancerModStudio
             List<TableBlock> oldBlocks = new List<TableBlock>();
             List<TableBlock> newBlocks = new List<TableBlock>();
 
-            for (int i = 0; i < blocks.Count; i++)
+            for (int i = 0; i < blocks.Count; ++i)
             {
                 //calculate correct insert position
                 int newIndex = targetIndex + i;
 
                 //decrease index if old blocks id is lower than the new index because they will be deleted first
-                for (int j = i - newBlocks.Count; j < blocks.Count; j++)
+                for (int j = i - newBlocks.Count; j < blocks.Count; ++j)
                 {
                     if (blocks[j].Index < newIndex)
                         newIndex--;

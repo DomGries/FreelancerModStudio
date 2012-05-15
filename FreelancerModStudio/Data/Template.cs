@@ -34,7 +34,7 @@ namespace FreelancerModStudio.Data
         public class TemplateData
         {
             [XmlArrayItem("File")]
-            public Files Files = new Files();
+            public List<File> Files = new List<File>();
 
             //public CostumTypes CostumTypes;
         }
@@ -166,29 +166,13 @@ namespace FreelancerModStudio.Data
 
         public enum OptionType { String, Int, Bool, Point, Double, Enum, RGB, StringArray, IntArray, DoubleArray };*/
 
-        public class Files : List<File>
-        {
-            public int IndexOf(string name)
-            {
-                for (int i = 0; i < Count; i++)
-                {
-                    if (this[i].Name.ToLower() == name.ToLower())
-                    {
-                        return i;
-                    }
-                }
-
-                return -1;
-            }
-        }
-
         public class Options : List<Option>
         {
             public int IndexOf(string name)
             {
-                for (int i = 0; i < Count; i++)
+                for (int i = 0; i < Count; ++i)
                 {
-                    if (this[i].Name.ToLower() == name.ToLower())
+                    if (this[i].Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                     {
                         return i;
                     }

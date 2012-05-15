@@ -18,6 +18,8 @@ namespace FreelancerModStudio.SystemPresenter
 
     public class CmpModelContent
     {
+        static readonly Matrix3D IdentityYInverted = new Matrix3D(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+
         static Matrix3D GetTransform(List<CmpPart> parts, string partName)
         {
             Matrix3D matrix = Matrix3D.Identity;
@@ -44,7 +46,7 @@ namespace FreelancerModStudio.SystemPresenter
                         break;
                     }
 
-                    GeometryModel3D gm = GetCmpModel(meshGroup.Mesh, meshIndex, meshGroup.Transform);
+                    GeometryModel3D gm = GetCmpModel(meshGroup.Mesh, meshIndex, meshGroup.Transform*IdentityYInverted);
                     modelGroup.Children.Add(gm);
                 }
             }
@@ -53,7 +55,6 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     Children = new Transform3DCollection
                         {
-                            new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), 180)),
                             new ScaleTransform3D(SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR)
                         }
                 };

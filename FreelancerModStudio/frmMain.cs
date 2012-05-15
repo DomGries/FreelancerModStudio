@@ -32,7 +32,7 @@ namespace FreelancerModStudio
 
             //initialize content windows after language was set
             InitContentWindows();
-            throw new ArgumentNullException();
+
             //register event to restart app if update was downloaded and button 'Install' pressed
             Helper.Update.AutoUpdate.RestartingApplication += AutoUpdate_RestartingApplication;
         }

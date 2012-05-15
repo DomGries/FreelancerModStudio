@@ -18,8 +18,8 @@ namespace FreelancerModStudio.Data.IO
 
         public UTFNode Read()
         {
-            using (var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (var reader = new BinaryReader(stream))
+            using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (BinaryReader reader = new BinaryReader(stream))
             {
                 if (stream.Length < ByteLen.FILE_TAG + ByteLen.INT ||
                     Encoding.ASCII.GetString(reader.ReadBytes(ByteLen.FILE_TAG)) != FILE_TYPE ||
@@ -34,7 +34,7 @@ namespace FreelancerModStudio.Data.IO
 
                 //int unknown1 = reader.ReadInt32();
                 //int header_size = reader.ReadInt32();
-                reader.BaseStream.Seek(ByteLen.INT * 3, SeekOrigin.Current);
+                reader.BaseStream.Seek(ByteLen.INT*3, SeekOrigin.Current);
 
                 // get string info
                 int stringBlockOffset = reader.ReadInt32();
@@ -58,20 +58,20 @@ namespace FreelancerModStudio.Data.IO
             }
         }
 
-        private void ParseNode(BinaryReader reader, StringTable stringTable, int nodeBlockStart, int nodeStart, int dataBlockOffset, UTFNode parent)
+        static void ParseNode(BinaryReader reader, StringTable stringTable, int nodeBlockStart, int nodeStart, int dataBlockOffset, UTFNode parent)
         {
             int offset = nodeBlockStart + nodeStart;
             reader.BaseStream.Position = offset;
 
-            int nodeOffset = offset;
-
-            int peerOffset = reader.ReadInt32();                // next node on same level
-            int nameOffset = reader.ReadInt32();                // string for this node
+            int peerOffset = reader.ReadInt32(); // next node on same level
+            int nameOffset = reader.ReadInt32(); // string for this node
             NodeFlags flags = (NodeFlags)reader.ReadInt32();
 
-            int zero = reader.ReadInt32();                      // always seems to be zero
-            int childOffset = reader.ReadInt32();               // next node in if intermediate, offset to data if leaf
-            int allocatedSize = reader.ReadInt32();             // leaf node only, 0 for intermediate
+            //int zero = reader.ReadInt32();
+            reader.BaseStream.Seek(ByteLen.INT, SeekOrigin.Current);
+
+            int childOffset = reader.ReadInt32(); // next node in if intermediate, offset to data if leaf
+            int allocatedSize = reader.ReadInt32(); // leaf node only, 0 for intermediate
             //int size = reader.ReadInt32();                      // leaf node only, 0 for intermediate
             //int size2 = reader.ReadInt32();                     // leaf node only, 0 for intermediate
 
@@ -81,7 +81,9 @@ namespace FreelancerModStudio.Data.IO
 
             UTFNode node = new UTFNode();
             if (parent.Name != null)
+            {
                 node.ParentNode = parent;
+            }
             node.Name = stringTable.GetString(nameOffset - 1);
 
             // Extract data if this is a leaf
@@ -96,10 +98,14 @@ namespace FreelancerModStudio.Data.IO
             parent.Nodes.Add(node);
 
             if (childOffset > 0 && (flags & NodeFlags.Intermediate) == NodeFlags.Intermediate)
+            {
                 ParseNode(reader, stringTable, nodeBlockStart, childOffset, dataBlockOffset, node);
+            }
 
             if (peerOffset > 0)
+            {
                 ParseNode(reader, stringTable, nodeBlockStart, peerOffset, dataBlockOffset, parent);
+            }
         }
     }
 }

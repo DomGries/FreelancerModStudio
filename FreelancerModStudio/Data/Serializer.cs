@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace FreelancerModStudio.Data
 {
@@ -6,15 +9,15 @@ namespace FreelancerModStudio.Data
     {
         public static object Load(string path, Type type)
         {
-            return Load(new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.Read), type);
+            return Load(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read), type);
         }
 
-        public static object Load(System.IO.Stream stream, Type type)
+        public static object Load(Stream stream, Type type)
         {
             object o;
-            using (var textReader = new System.IO.StreamReader(stream))
+            using (StreamReader textReader = new StreamReader(stream))
             {
-                var serializer = new System.Xml.Serialization.XmlSerializer(type);
+                XmlSerializer serializer = new XmlSerializer(type);
                 o = serializer.Deserialize(textReader);
             }
 
@@ -23,14 +26,14 @@ namespace FreelancerModStudio.Data
 
         public static void Save(string path, object o)
         {
-            Save(new System.IO.FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.Write), o);
+            Save(new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write), o);
         }
 
-        public static void Save(System.IO.Stream stream, object o)
+        public static void Save(Stream stream, object o)
         {
-            using (var textWriter = new System.IO.StreamWriter(stream, System.Text.Encoding.UTF8))
+            using (StreamWriter textWriter = new StreamWriter(stream, Encoding.UTF8))
             {
-                var serializer = new System.Xml.Serialization.XmlSerializer(o.GetType());
+                XmlSerializer serializer = new XmlSerializer(o.GetType());
                 serializer.Serialize(textWriter, o);
             }
         }

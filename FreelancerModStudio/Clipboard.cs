@@ -18,16 +18,18 @@ namespace FreelancerModStudio
         public static bool CanPaste(Type type)
         {
             //check if clipboard contains object type
-            var dataObject = System.Windows.Forms.Clipboard.GetDataObject();
+            IDataObject dataObject = System.Windows.Forms.Clipboard.GetDataObject();
             return dataObject != null && dataObject.GetDataPresent(type.FullName);
         }
 
         public static object Paste(Type type)
         {
             //deserialize object from clipboard
-            var dataObject = System.Windows.Forms.Clipboard.GetDataObject();
+            IDataObject dataObject = System.Windows.Forms.Clipboard.GetDataObject();
             if (dataObject != null && dataObject.GetDataPresent(type.FullName))
+            {
                 return dataObject.GetData(type.FullName);
+            }
 
             return null;
         }

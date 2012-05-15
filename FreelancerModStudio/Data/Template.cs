@@ -106,7 +106,7 @@ namespace FreelancerModStudio.Data
 
             int IComparable<Option>.CompareTo(Option obj)
             {
-                return Name.CompareTo(obj.Name);
+                return String.CompareOrdinal(Name, obj.Name);
             }
         }
 

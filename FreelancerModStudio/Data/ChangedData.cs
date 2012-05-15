@@ -14,26 +14,32 @@ namespace FreelancerModStudio.Data
             {
                 case ChangedType.Add:
                     return new ChangedData
-                               {
-                                   Type = ChangedType.Delete,
-                                   NewBlocks = NewBlocks
-                               };
+                        {
+                            Type = ChangedType.Delete,
+                            NewBlocks = NewBlocks
+                        };
                 case ChangedType.Delete:
                     return new ChangedData
-                               {
-                                   Type = ChangedType.Add,
-                                   NewBlocks = NewBlocks
-                               };
+                        {
+                            Type = ChangedType.Add,
+                            NewBlocks = NewBlocks
+                        };
                 default:
                     return new ChangedData
-                               {
-                                   Type = Type,
-                                   NewBlocks = OldBlocks,
-                                   OldBlocks = NewBlocks
-                               };
+                        {
+                            Type = Type,
+                            NewBlocks = OldBlocks,
+                            OldBlocks = NewBlocks
+                        };
             }
         }
     }
 
-    public enum ChangedType { Add, Edit, Move, Delete }
+    public enum ChangedType
+    {
+        Add,
+        Edit,
+        Move,
+        Delete
+    }
 }

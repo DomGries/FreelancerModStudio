@@ -8,7 +8,7 @@ namespace FreelancerModStudio.AutoUpdate
         {
             UpdateInformation updateInformation = new UpdateInformation();
 
-            string[] line = content.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] line = content.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (line.Length < 3)
             {

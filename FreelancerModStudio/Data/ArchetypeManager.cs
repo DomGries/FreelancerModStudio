@@ -87,14 +87,19 @@ namespace FreelancerModStudio.Data
 
                     if (name != null)
                     {
-                        if ((type == ContentType.Planet || type == ContentType.Sun) && radius != 0d)
+                        if (type == ContentType.Planet || type == ContentType.Sun)
                         {
                             //save radius only for planets and suns
-                            _archetypes[name] = new ArchetypeInfo
-                                {
-                                    Type = type,
-                                    Radius = radius
-                                };
+                            // ReSharper disable CompareOfFloatsByEqualityOperator
+                            if (radius != 0d)
+                                // ReSharper restore CompareOfFloatsByEqualityOperator
+                            {
+                                _archetypes[name] = new ArchetypeInfo
+                                    {
+                                        Type = type,
+                                        Radius = radius
+                                    };
+                            }
                         }
                         else if (type != ContentType.None && cmpFile != null)
                         {

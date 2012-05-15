@@ -22,7 +22,9 @@ namespace FreelancerModStudio.Data
             MaxId = data.Blocks.Count;
 
             for (int i = 0; i < MaxId; ++i)
+            {
                 Blocks.Add(new TableBlock(i, i, data.Blocks[i], TemplateIndex));
+            }
         }
 
         public EditorINIData GetEditorData()
@@ -30,7 +32,9 @@ namespace FreelancerModStudio.Data
             EditorINIData data = new EditorINIData(TemplateIndex);
 
             foreach (TableBlock block in Blocks)
+            {
                 data.Blocks.Add(block.Block);
+            }
 
             return data;
         }
@@ -38,7 +42,9 @@ namespace FreelancerModStudio.Data
         public void RefreshIndices(int startIndex)
         {
             for (int i = startIndex; i < Blocks.Count; ++i)
+            {
                 Blocks[i].Index = i;
+            }
         }
     }
 }

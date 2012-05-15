@@ -7,8 +7,8 @@ namespace FreelancerModStudio.Data.UTF
     public class VMeshRef
     {
         // Header - one per lod for each .3db section of cmp - 60 bytes
-        public uint HeaderSize { get; set; }            // 0x0000003C
-        public uint VMeshLibId { get; set; }            // crc of 3db name
+        public uint HeaderSize { get; set; }
+        public uint VMeshLibId { get; set; }
         public ushort VertexStart { get; set; }
         public ushort VertexCount { get; set; }
         public ushort IndexStart { get; set; }

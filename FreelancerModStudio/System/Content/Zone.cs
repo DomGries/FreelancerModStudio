@@ -9,8 +9,6 @@ namespace FreelancerModStudio.SystemPresenter.Content
             switch (Block.ObjectType)
             {
                 default:
-                case ContentType.ZoneSphere:
-                case ContentType.ZoneEllipsoid:
                     return SharedGeometries.ZoneSphereOrEllipsoid;
                 case ContentType.ZoneCylinderOrRing:
                     return SharedGeometries.ZoneCylinderOrRing;

@@ -22,89 +22,108 @@ namespace FreelancerModStudio.SystemPresenter
         public bool IsModelMode;
         public string DataPath;
 
-        int secondLayerID;
+        int _secondLayerId;
 
-        ModelVisual3D lightning;
+        ModelVisual3D _lightning;
+        ModelVisual3D _selection;
+        ContentBase _selectedContent;
+
         public ModelVisual3D Lightning
         {
             get
             {
-                return lightning;
+                return _lightning;
             }
             set
             {
-                int index = Viewport.Children.IndexOf(lightning);
+                int index = Viewport.Children.IndexOf(_lightning);
                 if (index != -1)
                 {
                     if (value != null)
+                    {
                         Viewport.Children[index] = value;
+                    }
                     else
+                    {
                         Viewport.Children.RemoveAt(index);
+                    }
                 }
                 else if (value != null)
                 {
                     Viewport.Children.Insert(0, value);
-                    ++secondLayerID;
+                    ++_secondLayerId;
                 }
 
-                lightning = value;
+                _lightning = value;
             }
         }
 
-        ModelVisual3D selection;
         public ModelVisual3D Selection
         {
             get
             {
-                return selection;
+                return _selection;
             }
             set
             {
-                int index = Viewport.Children.IndexOf(selection);
+                int index = Viewport.Children.IndexOf(_selection);
                 if (index != -1)
                 {
                     if (value != null)
+                    {
                         Viewport.Children[index] = value;
+                    }
                     else
+                    {
                         Viewport.Children.RemoveAt(index);
+                    }
                 }
                 else if (value != null)
+                {
                     Viewport.Children.Insert(0, value);
+                }
 
-                selection = value;
+                _selection = value;
             }
         }
 
-        ContentBase selectedContent;
         public ContentBase SelectedContent
         {
             get
             {
-                return selectedContent;
+                return _selectedContent;
             }
             set
             {
-                if (selectedContent != value)
+                if (_selectedContent != value)
+                {
                     SetSelectedContent(value, false);
+                }
             }
         }
 
         public delegate void SelectionChangedType(ContentBase content);
+
         public SelectionChangedType SelectionChanged;
 
         void OnSelectionChanged(ContentBase content)
         {
             if (SelectionChanged != null)
+            {
                 SelectionChanged(content);
+            }
         }
 
         public delegate void FileOpenType(string file);
+
         public FileOpenType FileOpen;
 
         void OnFileOpen(string file)
         {
             if (FileOpen != null)
+            {
                 FileOpen(file);
+            }
         }
 
         public Presenter(HelixViewport3D viewport)
@@ -116,7 +135,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetSelectedContent(ContentBase content, bool lookAt)
         {
-            selectedContent = content;
+            _selectedContent = content;
 
             if (content != null)
             {
@@ -152,7 +171,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             AddModel(content);
 
-            if (content == selectedContent)
+            if (content == _selectedContent)
             {
                 Selection = GetSelectionBox(content);
             }
@@ -199,8 +218,8 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
-                Viewport.Children.Insert(secondLayerID, content);
-                ++secondLayerID;
+                Viewport.Children.Insert(_secondLayerId, content);
+                ++_secondLayerId;
             }
         }
 
@@ -225,7 +244,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (!content.IsEmissive())
             {
-                secondLayerID--;
+                _secondLayerId--;
             }
         }
 
@@ -238,7 +257,7 @@ namespace FreelancerModStudio.SystemPresenter
                 return;
             }
 
-            if (selectedContent == content)
+            if (_selectedContent == content)
             {
                 if (IsUniverse)
                 {
@@ -284,37 +303,41 @@ namespace FreelancerModStudio.SystemPresenter
             return lines;
         }
 
-        WireLines GetWireBox(Vector3D bounds)
+        static WireLines GetWireBox(Vector3D bounds)
         {
-            var points = new Point3DCollection
-                                           {
-                                               new Point3D(bounds.X, bounds.Y, bounds.Z),
-                                               new Point3D(-bounds.X, bounds.Y, bounds.Z),
-                                               new Point3D(-bounds.X, bounds.Y, bounds.Z),
-                                               new Point3D(-bounds.X, bounds.Y, -bounds.Z),
-                                               new Point3D(-bounds.X, bounds.Y, -bounds.Z),
-                                               new Point3D(bounds.X, bounds.Y, -bounds.Z),
-                                               new Point3D(bounds.X, bounds.Y, -bounds.Z),
-                                               new Point3D(bounds.X, bounds.Y, bounds.Z),
-                                               new Point3D(bounds.X, -bounds.Y, bounds.Z),
-                                               new Point3D(-bounds.X, -bounds.Y, bounds.Z),
-                                               new Point3D(-bounds.X, -bounds.Y, bounds.Z),
-                                               new Point3D(-bounds.X, -bounds.Y, -bounds.Z),
-                                               new Point3D(-bounds.X, -bounds.Y, -bounds.Z),
-                                               new Point3D(bounds.X, -bounds.Y, -bounds.Z),
-                                               new Point3D(bounds.X, -bounds.Y, -bounds.Z),
-                                               new Point3D(bounds.X, -bounds.Y, bounds.Z),
-                                               new Point3D(bounds.X, bounds.Y, bounds.Z),
-                                               new Point3D(bounds.X, -bounds.Y, bounds.Z),
-                                               new Point3D(-bounds.X, bounds.Y, bounds.Z),
-                                               new Point3D(-bounds.X, -bounds.Y, bounds.Z),
-                                               new Point3D(bounds.X, bounds.Y, -bounds.Z),
-                                               new Point3D(bounds.X, -bounds.Y, -bounds.Z),
-                                               new Point3D(-bounds.X, bounds.Y, -bounds.Z),
-                                               new Point3D(-bounds.X, -bounds.Y, -bounds.Z)
-                                           };
+            Point3DCollection points = new Point3DCollection
+                {
+                    new Point3D(bounds.X, bounds.Y, bounds.Z),
+                    new Point3D(-bounds.X, bounds.Y, bounds.Z),
+                    new Point3D(-bounds.X, bounds.Y, bounds.Z),
+                    new Point3D(-bounds.X, bounds.Y, -bounds.Z),
+                    new Point3D(-bounds.X, bounds.Y, -bounds.Z),
+                    new Point3D(bounds.X, bounds.Y, -bounds.Z),
+                    new Point3D(bounds.X, bounds.Y, -bounds.Z),
+                    new Point3D(bounds.X, bounds.Y, bounds.Z),
+                    new Point3D(bounds.X, -bounds.Y, bounds.Z),
+                    new Point3D(-bounds.X, -bounds.Y, bounds.Z),
+                    new Point3D(-bounds.X, -bounds.Y, bounds.Z),
+                    new Point3D(-bounds.X, -bounds.Y, -bounds.Z),
+                    new Point3D(-bounds.X, -bounds.Y, -bounds.Z),
+                    new Point3D(bounds.X, -bounds.Y, -bounds.Z),
+                    new Point3D(bounds.X, -bounds.Y, -bounds.Z),
+                    new Point3D(bounds.X, -bounds.Y, bounds.Z),
+                    new Point3D(bounds.X, bounds.Y, bounds.Z),
+                    new Point3D(bounds.X, -bounds.Y, bounds.Z),
+                    new Point3D(-bounds.X, bounds.Y, bounds.Z),
+                    new Point3D(-bounds.X, -bounds.Y, bounds.Z),
+                    new Point3D(bounds.X, bounds.Y, -bounds.Z),
+                    new Point3D(bounds.X, -bounds.Y, -bounds.Z),
+                    new Point3D(-bounds.X, bounds.Y, -bounds.Z),
+                    new Point3D(-bounds.X, -bounds.Y, -bounds.Z)
+                };
 
-            return new WireLines { Lines = points, Color = Colors.Yellow };
+            return new WireLines
+                {
+                    Lines = points,
+                    Color = Colors.Yellow
+                };
         }
 
         public void ClearDisplay(bool light)
@@ -323,12 +346,12 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (light || Lightning == null)
             {
-                secondLayerID = 0;
+                _secondLayerId = 0;
             }
             else
             {
                 Viewport.Children.Add(Lightning);
-                secondLayerID = 1;
+                _secondLayerId = 1;
             }
         }
 
@@ -336,9 +359,13 @@ namespace FreelancerModStudio.SystemPresenter
         {
             int index = 0;
             if (Selection != null)
+            {
                 ++index;
+            }
             if (Lightning != null)
+            {
                 ++index;
+            }
 
             return index;
         }
@@ -471,22 +498,30 @@ namespace FreelancerModStudio.SystemPresenter
             line.SetTransform(position, rotation, scale);
         }
 
-        ConnectionType GetConnectionType(bool jumpgate, bool jumphole)
+        static ConnectionType GetConnectionType(bool jumpgate, bool jumphole)
         {
-            if (jumpgate && !jumphole)
-                return ConnectionType.JumpGate;
-            if (!jumpgate && jumphole)
-                return ConnectionType.JumpHole;
             if (jumpgate && jumphole)
+            {
                 return ConnectionType.JumpGateAndHole;
+            }
+            if (jumpgate)
+            {
+                return ConnectionType.JumpGate;
+            }
+            if (jumphole)
+            {
+                return ConnectionType.JumpHole;
+            }
 
             return ConnectionType.None;
         }
 
-        double Difference(double x, double y)
+        static double Difference(double x, double y)
         {
             if (x > y)
+            {
                 return x - y;
+            }
 
             return y - x;
         }
@@ -497,11 +532,15 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 //delete content if it was changed back to an invalid type
                 Delete(content);
-                if (selectedContent == content)
+                if (_selectedContent == content)
+                {
                     SelectedContent = null;
+                }
             }
             else
+            {
                 SetValues(content, block);
+            }
         }
 
         void SetValues(ContentBase content, TableBlock block)
@@ -523,7 +562,7 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
-            if (selectedContent == content)
+            if (_selectedContent == content)
             {
                 //update selection if changed content is selected
                 SetSelectedContent(content, false);

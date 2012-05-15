@@ -5,30 +5,35 @@ namespace FreelancerModStudio.Data
     public class UndoManager<T>
     {
         public delegate void DataChangedType(List<T> o, bool undo);
+
         public DataChangedType DataChanged;
 
-        List<List<T>> changes = new List<List<T>>();
-        int current = 0;
-        int savedIndex = 0;
+        readonly List<List<T>> _changes = new List<List<T>>();
+        int _current;
+        int _savedIndex;
 
         void OnDataChanged(List<T> o, bool undo)
         {
             if (DataChanged != null)
+            {
                 DataChanged(o, undo);
+            }
         }
 
         public List<T> CurrentData
         {
             get
             {
-                if (current > changes.Count)
+                if (_current > _changes.Count)
+                {
                     return null;
+                }
 
-                return changes[current - 1];
+                return _changes[_current - 1];
             }
             set
             {
-                changes[current] = value;
+                _changes[_current] = value;
             }
         }
 
@@ -36,10 +41,10 @@ namespace FreelancerModStudio.Data
         {
             for (int i = 0; i < levels; ++i)
             {
-                if (current > 0)
+                if (_current > 0)
                 {
-                    current--;
-                    List<T> data = changes[current];
+                    _current--;
+                    List<T> data = _changes[_current];
 
                     OnDataChanged(data, true);
                 }
@@ -50,10 +55,10 @@ namespace FreelancerModStudio.Data
         {
             for (int i = 0; i < levels; ++i)
             {
-                if (current < changes.Count)
+                if (_current < _changes.Count)
                 {
-                    List<T> data = changes[current];
-                    ++current;
+                    List<T> data = _changes[_current];
+                    ++_current;
 
                     OnDataChanged(data, false);
                 }
@@ -62,14 +67,17 @@ namespace FreelancerModStudio.Data
 
         public void Execute(T o)
         {
-            List<T> newData = new List<T> { o };
+            List<T> newData = new List<T>
+                {
+                    o
+                };
 
             //remove every data which comes after the current
-            changes.RemoveRange(current, changes.Count - current);
+            _changes.RemoveRange(_current, _changes.Count - _current);
 
             //add the data
-            changes.Add(newData);
-            ++current;
+            _changes.Add(newData);
+            ++_current;
 
             //raise event that the data was changed
             OnDataChanged(newData, false);
@@ -77,22 +85,22 @@ namespace FreelancerModStudio.Data
 
         public bool CanUndo()
         {
-            return current > 0;
+            return _current > 0;
         }
 
         public bool CanRedo()
         {
-            return changes.Count - current > 0;
+            return _changes.Count - _current > 0;
         }
 
         public void SetAsSaved()
         {
-            savedIndex = current;
+            _savedIndex = _current;
         }
 
         public bool IsModified()
         {
-            return savedIndex != current;
+            return _savedIndex != _current;
         }
     }
 }

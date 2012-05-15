@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Media.Media3D;
+﻿using System.Windows.Media.Media3D;
 
 namespace FreelancerModStudio.Data.UTF
 {
@@ -8,11 +7,11 @@ namespace FreelancerModStudio.Data.UTF
         // repeated <no_meshes> times in segment - 12 bytes
         public class TMeshHeader
         {
-            public uint MaterialId { get; set; }            // crc of texture name for mesh
+            public uint MaterialId { get; set; } // crc of texture name for mesh
             public ushort StartVertex { get; set; }
             public ushort EndVertex { get; set; }
             public ushort NumRefVertices { get; set; }
-            public ushort Padding { get; set; }             // 0x00CC
+            public ushort Padding { get; set; } // 0x00CC
 
             public int BaseVertex { get; set; }
             public int TriangleStart { get; set; }
@@ -40,11 +39,11 @@ namespace FreelancerModStudio.Data.UTF
         }
 
         // Data header - 16 bytes long
-        public uint MeshType { get; set; }                  // 0x00000001
-        public uint SurfaceType { get; set; }               // 0x00000004
+        public uint MeshType { get; set; } // 0x00000001
+        public uint SurfaceType { get; set; } // 0x00000004
         public ushort MeshCount { get; set; }
         public ushort NumRefVertices { get; set; }
-        public D3DFVF FlexibleVertexFormat { get; set; }    // 0x0112
+        public D3DFVF FlexibleVertexFormat { get; set; } // 0x0112
         public ushort VertexCount { get; set; }
 
         public TMeshHeader[] Meshes { get; set; }
@@ -100,7 +99,7 @@ namespace FreelancerModStudio.Data.UTF
                 mesh.EndVertex = CmpParser.ParseUInt16(data, ref pos);
                 mesh.NumRefVertices = CmpParser.ParseUInt16(data, ref pos);
                 mesh.Padding = CmpParser.ParseUInt16(data, ref pos);
-               
+
                 mesh.TriangleStart = triangleStartOffset;
                 triangleStartOffset += mesh.NumRefVertices;
 
@@ -111,7 +110,7 @@ namespace FreelancerModStudio.Data.UTF
             }
 
             // read the triangle data
-            int triangleCount = NumRefVertices / 3;
+            int triangleCount = NumRefVertices/3;
             Triangles = new TTriangle[triangleCount];
             for (int i = 0; i < triangleCount; ++i)
             {
@@ -127,33 +126,33 @@ namespace FreelancerModStudio.Data.UTF
             {
                 Vertices = new TVertex[VertexCount];
                 for (int i = 0; i < VertexCount; ++i)
-                {                 
+                {
                     TVertex vertex = new TVertex();
                     vertex.FVF = FlexibleVertexFormat;
 
                     vertex.Position = CmpParser.ParsePoint3D(data, ref pos);
 
-                    if ((FlexibleVertexFormat & D3DFVF.NORMAL) == D3DFVF.NORMAL)
+                    if ((FlexibleVertexFormat & D3DFVF.Normal) == D3DFVF.Normal)
                     {
                         vertex.Normal = CmpParser.ParseVector3D(data, ref pos);
                     }
-                    if ((FlexibleVertexFormat & D3DFVF.DIFFUSE) == D3DFVF.DIFFUSE)
+                    if ((FlexibleVertexFormat & D3DFVF.Diffuse) == D3DFVF.Diffuse)
                     {
                         vertex.Diffuse = CmpParser.ParseUInt32(data, ref pos);
                     }
-                    if ((FlexibleVertexFormat & D3DFVF.TEX1) == D3DFVF.TEX1)
+                    if ((FlexibleVertexFormat & D3DFVF.Tex1) == D3DFVF.Tex1)
                     {
                         vertex.S = CmpParser.ParseFloat(data, ref pos);
                         vertex.T = CmpParser.ParseFloat(data, ref pos);
                     }
-                    if ((FlexibleVertexFormat & D3DFVF.TEX2) == D3DFVF.TEX2)
+                    if ((FlexibleVertexFormat & D3DFVF.Tex2) == D3DFVF.Tex2)
                     {
                         vertex.S = CmpParser.ParseFloat(data, ref pos);
                         vertex.T = CmpParser.ParseFloat(data, ref pos);
                         vertex.U = CmpParser.ParseFloat(data, ref pos);
                         vertex.V = CmpParser.ParseFloat(data, ref pos);
                     }
-                    if ((FlexibleVertexFormat & D3DFVF.TEX4) == D3DFVF.TEX4)
+                    if ((FlexibleVertexFormat & D3DFVF.Tex4) == D3DFVF.Tex4)
                     {
                         vertex.S = CmpParser.ParseFloat(data, ref pos);
                         vertex.T = CmpParser.ParseFloat(data, ref pos);
@@ -164,7 +163,7 @@ namespace FreelancerModStudio.Data.UTF
                         CmpParser.ParseFloat(data, ref pos);
                         CmpParser.ParseFloat(data, ref pos);
                     }
-                    if ((FlexibleVertexFormat & D3DFVF.TEX4) == D3DFVF.TEX4)
+                    if ((FlexibleVertexFormat & D3DFVF.Tex4) == D3DFVF.Tex4)
                     {
                         vertex.S = CmpParser.ParseFloat(data, ref pos);
                         vertex.T = CmpParser.ParseFloat(data, ref pos);
@@ -175,7 +174,7 @@ namespace FreelancerModStudio.Data.UTF
                         CmpParser.ParseFloat(data, ref pos);
                         CmpParser.ParseFloat(data, ref pos);
                     }
-                    if ((FlexibleVertexFormat & D3DFVF.TEX5) == D3DFVF.TEX5)
+                    if ((FlexibleVertexFormat & D3DFVF.Tex5) == D3DFVF.Tex5)
                     {
                         vertex.S = CmpParser.ParseFloat(data, ref pos);
                         vertex.T = CmpParser.ParseFloat(data, ref pos);

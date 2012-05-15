@@ -15,6 +15,7 @@ namespace FreelancerModStudio.AutoUpdate
         }
 
         delegate void SetStatusInvoker(StatusType status);
+
         public event ActionRequired ActionRequired;
 
         void OnAction(ActionType action)
@@ -140,7 +141,7 @@ namespace FreelancerModStudio.AutoUpdate
                     pgbDownload.Value = percent;
 
                     // 1MB = 1048576 (1024 * 1024) bytes
-                    lblDownloaded.Text = String.Format(Strings.UpdatesDownloadSpeed, ((double)bytes / 1048576).ToString("N1"), ((double)bytesTotal / 1048576).ToString("N1"));
+                    lblDownloaded.Text = String.Format(Strings.UpdatesDownloadSpeed, ((double)bytes/1048576).ToString("N1"), ((double)bytesTotal/1048576).ToString("N1"));
 
                     Text = String.Format(Strings.UpdatesFormDownloadText, percent);
                 });

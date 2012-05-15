@@ -3,7 +3,7 @@ using System.Windows.Media.Media3D;
 
 namespace FreelancerModStudio.Data.UTF
 {
-    class RevConstruct
+    internal class RevConstruct
     {
         public static List<CmpPart> Parse(byte[] data)
         {

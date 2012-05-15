@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace FreelancerModStudio.Data
@@ -11,7 +13,7 @@ namespace FreelancerModStudio.Data
     {
         public SettingsData Data = new SettingsData();
 
-        public void Load(System.IO.Stream stream)
+        public void Load(Stream stream)
         {
             Data = (SettingsData)Serializer.Load(stream, Data.GetType());
         }
@@ -21,7 +23,7 @@ namespace FreelancerModStudio.Data
             Data = (SettingsData)Serializer.Load(path, Data.GetType());
         }
 
-        public void Save(System.IO.Stream stream)
+        public void Save(Stream stream)
         {
             Serializer.Save(stream, Data);
         }
@@ -41,64 +43,82 @@ namespace FreelancerModStudio.Data
         [DisplayName("General")]
         public class General
         {
-            [Category("General"),
-                DisplayName("Display recent files")]
+            [Category("General")]
+            [DisplayName("Display recent files")]
             public ushort RecentFilesCount { get; set; }
 
-            [Category("General"),
-                DisplayName("Language")]
+            [Category("General")]
+            [DisplayName("Language")]
             public LanguageType Language { get; set; }
 
-            [Category("Properties"),
-                DisplayName("Sort type")]
-            public System.Windows.Forms.PropertySort PropertiesSortType { get; set; }
+            [Category("Properties")]
+            [DisplayName("Sort type")]
+            public PropertySort PropertiesSortType { get; set; }
 
-            [Category("Properties"),
-                DisplayName("Show description")]
+            [Category("Properties")]
+            [DisplayName("Show description")]
             public bool PropertiesShowHelp { get; set; }
 
-            [XmlIgnore,
-                Category("INI Editor"),
-                DisplayName("Modified row color")]
+            [XmlIgnore]
+            [Category("INI Editor")]
+            [DisplayName("Modified row color")]
             public Color EditorModifiedColor { get; set; }
 
-            [XmlIgnore,
-                Category("INI Editor"),
-                DisplayName("Saved row color")]
+            [XmlIgnore]
+            [Category("INI Editor")]
+            [DisplayName("Saved row color")]
             public Color EditorModifiedSavedColor { get; set; }
 
-            [XmlIgnore,
-                Category("INI Editor"),
-                DisplayName("Hidden row color")]
+            [XmlIgnore]
+            [Category("INI Editor")]
+            [DisplayName("Hidden row color")]
             public Color EditorHiddenColor { get; set; }
 
-            [Category("INI Formatting"),
-                DisplayName("Spaces around equal sign")]
+            [Category("INI Formatting")]
+            [DisplayName("Spaces around equal sign")]
             public bool FormattingSpaces { get; set; }
 
-            [Category("INI Formatting"),
-                DisplayName("Empty line between sections")]
+            [Category("INI Formatting")]
+            [DisplayName("Empty line between sections")]
             public bool FormattingEmptyLine { get; set; }
 
             [Browsable(false)]
             public string EditorModifiedSavedColorXML
             {
-                get { return ColorTranslator.ToHtml(EditorModifiedSavedColor); }
-                set { EditorModifiedSavedColor = ColorTranslator.FromHtml(value); }
+                get
+                {
+                    return ColorTranslator.ToHtml(EditorModifiedSavedColor);
+                }
+                set
+                {
+                    EditorModifiedSavedColor = ColorTranslator.FromHtml(value);
+                }
             }
 
             [Browsable(false)]
             public string EditorModifiedColorXML
             {
-                get { return ColorTranslator.ToHtml(EditorModifiedColor); }
-                set { EditorModifiedColor = ColorTranslator.FromHtml(value); }
+                get
+                {
+                    return ColorTranslator.ToHtml(EditorModifiedColor);
+                }
+                set
+                {
+                    EditorModifiedColor = ColorTranslator.FromHtml(value);
+                }
             }
 
             [Browsable(false)]
             public string EditorHiddenColorXML
             {
-                get { return ColorTranslator.ToHtml(EditorHiddenColor); }
-                set { EditorHiddenColor = ColorTranslator.FromHtml(value); }
+                get
+                {
+                    return ColorTranslator.ToHtml(EditorHiddenColor);
+                }
+                set
+                {
+                    EditorHiddenColor = ColorTranslator.FromHtml(value);
+                }
             }
 
             public AutoUpdate AutoUpdate { get; set; }
@@ -108,7 +128,7 @@ namespace FreelancerModStudio.Data
                 RecentFilesCount = 4;
                 Language = LanguageType.English;
 
-                PropertiesSortType = System.Windows.Forms.PropertySort.NoSort;
+                PropertiesSortType = PropertySort.NoSort;
                 PropertiesShowHelp = false;
 
                 EditorModifiedColor = Color.FromArgb(255, 255, 164);
@@ -122,17 +142,20 @@ namespace FreelancerModStudio.Data
             }
         }
 
-        [Category("Auto Update"),
-            DisplayName("Auto Update"),
-            TypeConverter(typeof(SettingsConverter))]
+        [Category("Auto Update")]
+        [DisplayName("Auto Update")]
+        [TypeConverter(typeof(SettingsConverter))]
         public class AutoUpdate
         {
             [DisplayName("Active")]
             public bool Enabled { get; set; }
+
             [DisplayName("Check each days")]
             public uint CheckInterval { get; set; }
+
             [DisplayName("Download silent")]
             public bool SilentDownload { get; set; }
+
             [DisplayName("Check file")]
             public string UpdateFile { get; set; }
 
@@ -164,10 +187,13 @@ namespace FreelancerModStudio.Data
         {
             [DisplayName("Active")]
             public bool Enabled { get; set; }
+
             [DisplayName("Address")]
             public string Uri { get; set; }
+
             public string Username { get; set; }
             public string Password { get; set; }
+
             public Proxy()
             {
                 Enabled = false;
@@ -177,7 +203,7 @@ namespace FreelancerModStudio.Data
         public class Forms
         {
             public Main Main = new Main();
-            public NewMod NewMod = new NewMod();
+            //public NewMod NewMod = new NewMod();
             public ChooseFileType ChooseFileType = new ChooseFileType();
         }
 
@@ -193,11 +219,11 @@ namespace FreelancerModStudio.Data
             public bool FullScreen;
         }
 
-        public class NewMod
+        /*public class NewMod
         {
-            public string ModSaveLocation = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Mods");
+            public string ModSaveLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Mods");
             public Size Size;
-        }
+        }*/
 
         public class ChooseFileType
         {
@@ -208,13 +234,6 @@ namespace FreelancerModStudio.Data
         {
             public string File;
             public int TemplateIndex = -1;
-
-            public RecentFile() { }
-            public RecentFile(string file, int templateIndex)
-            {
-                File = file;
-                TemplateIndex = templateIndex;
-            }
         }
     }
 
@@ -230,6 +249,7 @@ namespace FreelancerModStudio.Data
         {
             return string.Empty;
         }
+
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return false;

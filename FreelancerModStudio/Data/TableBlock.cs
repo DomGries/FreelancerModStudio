@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.Properties;
@@ -80,7 +81,7 @@ namespace FreelancerModStudio.Data
                         string append = null;
                         if (option.Values.Count > 1)
                         {
-                            append = option.Name + " = [" + option.Values.Count.ToString() + "]";
+                            append = option.Name + " = [" + option.Values.Count.ToString(CultureInfo.InvariantCulture) + "]";
                         }
                         else if (option.Values.Count == 1)
                         {

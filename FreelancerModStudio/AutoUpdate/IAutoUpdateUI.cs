@@ -2,7 +2,7 @@
 {
     public delegate void ActionRequired(ActionType value);
 
-    interface IAutoUpdateUI
+    internal interface IAutoUpdateUI
     {
         void ShowUI();
         void SetPage(StatusType page, bool async);

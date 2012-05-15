@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace FreelancerModStudio.Data.IO
@@ -28,7 +29,7 @@ namespace FreelancerModStudio.Data.IO
         {
             for (int index = 0; index < Nodes.Count; ++index)
             {
-                if (Nodes[index].Name.Equals(name, System.StringComparison.OrdinalIgnoreCase))
+                if (Nodes[index].Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
                     return index;
                 }
@@ -40,7 +41,7 @@ namespace FreelancerModStudio.Data.IO
         {
             foreach (UTFNode node in Nodes)
             {
-                if (node.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase))
+                if (node.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
                     return node;
                 }
@@ -64,7 +65,7 @@ namespace FreelancerModStudio.Data.IO
 
             foreach (UTFNode node in Nodes)
             {
-                if (node.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase))
+                if (node.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
                     foundNodes.Add(node);
                 }

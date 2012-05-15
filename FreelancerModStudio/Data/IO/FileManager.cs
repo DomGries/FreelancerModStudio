@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace FreelancerModStudio.Data.IO
@@ -25,7 +26,7 @@ namespace FreelancerModStudio.Data.IO
         public EditorINIData Read(FileEncoding encoding, int templateFileIndex)
         {
 #if DEBUG
-            System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
+            Stopwatch st = new Stopwatch();
             st.Start();
 #endif
             List<INIBlock> iniData;
@@ -36,29 +37,37 @@ namespace FreelancerModStudio.Data.IO
 
                 BINIManager biniManager = new BINIManager(File);
                 if (biniManager.Read())
+                {
                     iniData = biniManager.Data;
+                }
                 else
                 {
                     if (encoding == FileEncoding.Automatic)
+                    {
                         iniData = ReadINI();
+                    }
                     else
+                    {
                         return null;
+                    }
                 }
             }
             else
+            {
                 iniData = ReadINI();
+            }
 #if DEBUG
             st.Stop();
-            System.Diagnostics.Debug.WriteLine("load data: " + st.ElapsedMilliseconds + "ms");
+            Debug.WriteLine("load data: " + st.ElapsedMilliseconds + "ms");
 #endif
 
             return GetEditorData(iniData, templateFileIndex);
         }
 
-        EditorINIData GetEditorData(List<INIBlock> iniData, int templateFileIndex)
+        static EditorINIData GetEditorData(List<INIBlock> iniData, int templateFileIndex)
         {
 #if DEBUG
-            System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
+            Stopwatch st = new Stopwatch();
             st.Start();
 #endif
 
@@ -91,7 +100,7 @@ namespace FreelancerModStudio.Data.IO
                         EditorINIOption editorOption = new EditorINIOption(templateOption.Name, j);
 
                         //get ini options based on all possible template option names
-                        List<INIOption> iniOptions = null;
+                        List<INIOption> iniOptions;
                         if (!iniBlock.Options.TryGetValue(templateOption.Name, out iniOptions) && templateOption.RenameFrom != null)
                         {
                             //search for alternative names
@@ -131,10 +140,14 @@ namespace FreelancerModStudio.Data.IO
                                         {
                                             INIOption childOption = iniChildOptions[h];
                                             if (k < iniOptions.Count - 1 && childOption.Index > iniOptions[k + 1].Index)
+                                            {
                                                 break;
+                                            }
 
                                             if (childOption.Index > iniOptions[k].Index)
+                                            {
                                                 editorChildOptions.Add(childOption.Value);
+                                            }
                                         }
                                     }
 
@@ -147,11 +160,15 @@ namespace FreelancerModStudio.Data.IO
                                 if (iniOptions.Count > 0)
                                 {
                                     if (iniOptions[0].Value.Length > 0)
+                                    {
                                         //just add the last option (Freelancer like) if aviable to prevent multiple options which should be single
                                         editorOption.Values.Add(new EditorINIEntry(iniOptions[iniOptions.Count - 1].Value));
+                                    }
                                     else
+                                    {
                                         //use '=' for options which dont have values and are simply defined when using the option key followed by a colon equal
                                         editorOption.Values.Add(new EditorINIEntry("="));
+                                    }
                                 }
                             }
 
@@ -159,16 +176,22 @@ namespace FreelancerModStudio.Data.IO
                             editorBlock.Options.Add(editorOption);
                         }
                         else
+                        {
                             //add empty option based on template
                             editorBlock.Options.Add(new EditorINIOption(templateOption.Name, j));
+                        }
 
                         //set index of main option (value displayed in table view)
                         if (templateBlock.Identifier != null && templateBlock.Identifier.Equals(editorBlock.Options[editorBlock.Options.Count - 1].Name, StringComparison.OrdinalIgnoreCase))
+                        {
                             editorBlock.MainOptionIndex = editorBlock.Options.Count - 1;
+                        }
 
                         //ignore next option because we already added it as children to the current option
                         if (childTemplateOption != null)
+                        {
                             ++j;
+                        }
                     }
 
                     //add block
@@ -177,7 +200,7 @@ namespace FreelancerModStudio.Data.IO
             }
 #if DEBUG
             st.Stop();
-            System.Diagnostics.Debug.WriteLine("typecast data: " + st.ElapsedMilliseconds + "ms");
+            Debug.WriteLine("typecast data: " + st.ElapsedMilliseconds + "ms");
 #endif
 
             return editorData;
@@ -223,25 +246,45 @@ namespace FreelancerModStudio.Data.IO
 
                         foreach (EditorINIEntry entry in option.Values)
                         {
-                            var optionValue = entry.Value.ToString();
+                            string optionValue = entry.Value.ToString();
                             if (optionValue == "=")
+                            {
                                 //use an empty value for options which dont have values and are simply defined when using the option key followed by a colon equal
-                                newOption.Add(new INIOption { Value = string.Empty });
+                                newOption.Add(new INIOption
+                                    {
+                                        Value = string.Empty
+                                    });
+                            }
                             else
-                                newOption.Add(new INIOption { Value = optionValue });
+                            {
+                                newOption.Add(new INIOption
+                                    {
+                                        Value = optionValue
+                                    });
+                            }
 
                             //add suboptions as options with defined parent
                             if (entry.SubOptions != null)
                             {
                                 for (int k = 0; k < entry.SubOptions.Count; ++k)
-                                    newOption.Add(new INIOption { Value = entry.SubOptions[k].ToString(), Parent = option.ChildName });
+                                {
+                                    newOption.Add(new INIOption
+                                        {
+                                            Value = entry.SubOptions[k].ToString(),
+                                            Parent = option.ChildName
+                                        });
+                                }
                             }
                         }
 
                         newBlock.Add(option.Name, newOption);
                     }
                 }
-                newData.Add(new INIBlock { Name = block.Name, Options = newBlock });
+                newData.Add(new INIBlock
+                    {
+                        Name = block.Name,
+                        Options = newBlock
+                    });
             }
 
             //if (IsBINI)
@@ -252,11 +295,11 @@ namespace FreelancerModStudio.Data.IO
             //}
             //else
             //{
-            var iniManager = new INIManager(File)
-                                 {
-                                     WriteEmptyLine = WriteEmptyLine,
-                                     WriteSpaces = WriteSpaces
-                                 };
+            INIManager iniManager = new INIManager(File)
+                {
+                    WriteEmptyLine = WriteEmptyLine,
+                    WriteSpaces = WriteSpaces
+                };
             iniManager.Write(newData);
             //}
         }
@@ -316,14 +359,16 @@ namespace FreelancerModStudio.Data.IO
             catch { }
 
             return value;
-        }*/
+        }
 
         object ConvertToArray(ArrayType type, string value)
         {
             string[] arrayValues = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (type == ArrayType.String)
+            {
                 return arrayValues;
+            }
 
             switch (type)
             {
@@ -332,7 +377,9 @@ namespace FreelancerModStudio.Data.IO
                         List<int> newValues = new List<int>();
 
                         foreach (string arrayValue in arrayValues)
+                        {
                             newValues.Add(Convert.ToInt32(arrayValue.Trim()));
+                        }
 
                         return newValues.ToArray();
                     }
@@ -341,32 +388,38 @@ namespace FreelancerModStudio.Data.IO
                         List<double> newValues = new List<double>();
 
                         foreach (string arrayValue in arrayValues)
+                        {
                             newValues.Add(Convert.ToDouble(arrayValue.Trim()));
+                        }
 
                         return newValues.ToArray();
                     }
                 case ArrayType.Point:
                     if (arrayValues.Length == 2)
-                        return new System.Drawing.Point(Convert.ToInt32(arrayValues[0].Trim()), Convert.ToInt32(arrayValues[1].Trim()));
+                    {
+                        return new Point(Convert.ToInt32(arrayValues[0].Trim()), Convert.ToInt32(arrayValues[1].Trim()));
+                    }
                     break;
                 case ArrayType.RGB:
                     if (arrayValues.Length == 3)
-                        return System.Drawing.Color.FromArgb(Convert.ToInt32(arrayValues[0].Trim()), Convert.ToInt32(arrayValues[1].Trim()), Convert.ToInt32(arrayValues[2].Trim()));
+                    {
+                        return Color.FromArgb(Convert.ToInt32(arrayValues[0].Trim()), Convert.ToInt32(arrayValues[1].Trim()), Convert.ToInt32(arrayValues[2].Trim()));
+                    }
                     break;
             }
 
             return null;
-        }
+        }*/
     }
 
-    enum ArrayType
+    /*internal enum ArrayType
     {
         Int,
         Double,
         String,
         Point,
         RGB
-    }
+    }*/
 
     public enum FileEncoding
     {

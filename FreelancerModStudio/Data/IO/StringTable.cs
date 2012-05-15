@@ -9,9 +9,11 @@ namespace FreelancerModStudio.Data.IO
         public StringTable(string content)
         {
             if (content == null)
+            {
                 return;
+            }
 
-            var position = 0;
+            int position = 0;
             foreach (string stringValue in content.Trim('\0').Split('\0'))
             {
                 _strings.Add(position, stringValue);

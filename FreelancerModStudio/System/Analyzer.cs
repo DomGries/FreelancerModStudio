@@ -31,7 +31,7 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     if (option.Name.Equals("file", StringComparison.OrdinalIgnoreCase) && option.Values.Count > 0)
                     {
-                        // GetConnections throws an exception if the file cant be read
+                        // GetConnections could throw an exception if the file can't be opened
                         try
                         {
                             Table<int, ConnectionPart> systemConnections = GetConnections(block.Id, Path.Combine(UniversePath, option.Values[0].Value.ToString()));
@@ -40,7 +40,9 @@ namespace FreelancerModStudio.SystemPresenter
                                 AddConnections(block.Id, systemConnections);
                             }
                         }
+                            // ReSharper disable EmptyGeneralCatchClause
                         catch
+                            // ReSharper restore EmptyGeneralCatchClause
                         {
                         }
 

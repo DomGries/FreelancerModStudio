@@ -12,7 +12,7 @@ namespace FreelancerModStudio.Data
 
         public override string ToString()
         {
-            return Type.ToString() + ", " + Radius.ToString();
+            return Type + ", " + Radius;
         }
     }
 }

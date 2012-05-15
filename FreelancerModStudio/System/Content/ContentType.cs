@@ -3,7 +3,7 @@ namespace FreelancerModStudio.SystemPresenter.Content
     public enum ContentType
     {
         None,
-        
+
         // [System]
         System,
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -21,8 +22,8 @@ namespace FreelancerModStudio.Data.IO
         {
             Data = new List<INIBlock>();
 
-            using (var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (var binaryReader = new BinaryReader(stream, Encoding.Default))
+            using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (BinaryReader binaryReader = new BinaryReader(stream, Encoding.Default))
             {
                 if (stream.Length < ByteLen.FILE_TAG + ByteLen.INT ||
                     Encoding.ASCII.GetString(binaryReader.ReadBytes(ByteLen.FILE_TAG)) != FILE_TYPE ||
@@ -70,9 +71,13 @@ namespace FreelancerModStudio.Data.IO
 
                             string entryValue;
                             if (valueType == 1)
-                                entryValue = binaryReader.ReadInt32().ToString("D", System.Globalization.CultureInfo.InvariantCulture);
+                            {
+                                entryValue = binaryReader.ReadInt32().ToString("D", CultureInfo.InvariantCulture);
+                            }
                             else if (valueType == 2)
-                                entryValue = binaryReader.ReadSingle().ToString("0.000000", System.Globalization.CultureInfo.InvariantCulture);
+                            {
+                                entryValue = binaryReader.ReadSingle().ToString("0.000000", CultureInfo.InvariantCulture);
+                            }
                             else //string
                             {
                                 int valueStringPosition = binaryReader.ReadInt32();
@@ -80,9 +85,17 @@ namespace FreelancerModStudio.Data.IO
                             }
                             options.Add(entryValue);
                         }
-                        block.Add(entryName, new INIOption { Value = string.Join(", ", options.ToArray()), Index = i } );
+                        block.Add(entryName, new INIOption
+                            {
+                                Value = string.Join(", ", options.ToArray()),
+                                Index = i
+                            });
                     }
-                    Data.Add(new INIBlock { Name = sectionName, Options = block });
+                    Data.Add(new INIBlock
+                        {
+                            Name = sectionName,
+                            Options = block
+                        });
                 }
             }
             return true;

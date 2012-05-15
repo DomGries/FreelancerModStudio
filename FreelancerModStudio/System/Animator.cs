@@ -20,19 +20,23 @@ namespace FreelancerModStudio.SystemPresenter
         public static void Animate(ModelVisual3D model, ContentAnimation animation)
         {
             if (AnimationDuration.TimeSpan == TimeSpan.Zero)
+            {
                 model.Transform = new MatrixTransform3D(animation.NewMatrix);
+            }
             else
+            {
                 model.Transform = AnimateMatrix(animation.OldMatrix, animation.NewMatrix);
+            }
         }
 
         static MatrixTransform3D AnimateMatrix(Matrix3D oldMatrix, Matrix3D newMatrix)
         {
             Matrix3DAnimation animationMatrix = new Matrix3DAnimation(oldMatrix, newMatrix, AnimationDuration)
-            {
-                AccelerationRatio = AnimationAccelerationRatio,
-                DecelerationRatio = AnimationDecelerationRatio,
-                FillBehavior = FillBehavior.HoldEnd
-            };
+                {
+                    AccelerationRatio = AnimationAccelerationRatio,
+                    DecelerationRatio = AnimationDecelerationRatio,
+                    FillBehavior = FillBehavior.HoldEnd
+                };
 
             MatrixTransform3D transform = new MatrixTransform3D(oldMatrix);
             transform.BeginAnimation(MatrixTransform3D.MatrixProperty, animationMatrix);

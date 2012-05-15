@@ -18,7 +18,7 @@ namespace FreelancerModStudio.AutoUpdate
         public bool SilentCheck { get; set; }
 
         UpdateInformation _updateInfo;
-        IAutoUpdateUI _UI;
+        IAutoUpdateUI _ui;
 
         readonly WebClient _webClient = new WebClient();
 
@@ -83,16 +83,16 @@ namespace FreelancerModStudio.AutoUpdate
 
         void SetPage(StatusType value)
         {
-            if (_UI == null)
+            if (_ui == null)
             {
-                _UI = new frmAutoUpdate();
-                _UI.ActionRequired += UI_ActionRequired;
-                _UI.SetPage(value, false);
-                _UI.ShowUI();
+                _ui = new frmAutoUpdate();
+                _ui.ActionRequired += UI_ActionRequired;
+                _ui.SetPage(value, false);
+                _ui.ShowUI();
             }
             else
             {
-                _UI.SetPage(value, true);
+                _ui.SetPage(value, true);
             }
         }
 
@@ -124,8 +124,14 @@ namespace FreelancerModStudio.AutoUpdate
                 SetPage(Status);
             }
 
+            string destFileName = Path.GetFileName(_updateInfo.FileUri.AbsolutePath);
+            if (destFileName == null)
+            {
+                destFileName = "Update.exe";
+            }
+
             string destPath = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.UpdateDownloadPath);
-            string destFile = Path.Combine(destPath, Path.GetFileName(_updateInfo.FileUri.AbsolutePath));
+            string destFile = Path.Combine(destPath, destFileName);
 
             //create update directory if not existing
             if (!Directory.Exists(destPath))
@@ -211,9 +217,9 @@ namespace FreelancerModStudio.AutoUpdate
 
         void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            if (_UI != null)
+            if (_ui != null)
             {
-                _UI.SetProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
+                _ui.SetProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
             }
         }
 
@@ -227,10 +233,10 @@ namespace FreelancerModStudio.AutoUpdate
             switch (action)
             {
                 case ActionType.Close:
-                    _UI = null;
+                    _ui = null;
                     break;
                 case ActionType.CloseAndAbort:
-                    _UI = null;
+                    _ui = null;
                     Abort();
                     break;
                 case ActionType.Download:
@@ -315,9 +321,16 @@ namespace FreelancerModStudio.AutoUpdate
                 {
                     File.Delete(file);
                 }
-                Directory.Delete(Path.GetDirectoryName(file));
+
+                string directory = Path.GetDirectoryName(file);
+                if (directory != null)
+                {
+                    Directory.Delete(directory);
+                }
             }
+                // ReSharper disable EmptyGeneralCatchClause
             catch
+                // ReSharper restore EmptyGeneralCatchClause
             {
             }
 

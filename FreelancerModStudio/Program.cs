@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Forms;
+
+#if !DEBUG
+#endif
 
 namespace FreelancerModStudio
 {
@@ -14,12 +16,12 @@ namespace FreelancerModStudio
             Application.SetCompatibleTextRenderingDefault(false);
 
 #if !DEBUG
-            // catch real errors globally
+    // catch real errors globally
             try
             {
 #endif
-                // initialize program
-                Helper.Program.Start();
+            // initialize program
+            Helper.Program.Start();
 #if !DEBUG
             }
             catch (Exception ex)

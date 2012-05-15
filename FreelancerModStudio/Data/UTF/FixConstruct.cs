@@ -2,7 +2,7 @@
 
 namespace FreelancerModStudio.Data.UTF
 {
-    class FixConstruct
+    internal class FixConstruct
     {
         public static List<CmpPart> Parse(byte[] data)
         {

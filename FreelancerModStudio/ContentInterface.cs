@@ -1,4 +1,6 @@
-﻿namespace FreelancerModStudio
+﻿using System.Windows.Forms;
+
+namespace FreelancerModStudio
 {
     public interface IContentForm
     {
@@ -11,7 +13,7 @@
         bool CanDelete();
         bool CanSelectAll();
 
-        System.Windows.Forms.ToolStripDropDown MultipleAddDropDown();
+        ToolStripDropDown MultipleAddDropDown();
 
         void Add(int index);
         void Copy();

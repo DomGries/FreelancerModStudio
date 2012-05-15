@@ -9,7 +9,9 @@ namespace FreelancerModStudio.Data
         {
             int value;
             if (int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out value))
+            {
                 return value;
+            }
 
             return defaultValue;
         }
@@ -18,7 +20,9 @@ namespace FreelancerModStudio.Data
         {
             float value;
             if (float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+            {
                 return value;
+            }
 
             return defaultValue;
         }
@@ -27,7 +31,9 @@ namespace FreelancerModStudio.Data
         {
             double value;
             if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+            {
                 return value;
+            }
 
             return defaultValue;
         }
@@ -37,7 +43,9 @@ namespace FreelancerModStudio.Data
             //Use Vector3D.Parse after implementation of type handling
             string[] values = vector.Split(new[] { ',' });
             if (values.Length > 2)
+            {
                 return new Vector3D(ParseDouble(values[0], 0), ParseDouble(values[1], 0), ParseDouble(values[2], 0));
+            }
 
             return new Vector3D(0, 0, 0);
         }

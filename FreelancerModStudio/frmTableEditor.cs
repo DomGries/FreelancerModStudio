@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -8,67 +10,84 @@ using BrightIdeasSoftware;
 using FreelancerModStudio.Controls;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.Properties;
 using FreelancerModStudio.SystemPresenter;
 using FreelancerModStudio.SystemPresenter.Content;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace FreelancerModStudio
 {
-    public partial class frmTableEditor : WeifenLuo.WinFormsUI.Docking.DockContent, IDocumentForm, IContentForm
+    public partial class frmTableEditor : DockContent, IDocumentForm, IContentForm
     {
         public TableData Data;
         public string File;
         public string DataPath { get; private set; }
 
-        bool _isBINI;
+        readonly bool _isBINI;
 
-        UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
+        readonly UndoManager<ChangedData> _undoManager = new UndoManager<ChangedData>();
 
         public ViewerType ViewerType { get; set; }
         public ArchetypeManager Archetype { get; set; }
 
         public delegate void DataChangedType(ChangedData data);
+
         public DataChangedType DataChanged;
 
         public delegate void SelectionChangedType(List<TableBlock> data, int templateIndex);
+
         public SelectionChangedType SelectionChanged;
 
         public delegate void DataVisibilityChangedType(TableBlock block);
+
         public DataVisibilityChangedType DataVisibilityChanged;
 
         public delegate void ContentChangedType(IContentForm content);
+
         public ContentChangedType ContentChanged;
 
         public delegate void DocumentChangedType(IDocumentForm document);
+
         public DocumentChangedType DocumentChanged;
 
         void OnDataChanged(ChangedData data)
         {
             if (DataChanged != null)
+            {
                 DataChanged(data);
+            }
         }
 
         void OnSelectionChanged(List<TableBlock> data, int templateIndex)
         {
             if (SelectionChanged != null)
+            {
                 SelectionChanged(data, templateIndex);
+            }
         }
 
         void OnDataVisibilityChanged(TableBlock block)
         {
             if (DataVisibilityChanged != null)
+            {
                 DataVisibilityChanged(block);
+            }
         }
 
         void OnContentChanged(IContentForm content)
         {
             if (ContentChanged != null)
+            {
                 ContentChanged(content);
+            }
         }
 
         void OnDocumentChanged(IDocumentForm document)
         {
             if (DocumentChanged != null)
+            {
                 DocumentChanged(document);
+            }
         }
 
         public frmTableEditor(int templateIndex, string file)
@@ -76,7 +95,7 @@ namespace FreelancerModStudio
             InitializeComponent();
 
             LoadIcons();
-            undoManager.DataChanged += UndoManager_DataChanged;
+            _undoManager.DataChanged += UndoManager_DataChanged;
 
             if (file != null)
             {
@@ -90,7 +109,10 @@ namespace FreelancerModStudio
             }
             else
             {
-                Data = new TableData { TemplateIndex = templateIndex };
+                Data = new TableData
+                    {
+                        TemplateIndex = templateIndex
+                    };
                 _isBINI = false;
 
                 SetFile(string.Empty);
@@ -100,7 +122,7 @@ namespace FreelancerModStudio
             objectListView1.UnfocusedHighlightBackgroundColor = objectListView1.HighlightBackgroundColorOrDefault;
             objectListView1.UnfocusedHighlightForegroundColor = objectListView1.HighlightForegroundColorOrDefault;
 
-            var dropSink = objectListView1.DropSink as SimpleDropSink;
+            SimpleDropSink dropSink = objectListView1.DropSink as SimpleDropSink;
             if (dropSink != null)
             {
                 dropSink.CanDropBetween = true;
@@ -112,82 +134,95 @@ namespace FreelancerModStudio
 
         void LoadIcons()
         {
-            Icon = Properties.Resources.FileINIIcon;
+            Icon = Resources.FileINIIcon;
 
             // synchronized with ContentType enum
-            ImageList imageList = new ImageList { ColorDepth = ColorDepth.Depth32Bit };
+            ImageList imageList = new ImageList
+                {
+                    ColorDepth = ColorDepth.Depth32Bit
+                };
             imageList.Images.AddRange(new Image[]
-            {
-                Properties.Resources.System,
-                Properties.Resources.LightSource,
-                Properties.Resources.Construct,
-                Properties.Resources.Depot,
-                Properties.Resources.DockingRing,
-                Properties.Resources.JumpGate,
-                Properties.Resources.JumpHole,
-                Properties.Resources.Planet,
-                Properties.Resources.Satellite,
-                Properties.Resources.Ship,
-                Properties.Resources.Station,
-                Properties.Resources.Sun,
-                Properties.Resources.TradeLane,
-                Properties.Resources.WeaponsPlatform,
-                Properties.Resources.Zone,
-                Properties.Resources.Zone,
-                Properties.Resources.ZoneCylinder,
-                Properties.Resources.ZoneBox,
-                Properties.Resources.ZoneExclusion,
-                Properties.Resources.ZoneExclusion,
-                Properties.Resources.ZoneCylinderExclusion,
-                Properties.Resources.ZoneBoxExclusion,
-                Properties.Resources.ZoneVignette,
-                Properties.Resources.ZonePath,
-                Properties.Resources.ZonePathTrade,
-                Properties.Resources.ZonePathTradeLane
-            });
+                {
+                    Resources.System,
+                    Resources.LightSource,
+                    Resources.Construct,
+                    Resources.Depot,
+                    Resources.DockingRing,
+                    Resources.JumpGate,
+                    Resources.JumpHole,
+                    Resources.Planet,
+                    Resources.Satellite,
+                    Resources.Ship,
+                    Resources.Station,
+                    Resources.Sun,
+                    Resources.TradeLane,
+                    Resources.WeaponsPlatform,
+                    Resources.Zone,
+                    Resources.Zone,
+                    Resources.ZoneCylinder,
+                    Resources.ZoneBox,
+                    Resources.ZoneExclusion,
+                    Resources.ZoneExclusion,
+                    Resources.ZoneCylinderExclusion,
+                    Resources.ZoneBoxExclusion,
+                    Resources.ZoneVignette,
+                    Resources.ZonePath,
+                    Resources.ZonePathTrade,
+                    Resources.ZonePathTradeLane
+                });
             objectListView1.SmallImageList = imageList;
         }
 
         public void RefreshSettings()
         {
-            objectListView1.EmptyListMsg = Properties.Strings.FileEditorEmpty;
+            objectListView1.EmptyListMsg = Strings.FileEditorEmpty;
 
             //display modified rows in different color
             objectListView1.RowFormatter = delegate(OLVListItem lvi)
-            {
-                TableBlock block = (TableBlock)lvi.RowObject;
-                if (block.Modified == TableModified.Changed)
-                    lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedColor;
-                else if (block.Modified == TableModified.ChangedSaved)
-                    lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
+                {
+                    TableBlock block = (TableBlock)lvi.RowObject;
+                    if (block.Modified == TableModified.Changed)
+                    {
+                        lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedColor;
+                    }
+                    else if (block.Modified == TableModified.ChangedSaved)
+                    {
+                        lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
+                    }
 
-                if (block.ObjectType != ContentType.None && !block.Visibility)
-                    lvi.ForeColor = Helper.Settings.Data.Data.General.EditorHiddenColor;
-            };
+                    if (block.ObjectType != ContentType.None && !block.Visibility)
+                    {
+                        lvi.ForeColor = Helper.Settings.Data.Data.General.EditorHiddenColor;
+                    }
+                };
 
             //refresh column text
             if (objectListView1.Columns.Count > 2)
             {
-                objectListView1.Columns[0].Text = Properties.Strings.FileEditorColumnName;
-                objectListView1.Columns[2].Text = Properties.Strings.FileEditorColumnType;
+                objectListView1.Columns[0].Text = Strings.FileEditorColumnName;
+                objectListView1.Columns[2].Text = Strings.FileEditorColumnType;
             }
 
             //update 'New file' to new language
             if (File.Length == 0)
+            {
                 SetFile(string.Empty);
+            }
 
             objectListView1.Refresh();
         }
 
         string ShowSolarArchetypeSelector()
         {
-            var openFile = new OpenFileDialog
-                                          {
-                                              Title = string.Format(Properties.Strings.FileEditorOpenSolarArch, GetFileName()),
-                                              Filter = "Solar Archetype INI|*.ini"
-                                          };
+            OpenFileDialog openFile = new OpenFileDialog
+                {
+                    Title = string.Format(Strings.FileEditorOpenSolarArch, GetFileName()),
+                    Filter = "Solar Archetype INI|*.ini"
+                };
             if (openFile.ShowDialog() == DialogResult.OK)
+            {
                 return openFile.FileName;
+            }
 
             return null;
         }
@@ -224,17 +259,25 @@ namespace FreelancerModStudio
         public void ShowData()
         {
             if (Data.TemplateIndex == Helper.Template.Data.SystemFile)
+            {
                 ViewerType = ViewerType.System;
+            }
             else if (Data.TemplateIndex == Helper.Template.Data.UniverseFile)
+            {
                 ViewerType = ViewerType.Universe;
+            }
             else
+            {
                 ViewerType = ViewerType.None;
+            }
 
             if (ViewerType != ViewerType.None)
+            {
                 LoadArchetypes();
+            }
 
 #if DEBUG
-            System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
+            Stopwatch st = new Stopwatch();
             st.Start();
 #endif
             AddColumns();
@@ -244,17 +287,17 @@ namespace FreelancerModStudio
             //add block types to add menu
             for (int i = 0; i < Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Count; ++i)
             {
-                var addItem = new ToolStripMenuItem
-                                                {
-                                                    Text = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[i].Name,
-                                                    Tag = i
-                                                };
+                ToolStripMenuItem addItem = new ToolStripMenuItem
+                    {
+                        Text = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[i].Name,
+                        Tag = i
+                    };
                 addItem.Click += mnuAddItem_Click;
                 mnuAdd.DropDownItems.Add(addItem);
             }
 #if DEBUG
             st.Stop();
-            System.Diagnostics.Debug.WriteLine("display " + objectListView1.Items.Count + " data: " + st.ElapsedMilliseconds + "ms");
+            Debug.WriteLine("display " + objectListView1.Items.Count + " data: " + st.ElapsedMilliseconds + "ms");
 #endif
         }
 
@@ -266,11 +309,11 @@ namespace FreelancerModStudio
             objectListView1.CheckBoxes = ViewerType == ViewerType.System;
 
             OLVColumn[] cols =
-            {
-                    new OLVColumn(Properties.Strings.FileEditorColumnName, "Name"),
+                {
+                    new OLVColumn(Strings.FileEditorColumnName, "Name"),
                     new OLVColumn("#", "ID"),
-                    new OLVColumn(Properties.Strings.FileEditorColumnType, "Group")
-            };
+                    new OLVColumn(Strings.FileEditorColumnType, "Group")
+                };
 
             cols[0].Width = 150;
             cols[1].Width = cols[1].MinimumWidth = cols[1].MaximumWidth = 34;
@@ -280,46 +323,39 @@ namespace FreelancerModStudio
             if (ViewerType != ViewerType.None)
             {
                 //legend icons in system editor
-                cols[0].ImageGetter = delegate(object rowObject)
-                {
-                    return (int)((TableBlock)rowObject).ObjectType - 1;
-                };
+                cols[0].ImageGetter = rowObject => (int)((TableBlock)rowObject).ObjectType - 1;
             }
 
             if (ViewerType == ViewerType.System)
             {
-                cols[0].AspectGetter = delegate(object x)
-                {
-                    return ((TableBlock)x).Name;
-                };
+                cols[0].AspectGetter = x => ((TableBlock)x).Name;
 
                 //checkboxes for hidden shown objects
-                objectListView1.BooleanCheckStateGetter = delegate(object x)
-                {
-                    return ((TableBlock)x).Visibility;
-                };
+                objectListView1.BooleanCheckStateGetter = x => ((TableBlock)x).Visibility;
                 objectListView1.BooleanCheckStatePutter = delegate(object x, bool newValue)
-                {
-                    TableBlock block = (TableBlock)x;
-                    if (block.ObjectType != ContentType.None)
                     {
-                        block.Visibility = newValue;
-                        OnDataVisibilityChanged(block);
-                        return newValue;
-                    }
+                        TableBlock block = (TableBlock)x;
+                        if (block.ObjectType != ContentType.None)
+                        {
+                            block.Visibility = newValue;
+                            OnDataVisibilityChanged(block);
+                            return newValue;
+                        }
 
-                    return block.Visibility;
-                };
+                        return block.Visibility;
+                    };
 
                 //show content type if possible otherwise group
                 cols[2].AspectGetter = delegate(object x)
-                {
-                    TableBlock block = (TableBlock)x;
-                    if (block.ObjectType != ContentType.None)
-                        return block.ObjectType.ToString();
+                    {
+                        TableBlock block = (TableBlock)x;
+                        if (block.ObjectType != ContentType.None)
+                        {
+                            return block.ObjectType.ToString();
+                        }
 
-                    return block.Group;
-                };
+                        return block.Group;
+                    };
             }
             else
             {
@@ -328,16 +364,10 @@ namespace FreelancerModStudio
             }
 
             //show ID + 1
-            cols[1].AspectGetter = delegate(object x)
-            {
-                return ((TableBlock)x).Index + 1;
-            };
+            cols[1].AspectGetter = x => ((TableBlock)x).Index + 1;
 
             //show all options of a block in the tooltip
-            objectListView1.CellToolTipGetter = delegate(OLVColumn col, Object x)
-            {
-                return ((TableBlock)x).ToolTip;
-            };
+            objectListView1.CellToolTipGetter = (col, x) => ((TableBlock)x).ToolTip;
 
             objectListView1.Columns.AddRange(cols);
         }
@@ -350,11 +380,11 @@ namespace FreelancerModStudio
 
         void Save(string file)
         {
-            var fileManager = new FileManager(file, _isBINI)
-                                          {
-                                              WriteSpaces = Helper.Settings.Data.Data.General.FormattingSpaces,
-                                              WriteEmptyLine = Helper.Settings.Data.Data.General.FormattingEmptyLine
-                                          };
+            FileManager fileManager = new FileManager(file, _isBINI)
+                {
+                    WriteSpaces = Helper.Settings.Data.Data.General.FormattingSpaces,
+                    WriteEmptyLine = Helper.Settings.Data.Data.General.FormattingEmptyLine
+                };
             fileManager.Write(Data.GetEditorData());
 
             SetAsSaved();
@@ -373,9 +403,11 @@ namespace FreelancerModStudio
         {
             File = file;
 
-            var title = Title;
-            if (undoManager.IsModified())
+            string title = Title;
+            if (_undoManager.IsModified())
+            {
                 title += "*";
+            }
 
             TabText = title;
             Text = title;
@@ -386,9 +418,9 @@ namespace FreelancerModStudio
 
         void SetAsSaved()
         {
-            if (undoManager.IsModified())
+            if (_undoManager.IsModified())
             {
-                undoManager.SetAsSaved();
+                _undoManager.SetAsSaved();
 
                 //set objects in listview as unmodified
                 foreach (TableBlock tableData in objectListView1.Objects)
@@ -404,13 +436,17 @@ namespace FreelancerModStudio
 
         bool CancelClose()
         {
-            if (undoManager.IsModified())
+            if (_undoManager.IsModified())
             {
-                DialogResult dialogResult = MessageBox.Show(String.Format(Properties.Strings.FileCloseSave, Title), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult dialogResult = MessageBox.Show(String.Format(Strings.FileCloseSave, Title), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Cancel)
+                {
                     return true;
+                }
                 if (dialogResult == DialogResult.Yes)
+                {
                     Save();
+                }
             }
 
             return false;
@@ -426,11 +462,15 @@ namespace FreelancerModStudio
 
                 //set block to be modified except in undo mode
                 if (!undo)
+                {
                     tableBlock.Modified = TableModified.Changed;
+                }
 
                 //set archetype of block
                 if (tableBlock.Archetype == null)
+                {
                     SystemParser.SetObjectType(tableBlock, Archetype);
+                }
 
                 bool existSingle = false;
 
@@ -446,12 +486,18 @@ namespace FreelancerModStudio
                             tableBlock.Id = Data.Blocks[j].Id;
 
                             //overwrite data if we add blocks which are single then they are overwritten which means they have to be changed to edit in the undo history
-                            undoManager.CurrentData[undoBlock] = new ChangedData
-                                                                     {
-                                                                         Type = ChangedType.Edit,
-                                                                         OldBlocks = new List<TableBlock> { Data.Blocks[j] },
-                                                                         NewBlocks = new List<TableBlock> { tableBlock },
-                                                                     };
+                            _undoManager.CurrentData[undoBlock] = new ChangedData
+                                {
+                                    Type = ChangedType.Edit,
+                                    OldBlocks = new List<TableBlock>
+                                        {
+                                            Data.Blocks[j]
+                                        },
+                                    NewBlocks = new List<TableBlock>
+                                        {
+                                            tableBlock
+                                        },
+                                };
 
                             //overwrite block
                             Data.Blocks[j] = tableBlock;
@@ -465,9 +511,13 @@ namespace FreelancerModStudio
                 if (!existSingle)
                 {
                     if (block.Index >= Data.Blocks.Count)
+                    {
                         Data.Blocks.Add(block);
+                    }
                     else
+                    {
                         Data.Blocks.Insert(block.Index, block);
+                    }
                 }
 
                 selectedData.Add(tableBlock);
@@ -501,22 +551,37 @@ namespace FreelancerModStudio
             //add new block under selected one if it exists otherwise at the end
             int id;
             if (objectListView1.SelectedIndices.Count > 0)
+            {
                 id = objectListView1.SelectedIndices[objectListView1.SelectedIndices.Count - 1] + 1;
+            }
             else
+            {
                 id = Data.Blocks.Count;
+            }
 
             //add actual block
-            undoManager.Execute(new ChangedData { NewBlocks = new List<TableBlock> { new TableBlock(id, Data.MaxId++, editorBlock, Data.TemplateIndex) }, Type = ChangedType.Add });
+            _undoManager.Execute(new ChangedData
+                {
+                    NewBlocks = new List<TableBlock>
+                        {
+                            new TableBlock(id, Data.MaxId++, editorBlock, Data.TemplateIndex)
+                        },
+                    Type = ChangedType.Add
+                });
         }
 
         public List<TableBlock> GetSelectedBlocks()
         {
             if (objectListView1.SelectedObjects.Count == 0)
+            {
                 return null;
+            }
 
             List<TableBlock> blocks = new List<TableBlock>();
             foreach (TableBlock tableData in objectListView1.SelectedObjects)
+            {
                 blocks.Add(tableData);
+            }
 
             return blocks;
         }
@@ -550,12 +615,16 @@ namespace FreelancerModStudio
                                     string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                                     List<object> subOptions = new List<object>();
                                     for (int k = 1; k < lines.Length; ++k)
+                                    {
                                         subOptions.Add(lines[k].Trim());
+                                    }
 
                                     options.Add(new EditorINIEntry(lines[0], subOptions));
                                 }
                                 else
+                                {
                                     options.Add(new EditorINIEntry(text));
+                                }
                             }
                         }
                     }
@@ -568,17 +637,25 @@ namespace FreelancerModStudio
                             {
                                 //check if value is different
                                 if (options[0].Value.ToString() != text)
+                                {
                                     options[0].Value = text;
+                                }
                             }
                             else
+                            {
                                 options.Add(new EditorINIEntry(text));
+                            }
                         }
                         else
+                        {
                             options.Clear();
+                        }
 
                         //change data in listview
                         if (newBlocks[i].Block.MainOptionIndex == j)
+                        {
                             newBlocks[i].Name = text;
+                        }
                     }
                 }
 
@@ -586,9 +663,16 @@ namespace FreelancerModStudio
             }
 
             foreach (TableBlock block in newBlocks)
+            {
                 SystemParser.SetObjectType(block, Archetype);
+            }
 
-            undoManager.Execute(new ChangedData { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Edit });
+            _undoManager.Execute(new ChangedData
+                {
+                    NewBlocks = newBlocks,
+                    OldBlocks = oldBlocks,
+                    Type = ChangedType.Edit
+                });
         }
 
         void ChangeBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
@@ -607,7 +691,7 @@ namespace FreelancerModStudio
             EnsureSelectionVisible();
         }
 
-        private void MoveBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
+        void MoveBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
         {
             //remove all moved blocks first because otherwise inserted index would be wrong
             List<TableBlock> blocks = new List<TableBlock>();
@@ -619,7 +703,9 @@ namespace FreelancerModStudio
 
             //insert blocks at new position
             for (int i = 0; i < oldBlocks.Count; ++i)
+            {
                 Data.Blocks.Insert(newBlocks[i].Index, blocks[oldBlocks.Count - i - 1]);
+            }
 
             Data.RefreshIndices(Math.Min(oldBlocks[0].Index, newBlocks[0].Index));
             objectListView1.SetObjects(Data.Blocks);
@@ -632,10 +718,12 @@ namespace FreelancerModStudio
 
         void DeleteBlocks(List<TableBlock> blocks)
         {
-            System.Collections.IList selection = objectListView1.SelectedObjects;
+            IList selection = objectListView1.SelectedObjects;
 
             foreach (TableBlock tableBlock in blocks)
+            {
                 Data.Blocks.Remove(tableBlock);
+            }
 
             Data.RefreshIndices(blocks[0].Index);
             objectListView1.RemoveObjects(blocks);
@@ -650,9 +738,15 @@ namespace FreelancerModStudio
             List<TableBlock> blocks = new List<TableBlock>();
 
             foreach (TableBlock block in objectListView1.SelectedObjects)
+            {
                 blocks.Add(block);
+            }
 
-            undoManager.Execute(new ChangedData { NewBlocks = blocks, Type = ChangedType.Delete });
+            _undoManager.Execute(new ChangedData
+                {
+                    NewBlocks = blocks,
+                    Type = ChangedType.Delete
+                });
         }
 
         void EnsureSelectionVisible()
@@ -739,16 +833,25 @@ namespace FreelancerModStudio
         public void Save()
         {
             if (File.Length == 0)
+            {
                 SaveAs();
+            }
             else
+            {
                 Save(File);
+            }
         }
 
         public void SaveAs()
         {
-            var saveDialog = new SaveFileDialog { Filter = Properties.Strings.FileDialogFilter };
+            SaveFileDialog saveDialog = new SaveFileDialog
+                {
+                    Filter = Strings.FileDialogFilter
+                };
             if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
                 Save(saveDialog.FileName);
+            }
         }
 
         public void Add(int index)
@@ -780,7 +883,7 @@ namespace FreelancerModStudio
         {
             get
             {
-                return File.Length == 0 ? Properties.Strings.FileEditorNewFile : Path.GetFileName(File);
+                return File.Length == 0 ? Strings.FileEditorNewFile : Path.GetFileName(File);
             }
         }
 
@@ -788,7 +891,9 @@ namespace FreelancerModStudio
         {
             EditorINIData data = new EditorINIData(Data.TemplateIndex);
             foreach (TableBlock tableData in objectListView1.SelectedObjects)
+            {
                 data.Blocks.Add(tableData.Block);
+            }
 
             Clipboard.Copy(data);
 
@@ -810,15 +915,25 @@ namespace FreelancerModStudio
                 //add new block under selected one if it exists otherwise at the end
                 int id;
                 if (objectListView1.SelectedIndices.Count > 0)
+                {
                     id = objectListView1.SelectedIndices[objectListView1.SelectedIndices.Count - 1] + 1;
+                }
                 else
+                {
                     id = Data.Blocks.Count;
+                }
 
                 List<TableBlock> blocks = new List<TableBlock>();
                 for (int i = 0; i < editorData.Blocks.Count; ++i)
+                {
                     blocks.Add(new TableBlock(id + i, Data.MaxId++, editorData.Blocks[i], Data.TemplateIndex));
+                }
 
-                undoManager.Execute(new ChangedData { NewBlocks = blocks, Type = ChangedType.Add });
+                _undoManager.Execute(new ChangedData
+                    {
+                        NewBlocks = blocks,
+                        Type = ChangedType.Add
+                    });
             }
         }
 
@@ -829,22 +944,22 @@ namespace FreelancerModStudio
 
         public bool CanUndo()
         {
-            return undoManager.CanUndo();
+            return _undoManager.CanUndo();
         }
 
         public bool CanRedo()
         {
-            return undoManager.CanRedo();
+            return _undoManager.CanRedo();
         }
 
         public void Undo()
         {
-            undoManager.Undo(1);
+            _undoManager.Undo(1);
         }
 
         public void Redo()
         {
-            undoManager.Redo(1);
+            _undoManager.Redo(1);
         }
 
         public bool CanDisplay3DViewer()
@@ -876,7 +991,9 @@ namespace FreelancerModStudio
         void UndoManager_DataChanged(List<ChangedData> data, bool undo)
         {
             for (int i = 0; i < data.Count; ++i)
+            {
                 ExecuteDataChanged(undo ? data[i].GetUndoData() : data[i], i, undo);
+            }
 
             SetFile(File);
             //OnDocumentChanged(this); is already called in SetFile
@@ -917,7 +1034,9 @@ namespace FreelancerModStudio
         public void HideShowSelected()
         {
             if (objectListView1.SelectedObjects.Count == 0)
+            {
                 return;
+            }
 
             bool visibility = !((TableBlock)objectListView1.SelectedObjects[0]).Visibility;
 
@@ -937,7 +1056,9 @@ namespace FreelancerModStudio
         {
             bool correctFileType = ViewerType == ViewerType.System;
             if (rightNow)
+            {
                 return correctFileType && objectListView1.SelectedObjects.Count > 0;
+            }
 
             return correctFileType;
         }
@@ -946,7 +1067,9 @@ namespace FreelancerModStudio
         {
             bool correctFileType = ViewerType != ViewerType.None;
             if (rightNow)
+            {
                 return correctFileType && objectListView1.SelectedObjects.Count > 0;
+            }
 
             return correctFileType;
         }
@@ -956,28 +1079,34 @@ namespace FreelancerModStudio
             HideShowSelected();
         }
 
-        private void objectListView1_CanDrop(object sender, OlvDropEventArgs e)
+        void objectListView1_CanDrop(object sender, OlvDropEventArgs e)
         {
             if (e.DropTargetItem.RowObject is TableBlock)
+            {
                 e.Effect = DragDropEffects.Move;
+            }
             else
+            {
                 e.Effect = DragDropEffects.None;
+            }
         }
 
-        private void objectListView1_Dropped(object sender, OlvDropEventArgs e)
+        void objectListView1_Dropped(object sender, OlvDropEventArgs e)
         {
             OLVDataObject o = e.DataObject as OLVDataObject;
             if (o != null)
             {
                 List<TableBlock> blocks = new List<TableBlock>();
                 foreach (TableBlock block in o.ModelObjects)
+                {
                     blocks.Add(block);
+                }
 
                 StartMoveBlocks(blocks, e.DropTargetIndex);
             }
         }
 
-        private void StartMoveBlocks(List<TableBlock> blocks, int targetIndex)
+        void StartMoveBlocks(List<TableBlock> blocks, int targetIndex)
         {
             List<TableBlock> oldBlocks = new List<TableBlock>();
             List<TableBlock> newBlocks = new List<TableBlock>();
@@ -991,7 +1120,9 @@ namespace FreelancerModStudio
                 for (int j = i - newBlocks.Count; j < blocks.Count; ++j)
                 {
                     if (blocks[j].Index < newIndex)
+                    {
                         newIndex--;
+                    }
                 }
 
                 //skip block if the id was not changed
@@ -1003,7 +1134,14 @@ namespace FreelancerModStudio
             }
 
             if (oldBlocks.Count > 0)
-                undoManager.Execute(new ChangedData { NewBlocks = newBlocks, OldBlocks = oldBlocks, Type = ChangedType.Move });
+            {
+                _undoManager.Execute(new ChangedData
+                    {
+                        NewBlocks = newBlocks,
+                        OldBlocks = oldBlocks,
+                        Type = ChangedType.Move
+                    });
+            }
         }
     }
 

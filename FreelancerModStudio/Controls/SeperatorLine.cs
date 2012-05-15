@@ -31,6 +31,5 @@ namespace FreelancerModStudio.Controls
             Height = 2;
             Invalidate();
         }
-
     }
 }

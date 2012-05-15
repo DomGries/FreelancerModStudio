@@ -23,21 +23,25 @@ namespace FreelancerModStudio.Data.IO
             INIBlock currentBlock = new INIBlock();
             int currentOptionIndex = 0;
 
-            using (var stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (var streamReader = new StreamReader(stream, Encoding.Default))
+            using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (StreamReader streamReader = new StreamReader(stream, Encoding.Default))
             {
                 while (!streamReader.EndOfStream)
                 {
-                    var line = streamReader.ReadLine();
+                    string line = streamReader.ReadLine();
                     if (line == null)
+                    {
                         break;
+                    }
 
                     line = line.Trim();
 
                     //remove comments from data
                     int commentIndex = line.IndexOf(';');
                     if (commentIndex != -1)
+                    {
                         line = line.Substring(0, commentIndex).Trim();
+                    }
 
                     if (line.Length > 0)
                     {
@@ -45,7 +49,9 @@ namespace FreelancerModStudio.Data.IO
                         {
                             //reset current block if block was commented out
                             if (currentBlock.Name != null)
+                            {
                                 data.Add(currentBlock);
+                            }
 
                             currentBlock = new INIBlock();
                         }
@@ -53,11 +59,17 @@ namespace FreelancerModStudio.Data.IO
                         {
                             //new block
                             if (currentBlock.Name != null)
+                            {
                                 data.Add(currentBlock);
+                            }
 
                             string blockName = line.Substring(1, line.Length - 2).Trim();
 
-                            currentBlock = new INIBlock { Name = blockName, Options = new INIOptions() };
+                            currentBlock = new INIBlock
+                                {
+                                    Name = blockName,
+                                    Options = new INIOptions()
+                                };
                             currentOptionIndex = 0;
                         }
                         else if (currentBlock.Name != null)
@@ -70,13 +82,21 @@ namespace FreelancerModStudio.Data.IO
                                 string optionName = line.Substring(0, valueIndex).Trim();
                                 string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
 
-                                currentBlock.Options.Add(optionName, new INIOption { Value = optionValue, Index = currentOptionIndex } );
+                                currentBlock.Options.Add(optionName, new INIOption
+                                    {
+                                        Value = optionValue,
+                                        Index = currentOptionIndex
+                                    });
                                 ++currentOptionIndex;
                             }
                             else
                             {
                                 // entry without value
-                                currentBlock.Options.Add(line, new INIOption { Value = string.Empty, Index = currentOptionIndex });
+                                currentBlock.Options.Add(line, new INIOption
+                                    {
+                                        Value = string.Empty,
+                                        Index = currentOptionIndex
+                                    });
                                 ++currentOptionIndex;
                             }
                         }
@@ -85,14 +105,16 @@ namespace FreelancerModStudio.Data.IO
             }
 
             if (currentBlock.Name != null)
+            {
                 data.Add(currentBlock);
+            }
 
             return data;
         }
 
         public void Write(List<INIBlock> data)
         {
-            using (var streamWriter = new StreamWriter(File, false, Encoding.Default))
+            using (StreamWriter streamWriter = new StreamWriter(File, false, Encoding.Default))
             {
                 int i = 0;
                 foreach (INIBlock block in data)
@@ -101,7 +123,9 @@ namespace FreelancerModStudio.Data.IO
                     {
                         streamWriter.WriteLine();
                         if (WriteEmptyLine)
+                        {
                             streamWriter.WriteLine();
+                        }
                     }
 
                     streamWriter.WriteLine("[" + block.Name + "]");
@@ -119,17 +143,25 @@ namespace FreelancerModStudio.Data.IO
                             if (option.Value[h].Value.Length != 0)
                             {
                                 if (WriteSpaces)
+                                {
                                     streamWriter.Write(" = " + option.Value[h].Value);
+                                }
                                 else
+                                {
                                     streamWriter.Write("=" + option.Value[h].Value);
+                                }
                             }
 
                             if (h < option.Value.Count - 1)
+                            {
                                 streamWriter.Write(Environment.NewLine);
+                            }
                         }
 
                         if (k < block.Options.Count - 1)
+                        {
                             streamWriter.Write(Environment.NewLine);
+                        }
 
                         ++k;
                     }
@@ -147,7 +179,10 @@ namespace FreelancerModStudio.Data.IO
 
     public class INIOptions : Dictionary<string, List<INIOption>>
     {
-        public INIOptions() : base(StringComparer.OrdinalIgnoreCase) { }
+        public INIOptions()
+            : base(StringComparer.OrdinalIgnoreCase)
+        {
+        }
 
         public new void Add(string key, List<INIOption> values)
         {
@@ -155,7 +190,9 @@ namespace FreelancerModStudio.Data.IO
             {
                 //add value to existing option
                 foreach (INIOption option in values)
+                {
                     this[key].Add(option);
+                }
             }
             else
             {
@@ -166,7 +203,10 @@ namespace FreelancerModStudio.Data.IO
 
         public void Add(string key, INIOption value)
         {
-            Add(key, new List<INIOption> { value });
+            Add(key, new List<INIOption>
+                {
+                    value
+                });
         }
     }
 

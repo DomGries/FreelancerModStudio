@@ -19,9 +19,9 @@ namespace FreelancerModStudio
         //Mod mod;
         //bool modChanged;
 
-        frmProperties propertiesForm;
+        frmProperties _propertiesForm;
         //frmSolutionExplorer solutionExplorerForm = null;
-        frmSystemEditor systemEditor;
+        frmSystemEditor _systemEditor;
 
         public frmMain()
         {
@@ -44,12 +44,15 @@ namespace FreelancerModStudio
             string layoutFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.LayoutPath);
             if (File.Exists(layoutFile))
             {
+                // don't throw an error if the layout file can't be loaded
                 try
                 {
                     dockPanel1.LoadFromXml(layoutFile, GetContentFromPersistString);
                     layoutLoaded = true;
                 }
+                    // ReSharper disable EmptyGeneralCatchClause
                 catch
+                    // ReSharper restore EmptyGeneralCatchClause
                 {
                 }
             }
@@ -57,7 +60,7 @@ namespace FreelancerModStudio
             if (!layoutLoaded)
             {
                 //this.solutionExplorerForm.Show(dockPanel1);
-                propertiesForm.Show(dockPanel1);
+                _propertiesForm.Show(dockPanel1);
             }
 
             //open files
@@ -78,36 +81,36 @@ namespace FreelancerModStudio
 
         void InitContentWindows()
         {
-            propertiesForm = new frmProperties();
+            _propertiesForm = new frmProperties();
             //solutionExplorerForm = new frmSolutionExplorer();
 
-            propertiesForm.OptionsChanged += Properties_OptionsChanged;
-            propertiesForm.ContentChanged += Content_DisplayChanged;
+            _propertiesForm.OptionsChanged += Properties_OptionsChanged;
+            _propertiesForm.ContentChanged += Content_DisplayChanged;
 
             InitSystemEditor();
         }
 
         void InitSystemEditor()
         {
-            systemEditor = new frmSystemEditor();
-            systemEditor.SelectionChanged += systemEditor_SelectionChanged;
-            systemEditor.FileOpen += systemEditor_FileOpen;
+            _systemEditor = new frmSystemEditor();
+            _systemEditor.SelectionChanged += systemEditor_SelectionChanged;
+            _systemEditor.FileOpen += systemEditor_FileOpen;
 
             // set model mode as it was reset if the editor was closed
-            systemEditor.IsModelMode = mnuShowModels.Checked;
+            _systemEditor.IsModelMode = mnuShowModels.Checked;
         }
 
         IDockContent GetContentFromPersistString(string persistString)
         {
             if (persistString == typeof(frmProperties).ToString())
             {
-                return propertiesForm;
+                return _propertiesForm;
             }
             //else if (persistString == typeof(frmSolutionExplorer).ToString())
             //    return solutionExplorerForm;
             else if (persistString == typeof(frmSystemEditor).ToString())
             {
-                return systemEditor;
+                return _systemEditor;
             }
             else
             {
@@ -191,19 +194,19 @@ namespace FreelancerModStudio
 
         void DefaultEditor_DataChanged(ChangedData data)
         {
-            if (systemEditor != null)
+            if (_systemEditor != null)
             {
                 if (data.Type == ChangedType.Add)
                 {
-                    systemEditor.Add(data.NewBlocks);
+                    _systemEditor.Add(data.NewBlocks);
                 }
                 else if (data.Type == ChangedType.Delete)
                 {
-                    systemEditor.Delete(data.NewBlocks);
+                    _systemEditor.Delete(data.NewBlocks);
                 }
                 else if (data.Type == ChangedType.Edit)
                 {
-                    systemEditor.SetValues(data.NewBlocks);
+                    _systemEditor.SetValues(data.NewBlocks);
                 }
             }
         }
@@ -212,29 +215,29 @@ namespace FreelancerModStudio
         {
             if (data != null)
             {
-                propertiesForm.ShowData(data, templateIndex);
+                _propertiesForm.ShowData(data, templateIndex);
 
-                if (systemEditor != null)
+                if (_systemEditor != null)
                 {
-                    systemEditor.Select(data[0]);
+                    _systemEditor.Select(data[0]);
                 }
             }
             else
             {
-                propertiesForm.ClearData();
+                _propertiesForm.ClearData();
 
-                if (systemEditor != null)
+                if (_systemEditor != null)
                 {
-                    systemEditor.Deselect();
+                    _systemEditor.Deselect();
                 }
             }
         }
 
         void DefaultEditor_DataVisibilityChanged(TableBlock block)
         {
-            if (systemEditor != null)
+            if (_systemEditor != null)
             {
-                systemEditor.SetVisibility(block);
+                _systemEditor.SetVisibility(block);
             }
         }
 
@@ -254,18 +257,21 @@ namespace FreelancerModStudio
 
         void SetSettings()
         {
-            //save layout
+            // save layout (don't throw an error if it fails)
             string layoutFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.LayoutPath);
             try
             {
-                if (!Directory.Exists(Path.GetDirectoryName(layoutFile)))
+                string directory = Path.GetDirectoryName(layoutFile);
+                if (directory != null && !Directory.Exists(directory))
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(layoutFile));
+                    Directory.CreateDirectory(directory);
                 }
 
                 dockPanel1.SaveAsXml(layoutFile);
             }
+                // ReSharper disable EmptyGeneralCatchClause
             catch
+                // ReSharper restore EmptyGeneralCatchClause
             {
             }
 
@@ -372,7 +378,11 @@ namespace FreelancerModStudio
             }
 
             //insert new recentfile at first place
-            Helper.Settings.Data.Data.Forms.Main.RecentFiles.Insert(0, new Settings.RecentFile(file, templateIndex));
+            Helper.Settings.Data.Data.Forms.Main.RecentFiles.Insert(0, new Settings.RecentFile
+                {
+                    File = file,
+                    TemplateIndex = templateIndex
+                });
 
             //remove last recentfile to keep ajusted amount of recentfiles
             if (Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count > Helper.Settings.Data.Data.General.RecentFilesCount)
@@ -652,7 +662,7 @@ namespace FreelancerModStudio
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
             {
-                if (!tableEditor.CanDisplay3DViewer() && systemEditor != null)
+                if (!tableEditor.CanDisplay3DViewer() && _systemEditor != null)
                 {
                     CloseSystemEditor();
                 }
@@ -669,7 +679,7 @@ namespace FreelancerModStudio
             {
                 DefaultEditor_SelectionChanged(null, 0);
 
-                if (systemEditor != null)
+                if (_systemEditor != null)
                 {
                     CloseSystemEditor();
                 }
@@ -678,25 +688,25 @@ namespace FreelancerModStudio
 
         void ShowSystemEditor(frmTableEditor editor)
         {
-            if (systemEditor != null)
+            if (_systemEditor != null)
             {
                 // set data path before showing the models
-                systemEditor.DataPath = editor.DataPath;
+                _systemEditor.DataPath = editor.DataPath;
 
                 if (editor.ViewerType == ViewerType.Universe)
                 {
-                    systemEditor.ShowData(editor.Data, editor.File, editor.Archetype);
+                    _systemEditor.ShowData(editor.Data, editor.File, editor.Archetype);
                 }
                 else
                 {
-                    systemEditor.ShowData(editor.Data, null, null);
+                    _systemEditor.ShowData(editor.Data, null, null);
                 }
 
                 //select initially
                 List<TableBlock> blocks = editor.GetSelectedBlocks();
                 if (blocks != null)
                 {
-                    systemEditor.Select(blocks[0]);
+                    _systemEditor.Select(blocks[0]);
                 }
             }
         }
@@ -757,9 +767,9 @@ namespace FreelancerModStudio
                 editor.RefreshSettings();
             }
 
-            if (propertiesForm != null)
+            if (_propertiesForm != null)
             {
-                propertiesForm.RefreshSettings();
+                _propertiesForm.RefreshSettings();
             }
 
             //if (solutionExplorerForm != null)
@@ -811,7 +821,7 @@ namespace FreelancerModStudio
 
         void mnuProperties_Click(object sender, EventArgs e)
         {
-            propertiesForm.Show(dockPanel1, DockState.DockRight);
+            _propertiesForm.Show(dockPanel1, DockState.DockRight);
         }
 
         void mnuNewFile_Click(object sender, EventArgs e)
@@ -962,17 +972,17 @@ namespace FreelancerModStudio
             bool isModelMode = !mnuShowModels.Checked;
             mnuShowModels.Checked = isModelMode;
 
-            if (systemEditor != null)
+            if (_systemEditor != null)
             {
-                systemEditor.IsModelMode = isModelMode;
+                _systemEditor.IsModelMode = isModelMode;
             }
         }
 
         void mnuFocusSelected_Click(object sender, EventArgs e)
         {
-            if (systemEditor != null)
+            if (_systemEditor != null)
             {
-                systemEditor.FocusSelected();
+                _systemEditor.FocusSelected();
             }
         }
 
@@ -992,8 +1002,8 @@ namespace FreelancerModStudio
         void CloseSystemEditor()
         {
             //dispose system editor
-            systemEditor.Dispose();
-            systemEditor = null;
+            _systemEditor.Dispose();
+            _systemEditor = null;
         }
 
         void dockPanel1_ContentAdded(object sender, DockContentEventArgs e)
@@ -1024,9 +1034,9 @@ namespace FreelancerModStudio
                 //no editors found
                 SetDocumentMenus(false);
 
-                if (systemEditor != null)
+                if (_systemEditor != null)
                 {
-                    systemEditor.Clear();
+                    _systemEditor.Clear();
                 }
             }
         }
@@ -1068,9 +1078,9 @@ namespace FreelancerModStudio
                 return;
             }
 
-            if (systemEditor != null)
+            if (_systemEditor != null)
             {
-                systemEditor.DataPath = document.DataPath;
+                _systemEditor.DataPath = document.DataPath;
             }
 
             if (document.CanSave())
@@ -1144,12 +1154,15 @@ namespace FreelancerModStudio
 
         void mnu3dEditor_Click(object sender, EventArgs e)
         {
-            if (systemEditor == null)
+            if (_systemEditor == null)
             {
                 InitSystemEditor();
             }
 
-            systemEditor.Show(dockPanel1);
+            // system editor is never null as it was initialized above if that was the case
+            // ReSharper disable PossibleNullReferenceException
+            _systemEditor.Show(dockPanel1);
+            // ReSharper restore PossibleNullReferenceException
 
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
@@ -1167,14 +1180,18 @@ namespace FreelancerModStudio
 
                 try
                 {
-                    file = Path.Combine(Path.GetDirectoryName(tableEditor.File), path);
-                    if (File.Exists(file))
+                    string directory = Path.GetDirectoryName(tableEditor.File);
+                    if (directory != null)
                     {
-                        OpenFile(file, Helper.Template.Data.SystemFile);
-                    }
-                    else
-                    {
-                        throw new FileNotFoundException();
+                        file = Path.Combine(directory, path);
+                        if (File.Exists(file))
+                        {
+                            OpenFile(file, Helper.Template.Data.SystemFile);
+                        }
+                        else
+                        {
+                            throw new FileNotFoundException();
+                        }
                     }
                 }
                 catch (Exception ex)

@@ -15,9 +15,11 @@ namespace FreelancerModStudio.Controls
     {
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            var propertySubOptions = value as PropertySubOptions;
+            PropertySubOptions propertySubOptions = value as PropertySubOptions;
             if (propertySubOptions != null)
+            {
                 return "[" + ((propertySubOptions).Count - 1).ToString(CultureInfo.InvariantCulture) + "]";
+            }
 
             return string.Empty;
         }
@@ -26,11 +28,6 @@ namespace FreelancerModStudio.Controls
         {
             return false;
         }
-
-        public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, Attribute[] attributes)
-        {
-            return base.GetProperties(context, value, attributes);
-        }
     }
 
     public class PropertyBlock : PropertyOptionCollection
@@ -38,7 +35,9 @@ namespace FreelancerModStudio.Controls
         public PropertyBlock(EditorINIBlock block, Template.Block templateBlock)
         {
             foreach (EditorINIOption option in block.Options)
+            {
                 List.Add(new PropertyOption(option.Values, templateBlock.Options[option.TemplateIndex], option.ChildTemplateIndex != -1));
+            }
         }
     }
 
@@ -66,9 +65,11 @@ namespace FreelancerModStudio.Controls
 
             if (templateOption.Multiple)
             {
-                Attributes = new Attribute[] { 
-                    new EditorAttribute(typeof(UITypeEditor), typeof(UITypeEditor)),
-                    new TypeConverterAttribute(typeof(PropertyOptionCollectionConverter)) };
+                Attributes = new Attribute[]
+                    {
+                        new EditorAttribute(typeof(UITypeEditor), typeof(UITypeEditor)),
+                        new TypeConverterAttribute(typeof(PropertyOptionCollectionConverter))
+                    };
 
                 Value = new PropertySubOptions(templateOption.Name, options, children);
             }
@@ -84,8 +85,10 @@ namespace FreelancerModStudio.Controls
 
             if (children)
             {
-                Attributes = new Attribute[] { 
-                    new EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor)) };
+                Attributes = new Attribute[]
+                    {
+                        new EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor))
+                    };
 
                 StringBuilder valueCollection = new StringBuilder();
                 valueCollection.Append(option);
@@ -94,7 +97,9 @@ namespace FreelancerModStudio.Controls
                     foreach (object subValue in subOptions)
                     {
                         if (valueCollection.Length > 0)
+                        {
                             valueCollection.Append(Environment.NewLine);
+                        }
 
                         valueCollection.Append(subValue.ToString());
                     }
@@ -102,7 +107,9 @@ namespace FreelancerModStudio.Controls
                 Value = valueCollection.ToString();
             }
             else
+            {
                 Value = option;
+            }
         }
     }
 
@@ -113,11 +120,11 @@ namespace FreelancerModStudio.Controls
             int index = 0;
             foreach (EditorINIEntry entry in options)
             {
-                List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), entry.Value, entry.SubOptions, children));
+                List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(CultureInfo.InvariantCulture), entry.Value, entry.SubOptions, children));
                 ++index;
             }
 
-            List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(), string.Empty, null, children));
+            List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(CultureInfo.InvariantCulture), string.Empty, null, children));
         }
     }
 
@@ -227,22 +234,34 @@ namespace FreelancerModStudio.Controls
 
         public override Type ComponentType
         {
-            get { return typeof(PropertyOption); }
+            get
+            {
+                return typeof(PropertyOption);
+            }
         }
 
         public override string DisplayName
         {
-            get { return PropertyOption.Name; }
+            get
+            {
+                return PropertyOption.Name;
+            }
         }
 
         public override string Category
         {
-            get { return PropertyOption.Category; }
+            get
+            {
+                return PropertyOption.Category;
+            }
         }
 
         public override string Description
         {
-            get { return PropertyOption.Comment; }
+            get
+            {
+                return PropertyOption.Comment;
+            }
         }
 
         public override object GetValue(object component)
@@ -252,7 +271,10 @@ namespace FreelancerModStudio.Controls
 
         public override bool IsReadOnly
         {
-            get { return false; }
+            get
+            {
+                return false;
+            }
         }
 
         public override Type PropertyType
@@ -260,7 +282,9 @@ namespace FreelancerModStudio.Controls
             get
             {
                 if (PropertyOption.Value != null)
+                {
                     return PropertyOption.Value.GetType();
+                }
 
                 return typeof(object);
             }

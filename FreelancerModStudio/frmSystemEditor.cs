@@ -166,15 +166,30 @@ namespace FreelancerModStudio
                 return;
             }
 
-            ContentBase content = GetContent(block);
-            if (content != null)
+            if (block.Visibility)
             {
-                _presenter.SelectedContent = content;
+                // select object
+                ContentBase content = GetContent(block);
+                if (content != null)
+                {
+                    _presenter.SelectedContent = content;
+                    return;
+                }
             }
             else
             {
-                Deselect();
+                // show selection box for invisible objects
+                ContentBase content = Presenter.CreateContent(block.ObjectType);
+                if (content != null)
+                {
+                    SystemParser.SetValues(content, block, false);
+                    _presenter.SelectedContent = content;
+                    return;
+                }
             }
+
+            // deselect currect selection if nothing could be selected
+            Deselect();
         }
 
         public void Deselect()

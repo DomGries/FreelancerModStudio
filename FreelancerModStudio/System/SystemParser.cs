@@ -6,10 +6,8 @@ using FreelancerModStudio.SystemPresenter.Content;
 
 namespace FreelancerModStudio.SystemPresenter
 {
-    public class SystemParser
+    public static class SystemParser
     {
-        public bool ModelChanged { get; set; }
-
         public const double SIZE_FACTOR = 0.005;
 
         public static void SetObjectType(TableBlock block, ArchetypeManager archetypeManager)
@@ -120,7 +118,7 @@ namespace FreelancerModStudio.SystemPresenter
             block.ObjectType = ContentType.None;
         }
 
-        public void SetValues(ContentBase content, TableBlock block, bool animate)
+        public static bool SetValues(ContentBase content, TableBlock block, bool animate)
         {
             string positionString = "0,0,0";
             string rotationString = "0,0,0";
@@ -200,15 +198,14 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             // update the model if the object type was changed
-            if (content.Block == null || content.Block.ObjectType != block.ObjectType)
-            {
-                ModelChanged = true;
-            }
+            bool modelChanged = content.Block == null || content.Block.ObjectType != block.ObjectType;
 
             // set reference to block (this one is different than the one passed in the argument because a new copy was create in the undomanager)
             content.Block = block;
 
             content.SetTransform(position, rotation, scale, animate);
+
+            return modelChanged;
         }
 
         public static Vector3D ParseScale(string scale, ContentType type)
@@ -266,7 +263,7 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(tempRotation.X, -tempRotation.Z, tempRotation.Y);
         }
 
-        public Vector3D ParseUniverseVector(string vector)
+        public static Vector3D ParseUniverseVector(string vector)
         {
             const double axisCenter = 7.5;
             const double positionScale = 1/SIZE_FACTOR/4;

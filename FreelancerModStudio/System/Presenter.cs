@@ -551,10 +551,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetValues(ContentBase content, TableBlock block)
         {
-            SystemParser parser = new SystemParser();
-            parser.SetValues(content, block, !IsUniverse);
-
-            if (parser.ModelChanged && content.Content != null)
+            if (SystemParser.SetValues(content, block, !IsUniverse) && content.Content != null)
             {
                 LoadModel(content);
             }
@@ -621,7 +618,7 @@ namespace FreelancerModStudio.SystemPresenter
             return content;
         }
 
-        static ContentBase CreateContent(ContentType type)
+        public static ContentBase CreateContent(ContentType type)
         {
             switch (type)
             {

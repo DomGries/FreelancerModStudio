@@ -10,13 +10,13 @@
 #include "scripts\products\dotnetfx35sp1.iss"
 
 #define MyAppSetupName 'Freelancer Mod Studio'
-#define MyAppVersion '0.9.8'
+#define MyAppVersion '1.0'
 
 [Setup]
 AppName={#MyAppSetupName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppSetupName} {#MyAppVersion}
-AppCopyright=Copyright © stfx 2009-2011
+AppCopyright=Copyright © stfx 2009-2012
 VersionInfoVersion={#MyAppVersion}
 VersionInfoCompany=stfx
 AppPublisher=stfx
@@ -26,7 +26,6 @@ OutputBaseFilename=FreelancerModStudio-{#MyAppVersion}
 DefaultGroupName={#MyAppSetupName}
 DefaultDirName={pf}\{#MyAppSetupName}
 UninstallDisplayIcon={app}\FreelancerModStudio.exe
-UninstallDisplayName={#MyAppSetupName}
 OutputDir=bin
 SourceDir=.
 AllowNoIcons=yes

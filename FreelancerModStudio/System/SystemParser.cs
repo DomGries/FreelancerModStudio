@@ -120,7 +120,7 @@ namespace FreelancerModStudio.SystemPresenter
             block.ObjectType = ContentType.None;
         }
 
-        public void SetValues(ContentBase content, TableBlock block)
+        public void SetValues(ContentBase content, TableBlock block, bool animate)
         {
             string positionString = "0,0,0";
             string rotationString = "0,0,0";
@@ -208,7 +208,7 @@ namespace FreelancerModStudio.SystemPresenter
             // set reference to block (this one is different than the one passed in the argument because a new copy was create in the undomanager)
             content.Block = block;
 
-            content.SetTransform(position, rotation, scale);
+            content.SetTransform(position, rotation, scale, animate);
         }
 
         public static Vector3D ParseScale(string scale, ContentType type)

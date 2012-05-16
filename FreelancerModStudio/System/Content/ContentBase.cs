@@ -11,9 +11,9 @@ namespace FreelancerModStudio.SystemPresenter.Content
         public abstract Vector3D GetBaseScale();
         public abstract bool IsEmissive();
 
-        public void SetTransform(Matrix3D matrix)
+        public void SetTransform(Matrix3D matrix, bool animate)
         {
-            if (Content != null)
+            if (Content != null && animate)
             {
                 ContentAnimation animation = new ContentAnimation
                     {
@@ -28,9 +28,9 @@ namespace FreelancerModStudio.SystemPresenter.Content
             }
         }
 
-        public void SetTransform(Vector3D position, Vector3D rotation, Vector3D scale)
+        public void SetTransform(Vector3D position, Vector3D rotation, Vector3D scale, bool animate)
         {
-            SetTransform(GetMatrix(position, rotation, scale));
+            SetTransform(GetMatrix(position, rotation, scale), animate);
         }
 
         static Matrix3D GetMatrix(Vector3D position, Vector3D rotation, Vector3D scale)

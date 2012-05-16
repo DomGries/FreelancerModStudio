@@ -257,6 +257,12 @@ namespace FreelancerModStudio.SystemPresenter
                 return;
             }
 
+            // return if user selected universe connection
+            if (content.Block == null)
+            {
+                return;
+            }
+
             if (_selectedContent == content)
             {
                 if (IsUniverse)
@@ -495,7 +501,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             Vector3D rotation = new Vector3D(0, 0, (angle + angleOffset)*factor);
 
-            line.SetTransform(position, rotation, scale);
+            line.SetTransform(position, rotation, scale, false);
         }
 
         static ConnectionType GetConnectionType(bool jumpgate, bool jumphole)
@@ -546,7 +552,7 @@ namespace FreelancerModStudio.SystemPresenter
         void SetValues(ContentBase content, TableBlock block)
         {
             SystemParser parser = new SystemParser();
-            parser.SetValues(content, block);
+            parser.SetValues(content, block, !IsUniverse);
 
             if (parser.ModelChanged && content.Content != null)
             {

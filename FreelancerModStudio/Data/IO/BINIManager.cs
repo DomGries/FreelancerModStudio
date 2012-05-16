@@ -23,65 +23,67 @@ namespace FreelancerModStudio.Data.IO
             Data = new List<INIBlock>();
 
             using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (BinaryReader binaryReader = new BinaryReader(stream, Encoding.Default))
+            using (BinaryReader reader = new BinaryReader(stream, Encoding.Default))
             {
                 if (stream.Length < ByteLen.FILE_TAG + ByteLen.INT ||
-                    Encoding.ASCII.GetString(binaryReader.ReadBytes(ByteLen.FILE_TAG)) != FILE_TYPE ||
-                    binaryReader.ReadInt32() != FILE_VERSION)
+                    Encoding.ASCII.GetString(reader.ReadBytes(ByteLen.FILE_TAG)) != FILE_TYPE ||
+                    reader.ReadInt32() != FILE_VERSION)
                 {
                     // return false if it is not a bini file
                     return false;
                 }
 
-                int stringTablePosition = binaryReader.ReadInt32();
+                int stringBlockOffset = reader.ReadInt32();
                 long dataPosition = stream.Position;
 
-                //goto string table
-                stream.Position = stringTablePosition;
+                // goto string block
+                stream.Position = stringBlockOffset;
 
-                //read string table
-                StringTable stringTable = new StringTable(Encoding.Default.GetString(binaryReader.ReadBytes((int)(stream.Length - stream.Position))));
+                // read string block
+                byte[] buffer = new byte[stream.Length - stringBlockOffset];
+                reader.Read(buffer, 0, buffer.Length);
+                string stringBlock = Encoding.ASCII.GetString(buffer);
 
-                //go back to data
+                // go back to data
                 stream.Position = dataPosition;
 
-                //read data
-                while (stream.Position < stringTablePosition && stream.Position < stream.Length)
+                // read data
+                while (stream.Position < stringBlockOffset && stream.Position < stream.Length)
                 {
-                    //read section
-                    int sectionStringPosition = binaryReader.ReadInt16();
-                    int sectionEntriesCount = binaryReader.ReadInt16();
+                    // read section
+                    int sectionNameOffset = reader.ReadInt16();
+                    int sectionEntriesCount = reader.ReadInt16();
 
-                    string sectionName = stringTable.GetString(sectionStringPosition);
+                    string sectionName = stringBlock.Substring(sectionNameOffset, stringBlock.IndexOf('\0', sectionNameOffset) - sectionNameOffset);
                     INIOptions block = new INIOptions();
-                    //read each entry
+                    // read each entry
                     for (int i = 0; i < sectionEntriesCount; ++i)
                     {
-                        //read entry
-                        int entryStringPosition = binaryReader.ReadInt16();
-                        int entryValuesCount = binaryReader.ReadByte();
-                        string entryName = stringTable.GetString(entryStringPosition);
+                        // read entry
+                        int entryNameOffset = reader.ReadInt16();
+                        int entryValuesCount = reader.ReadByte();
+                        string entryName = stringBlock.Substring(entryNameOffset, stringBlock.IndexOf('\0', entryNameOffset) - entryNameOffset);
 
-                        //read each value
+                        // read each value
                         List<string> options = new List<string>();
                         for (int j = 0; j < entryValuesCount; ++j)
                         {
-                            //read value
-                            int valueType = binaryReader.ReadByte();
+                            // read value
+                            int valueType = reader.ReadByte();
 
                             string entryValue;
                             if (valueType == 1)
                             {
-                                entryValue = binaryReader.ReadInt32().ToString("D", CultureInfo.InvariantCulture);
+                                entryValue = reader.ReadInt32().ToString("D", CultureInfo.InvariantCulture);
                             }
                             else if (valueType == 2)
                             {
-                                entryValue = binaryReader.ReadSingle().ToString("0.000000", CultureInfo.InvariantCulture);
+                                entryValue = reader.ReadSingle().ToString("0.000000", CultureInfo.InvariantCulture);
                             }
-                            else //string
+                            else // string
                             {
-                                int valueStringPosition = binaryReader.ReadInt32();
-                                entryValue = stringTable.GetString(valueStringPosition);
+                                int valueNameOffset = reader.ReadInt32();
+                                entryValue = stringBlock.Substring(valueNameOffset, stringBlock.IndexOf('\0', valueNameOffset) - valueNameOffset);
                             }
                             options.Add(entryValue);
                         }

@@ -34,31 +34,33 @@ namespace FreelancerModStudio.Data.IO
 
                 //int unknown1 = reader.ReadInt32();
                 //int header_size = reader.ReadInt32();
-                reader.BaseStream.Seek(ByteLen.INT*3, SeekOrigin.Current);
+                stream.Position += ByteLen.INT * 3;
 
                 // get string info
                 int stringBlockOffset = reader.ReadInt32();
                 int stringBlockSize = reader.ReadInt32();
 
                 //int unknown2 = reader.ReadInt32();
-                reader.BaseStream.Seek(ByteLen.INT, SeekOrigin.Current);
+                stream.Position += ByteLen.INT;
 
                 // get data info
                 int dataBlockOffset = reader.ReadInt32();
 
-                reader.BaseStream.Position = stringBlockOffset;
+                // goto string block
+                stream.Position = stringBlockOffset;
 
-                // read string table
-                StringTable stringTable =
-                    new StringTable(Encoding.ASCII.GetString(reader.ReadBytes(stringBlockSize)));
+                // read string block
+                byte[] buffer = new byte[stringBlockSize];
+                reader.Read(buffer, 0, stringBlockSize);
+                string stringBlock = Encoding.ASCII.GetString(buffer);
 
                 UTFNode info = new UTFNode();
-                ParseNode(reader, stringTable, nodeBlockOffset, 0, dataBlockOffset, info);
+                ParseNode(reader, stringBlock, nodeBlockOffset, 0, dataBlockOffset, info);
                 return info;
             }
         }
 
-        static void ParseNode(BinaryReader reader, StringTable stringTable, int nodeBlockStart, int nodeStart, int dataBlockOffset, UTFNode parent)
+        static void ParseNode(BinaryReader reader, string stringBlock, int nodeBlockStart, int nodeStart, int dataBlockOffset, UTFNode parent)
         {
             int offset = nodeBlockStart + nodeStart;
             reader.BaseStream.Position = offset;
@@ -68,7 +70,7 @@ namespace FreelancerModStudio.Data.IO
             NodeFlags flags = (NodeFlags)reader.ReadInt32();
 
             //int zero = reader.ReadInt32();
-            reader.BaseStream.Seek(ByteLen.INT, SeekOrigin.Current);
+            reader.BaseStream.Position += ByteLen.INT;
 
             int childOffset = reader.ReadInt32(); // next node in if intermediate, offset to data if leaf
             int allocatedSize = reader.ReadInt32(); // leaf node only, 0 for intermediate
@@ -84,9 +86,9 @@ namespace FreelancerModStudio.Data.IO
             {
                 node.ParentNode = parent;
             }
-            node.Name = stringTable.GetString(nameOffset - 1);
+            node.Name = stringBlock.Substring(nameOffset, stringBlock.IndexOf('\0', nameOffset) - nameOffset);
 
-            // Extract data if this is a leaf
+            // extract data if this is a leaf node
             if ((flags & NodeFlags.Leaf) == NodeFlags.Leaf)
             {
                 //if (size != size2) Compression might be used
@@ -99,12 +101,12 @@ namespace FreelancerModStudio.Data.IO
 
             if (childOffset > 0 && (flags & NodeFlags.Intermediate) == NodeFlags.Intermediate)
             {
-                ParseNode(reader, stringTable, nodeBlockStart, childOffset, dataBlockOffset, node);
+                ParseNode(reader, stringBlock, nodeBlockStart, childOffset, dataBlockOffset, node);
             }
 
             if (peerOffset > 0)
             {
-                ParseNode(reader, stringTable, nodeBlockStart, peerOffset, dataBlockOffset, parent);
+                ParseNode(reader, stringBlock, nodeBlockStart, peerOffset, dataBlockOffset, parent);
             }
         }
     }

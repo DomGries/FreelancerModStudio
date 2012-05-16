@@ -98,7 +98,6 @@
     <Compile Include="Data\ArchetypeManager.cs" />
     <Compile Include="Data\ByteLen.cs" />
     <Compile Include="Data\CrcTool.cs" />
-    <Compile Include="Data\IO\StringTable.cs" />
     <Compile Include="Data\IO\UTFNode.cs" />
     <Compile Include="Data\Parser.cs" />
     <Compile Include="Data\Table.cs" />

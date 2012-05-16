@@ -16,7 +16,7 @@ namespace FreelancerModStudio.SystemPresenter
         public Matrix3D Transform;
     }
 
-    public class CmpModelContent
+    public static class UtfModel
     {
         static readonly Matrix3D ConversionMatrix = GetConversionMatrix();
 
@@ -54,7 +54,10 @@ namespace FreelancerModStudio.SystemPresenter
                     }
 
                     GeometryModel3D gm = GetCmpModel(meshGroup.Mesh, meshIndex, meshGroup.Transform*ConversionMatrix);
-                    modelGroup.Children.Add(gm);
+                    if (gm != null)
+                    {
+                        modelGroup.Children.Add(gm);
+                    }
                 }
             }
 
@@ -70,6 +73,11 @@ namespace FreelancerModStudio.SystemPresenter
             //PointCollection texture = new PointCollection();
 
             int vertexCount = mesh.BaseVertex + mesh.EndVertex - mesh.StartVertex + 1;
+            if (vmesh.Vertices.Length < vertexCount)
+            {
+                return null;
+            }
+
             for (int i = mesh.BaseVertex; i < vertexCount; ++i)
             {
                 positions.Add(vmesh.Vertices[i].Position);
@@ -82,6 +90,11 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             int triangleCount = (mesh.TriangleStart + mesh.NumRefVertices)/3;
+            if (vmesh.Triangles.Length < triangleCount)
+            {
+                return null;
+            }
+
             for (int i = mesh.TriangleStart/3; i < triangleCount; ++i)
             {
                 indices.Add(vmesh.Triangles[i].Vertex1);
@@ -106,7 +119,7 @@ namespace FreelancerModStudio.SystemPresenter
             return gm;
         }
 
-        public Model3D LoadModel(string file)
+        public static Model3D LoadModel(string file)
         {
             UTFManager utfManager = new UTFManager(file);
             UTFNode root = utfManager.Read();
@@ -247,12 +260,17 @@ namespace FreelancerModStudio.SystemPresenter
                 if (mapFileToObj.TryGetValue(fileName, out meshGroupName))
                 {
                     VMeshRef meshReference = new VMeshRef(meshReferenceNode.Data);
-                    meshGroups.Add(new MeshGroup
-                        {
-                            MeshReference = meshReference,
-                            Mesh = meshes[meshReference.VMeshLibId],
-                            Transform = GetTransform(constructs, meshGroupName)
-                        });
+
+                    VMeshData mesh;
+                    if (meshes.TryGetValue(meshReference.VMeshLibId, out mesh))
+                    {
+                        meshGroups.Add(new MeshGroup
+                            {
+                                MeshReference = meshReference,
+                                Mesh = mesh,
+                                Transform = GetTransform(constructs, meshGroupName)
+                            });
+                    }
                 }
             }
 

@@ -208,7 +208,6 @@
     </Compile>
     <Compile Include="Data\ChangedData.cs" />
     <Compile Include="System\Animator.cs" />
-    <Compile Include="System\CmpModelContent.cs" />
     <Compile Include="System\Content\Connection.cs" />
     <Compile Include="System\Content\ConnectionType.cs" />
     <Compile Include="System\Content\ContentBase.cs" />
@@ -223,6 +222,7 @@
     <Compile Include="System\Analyzer.cs" />
     <Compile Include="System\Presenter.cs" />
     <Compile Include="System\SystemParser.cs" />
+    <Compile Include="System\UtfModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\LogoIcon.ico" />

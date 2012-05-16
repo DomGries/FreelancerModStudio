@@ -590,7 +590,7 @@ namespace FreelancerModStudio.SystemPresenter
                         string file = Path.Combine(DataPath, content.Block.Archetype.ModelPath);
                         if (File.Exists(file))
                         {
-                            content.Content = new CmpModelContent().LoadModel(file);
+                            content.Content = UtfModel.LoadModel(file);
 
                             // return if model was loaded successfully
                             if (content.Content != null)

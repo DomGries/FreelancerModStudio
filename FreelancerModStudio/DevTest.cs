@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.SystemPresenter;
 
 namespace FreelancerModStudio
 {
@@ -1470,6 +1471,25 @@ namespace FreelancerModStudio
             }
 
             DataList.Add(newTemplate);
+        }
+
+        public static void TestCmpModels(string directory)
+        {
+            foreach (string file in Directory.GetFiles(directory))
+            {
+                string extension = Path.GetExtension(file);
+
+                if (extension != null &&
+                    extension.Equals(".cmp", StringComparison.OrdinalIgnoreCase))
+                {
+                    UtfModel.LoadModel(file);
+                }
+            }
+
+            foreach (string dir in Directory.GetDirectories(directory))
+            {
+                TestCmpModels(dir);
+            }
         }
     }
 }

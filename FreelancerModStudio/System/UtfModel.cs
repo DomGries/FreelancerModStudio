@@ -16,6 +16,12 @@ namespace FreelancerModStudio.SystemPresenter
         public Matrix3D Transform;
     }
 
+    public class MeshReferenceMatch
+    {
+        public string FileName;
+        public VMeshRef MeshReference;
+    }
+
     public static class UtfModel
     {
         static readonly Matrix3D ConversionMatrix = GetConversionMatrix();
@@ -119,6 +125,36 @@ namespace FreelancerModStudio.SystemPresenter
             return gm;
         }
 
+        static VMeshRef ParseMeshPartNode(UTFNode meshPartNode)
+        {
+            if (meshPartNode.Nodes.Count > 0)
+            {
+                return new VMeshRef(meshPartNode.Nodes[0].Data);
+            }
+            return null;
+        }
+
+        static VMeshRef ParseLevelNode(UTFNode levelNode)
+        {
+            if (levelNode.Nodes.Count > 0)
+            {
+                return ParseMeshPartNode(levelNode.Nodes[0]);
+            }
+            return null;
+        }
+
+        static VMeshRef ParseMultiLevelNode(UTFNode node)
+        {
+            foreach (UTFNode levelNode in node.Nodes)
+            {
+                if (levelNode.Name.Equals("level0", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ParseLevelNode(levelNode);
+                }
+            }
+            return null;
+        }
+
         public static Model3D LoadModel(string file)
         {
             UTFManager utfManager = new UTFManager(file);
@@ -132,6 +168,7 @@ namespace FreelancerModStudio.SystemPresenter
             root = root.Nodes[0];
 
             Dictionary<uint, VMeshData> meshes = null;
+            List<MeshReferenceMatch> meshReferenceNodes = new List<MeshReferenceMatch>();
             List<CmpPart> constructs = new List<CmpPart>();
             Dictionary<string, string> mapFileToObj = new Dictionary<string, string>
                 {
@@ -205,32 +242,54 @@ namespace FreelancerModStudio.SystemPresenter
                             }
                         }
                         break;
-                        /*default:
+                    case "multilevel":
+                        // multi LoD 3db model (\MultiLevel\Level0\VMeshPart\VMeshRef => \)
+                        VMeshRef meshReference2 = ParseMultiLevelNode(node);
+                        if (meshReference2 != null)
+                        {
+                            meshReferenceNodes.Add(new MeshReferenceMatch { FileName = "\\", MeshReference = meshReference2 });
+                        }
+                        break;
+                    case "vmeshpart":
+                        // single LoD 3db model (\VMeshPart\VMeshRef => \)
+                        VMeshRef meshReference3 = ParseMeshPartNode(node);
+                        if (meshReference3 != null)
+                        {
+                            meshReferenceNodes.Add(new MeshReferenceMatch { FileName = "\\", MeshReference = meshReference3 });
+                        }
+                        break;
+                    default:
                         if (node.Name.EndsWith(".3db", StringComparison.OrdinalIgnoreCase))
                         {
                             foreach (UTFNode subNode in node.Nodes)
                             {
                                 if (subNode.Name.Equals("multilevel", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    foreach (UTFNode levelNode in subNode.Nodes)
+                                    // multi LoD cmp model (\PARTNAME.3db\MultiLevel\Level0\VMeshPart\VMeshRef => PARTNAME.3db)
+                                    VMeshRef meshReference = ParseMultiLevelNode(subNode);
+                                    if (meshReference != null)
                                     {
-                                        if (levelNode.Name.Equals("level0", StringComparison.OrdinalIgnoreCase) && levelNode.Nodes.Count > 0 && levelNode.Nodes[0].Nodes.Count > 0)
-                                        {
-                                            meshReferences.Add(new ExtentedMeshRef
-                                                {
-                                                    MeshReference = new VMeshRef(levelNode.Nodes[0].Nodes[0].Data), // Level0\VMeshPart\VMeshRef
-                                                    Name = node.Name
-                                                });
-                                        }
+                                        meshReferenceNodes.Add(new MeshReferenceMatch { FileName = node.Name, MeshReference = meshReference });
                                     }
+                                    break;
+                                }
+                                if (subNode.Name.Equals("vmeshpart", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    // single LoD cmp model (\PARTNAME.3db\VMeshPart\VMeshRef => PARTNAME.3db)
+                                    VMeshRef meshReference = ParseMeshPartNode(subNode);
+                                    if (meshReference != null)
+                                    {
+                                        meshReferenceNodes.Add(new MeshReferenceMatch { FileName = node.Name, MeshReference = meshReference });
+                                    }
+                                    break;
                                 }
                             }
                         }
-                        break;*/
+                        break;
                 }
             }
 
-            if (meshes == null)
+            if (meshes == null || meshReferenceNodes.Count == 0)
             {
                 return null;
             }
@@ -239,35 +298,17 @@ namespace FreelancerModStudio.SystemPresenter
 
             // Scan the level 0 VMeshRefs to build mesh group list for each 
             // of the construction nodes identified in the previous search.
-            foreach (UTFNode meshReferenceNode in root.FindNodes("VMeshRef", true))
+            foreach (MeshReferenceMatch meshReferenceNode in meshReferenceNodes)
             {
-                string fileName = meshReferenceNode.ParentNode.ParentNode.Name;
-                if (fileName.StartsWith("level", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (fileName.Length < 6 || fileName[5] != '0')
-                    {
-                        // only show highest LoD
-                        continue;
-                    }
-
-                    // multi LoD 3db model (\MultiLevel\Level0\VMeshPart\VMeshRef => \)
-                    // multi LoD cmp model (\PARTNAME.3db\MultiLevel\Level0\VMeshPart\VMeshRef => PARTNAME.3db)
-                    fileName = meshReferenceNode.ParentNode.ParentNode.ParentNode.ParentNode.Name;
-                }
-                // single LoD 3db model (\VMeshPart\VMeshRef => \)
-                // single LoD cmp model (\PARTNAME.3db\VMeshPart\VMeshRef => PARTNAME.3db)
-
                 string meshGroupName;
-                if (mapFileToObj.TryGetValue(fileName, out meshGroupName))
+                if (mapFileToObj.TryGetValue(meshReferenceNode.FileName, out meshGroupName))
                 {
-                    VMeshRef meshReference = new VMeshRef(meshReferenceNode.Data);
-
                     VMeshData mesh;
-                    if (meshes.TryGetValue(meshReference.VMeshLibId, out mesh))
+                    if (meshes.TryGetValue(meshReferenceNode.MeshReference.VMeshLibId, out mesh))
                     {
                         meshGroups.Add(new MeshGroup
                             {
-                                MeshReference = meshReference,
+                                MeshReference = meshReferenceNode.MeshReference,
                                 Mesh = mesh,
                                 Transform = GetTransform(constructs, meshGroupName)
                             });

@@ -82,10 +82,6 @@ namespace FreelancerModStudio.Data.IO
             //int timestamp3 = reader.ReadInt32();
 
             UTFNode node = new UTFNode();
-            if (parent.Name != null)
-            {
-                node.ParentNode = parent;
-            }
             node.Name = stringBlock.Substring(nameOffset, stringBlock.IndexOf('\0', nameOffset) - nameOffset);
 
             // extract data if this is a leaf node

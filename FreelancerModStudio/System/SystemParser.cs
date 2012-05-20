@@ -256,7 +256,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (pathRotation)
             {
-                tempRotation.X -= 90;
+                tempRotation.X += 90;
                 tempRotation.Y *= 2;
             }
 

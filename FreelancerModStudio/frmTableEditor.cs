@@ -158,10 +158,8 @@ namespace FreelancerModStudio
                     Resources.TradeLane,
                     Resources.WeaponsPlatform,
                     Resources.Zone,
-                    Resources.Zone,
                     Resources.ZoneCylinder,
                     Resources.ZoneBox,
-                    Resources.ZoneExclusion,
                     Resources.ZoneExclusion,
                     Resources.ZoneCylinderExclusion,
                     Resources.ZoneBoxExclusion,
@@ -322,8 +320,29 @@ namespace FreelancerModStudio
 
             if (ViewerType != ViewerType.None)
             {
-                //legend icons in system editor
-                cols[0].ImageGetter = rowObject => (int)((TableBlock)rowObject).ObjectType - 1;
+                // content type icons
+                cols[0].ImageGetter = delegate(object x)
+                    {
+                        // ellipsoid + sphere and cylinder + ring have same icon
+                        ContentType type = ((TableBlock)x).ObjectType;
+                        if (type >= ContentType.ZoneRingExclusion)
+                        {
+                            return (int)type - 5;
+                        }
+                        if (type >= ContentType.ZoneEllipsoidExclusion)
+                        {
+                            return (int)type - 4;
+                        }
+                        if (type >= ContentType.ZoneRing)
+                        {
+                            return (int)type - 3;
+                        }
+                        if (type >= ContentType.ZoneEllipsoid)
+                        {
+                            return (int)type - 2;
+                        }
+                        return (int)type - 1;
+                    };
             }
 
             if (ViewerType == ViewerType.System)

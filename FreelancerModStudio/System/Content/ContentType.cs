@@ -27,12 +27,14 @@ namespace FreelancerModStudio.SystemPresenter.Content
         // [Zone]
         ZoneSphere,
         ZoneEllipsoid,
-        ZoneCylinderOrRing,
+        ZoneCylinder,
+        ZoneRing,
         ZoneBox,
 
         ZoneSphereExclusion,
         ZoneEllipsoidExclusion,
-        ZoneCylinderOrRingExclusion,
+        ZoneCylinderExclusion,
+        ZoneRingExclusion,
         ZoneBoxExclusion,
 
         ZoneVignette,

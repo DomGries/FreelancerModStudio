@@ -10,7 +10,8 @@ namespace FreelancerModStudio.SystemPresenter.Content
             {
                 default:
                     return SharedGeometries.ZoneSphereOrEllipsoid;
-                case ContentType.ZoneCylinderOrRing:
+                case ContentType.ZoneCylinder:
+                case ContentType.ZoneRing:
                     return SharedGeometries.ZoneCylinderOrRing;
                 case ContentType.ZoneBox:
                     return SharedGeometries.ZoneBox;
@@ -18,7 +19,8 @@ namespace FreelancerModStudio.SystemPresenter.Content
                 case ContentType.ZoneSphereExclusion:
                 case ContentType.ZoneEllipsoidExclusion:
                     return SharedGeometries.ZoneSphereOrEllipsoidExclusion;
-                case ContentType.ZoneCylinderOrRingExclusion:
+                case ContentType.ZoneCylinderExclusion:
+                case ContentType.ZoneRingExclusion:
                     return SharedGeometries.ZoneCylinderOrRingExclusion;
                 case ContentType.ZoneBoxExclusion:
                     return SharedGeometries.ZoneBoxExclusion;
@@ -41,12 +43,14 @@ namespace FreelancerModStudio.SystemPresenter.Content
                 case ContentType.ZoneBox:
                 case ContentType.ZoneBoxExclusion:
                 case ContentType.ZonePathTradeLane:
-                    return new Vector3D(0.5, 0.5, 0.5);
-                case ContentType.ZoneCylinderOrRing:
-                case ContentType.ZoneCylinderOrRingExclusion:
+                    return new Vector3D(0.5, 0.5, 0.5); // box base mesh
+                case ContentType.ZoneRing:
+                case ContentType.ZoneRingExclusion:
+                case ContentType.ZoneCylinder:
+                case ContentType.ZoneCylinderExclusion:
                 case ContentType.ZonePath:
                 case ContentType.ZonePathTrade:
-                    return new Vector3D(1, 0.5, 1);
+                    return new Vector3D(1, 0.5, 1); // cylinder base mesh
             }
             return new Vector3D(1, 1, 1);
         }

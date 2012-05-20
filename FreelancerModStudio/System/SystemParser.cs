@@ -106,8 +106,10 @@ namespace FreelancerModStudio.SystemPresenter
                                 block.ObjectType = isExclusion ? ContentType.ZoneEllipsoidExclusion : ContentType.ZoneEllipsoid;
                                 return;
                             case "cylinder":
+                                block.ObjectType = isExclusion ? ContentType.ZoneCylinderExclusion : ContentType.ZoneCylinder;
+                                return;
                             case "ring":
-                                block.ObjectType = isExclusion ? ContentType.ZoneCylinderOrRingExclusion : ContentType.ZoneCylinderOrRing;
+                                block.ObjectType = isExclusion ? ContentType.ZoneRingExclusion : ContentType.ZoneRing;
                                 return;
                             case "box":
                                 block.ObjectType = isExclusion ? ContentType.ZoneBoxExclusion : ContentType.ZoneBox;
@@ -223,8 +225,6 @@ namespace FreelancerModStudio.SystemPresenter
                         return new Vector3D(tempScale, tempScale, tempScale)*SIZE_FACTOR;
                     }
                     break;
-                case ContentType.ZoneCylinderOrRing:
-                case ContentType.ZoneCylinderOrRingExclusion:
                 case ContentType.ZonePath:
                 case ContentType.ZonePathTrade:
                     if (values.Length > 1)
@@ -234,11 +234,12 @@ namespace FreelancerModStudio.SystemPresenter
                         return new Vector3D(tempScale1, tempScale2, tempScale1)*SIZE_FACTOR;
                     }
                     break;
-            }
-
-            if (values.Length > 2)
-            {
-                return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1))*SIZE_FACTOR;
+                default:
+                    if (values.Length > 2)
+                    {
+                        return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) * SIZE_FACTOR;
+                    }
+                    break;
             }
 
             return new Vector3D(1, 1, 1);
@@ -246,8 +247,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static Vector3D ParsePosition(string vector)
         {
-            Vector3D tempVector = Parser.ParseVector(vector);
-            return new Vector3D(tempVector.X, -tempVector.Z, tempVector.Y)*SIZE_FACTOR;
+            return Parser.ParseVector(vector)*SIZE_FACTOR;
         }
 
         public static Vector3D ParseRotation(string vector, bool pathRotation)
@@ -257,10 +257,10 @@ namespace FreelancerModStudio.SystemPresenter
             if (pathRotation)
             {
                 tempRotation.X += 90;
-                tempRotation.Z *= 2;
+                tempRotation.Y *= 2;
             }
 
-            return new Vector3D(tempRotation.X, -tempRotation.Z, tempRotation.Y);
+            return new Vector3D(tempRotation.X, tempRotation.Y, tempRotation.Z);
         }
 
         public static Vector3D ParseUniverseVector(string vector)

@@ -44,7 +44,7 @@ namespace FreelancerModStudio.Data
             string[] values = vector.Split(new[] { ',' });
             if (values.Length > 2)
             {
-                return new Vector3D(ParseDouble(values[0], 0), ParseDouble(values[1], 0), ParseDouble(values[2], 0));
+                return new Vector3D(ParseDouble(values[0], 0), -ParseDouble(values[2], 0), ParseDouble(values[1], 0));
             }
 
             return new Vector3D(0, 0, 0);

@@ -72,33 +72,45 @@ namespace FreelancerModStudio.Data.IO
             //int zero = reader.ReadInt32();
             reader.BaseStream.Position += ByteLen.INT;
 
-            int childOffset = reader.ReadInt32(); // next node in if intermediate, offset to data if leaf
-            int allocatedSize = reader.ReadInt32(); // leaf node only, 0 for intermediate
-            //int size = reader.ReadInt32();                      // leaf node only, 0 for intermediate
-            //int size2 = reader.ReadInt32();                     // leaf node only, 0 for intermediate
+            UTFNode node = new UTFNode
+                {
+                    Name = stringBlock.Substring(nameOffset, stringBlock.IndexOf('\0', nameOffset) - nameOffset)
+                };
 
-            //int timestamp1 = reader.ReadInt32();
-            //int timestamp2 = reader.ReadInt32();
-            //int timestamp3 = reader.ReadInt32();
-
-            UTFNode node = new UTFNode();
-            node.Name = stringBlock.Substring(nameOffset, stringBlock.IndexOf('\0', nameOffset) - nameOffset);
-
-            // extract data if this is a leaf node
-            if ((flags & NodeFlags.Leaf) == NodeFlags.Leaf)
+            if ((flags & NodeFlags.Intermediate) == NodeFlags.Intermediate)
             {
-                //if (size != size2) Compression might be used
+                int childOffset = reader.ReadInt32();
+                if (childOffset > 0)
+                {
+                    ParseNode(reader, stringBlock, nodeBlockStart, childOffset, dataBlockOffset, node);
+                }
 
-                reader.BaseStream.Position = childOffset + dataBlockOffset;
-                node.Data = reader.ReadBytes(allocatedSize);
+                //int allocatedSize = reader.ReadInt32();
+                //int size = reader.ReadInt32();
+                //int size2 = reader.ReadInt32();
+                //int timestamp1 = reader.ReadInt32();
+                //int timestamp2 = reader.ReadInt32();
+                //int timestamp3 = reader.ReadInt32();
+            }
+            else if ((flags & NodeFlags.Leaf) == NodeFlags.Leaf)
+            {
+                int dataOffset = reader.ReadInt32();
+
+                //int allocatedSize = reader.ReadInt32();
+                reader.BaseStream.Position += ByteLen.INT;
+
+                int size = reader.ReadInt32();
+                //int size2 = reader.ReadInt32();
+                //int timestamp1 = reader.ReadInt32();
+                //int timestamp2 = reader.ReadInt32();
+                //int timestamp3 = reader.ReadInt32();
+
+                reader.BaseStream.Position = dataBlockOffset + dataOffset;
+                node.Data = reader.ReadBytes(size);
+
             }
 
             parent.Nodes.Add(node);
-
-            if (childOffset > 0 && (flags & NodeFlags.Intermediate) == NodeFlags.Intermediate)
-            {
-                ParseNode(reader, stringBlock, nodeBlockStart, childOffset, dataBlockOffset, node);
-            }
 
             if (peerOffset > 0)
             {

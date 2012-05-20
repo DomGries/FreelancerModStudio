@@ -10,7 +10,6 @@ namespace FreelancerModStudio
         static void Main()
         {
             //DevTest.CreateTemplate(@""); return;
-            UtfModel.LoadModel(@"D:\MyData\DWN\FLDD\DATA\SOLAR\GALLIA\ga_lane.cmp");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

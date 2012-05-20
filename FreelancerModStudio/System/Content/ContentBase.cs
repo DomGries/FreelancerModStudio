@@ -33,15 +33,22 @@ namespace FreelancerModStudio.SystemPresenter.Content
             SetTransform(GetMatrix(position, rotation, scale), animate);
         }
 
+        static Matrix3D CreateRotationMatrix(Quaternion value)
+        {
+            Matrix3D matrix = Matrix3D.Identity;
+            matrix.Rotate(value);
+            return matrix;
+        }
+
         static Matrix3D GetMatrix(Vector3D position, Vector3D rotation, Vector3D scale)
         {
             Matrix3D matrix = new Matrix3D();
 
             matrix.Scale(scale);
 
-            matrix.Rotate(new Quaternion(new Vector3D(1, 0, 0), rotation.X));
-            matrix.Rotate(new Quaternion(new Vector3D(0, 1, 0)*matrix, rotation.Y));
-            matrix.Rotate(new Quaternion(new Vector3D(0, 0, 1)*matrix, rotation.Z));
+            matrix *= CreateRotationMatrix(new Quaternion(new Vector3D(1, 0, 0), rotation.X)) *
+                      CreateRotationMatrix(new Quaternion(new Vector3D(0, 0, 1), rotation.Z)) *
+                      CreateRotationMatrix(new Quaternion(new Vector3D(0, 1, 0), rotation.Y));
 
             matrix.Translate(position);
 

@@ -257,7 +257,6 @@ namespace FreelancerModStudio.SystemPresenter
             if (pathRotation)
             {
                 tempRotation.X += 90;
-                tempRotation.Y *= 2;
             }
 
             return new Vector3D(tempRotation.X, tempRotation.Y, tempRotation.Z);

@@ -29,7 +29,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static readonly MeshGeometry3D Cylinder = GetMesh(new CylinderMesh
             {
-                Slices = 18,
+                Slices = 18
             });
 
         public static readonly MeshGeometry3D Pyramid = GetMesh(new PyramidMesh());
@@ -120,7 +120,7 @@ namespace FreelancerModStudio.SystemPresenter
             GetGeometry(SharedMeshes.SurfaceCylinder, SharedMaterials.Zone);
 
         public static readonly GeometryModel3D ZonePathTrade =
-            GetGeometry(SharedMeshes.SurfaceCylinder, MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 10, 30)));
+            GetGeometry(SharedMeshes.SurfaceCylinder, MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 0, 30)));
 
         public static readonly GeometryModel3D ZonePathTradeLane =
             GetGeometry(SharedMeshes.Surface, MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(0, 30, 30)));

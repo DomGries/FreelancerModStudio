@@ -86,10 +86,10 @@ namespace FreelancerModStudio
 
                 Template.File file = new Template.File
                     {
-                        Name = Path.GetFileName(iniDataTemplate.Path.ToLower()),
+                        Name = Path.GetFileName(iniDataTemplate.Path.ToLowerInvariant()),
                         Paths = new List<string>
                             {
-                                iniDataTemplate.Path.ToLower()
+                                iniDataTemplate.Path.ToLowerInvariant()
                             },
                         Blocks = templateBlocks
                     };
@@ -1430,7 +1430,7 @@ namespace FreelancerModStudio
 
         static void CreateTemplateFromFile(string file, int dataPathIndex)
         {
-            string filePath = file.Substring(dataPathIndex).ToLower();
+            string filePath = file.Substring(dataPathIndex).ToLowerInvariant();
             if (Array.IndexOf(ExcludedFiles, filePath) != -1)
             {
                 return;
@@ -1462,7 +1462,7 @@ namespace FreelancerModStudio
                 List<string> selectedFileGroupData = new List<string>(FileGroups[selectedFileGroup]);
                 foreach (INIDataTemplate template in DataList)
                 {
-                    if (selectedFileGroupData.Contains(template.Path.ToLower()))
+                    if (selectedFileGroupData.Contains(template.Path.ToLowerInvariant()))
                     {
                         template.Blocks.AddRange(newTemplate.Blocks);
                         return;

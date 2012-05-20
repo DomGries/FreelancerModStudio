@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -125,12 +126,13 @@ namespace FreelancerModStudio
 
         public new void Dispose()
         {
-            base.Dispose();
-
             if (_presenter != null)
             {
                 Clear(true);
             }
+
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         void Clear(bool clearLight)
@@ -273,6 +275,10 @@ namespace FreelancerModStudio
 
         public bool IsModelMode
         {
+            get
+            {
+                return _presenter.IsModelMode;
+            }
             set
             {
                 if (_presenter.IsModelMode == value)
@@ -301,6 +307,10 @@ namespace FreelancerModStudio
 
         public string DataPath
         {
+            get
+            {
+                return _presenter.DataPath;
+            }
             set
             {
                 _presenter.DataPath = value;
@@ -344,7 +354,7 @@ namespace FreelancerModStudio
             return null;
         }
 
-        public void Add(int index)
+        public void Add()
         {
         }
 

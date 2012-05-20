@@ -9,7 +9,7 @@ using FreelancerModStudio.Properties;
 
 namespace FreelancerModStudio.AutoUpdate
 {
-    public class AutoUpdate
+    public class AutoUpdate : IDisposable
     {
         public StatusType Status { get; set; }
 
@@ -101,7 +101,10 @@ namespace FreelancerModStudio.AutoUpdate
             try
             {
                 _updateInfo = UpdateInformationParser.Parse(fileContent);
-                return _updateInfo.Version > Helper.Assembly.Version;
+                if (_updateInfo != null)
+                {
+                    return _updateInfo.Version > Helper.Assembly.Version;
+                }
             }
             catch (Exception ex)
             {
@@ -168,7 +171,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     if (!SilentCheck)
                     {
-                        Helper.Exceptions.Show(new Exception(String.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error));
+                        Helper.Exceptions.Show(String.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error);
                     }
                 }
             }
@@ -205,7 +208,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     if (!SilentCheck)
                     {
-                        Helper.Exceptions.Show(new Exception(String.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error));
+                        Helper.Exceptions.Show(String.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error);
                     }
                 }
             }
@@ -254,9 +257,9 @@ namespace FreelancerModStudio.AutoUpdate
             _webClient.Proxy = string.IsNullOrEmpty(proxy) ? null : new WebProxy(proxy);
         }
 
-        public void SetCredentials(string username, string password)
+        public void SetCredentials(string userName, string password)
         {
-            _webClient.Credentials = string.IsNullOrEmpty(username) ? null : new NetworkCredential(username, password);
+            _webClient.Credentials = string.IsNullOrEmpty(userName) ? null : new NetworkCredential(userName, password);
         }
 
         public static bool InstallUpdate()
@@ -336,6 +339,12 @@ namespace FreelancerModStudio.AutoUpdate
 
             Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName = null;
             Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = false;
+        }
+
+        public void Dispose()
+        {
+            _webClient.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

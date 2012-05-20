@@ -61,8 +61,8 @@ namespace FreelancerModStudio.SystemPresenter
                         From = new ConnectionPart
                             {
                                 Id = id,
-                                Jumpgate = connectionPart.Jumpgate,
-                                Jumphole = connectionPart.Jumphole
+                                JumpGate = connectionPart.JumpGate,
+                                JumpHole = connectionPart.JumpHole
                             },
                         To = new ConnectionPart
                             {
@@ -74,8 +74,8 @@ namespace FreelancerModStudio.SystemPresenter
                 UniverseConnection existingConnection;
                 if (Connections.TryGetValue(connectionHash, out existingConnection))
                 {
-                    existingConnection.To.Jumpgate = connection.From.Jumpgate;
-                    existingConnection.To.Jumphole = connection.From.Jumphole;
+                    existingConnection.To.JumpGate = connection.From.JumpGate;
+                    existingConnection.To.JumpHole = connection.From.JumpHole;
                 }
                 else
                 {
@@ -108,7 +108,7 @@ namespace FreelancerModStudio.SystemPresenter
                         if (option.Values.Count > 0)
                         {
                             string value = option.Values[0].Value.ToString();
-                            switch (option.Name.ToLower())
+                            switch (option.Name.ToLowerInvariant())
                             {
                                 case "archetype":
                                     archetypeString = value;
@@ -133,24 +133,24 @@ namespace FreelancerModStudio.SystemPresenter
                             switch (archetypeInfo.Type)
                             {
                                 case ContentType.JumpGate:
-                                    connection.Jumpgate = true;
+                                    connection.JumpGate = true;
                                     break;
                                 case ContentType.JumpHole:
-                                    connection.Jumphole = true;
+                                    connection.JumpHole = true;
                                     break;
                             }
 
                             ConnectionPart existingConnection;
                             if (connections.TryGetValue(connection.Id, out existingConnection))
                             {
-                                if (connection.Jumpgate)
+                                if (connection.JumpGate)
                                 {
-                                    existingConnection.Jumpgate = true;
+                                    existingConnection.JumpGate = true;
                                 }
 
-                                if (connection.Jumphole)
+                                if (connection.JumpHole)
                                 {
-                                    existingConnection.Jumphole = true;
+                                    existingConnection.JumpHole = true;
                                 }
                             }
                             else if (id != connection.Id && connection.Id != -1)
@@ -210,7 +210,7 @@ namespace FreelancerModStudio.SystemPresenter
     public class ConnectionPart : ITableRow<int>
     {
         public int Id { get; set; }
-        public bool Jumpgate { get; set; }
-        public bool Jumphole { get; set; }
+        public bool JumpGate { get; set; }
+        public bool JumpHole { get; set; }
     }
 }

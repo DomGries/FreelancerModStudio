@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace FreelancerModStudio.Data
 {
-    public class Serializer
+    public static class Serializer
     {
         public static object Load(string path, Type type)
         {

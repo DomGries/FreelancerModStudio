@@ -78,5 +78,14 @@ namespace FreelancerModStudio.Data.IO
 
             return foundNodes;
         }
+
+        public override string ToString()
+        {
+            if (ParentNode != null)
+            {
+                return ParentNode + "\\" + Name;
+            }
+            return Name;
+        }
     }
 }

@@ -135,7 +135,7 @@ namespace FreelancerModStudio
             return false;
         }
 
-        public void Add(int index)
+        public void Add()
         {
             if (propertyGrid.SelectedGridItem.Value is PropertySubOptions)
             {

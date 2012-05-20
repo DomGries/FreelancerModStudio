@@ -13,7 +13,7 @@ using FreelancerModStudio.Properties;
 
 namespace FreelancerModStudio
 {
-    internal class Helper
+    internal static class Helper
     {
         public struct Program
         {
@@ -95,20 +95,20 @@ namespace FreelancerModStudio
                 AutoUpdate.CheckFileUri = checkFileUri;
 
                 string proxy = string.Empty;
-                string username = string.Empty;
+                string userName = string.Empty;
                 string password = string.Empty;
 
                 if (Settings.Data.Data.General.AutoUpdate.Proxy.Enabled)
                 {
                     proxy = Settings.Data.Data.General.AutoUpdate.Proxy.Uri;
-                    username = Settings.Data.Data.General.AutoUpdate.Proxy.Username;
+                    userName = Settings.Data.Data.General.AutoUpdate.Proxy.UserName;
                     password = Settings.Data.Data.General.AutoUpdate.Proxy.Password;
                 }
 
                 AutoUpdate.SilentCheck = silentCheck;
                 AutoUpdate.SilentDownload = silentDownload;
                 AutoUpdate.SetProxy(proxy);
-                AutoUpdate.SetCredentials(username, password);
+                AutoUpdate.SetCredentials(userName, password);
 
                 AutoUpdate.Check();
             }
@@ -194,7 +194,7 @@ namespace FreelancerModStudio
 
                     for (int i = 0; i < Files.Count && count > 0; ++i)
                     {
-                        switch (Files[i].Name.ToLower())
+                        switch (Files[i].Name.ToLowerInvariant())
                         {
                             case "system":
                                 SystemFile = i;
@@ -255,25 +255,27 @@ namespace FreelancerModStudio
                 }
             }
 
-            public static string GetShortLanguage()
+            public static string ShortLanguage
             {
-                if (Data.Data.General.Language == LanguageType.German)
+                get
                 {
-                    return "de";
-                }
+                    if (Data.Data.General.Language == LanguageType.German)
+                    {
+                        return "de";
+                    }
 
-                return "en";
-            }
-
-            public static void SetShortLanguage(string language)
-            {
-                if (language.Equals("de", StringComparison.OrdinalIgnoreCase))
-                {
-                    Data.Data.General.Language = LanguageType.German;
+                    return "en";
                 }
-                else
+                set
                 {
-                    Data.Data.General.Language = LanguageType.English;
+                    if (value.Equals("de", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Data.Data.General.Language = LanguageType.German;
+                    }
+                    else
+                    {
+                        Data.Data.General.Language = LanguageType.English;
+                    }
                 }
             }
         }

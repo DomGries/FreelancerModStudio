@@ -4,7 +4,7 @@ using System.Windows.Media.Media3D;
 
 namespace FreelancerModStudio.Data.UTF
 {
-    internal class CmpParser
+    internal static class CmpParser
     {
         public static string ParseString(byte[] data, ref int pos)
         {

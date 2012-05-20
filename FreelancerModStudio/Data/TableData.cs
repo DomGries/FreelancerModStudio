@@ -39,7 +39,7 @@ namespace FreelancerModStudio.Data
             return data;
         }
 
-        public void RefreshIndices(int startIndex)
+        public void RefreshIndexes(int startIndex)
         {
             for (int i = startIndex; i < Blocks.Count; ++i)
             {

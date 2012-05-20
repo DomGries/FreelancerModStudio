@@ -2,7 +2,7 @@ using System;
 
 namespace FreelancerModStudio.AutoUpdate
 {
-    internal class UpdateInformationParser
+    internal static class UpdateInformationParser
     {
         public static UpdateInformation Parse(string content)
         {
@@ -12,7 +12,7 @@ namespace FreelancerModStudio.AutoUpdate
 
             if (line.Length < 3)
             {
-                throw new Exception();
+                return null;
             }
 
             updateInformation.Version = new Version(line[0]);

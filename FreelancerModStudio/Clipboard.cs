@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace FreelancerModStudio
 {
-    public class Clipboard
+    public static class Clipboard
     {
         public static void Copy(object o)
         {

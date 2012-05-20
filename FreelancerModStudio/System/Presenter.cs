@@ -301,7 +301,7 @@ namespace FreelancerModStudio.SystemPresenter
             OnFileOpen((string)((MenuItem)sender).Tag);
         }
 
-        ModelVisual3D GetSelectionBox(ContentBase content)
+        static ModelVisual3D GetSelectionBox(ContentBase content)
         {
             WireLines lines = GetWireBox(content.GetBaseScale());
             lines.Transform = content.Transform;
@@ -455,8 +455,8 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
-            line.FromType = GetConnectionType(connection.From.Jumpgate, connection.From.Jumphole);
-            line.ToType = GetConnectionType(connection.To.Jumpgate, connection.To.Jumphole);
+            line.FromType = GetConnectionType(connection.From.JumpGate, connection.From.JumpHole);
+            line.ToType = GetConnectionType(connection.To.JumpGate, connection.To.JumpHole);
 
             ((Content.System)line.From).Connections.Add(line);
             ((Content.System)line.To).Connections.Add(line);
@@ -464,7 +464,7 @@ namespace FreelancerModStudio.SystemPresenter
             SetConnection(line);
         }
 
-        void SetConnection(Connection line)
+        static void SetConnection(Connection line)
         {
             Vector3D fromPosition = line.From.GetPosition();
             Vector3D toPosition = line.To.GetPosition();

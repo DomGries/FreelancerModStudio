@@ -34,11 +34,11 @@ namespace FreelancerModStudio.SystemPresenter.Content
             switch (type)
             {
                 case ConnectionType.JumpGate:
-                    return SharedMaterials.ConnectionJumpgate;
+                    return SharedMaterials.ConnectionJumpGate;
                 case ConnectionType.JumpHole:
-                    return SharedMaterials.ConnectionJumphole;
+                    return SharedMaterials.ConnectionJumpHole;
                 case ConnectionType.JumpGateAndHole:
-                    return SharedMaterials.ConnectionBoth;
+                    return SharedMaterials.ConnectionJumpGateAndHole;
                 default:
                     return SharedMaterials.ConnectionNone;
             }

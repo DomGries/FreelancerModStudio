@@ -35,7 +35,7 @@ namespace FreelancerModStudio.Data
             return null;
         }
 
-        public static string GetRelativeArchetype(string file, int fileTemplate, int archetypeTemplate)
+        public static string GetRelativeArchetype(string file, int fileTemplate)
         {
             string dataPath = Helper.Template.Data.GetDataPath(file, fileTemplate);
             if (dataPath != null)
@@ -67,7 +67,7 @@ namespace FreelancerModStudio.Data
                     {
                         if (option.Values.Count > 0)
                         {
-                            switch (option.Name.ToLower())
+                            switch (option.Name.ToLowerInvariant())
                             {
                                 case "nickname":
                                     name = option.Values[0].Value.ToString();

@@ -316,7 +316,7 @@ namespace FreelancerModStudio
                 FullScreen(true);
             }
 
-            uiCultureChanger1.ApplyCulture(new CultureInfo(Helper.Settings.GetShortLanguage()));
+            uiCultureChanger1.ApplyCulture(new CultureInfo(Helper.Settings.ShortLanguage));
 
             DisplayRecentFiles();
         }
@@ -759,7 +759,7 @@ namespace FreelancerModStudio
                 }
             }
 
-            uiCultureChanger1.ApplyCulture(new CultureInfo(Helper.Settings.GetShortLanguage()));
+            uiCultureChanger1.ApplyCulture(new CultureInfo(Helper.Settings.ShortLanguage));
 
             //refresh settings after language change
             foreach (frmTableEditor editor in editors)
@@ -939,13 +939,13 @@ namespace FreelancerModStudio
             IContentForm content = GetContent();
             if (content != null)
             {
-                int index = 0;
-                if (((ToolStripMenuItem)sender).Tag != null)
+                /*int index = 0;
+                ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+                if (menuItem.Tag != null)
                 {
-                    index = (int)((ToolStripMenuItem)sender).Tag;
-                }
-
-                content.Add(index);
+                    index = (int)menuItem.Tag;
+                }*/
+                content.Add();
             }
         }
 

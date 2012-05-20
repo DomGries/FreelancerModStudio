@@ -11,9 +11,9 @@ namespace FreelancerModStudio.SystemPresenter
         public static readonly Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 15, 0));
         public static readonly Material CmpModel = MaterialHelper.CreateMaterial(Brushes.SlateGray);
 
-        public static readonly Color ConnectionJumphole = Colors.OrangeRed;
-        public static readonly Color ConnectionJumpgate = Colors.SlateGray;
-        public static readonly Color ConnectionBoth = Colors.Snow;
+        public static readonly Color ConnectionJumpHole = Colors.OrangeRed;
+        public static readonly Color ConnectionJumpGate = Colors.SlateGray;
+        public static readonly Color ConnectionJumpGateAndHole = Colors.Snow;
         public static readonly Color ConnectionNone = Colors.Black;
     }
 
@@ -127,15 +127,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static GeometryModel3D GetGeometry(Geometry3D geometry, Material material)
         {
-            return GetGeometry(geometry, material, Transform3D.Identity);
-        }
-
-        public static GeometryModel3D GetGeometry(Geometry3D geometry, Material material, Transform3D transform)
-        {
-            GeometryModel3D model = new GeometryModel3D(geometry, material)
-                {
-                    Transform = transform
-                };
+            GeometryModel3D model = new GeometryModel3D(geometry, material);
             model.Freeze();
             return model;
         }

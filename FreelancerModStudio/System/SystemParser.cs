@@ -12,7 +12,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static void SetObjectType(TableBlock block, ArchetypeManager archetypeManager)
         {
-            switch (block.Block.Name.ToLower())
+            switch (block.Block.Name.ToLowerInvariant())
             {
                 case "system":
                     block.ObjectType = ContentType.System;
@@ -56,7 +56,7 @@ namespace FreelancerModStudio.SystemPresenter
                             if (option.Values.Count > 0)
                             {
                                 string value = option.Values[0].Value.ToString();
-                                switch (option.Name.ToLower())
+                                switch (option.Name.ToLowerInvariant())
                                 {
                                     case "lane_id":
                                         // overrides exclusion zones as those are set after the loop
@@ -75,7 +75,7 @@ namespace FreelancerModStudio.SystemPresenter
                                         block.ObjectType = ContentType.ZonePath;
                                         return;
                                     case "vignette_type":
-                                        switch (value.ToLower())
+                                        switch (value.ToLowerInvariant())
                                         {
                                             case "open":
                                             case "field":
@@ -97,7 +97,7 @@ namespace FreelancerModStudio.SystemPresenter
                         bool isExclusion = (flags & exlusionFlag) == exlusionFlag;
 
                         // set type based on shape and flags
-                        switch (shape.ToLower())
+                        switch (shape.ToLowerInvariant())
                         {
                             case "sphere":
                                 block.ObjectType = isExclusion ? ContentType.ZoneSphereExclusion : ContentType.ZoneSphere;
@@ -133,7 +133,7 @@ namespace FreelancerModStudio.SystemPresenter
                 if (option.Values.Count > 0)
                 {
                     string value = option.Values[0].Value.ToString();
-                    switch (option.Name.ToLower())
+                    switch (option.Name.ToLowerInvariant())
                     {
                         case "pos":
                             positionString = value;
@@ -256,7 +256,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (pathRotation)
             {
-                tempRotation.X += 90;
+                tempRotation.X -= 90;
                 tempRotation.Y *= 2;
             }
 
@@ -281,7 +281,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static ContentType ParseContentType(string type)
         {
-            switch (type.ToLower())
+            switch (type.ToLowerInvariant())
             {
                 case "jump_hole":
                     return ContentType.JumpHole;

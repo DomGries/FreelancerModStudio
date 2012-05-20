@@ -3,7 +3,7 @@ using System.Windows.Media.Media3D;
 
 namespace FreelancerModStudio.Data.UTF
 {
-    internal class PrisConstruct
+    internal static class PrisConstruct
     {
         public static void Parse(List<CmpPart> constructs, byte[] data)
         {

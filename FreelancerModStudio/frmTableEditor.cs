@@ -227,7 +227,7 @@ namespace FreelancerModStudio
 
         public void LoadArchetypes()
         {
-            string archetypeFile = ArchetypeManager.GetRelativeArchetype(File, Data.TemplateIndex, Helper.Template.Data.SolarArchetypeFile);
+            string archetypeFile = ArchetypeManager.GetRelativeArchetype(File, Data.TemplateIndex);
 
             //user interaction required to get the path of the archetype file
             if (archetypeFile == null)
@@ -542,7 +542,7 @@ namespace FreelancerModStudio
                 selectedData.Add(tableBlock);
             }
 
-            Data.RefreshIndices(blocks[0].Index);
+            Data.RefreshIndexes(blocks[0].Index);
 
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.SelectedObjects = selectedData;
@@ -726,7 +726,7 @@ namespace FreelancerModStudio
                 Data.Blocks.Insert(newBlocks[i].Index, blocks[oldBlocks.Count - i - 1]);
             }
 
-            Data.RefreshIndices(Math.Min(oldBlocks[0].Index, newBlocks[0].Index));
+            Data.RefreshIndexes(Math.Min(oldBlocks[0].Index, newBlocks[0].Index));
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.RefreshObjects(Data.Blocks);
 
@@ -744,7 +744,7 @@ namespace FreelancerModStudio
                 Data.Blocks.Remove(tableBlock);
             }
 
-            Data.RefreshIndices(blocks[0].Index);
+            Data.RefreshIndexes(blocks[0].Index);
             objectListView1.RemoveObjects(blocks);
 
             //select objects which were selected before
@@ -808,10 +808,8 @@ namespace FreelancerModStudio
 
         void mnuAddItem_Click(object sender, EventArgs e)
         {
-            string blockName = ((ToolStripMenuItem)sender).Text;
-            int templateIndex = (int)((ToolStripMenuItem)sender).Tag;
-
-            AddNewBlock(blockName, templateIndex);
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            AddNewBlock(menuItem.Text, (int)menuItem.Tag);
         }
 
         public bool CanSave()
@@ -873,9 +871,9 @@ namespace FreelancerModStudio
             }
         }
 
-        public void Add(int index)
+        public void Add()
         {
-            AddNewBlock(mnuAdd.DropDownItems[index].Text, (int)mnuAdd.DropDownItems[index].Tag);
+            //AddNewBlock(mnuAdd.DropDownItems[index].Text, (int)mnuAdd.DropDownItems[index].Tag);
         }
 
         public void Delete()

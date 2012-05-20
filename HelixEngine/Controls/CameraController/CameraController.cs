@@ -593,12 +593,13 @@ namespace HelixEngine
             switch (cm)
             {
                 case CameraMode.Inspect:
+                    if (delta < -0.5)
+                    {
+                        delta = -0.5;
+                    }
                     Point3D target = Camera.Position + Camera.LookDirection;
                     Vector3D lookDirection = Camera.LookDirection * (1 + delta);
                     CameraHelper.LookAt(Camera, target, lookDirection, 0);
-                    //Point3D target = Camera.Position + Camera.LookDirection;
-                    //Camera.LookDirection *= (1 + delta);
-                    //Camera.Position = target - Camera.LookDirection;
                     break;
                 case CameraMode.WalkAround:
                     Camera.Position -= Camera.LookDirection * delta;

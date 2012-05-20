@@ -1473,22 +1473,23 @@ namespace FreelancerModStudio
             DataList.Add(newTemplate);
         }
 
-        public static void TestCmpModels(string directory)
+        public static void TestUtfModels(string directory, bool include3db)
         {
             foreach (string file in Directory.GetFiles(directory))
             {
                 string extension = Path.GetExtension(file);
 
                 if (extension != null &&
-                    extension.Equals(".cmp", StringComparison.OrdinalIgnoreCase))
+                    (extension.Equals(".cmp", StringComparison.OrdinalIgnoreCase) ||
+                     (include3db && extension.Equals(".3db", StringComparison.OrdinalIgnoreCase))))
                 {
                     UtfModel.LoadModel(file);
                 }
             }
 
-            foreach (string dir in Directory.GetDirectories(directory))
+            foreach (string subDirectory in Directory.GetDirectories(directory))
             {
-                TestCmpModels(dir);
+                TestUtfModels(subDirectory, include3db);
             }
         }
     }

@@ -218,7 +218,7 @@ namespace FreelancerModStudio.SystemPresenter
                                         {
                                             meshReferences.Add(new ExtentedMeshRef
                                                 {
-                                                    MeshReference = new VMeshRef(levelNode.Nodes[0].Nodes[0].Data), // Level0.VMeshPart.VMeshRef
+                                                    MeshReference = new VMeshRef(levelNode.Nodes[0].Nodes[0].Data), // Level0\VMeshPart\VMeshRef
                                                     Name = node.Name
                                                 });
                                         }
@@ -241,20 +241,21 @@ namespace FreelancerModStudio.SystemPresenter
             // of the construction nodes identified in the previous search.
             foreach (UTFNode meshReferenceNode in root.FindNodes("VMeshRef", true))
             {
-                string fileName;
-                string levelName = meshReferenceNode.ParentNode.ParentNode.Name;
-                if (levelName.Equals("level0", StringComparison.OrdinalIgnoreCase))
+                string fileName = meshReferenceNode.ParentNode.ParentNode.Name;
+                if (fileName.StartsWith("level", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (fileName.Length < 6 || fileName[5] != '0')
+                    {
+                        // only show highest LoD
+                        continue;
+                    }
+
+                    // multi LoD 3db model (\MultiLevel\Level0\VMeshPart\VMeshRef => \)
+                    // multi LoD cmp model (\PARTNAME.3db\MultiLevel\Level0\VMeshPart\VMeshRef => PARTNAME.3db)
                     fileName = meshReferenceNode.ParentNode.ParentNode.ParentNode.ParentNode.Name;
                 }
-                else if (levelName == "\\")
-                {
-                    fileName = levelName;
-                }
-                else
-                {
-                    fileName = meshReferenceNode.ParentNode.ParentNode.ParentNode.Name;
-                }
+                // single LoD 3db model (\VMeshPart\VMeshRef => \)
+                // single LoD cmp model (\PARTNAME.3db\VMeshPart\VMeshRef => PARTNAME.3db)
 
                 string meshGroupName;
                 if (mapFileToObj.TryGetValue(fileName, out meshGroupName))

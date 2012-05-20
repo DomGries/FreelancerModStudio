@@ -134,22 +134,13 @@ namespace FreelancerModStudio.SystemPresenter
             return null;
         }
 
-        static VMeshRef ParseLevelNode(UTFNode levelNode)
-        {
-            if (levelNode.Nodes.Count > 0)
-            {
-                return ParseMeshPartNode(levelNode.Nodes[0]);
-            }
-            return null;
-        }
-
         static VMeshRef ParseMultiLevelNode(UTFNode node)
         {
             foreach (UTFNode levelNode in node.Nodes)
             {
-                if (levelNode.Name.Equals("level0", StringComparison.OrdinalIgnoreCase))
+                if (levelNode.Name.Equals("level0", StringComparison.OrdinalIgnoreCase) && levelNode.Nodes.Count > 0)
                 {
-                    return ParseLevelNode(levelNode);
+                    return ParseMeshPartNode(levelNode.Nodes[0]);
                 }
             }
             return null;
@@ -295,9 +286,6 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             List<MeshGroup> meshGroups = new List<MeshGroup>();
-
-            // Scan the level 0 VMeshRefs to build mesh group list for each 
-            // of the construction nodes identified in the previous search.
             foreach (MeshReferenceMatch meshReferenceNode in meshReferenceNodes)
             {
                 string meshGroupName;

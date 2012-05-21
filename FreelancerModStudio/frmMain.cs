@@ -844,7 +844,7 @@ namespace FreelancerModStudio
 
         void mnuSave_Click(object sender, EventArgs e)
         {
-            IDocumentForm document = dockPanel1.ActiveContent as IDocumentForm;
+            IDocumentForm document = dockPanel1.ActiveDocument as IDocumentForm;
             if (document != null)
             {
                 document.Save();

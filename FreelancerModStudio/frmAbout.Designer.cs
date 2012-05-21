@@ -35,6 +35,7 @@
             this.lblProductName = new System.Windows.Forms.Label();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.btnOK = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,6 +63,7 @@
             // 
             // lblProductName
             // 
+            this.lblProductName.BackColor = System.Drawing.Color.White;
             resources.ApplyResources(this.lblProductName, "lblProductName");
             this.lblProductName.Name = "lblProductName";
             // 
@@ -80,6 +82,12 @@
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnOK.Name = "btnOK";
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.White;
+            resources.ApplyResources(this.panel1, "panel1");
+            this.panel1.Name = "panel1";
+            // 
             // frmAbout
             // 
             resources.ApplyResources(this, "$this");
@@ -91,6 +99,7 @@
             this.Controls.Add(this.lblProductName);
             this.Controls.Add(this.txtDescription);
             this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -112,6 +121,7 @@
         private System.Windows.Forms.Label lblProductName;
         private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Panel panel1;
 
     }
 }

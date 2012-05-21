@@ -148,7 +148,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblCompanyName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>140, 73</value>
+    <value>140, 109</value>
   </data>
   <data name="lblCompanyName.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 17</value>
@@ -172,7 +172,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblCopyright.Location" type="System.Drawing.Point, System.Drawing">
-    <value>140, 57</value>
+    <value>140, 93</value>
   </data>
   <data name="lblCopyright.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 16</value>
@@ -196,7 +196,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblVersion.Location" type="System.Drawing.Point, System.Drawing">
-    <value>140, 42</value>
+    <value>140, 78</value>
   </data>
   <data name="lblVersion.Size" type="System.Drawing.Size, System.Drawing">
     <value>208, 15</value>
@@ -217,16 +217,16 @@
     <value>3</value>
   </data>
   <data name="lblProductName.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+    <value>Microsoft Sans Serif, 12pt, style=Bold</value>
   </data>
   <data name="lblProductName.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="lblProductName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>140, 8</value>
+    <value>139, 23</value>
   </data>
   <data name="lblProductName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>208, 17</value>
+    <value>208, 26</value>
   </data>
   <data name="lblProductName.TabIndex" type="System.Int32, mscorlib">
     <value>27</value>
@@ -244,7 +244,7 @@
     <value>4</value>
   </data>
   <data name="txtDescription.Location" type="System.Drawing.Point, System.Drawing">
-    <value>143, 149</value>
+    <value>143, 165</value>
   </data>
   <data name="txtDescription.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>6, 3, 3, 3</value>
@@ -253,10 +253,13 @@
     <value>True</value>
   </data>
   <data name="txtDescription.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 54</value>
+    <value>205, 38</value>
   </data>
   <data name="txtDescription.TabIndex" type="System.Int32, mscorlib">
     <value>30</value>
+  </data>
+  <data name="txtDescription.Text" xml:space="preserve">
+    <value>Dedicated to the Freelancer community</value>
   </data>
   <data name="&gt;&gt;txtDescription.Name" xml:space="preserve">
     <value>txtDescription</value>
@@ -299,6 +302,30 @@
   </data>
   <data name="&gt;&gt;btnOK.ZOrder" xml:space="preserve">
     <value>6</value>
+  </data>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>128, 0</value>
+  </data>
+  <data name="panel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>233, 66</value>
+  </data>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>32</value>
+  </data>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>7</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

@@ -15,7 +15,6 @@ namespace FreelancerModStudio
             lblVersion.Text = String.Format(Strings.AboutVersion, Helper.Assembly.Version);
             lblCopyright.Text = Helper.Assembly.Copyright;
             lblCompanyName.Text = Helper.Assembly.Company;
-            txtDescription.Text = Helper.Assembly.Description;
         }
     }
 }

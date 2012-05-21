@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Freelancer Mod Studio")]
-[assembly: AssemblyDescription("Freelancer Mod Studio is a fast and powerful all-in-one visual modding solution.")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("stfx")]
 [assembly: AssemblyProduct("Freelancer Mod Studio")]
@@ -11,4 +11,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("d88a7221-eaf7-4b5b-a285-a71912942382")]
-[assembly: AssemblyVersion("1.0")]
+[assembly: AssemblyVersion("1.0.1")]

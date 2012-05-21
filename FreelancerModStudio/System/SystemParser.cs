@@ -250,16 +250,16 @@ namespace FreelancerModStudio.SystemPresenter
             return Parser.ParseVector(vector)*SIZE_FACTOR;
         }
 
-        public static Vector3D ParseRotation(string vector, bool pathRotation)
+        public static Vector3D ParseRotation(string vector, bool isPath)
         {
-            Vector3D tempRotation = Parser.ParseVector(vector);
+            Vector3D rotation = Parser.ParseVector(vector);
 
-            if (pathRotation)
+            if (isPath)
             {
-                tempRotation.X += 90;
+                rotation.X += 90;
             }
 
-            return new Vector3D(tempRotation.X, tempRotation.Y, tempRotation.Z);
+            return rotation;
         }
 
         public static Vector3D ParseUniverseVector(string vector)

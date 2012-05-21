@@ -593,13 +593,20 @@ namespace HelixEngine
             switch (cm)
             {
                 case CameraMode.Inspect:
+                    // prevent zooming in too fast
                     if (delta < -0.5)
                     {
                         delta = -0.5;
                     }
+
                     Point3D target = Camera.Position + Camera.LookDirection;
                     Vector3D lookDirection = Camera.LookDirection * (1 + delta);
-                    CameraHelper.LookAt(Camera, target, lookDirection, 0);
+
+                    // prevent zooming in too far because camera gets wiggly due to precision loss
+                    if (lookDirection.LengthSquared > 0.01)
+                    {
+                        CameraHelper.LookAt(Camera, target, lookDirection, 0);
+                    }
                     break;
                 case CameraMode.WalkAround:
                     Camera.Position -= Camera.LookDirection * delta;

@@ -179,11 +179,7 @@ namespace HelixEngine
         {
             Point3D newPosition = target - newLookDirection;
 
-            // prevent zooming in until camera gets wobbly due to precision loss
-            if (Math.Abs(newPosition.Z) > 0.01)
-            {
-                AnimateTo(camera, newPosition, newLookDirection, camera.UpDirection, animationTime);
-            }
+            AnimateTo(camera, newPosition, newLookDirection, camera.UpDirection, animationTime);
         }
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace FreelancerModStudio.SystemPresenter
                         string shape = "box";
                         int flags = 0;
 
-                        const int exlusionFlag = 0x20000;
+                        const int exclusionFlag = 0x10000 | 0x20000; // exclusion type 1 + exclusion type 2
 
                         foreach (EditorINIOption option in block.Block.Options)
                         {
@@ -94,7 +94,7 @@ namespace FreelancerModStudio.SystemPresenter
                             }
                         }
 
-                        bool isExclusion = (flags & exlusionFlag) == exlusionFlag;
+                        bool isExclusion = (flags & exclusionFlag) != 0;
 
                         // set type based on shape and flags
                         switch (shape.ToLowerInvariant())

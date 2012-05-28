@@ -138,6 +138,7 @@ namespace FreelancerModStudio
         {
             Helper.Thread.Abort(ref _universeLoadingThread, waitForThread);
             _presenter.ClearDisplay(false);
+            _presenter.SelectedContent = null;
         }
 
         ContentBase GetContent(TableBlock block)
@@ -159,7 +160,6 @@ namespace FreelancerModStudio
             {
                 _presenter.ClearDisplay(false);
                 _presenter.Add(block);
-                _presenter.Viewport.Title = block.Name;
                 return;
             }
 
@@ -200,7 +200,6 @@ namespace FreelancerModStudio
             if (_presenter.ViewerType == ViewerType.SolarArchetype)
             {
                 _presenter.ClearDisplay(false);
-                _presenter.Viewport.Title = null;
                 return;
             }
 

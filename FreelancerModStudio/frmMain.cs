@@ -95,9 +95,6 @@ namespace FreelancerModStudio
             _systemEditor = new frmSystemEditor();
             _systemEditor.SelectionChanged += systemEditor_SelectionChanged;
             _systemEditor.FileOpen += systemEditor_FileOpen;
-
-            // set model mode as it was reset if the editor was closed
-            _systemEditor.IsModelMode = mnuShowModels.Checked;
         }
 
         IDockContent GetContentFromPersistString(string persistString)
@@ -690,16 +687,25 @@ namespace FreelancerModStudio
         {
             if (_systemEditor != null)
             {
+                _systemEditor.ShowViewer(editor.ViewerType);
+
                 // set data path before showing the models
                 _systemEditor.DataPath = editor.DataPath;
 
-                if (editor.ViewerType == ViewerType.Universe)
+                switch (editor.ViewerType)
                 {
-                    _systemEditor.ShowData(editor.Data, editor.File, editor.Archetype);
-                }
-                else
-                {
-                    _systemEditor.ShowData(editor.Data, null, null);
+                    case ViewerType.System:
+                        // set model mode as it was reset if the editor was closed
+                        _systemEditor.IsModelMode = mnuShowModels.Checked;
+                        _systemEditor.ShowData(editor.Data);
+                        break;
+                    case ViewerType.Universe:
+                        _systemEditor.IsModelMode = false;
+                        _systemEditor.ShowData(editor.Data, editor.File, editor.Archetype);
+                        break;
+                    case ViewerType.SolarArchetype:
+                        _systemEditor.IsModelMode = true;
+                        break;
                 }
 
                 //select initially
@@ -1036,7 +1042,7 @@ namespace FreelancerModStudio
 
                 if (_systemEditor != null)
                 {
-                    _systemEditor.Clear();
+                    _systemEditor.Clear(false, false);
                 }
             }
         }

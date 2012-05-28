@@ -188,7 +188,7 @@ namespace FreelancerModStudio
                         lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
                     }
 
-                    if (block.ObjectType != ContentType.None && !block.Visibility)
+                    if (ViewerType == ViewerType.System && block.ObjectType != ContentType.None && !block.Visibility)
                     {
                         lvi.ForeColor = Helper.Settings.Data.Data.General.EditorHiddenColor;
                     }
@@ -225,7 +225,7 @@ namespace FreelancerModStudio
             return null;
         }
 
-        public void LoadArchetypes()
+        void LoadArchetypes()
         {
             string archetypeFile = ArchetypeManager.GetRelativeArchetype(File, Data.TemplateIndex);
 
@@ -245,7 +245,7 @@ namespace FreelancerModStudio
 
             foreach (TableBlock block in Data.Blocks)
             {
-                SystemParser.SetObjectType(block, Archetype);
+                SetBlockType(block);
 
                 if (block.ObjectType != ContentType.None)
                 {
@@ -254,7 +254,23 @@ namespace FreelancerModStudio
             }
         }
 
-        public void ShowData()
+        void SetBlockType(TableBlock block)
+        {
+            switch (ViewerType)
+            {
+                case ViewerType.System:
+                    SystemParser.SetObjectType(block, Archetype);
+                    break;
+                case ViewerType.Universe:
+                    SystemParser.SetUniverseObjectType(block);
+                    break;
+                case ViewerType.SolarArchetype:
+                    SystemParser.SetSolarArchetypeObjectType(block);
+                    break;
+            }
+        }
+
+        void SetViewerType()
         {
             if (Data.TemplateIndex == Helper.Template.Data.SystemFile)
             {
@@ -264,14 +280,32 @@ namespace FreelancerModStudio
             {
                 ViewerType = ViewerType.Universe;
             }
+            else if (Data.TemplateIndex == Helper.Template.Data.SolarArchetypeFile)
+            {
+                ViewerType = ViewerType.SolarArchetype;
+            }
             else
             {
                 ViewerType = ViewerType.None;
             }
+        }
 
-            if (ViewerType != ViewerType.None)
+        public void ShowData()
+        {
+            SetViewerType();
+            switch (ViewerType)
             {
-                LoadArchetypes();
+                case ViewerType.SolarArchetype:
+                    DataPath = Helper.Template.Data.GetDataPath(File, Helper.Template.Data.SolarArchetypeFile);
+                    foreach (TableBlock block in Data.Blocks)
+                    {
+                        SetBlockType(block);
+                    }
+                    break;
+                case ViewerType.System:
+                case ViewerType.Universe:
+                    LoadArchetypes();
+                    break;
             }
 
 #if DEBUG
@@ -364,6 +398,15 @@ namespace FreelancerModStudio
                         return block.Visibility;
                     };
 
+            }
+            else
+            {
+                objectListView1.BooleanCheckStateGetter = null;
+                objectListView1.BooleanCheckStatePutter = null;
+            }
+
+            if (ViewerType == ViewerType.System || ViewerType == ViewerType.SolarArchetype)
+            {
                 //show content type if possible otherwise group
                 cols[2].AspectGetter = delegate(object x)
                     {
@@ -375,11 +418,6 @@ namespace FreelancerModStudio
 
                         return block.Group;
                     };
-            }
-            else
-            {
-                objectListView1.BooleanCheckStateGetter = null;
-                objectListView1.BooleanCheckStatePutter = null;
             }
 
             //show ID + 1
@@ -488,7 +526,7 @@ namespace FreelancerModStudio
                 //set archetype of block
                 if (tableBlock.Archetype == null)
                 {
-                    SystemParser.SetObjectType(tableBlock, Archetype);
+                    SetBlockType(tableBlock);
                 }
 
                 bool existSingle = false;
@@ -683,7 +721,7 @@ namespace FreelancerModStudio
 
             foreach (TableBlock block in newBlocks)
             {
-                SystemParser.SetObjectType(block, Archetype);
+                SetBlockType(block);
             }
 
             _undoManager.Execute(new ChangedData
@@ -1164,8 +1202,9 @@ namespace FreelancerModStudio
 
     public enum ViewerType
     {
+        None,
         System,
         Universe,
-        None
+        SolarArchetype
     }
 }

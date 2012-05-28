@@ -56,61 +56,10 @@ namespace FreelancerModStudio.Data
 
             foreach (EditorINIBlock block in blocks)
             {
-                if (block.Name.Equals("solar", StringComparison.OrdinalIgnoreCase))
+                KeyValuePair<string, ArchetypeInfo> info = SystemParser.GetArchetypeInfo(block);
+                if (info.Key != null)
                 {
-                    ContentType type = ContentType.None;
-                    string name = null;
-                    double radius = 0d;
-                    string cmpFile = null;
-
-                    foreach (EditorINIOption option in block.Options)
-                    {
-                        if (option.Values.Count > 0)
-                        {
-                            switch (option.Name.ToLowerInvariant())
-                            {
-                                case "nickname":
-                                    name = option.Values[0].Value.ToString();
-                                    break;
-                                case "solar_radius":
-                                    radius = Parser.ParseDouble(option.Values[0].Value.ToString(), 1);
-                                    break;
-                                case "type":
-                                    type = SystemParser.ParseContentType(option.Values[0].Value.ToString());
-                                    break;
-                                case "da_archetype":
-                                    cmpFile = option.Values[0].Value.ToString();
-                                    break;
-                            }
-                        }
-                    }
-
-                    if (name != null)
-                    {
-                        if (type == ContentType.Planet || type == ContentType.Sun)
-                        {
-                            //save radius only for planets and suns
-                            // ReSharper disable CompareOfFloatsByEqualityOperator
-                            if (radius != 0d)
-                                // ReSharper restore CompareOfFloatsByEqualityOperator
-                            {
-                                _archetypes[name] = new ArchetypeInfo
-                                    {
-                                        Type = type,
-                                        Radius = radius
-                                    };
-                            }
-                        }
-                        else if (type != ContentType.None && cmpFile != null)
-                        {
-                            //save model path only for supported objects (not planets and suns)
-                            _archetypes[name] = new ArchetypeInfo
-                                {
-                                    Type = type,
-                                    ModelPath = cmpFile
-                                };
-                        }
-                    }
+                    _archetypes[info.Key] = info.Value;
                 }
             }
         }

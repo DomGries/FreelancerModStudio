@@ -94,22 +94,21 @@ namespace FreelancerModStudio
             OnFileOpen(file);
         }
 
+        public void ShowViewer(ViewerType viewerType)
+        {
+            Clear(false, false);
+            _presenter.ViewerType = viewerType;
+        }
+
+        public void ShowData(TableData data)
+        {
+            _presenter.Add(data.Blocks);
+        }
+
         public void ShowData(TableData data, string file, ArchetypeManager archetype)
         {
-            Helper.Thread.Abort(ref _universeLoadingThread, false);
-
-            Clear();
             _presenter.Add(data.Blocks);
-
-            if (archetype != null)
-            {
-                _presenter.IsUniverse = true;
-                DisplayUniverse(file, data.Blocks, archetype);
-            }
-            else
-            {
-                _presenter.IsUniverse = false;
-            }
+            DisplayUniverse(file, data.Blocks, archetype);
         }
 
         void DisplayUniverse(string file, List<TableBlock> blocks, ArchetypeManager archetype)
@@ -128,23 +127,17 @@ namespace FreelancerModStudio
         {
             if (_presenter != null)
             {
-                Clear(true);
+                Clear(true, true);
             }
 
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        void Clear(bool clearLight)
+        public void Clear(bool clearLight, bool waitForThread)
         {
-            Helper.Thread.Abort(ref _universeLoadingThread, true);
-
-            _presenter.ClearDisplay(clearLight);
-        }
-
-        public void Clear()
-        {
-            Clear(false);
+            Helper.Thread.Abort(ref _universeLoadingThread, waitForThread);
+            _presenter.ClearDisplay(false);
         }
 
         ContentBase GetContent(TableBlock block)
@@ -162,6 +155,14 @@ namespace FreelancerModStudio
 
         public void Select(TableBlock block)
         {
+            if (_presenter.ViewerType == ViewerType.SolarArchetype)
+            {
+                _presenter.ClearDisplay(false);
+                _presenter.Add(block);
+                _presenter.Viewport.Title = block.Name;
+                return;
+            }
+
             // return if object is already selected
             if (_presenter.SelectedContent != null && _presenter.SelectedContent.Block == block)
             {
@@ -196,6 +197,13 @@ namespace FreelancerModStudio
 
         public void Deselect()
         {
+            if (_presenter.ViewerType == ViewerType.SolarArchetype)
+            {
+                _presenter.ClearDisplay(false);
+                _presenter.Viewport.Title = null;
+                return;
+            }
+
             _presenter.SelectedContent = null;
         }
 
@@ -224,7 +232,7 @@ namespace FreelancerModStudio
                 ContentBase content = GetContent(block);
                 if (content != null)
                 {
-                    // visual is visibile as it was found so we need to remove it
+                    // visual is visible as it was found so we need to remove it
                     if (block.Visibility)
                     {
                         _presenter.ChangeValues(content, block);
@@ -248,16 +256,19 @@ namespace FreelancerModStudio
 
         public void Add(List<TableBlock> blocks)
         {
-            _presenter.Add(blocks);
-        }
-
-        public void AddModel(Visual3D v)
-        {
-            _presenter.Viewport.Children.Add(v);
+            if (_presenter.ViewerType != ViewerType.SolarArchetype)
+            {
+                _presenter.Add(blocks);
+            }
         }
 
         public void Delete(List<TableBlock> blocks)
         {
+            if (_presenter.ViewerType == ViewerType.SolarArchetype)
+            {
+                return;
+            }
+
             foreach (TableBlock block in blocks)
             {
                 ContentBase content = GetContent(block);
@@ -299,6 +310,12 @@ namespace FreelancerModStudio
 
         public void FocusSelected()
         {
+            if (_presenter.ViewerType == ViewerType.SolarArchetype)
+            {
+                _presenter.LookAt(new Point3D(0, 0, 0));
+                return;
+            }
+
             if (_presenter.SelectedContent != null)
             {
                 _presenter.LookAt(_presenter.SelectedContent);

@@ -18,7 +18,7 @@ namespace FreelancerModStudio.SystemPresenter
     public class Presenter
     {
         public HelixViewport3D Viewport;
-        public bool IsUniverse;
+        public ViewerType ViewerType;
         public bool IsModelMode;
         public string DataPath;
 
@@ -95,9 +95,22 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                if (_selectedContent != value)
+                if (_selectedContent == value)
                 {
-                    SetSelectedContent(value, false);
+                    return;
+                }
+                _selectedContent = value;
+
+                if (value != null)
+                {
+                    //select content visually
+                    Selection = GetSelectionBox(value);
+                    Viewport.Title = value.Block.Name;
+                }
+                else
+                {
+                    Selection = null;
+                    Viewport.Title = null;
                 }
             }
         }
@@ -133,32 +146,14 @@ namespace FreelancerModStudio.SystemPresenter
             Lightning = new SystemLightsVisual3D();
         }
 
-        void SetSelectedContent(ContentBase content, bool lookAt)
-        {
-            _selectedContent = content;
-
-            if (content != null)
-            {
-                //goto content
-                if (lookAt)
-                {
-                    LookAt(content);
-                }
-
-                //select content visually
-                Selection = GetSelectionBox(content);
-                Viewport.Title = content.Block.Name;
-            }
-            else
-            {
-                Selection = null;
-                Viewport.Title = null;
-            }
-        }
-
         public void LookAt(ContentBase content)
         {
             Viewport.LookAt(content.GetPositionPoint(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
+        }
+
+        public void LookAt(Point3D point)
+        {
+            Viewport.LookAt(point, Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
         }
 
         void AddContent(ContentBase content)
@@ -226,7 +221,7 @@ namespace FreelancerModStudio.SystemPresenter
         public void Delete(ContentBase content)
         {
             //if we delete a system also delete all universe connections to and from it
-            if (IsUniverse)
+            if (ViewerType == ViewerType.Universe)
             {
                 Content.System system = content as Content.System;
                 if (system != null)
@@ -250,22 +245,23 @@ namespace FreelancerModStudio.SystemPresenter
 
         void camera_SelectionChanged(DependencyObject visual)
         {
-            ContentBase content = visual as ContentBase;
-            if (content == null)
+            // prevent selecting objects in solararchetype file
+            if (ViewerType == ViewerType.SolarArchetype)
             {
-                //return if user selected wirebox
                 return;
             }
 
-            // return if user selected universe connection
-            if (content.Block == null)
+            ContentBase content = visual as ContentBase;
+
+            // prevent selecting wirebox + universe connection
+            if (content == null || content.Block == null)
             {
                 return;
             }
 
             if (_selectedContent == content)
             {
-                if (IsUniverse)
+                if (ViewerType == ViewerType.Universe)
                 {
                     Content.System system = content as Content.System;
                     if (system != null)
@@ -276,7 +272,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
-                SetSelectedContent(content, false);
+                SelectedContent = content;
             }
 
             OnSelectionChanged(content);
@@ -551,12 +547,12 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetValues(ContentBase content, TableBlock block)
         {
-            if (SystemParser.SetValues(content, block, !IsUniverse) && content.Content != null)
+            if (SystemParser.SetValues(content, block, ViewerType == ViewerType.System) && content.Content != null)
             {
                 LoadModel(content);
             }
 
-            if (IsUniverse)
+            if (ViewerType == ViewerType.Universe)
             {
                 Content.System system = content as Content.System;
                 if (system != null)
@@ -568,7 +564,7 @@ namespace FreelancerModStudio.SystemPresenter
             if (_selectedContent == content)
             {
                 //update selection if changed content is selected
-                SetSelectedContent(content, false);
+                SelectedContent = content;
 
                 // set title when block name was changed in properties window
                 Viewport.Title = content.Block.Name;

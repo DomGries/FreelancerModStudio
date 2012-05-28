@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
@@ -10,13 +11,89 @@ namespace FreelancerModStudio.SystemPresenter
     {
         public const double SIZE_FACTOR = 0.005;
 
+        public static KeyValuePair<string, ArchetypeInfo> GetArchetypeInfo(EditorINIBlock block)
+        {
+            if (block.Name.Equals("solar", StringComparison.OrdinalIgnoreCase))
+            {
+                ContentType type = ContentType.None;
+                string name = null;
+                double radius = 0d;
+                string cmpFile = null;
+
+                foreach (EditorINIOption option in block.Options)
+                {
+                    if (option.Values.Count > 0)
+                    {
+                        switch (option.Name.ToLowerInvariant())
+                        {
+                            case "nickname":
+                                name = option.Values[0].Value.ToString();
+                                break;
+                            case "solar_radius":
+                                radius = Parser.ParseDouble(option.Values[0].Value.ToString(), 1);
+                                break;
+                            case "type":
+                                type = ParseContentType(option.Values[0].Value.ToString());
+                                break;
+                            case "da_archetype":
+                                cmpFile = option.Values[0].Value.ToString();
+                                break;
+                        }
+                    }
+                }
+
+                if (name != null)
+                {
+                    if (type == ContentType.Planet || type == ContentType.Sun)
+                    {
+                        //save radius only for planets and suns
+                        // ReSharper disable CompareOfFloatsByEqualityOperator
+                        if (radius != 0d)
+                        // ReSharper restore CompareOfFloatsByEqualityOperator
+                        {
+                            return new KeyValuePair<string, ArchetypeInfo>(name, new ArchetypeInfo
+                            {
+                                Type = type,
+                                Radius = radius
+                            });
+                        }
+                    }
+                    else if (type != ContentType.None && cmpFile != null)
+                    {
+                        //save model path only for supported objects (not planets and suns)
+                        return new KeyValuePair<string, ArchetypeInfo>(name, new ArchetypeInfo
+                        {
+                            Type = type,
+                            ModelPath = cmpFile
+                        });
+                    }
+                }
+            }
+            return new KeyValuePair<string, ArchetypeInfo>(null, null);
+        }
+
+        public static void SetUniverseObjectType(TableBlock block)
+        {
+            if (block.Block.Name.Equals("system", StringComparison.OrdinalIgnoreCase))
+            {
+                block.ObjectType = ContentType.System;
+            }
+        }
+
+        public static void SetSolarArchetypeObjectType(TableBlock block)
+        {
+            KeyValuePair<string, ArchetypeInfo> info = GetArchetypeInfo(block.Block);
+            if (info.Key != null)
+            {
+                block.Archetype = info.Value;
+                block.ObjectType = info.Value.Type;
+            }
+        }
+
         public static void SetObjectType(TableBlock block, ArchetypeManager archetypeManager)
         {
             switch (block.Block.Name.ToLowerInvariant())
             {
-                case "system":
-                    block.ObjectType = ContentType.System;
-                    return;
                 case "lightsource":
                     block.ObjectType = ContentType.LightSource;
                     return;
@@ -237,7 +314,7 @@ namespace FreelancerModStudio.SystemPresenter
                 default:
                     if (values.Length > 2)
                     {
-                        return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) * SIZE_FACTOR;
+                        return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1))*SIZE_FACTOR;
                     }
                     break;
             }

@@ -258,4 +258,7 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
   <data name="FileEditorOpenSolarArch" xml:space="preserve">
     <value>Solar Archetype INI öffnen ({0})</value>
   </data>
+  <data name="FileErrorSave" xml:space="preserve">
+    <value>Die Datei '{0}' konnte nicht gespeichert werden. Bitte überprüfen Sie ob die die Datei in einer anderen Anwendung geöffnet oder schreibgeschützt ist.</value>
+  </data>
 </root>

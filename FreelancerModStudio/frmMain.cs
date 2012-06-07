@@ -853,7 +853,14 @@ namespace FreelancerModStudio
             IDocumentForm document = dockPanel1.ActiveDocument as IDocumentForm;
             if (document != null)
             {
-                document.Save();
+                try
+                {
+                    document.Save();
+                }
+                catch (Exception ex)
+                {
+                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, document.Title), ex);
+                }
             }
         }
 
@@ -862,9 +869,16 @@ namespace FreelancerModStudio
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
             {
-                tableEditor.SaveAs();
+                try
+                {
+                    tableEditor.SaveAs();
 
-                AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
+                    AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
+                }
+                catch (Exception ex)
+                {
+                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, tableEditor.Title), ex);
+                }
             }
         }
 

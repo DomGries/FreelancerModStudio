@@ -161,13 +161,13 @@ Please enter a valid name.</value>
     <value>No Updates Found</value>
   </data>
   <data name="UpdatesNotAviableDescription" xml:space="preserve">
-    <value>There are no new updates aviable. {0} may check periodically for new updates.</value>
+    <value>There are no new updates available. {0} may check periodically for new updates.</value>
   </data>
   <data name="UpdatesAviableHeader" xml:space="preserve">
     <value>New Updates Found</value>
   </data>
   <data name="UpdatesAviableDescription" xml:space="preserve">
-    <value>There are new updates for {0} aviable. Do you want to download them now?</value>
+    <value>There are new updates for {0} available. Do you want to download them now?</value>
   </data>
   <data name="UpdatesDownloadingHeader" xml:space="preserve">
     <value>Downloading Updates</value>
@@ -220,7 +220,7 @@ If that problem persists, download and install the update manually.</value>
     <value>INI-Files (*.ini)|*.ini|FLMM Backup INI-Files (*.ini.flmmbak)|*.ini.flmmbak</value>
   </data>
   <data name="FileEditorEmpty" xml:space="preserve">
-    <value>No entries aviable...</value>
+    <value>No entries existing...</value>
   </data>
   <data name="ErrorListText" xml:space="preserve">
     <value>Error List</value>
@@ -257,5 +257,8 @@ If that problem persists, download and install the update manually.</value>
   </data>
   <data name="FileEditorOpenSolarArch" xml:space="preserve">
     <value>Open Solar Archetype INI ({0})</value>
+  </data>
+  <data name="FileErrorSave" xml:space="preserve">
+    <value>The file '{0}' could not be saved. Please check if it is opened in another application or if the file is marked as read-only.</value>
   </data>
 </root>

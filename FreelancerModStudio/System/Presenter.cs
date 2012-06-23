@@ -95,10 +95,6 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                if (_selectedContent == value)
-                {
-                    return;
-                }
                 _selectedContent = value;
 
                 if (value != null)

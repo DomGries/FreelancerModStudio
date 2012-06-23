@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using FreelancerModStudio.SystemPresenter;
 
 namespace FreelancerModStudio
 {
@@ -13,14 +12,14 @@ namespace FreelancerModStudio
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-#if !DEBUG
-    // catch real errors globally
+/*#if !DEBUG
+            // catch real errors globally
             try
             {
-#endif
+#endif*/
             // initialize program
             Helper.Program.Start();
-#if !DEBUG
+/*#if !DEBUG
             }
             catch (Exception ex)
             {
@@ -31,7 +30,7 @@ namespace FreelancerModStudio
                     System.Diagnostics.Process.Start("http://code.google.com/p/freelancermodstudio/issues");
                 }
             }
-#endif
+#endif*/
         }
     }
 }

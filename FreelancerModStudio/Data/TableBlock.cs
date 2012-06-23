@@ -133,5 +133,13 @@ namespace FreelancerModStudio.Data
 
             return groupComparison;
         }*/
+
+        public void SetVisibleIfPossible()
+        {
+            if (ObjectType != ContentType.None)
+            {
+                Visibility = true;
+            }
+        }
     }
 }

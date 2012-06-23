@@ -246,11 +246,7 @@ namespace FreelancerModStudio
             foreach (TableBlock block in Data.Blocks)
             {
                 SetBlockType(block);
-
-                if (block.ObjectType != ContentType.None)
-                {
-                    block.Visibility = true;
-                }
+                block.SetVisibleIfPossible();
             }
         }
 
@@ -519,10 +515,11 @@ namespace FreelancerModStudio
                     tableBlock.Modified = TableModified.Changed;
                 }
 
-                //set archetype of block
+                //set archetype of block and make visible if possible
                 if (tableBlock.Archetype == null)
                 {
                     SetBlockType(tableBlock);
+                    tableBlock.SetVisibleIfPossible();
                 }
 
                 bool existSingle = false;

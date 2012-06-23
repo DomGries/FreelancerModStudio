@@ -167,8 +167,8 @@ namespace FreelancerModStudio.Data
             public AutoUpdate()
             {
                 Enabled = true;
-                CheckInterval = 14;
-                SilentDownload = true;
+                CheckInterval = 28;
+                SilentDownload = false;
                 UpdateFile = @"http://freelancermodstudio.googlecode.com/files/updates.txt";
                 Proxy = new Proxy();
             }

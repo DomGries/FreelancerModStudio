@@ -271,13 +271,13 @@ namespace FreelancerModStudio.SystemPresenter
                     }
                     break;
                 default: // all zones
+                    scale = ParseScale(scaleString, block.ObjectType);
                     rotation = ParseRotation(rotationString,
                         block.ObjectType == ContentType.ZonePath ||
                         block.ObjectType == ContentType.ZonePathTrade ||
                         block.ObjectType == ContentType.ZoneCylinder ||
                         block.ObjectType == ContentType.ZoneCylinderExclusion ||
                         block.ObjectType == ContentType.ZoneRing);
-                    scale = ParseScale(scaleString, block.ObjectType);
                     break;
             }
 

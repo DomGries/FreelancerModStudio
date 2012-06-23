@@ -110,7 +110,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static readonly GeometryModel3D ZoneBoxExclusion =
             GetGeometry(SharedMeshes.Box, SharedMaterials.ZoneExclusion);
 
-        public static readonly GeometryModel3D ZoneCylinderOrRingExclusion =
+        public static readonly GeometryModel3D ZoneCylinderExclusion =
             GetGeometry(SharedMeshes.Cylinder, SharedMaterials.ZoneExclusion);
 
         public static readonly GeometryModel3D ZoneVignette =

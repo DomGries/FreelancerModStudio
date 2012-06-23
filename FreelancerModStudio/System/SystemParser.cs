@@ -186,7 +186,7 @@ namespace FreelancerModStudio.SystemPresenter
                                 block.ObjectType = isExclusion ? ContentType.ZoneCylinderExclusion : ContentType.ZoneCylinder;
                                 return;
                             case "ring":
-                                block.ObjectType = isExclusion ? ContentType.ZoneRingExclusion : ContentType.ZoneRing;
+                                block.ObjectType = ContentType.ZoneRing; // rings can't be used as exclusions
                                 return;
                             case "box":
                                 block.ObjectType = isExclusion ? ContentType.ZoneBoxExclusion : ContentType.ZoneBox;
@@ -271,7 +271,12 @@ namespace FreelancerModStudio.SystemPresenter
                     }
                     break;
                 default: // all zones
-                    rotation = ParseRotation(rotationString, block.ObjectType == ContentType.ZonePath || block.ObjectType == ContentType.ZonePathTrade);
+                    rotation = ParseRotation(rotationString,
+                        block.ObjectType == ContentType.ZonePath ||
+                        block.ObjectType == ContentType.ZonePathTrade ||
+                        block.ObjectType == ContentType.ZoneCylinder ||
+                        block.ObjectType == ContentType.ZoneCylinderExclusion ||
+                        block.ObjectType == ContentType.ZoneRing);
                     scale = ParseScale(scaleString, block.ObjectType);
                     break;
             }
@@ -327,11 +332,12 @@ namespace FreelancerModStudio.SystemPresenter
             return Parser.ParseVector(vector)*SIZE_FACTOR;
         }
 
-        public static Vector3D ParseRotation(string vector, bool isPath)
+        public static Vector3D ParseRotation(string vector, bool isCylinder)
         {
             Vector3D rotation = Parser.ParseVector(vector);
 
-            if (isPath)
+            // our cylinder meshes are by default not rotated like DirectX cylinders
+            if (isCylinder)
             {
                 rotation.X += 90;
             }

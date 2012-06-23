@@ -359,10 +359,6 @@ namespace FreelancerModStudio
                     {
                         // ellipsoid + sphere and cylinder + ring have same icon
                         ContentType type = ((TableBlock)x).ObjectType;
-                        if (type >= ContentType.ZoneRingExclusion)
-                        {
-                            return (int)type - 5;
-                        }
                         if (type >= ContentType.ZoneEllipsoidExclusion)
                         {
                             return (int)type - 4;

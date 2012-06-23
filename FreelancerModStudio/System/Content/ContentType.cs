@@ -34,7 +34,6 @@ namespace FreelancerModStudio.SystemPresenter.Content
         ZoneSphereExclusion,
         ZoneEllipsoidExclusion,
         ZoneCylinderExclusion,
-        ZoneRingExclusion,
         ZoneBoxExclusion,
 
         ZoneVignette,

@@ -20,8 +20,7 @@ namespace FreelancerModStudio.SystemPresenter.Content
                 case ContentType.ZoneEllipsoidExclusion:
                     return SharedGeometries.ZoneSphereOrEllipsoidExclusion;
                 case ContentType.ZoneCylinderExclusion:
-                case ContentType.ZoneRingExclusion:
-                    return SharedGeometries.ZoneCylinderOrRingExclusion;
+                    return SharedGeometries.ZoneCylinderExclusion;
                 case ContentType.ZoneBoxExclusion:
                     return SharedGeometries.ZoneBoxExclusion;
 
@@ -45,7 +44,6 @@ namespace FreelancerModStudio.SystemPresenter.Content
                 case ContentType.ZonePathTradeLane:
                     return new Vector3D(0.5, 0.5, 0.5); // box base mesh
                 case ContentType.ZoneRing:
-                case ContentType.ZoneRingExclusion:
                 case ContentType.ZoneCylinder:
                 case ContentType.ZoneCylinderExclusion:
                 case ContentType.ZonePath:

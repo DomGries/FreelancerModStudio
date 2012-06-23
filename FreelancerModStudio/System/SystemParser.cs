@@ -281,8 +281,11 @@ namespace FreelancerModStudio.SystemPresenter
                     break;
             }
 
-            // update the model if the object type was changed
-            bool modelChanged = content.Block == null || content.Block.ObjectType != block.ObjectType;
+            // update the model if the object type or the archetype was changed
+            bool modelChanged =
+                content.Block == null ||
+                content.Block.ObjectType != block.ObjectType ||
+                content.Block.Archetype != block.Archetype;
 
             // set reference to block (this one is different than the one passed in the argument because a new copy was create in the undomanager)
             content.Block = block;

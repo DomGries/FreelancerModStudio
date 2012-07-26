@@ -22,6 +22,7 @@ namespace FreelancerModStudio
         frmProperties _propertiesForm;
         //frmSolutionExplorer solutionExplorerForm = null;
         frmSystemEditor _systemEditor;
+        readonly UICultureChanger _uiCultureChanger = new UICultureChanger();
 
         public frmMain()
         {
@@ -77,6 +78,8 @@ namespace FreelancerModStudio
             {
                 SetDocumentMenus(false);
             }
+
+            SettingsChanged();
         }
 
         void InitContentWindows()
@@ -312,8 +315,6 @@ namespace FreelancerModStudio
             {
                 FullScreen(true);
             }
-
-            uiCultureChanger1.ApplyCulture(new CultureInfo(Helper.Settings.ShortLanguage));
 
             DisplayRecentFiles();
         }
@@ -754,23 +755,19 @@ namespace FreelancerModStudio
 
         void SettingsChanged()
         {
-            List<frmTableEditor> editors = new List<frmTableEditor>();
+            _uiCultureChanger.ApplyCulture(new CultureInfo(Helper.Settings.ShortLanguage));
+            _uiCultureChanger.ApplyCultureToForm(this);
+
             foreach (IDockContent document in dockPanel1.Contents)
             {
                 frmTableEditor tableEditor = document as frmTableEditor;
                 if (tableEditor != null)
                 {
-                    editors.Add(tableEditor);
-                    uiCultureChanger1.AddForm((Form)document);
+                    _uiCultureChanger.ApplyCultureToForm(tableEditor);
+
+                    //refresh settings after language change
+                    tableEditor.RefreshSettings();
                 }
-            }
-
-            uiCultureChanger1.ApplyCulture(new CultureInfo(Helper.Settings.ShortLanguage));
-
-            //refresh settings after language change
-            foreach (frmTableEditor editor in editors)
-            {
-                editor.RefreshSettings();
             }
 
             if (_propertiesForm != null)

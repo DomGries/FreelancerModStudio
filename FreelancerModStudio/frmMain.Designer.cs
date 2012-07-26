@@ -106,7 +106,6 @@
             this.mnuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripPanel3 = new System.Windows.Forms.ToolStripPanel();
             this.dockPanel1 = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.uiCultureChanger1 = new UICultureChanger();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripPanel4 = new System.Windows.Forms.ToolStripPanel();
             this.toolStripPanel2.SuspendLayout();
@@ -610,11 +609,6 @@
             this.dockPanel1.ActiveDocumentChanged += new System.EventHandler(this.dockPanel1_ActiveDocumentChanged);
             this.dockPanel1.ContentRemoved += new System.EventHandler<WeifenLuo.WinFormsUI.Docking.DockContentEventArgs>(this.dockPanel1_ContentRemoved);
             // 
-            // uiCultureChanger1
-            // 
-            this.uiCultureChanger1.ApplyToolTip = true;
-            this.uiCultureChanger1.AddForm(this);
-            // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
@@ -661,7 +655,6 @@
         private System.Windows.Forms.ToolStripPanel toolStripPanel3;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
-        private UICultureChanger uiCultureChanger1;
         private System.Windows.Forms.ToolStripMenuItem mnuReportIssue;
         private System.Windows.Forms.ToolStripMenuItem mnuVisitForum;
         private System.Windows.Forms.ToolStripMenuItem mnuAbout;

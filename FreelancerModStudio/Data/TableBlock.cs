@@ -141,5 +141,26 @@ namespace FreelancerModStudio.Data
                 Visibility = true;
             }
         }
+
+        public bool IsRealModel()
+        {
+            // objects which have real model support (all solid objects except planets and suns)
+            switch (ObjectType)
+            {
+                case ContentType.Construct:
+                case ContentType.Depot:
+                case ContentType.DockingRing:
+                case ContentType.JumpGate:
+                case ContentType.JumpHole:
+                case ContentType.Satellite:
+                case ContentType.Ship:
+                case ContentType.Station:
+                case ContentType.TradeLane:
+                case ContentType.WeaponsPlatform:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

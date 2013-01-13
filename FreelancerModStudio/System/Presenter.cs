@@ -23,6 +23,7 @@ namespace FreelancerModStudio.SystemPresenter
         public string DataPath;
 
         int _secondLayerId;
+        readonly Dictionary<string, Model3D> _modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
 
         ModelVisual3D _lightning;
         ModelVisual3D _selection;
@@ -567,29 +568,47 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
+        Model3D LoadModel(string modelPath)
+        {
+            string extension = Path.GetExtension(modelPath);
+
+            if (extension != null &&
+                (extension.Equals(".cmp", StringComparison.OrdinalIgnoreCase) ||
+                 extension.Equals(".3db", StringComparison.OrdinalIgnoreCase)))
+            {
+                // try to get the cached model
+                Model3D contentModel;
+                if (_modelCache.TryGetValue(modelPath, out contentModel))
+                {
+                    return contentModel;
+                }
+
+                string file = Path.Combine(DataPath, modelPath);
+                if (File.Exists(file))
+                {
+                    contentModel = UtfModel.LoadModel(file);
+
+                    // cache model
+                    _modelCache[modelPath] = contentModel;
+
+                    return contentModel;
+                }
+            }
+            return null;
+        }
+
         public void LoadModel(ContentBase content)
         {
-            if (IsModelMode)
+            if (IsModelMode && content.Block.IsRealModel())
             {
                 if (content.Block.Archetype != null && content.Block.Archetype.ModelPath != null)
                 {
-                    string extension = Path.GetExtension(content.Block.Archetype.ModelPath);
+                    content.Content = LoadModel(content.Block.Archetype.ModelPath);
 
-                    if (extension != null &&
-                        (extension.Equals(".cmp", StringComparison.OrdinalIgnoreCase) ||
-                         extension.Equals(".3db", StringComparison.OrdinalIgnoreCase)))
+                    // return if model was loaded successfully
+                    if (content.Content != null)
                     {
-                        string file = Path.Combine(DataPath, content.Block.Archetype.ModelPath);
-                        if (File.Exists(file))
-                        {
-                            content.Content = UtfModel.LoadModel(file);
-
-                            // return if model was loaded successfully
-                            if (content.Content != null)
-                            {
-                                return;
-                            }
-                        }
+                        return;
                     }
                 }
             }

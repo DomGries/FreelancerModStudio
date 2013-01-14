@@ -128,11 +128,11 @@ namespace HelixEngine
                             // transform to global coordinates
 
                             // first transform the Model3D hierarchy
-                            //var t2 = GetTransform(rayHit.VisualHit, rayHit.ModelHit);
-                            //if (t2 != null)
-                            //{
-                            //    p = t2.Transform(p);
-                            //}
+                            var t2 = GetTransform(rayHit.VisualHit, rayHit.ModelHit);
+                            if (t2 != null)
+                            {
+                                p = t2.Transform(p);
+                            }
 
                             // then transform the Visual3D hierarchy up to the Viewport3D ancestor
                             var t = GetTransform(viewport, rayHit.VisualHit);

@@ -163,9 +163,10 @@ namespace FreelancerModStudio.SystemPresenter
 
             AddModel(content);
 
-            if (content == _selectedContent)
+            // reset reference of previously invisible selected content
+            if (_selectedContent != null && content.Block == _selectedContent.Block)
             {
-                Selection = GetSelectionBox(content);
+                SelectedContent = content;
             }
         }
 
@@ -296,20 +297,35 @@ namespace FreelancerModStudio.SystemPresenter
 
         ModelVisual3D GetSelectionBox(ContentBase content)
         {
-            Rect3D bounds;
-            if (IsModelMode && content.Block.IsRealModel())
-            {
-                bounds = content.Content.Bounds;
-            }
-            else
-            {
-                bounds = content.GetShapeBounds();
-            }
-
-            WireLines lines = GetWireBox(bounds);
+            WireLines lines = GetWireBox(GetBounds(content));
             lines.Transform = content.Transform;
 
             return lines;
+        }
+
+        Rect3D GetBounds(ContentBase content)
+        {
+            if (IsModelMode && content.Block.IsRealModel())
+            {
+                // return bounds of shown model
+                if (content.Block.Visibility && content.Content != null)
+                {
+                    return content.Content.Bounds;
+                }
+
+                // try to find bounds of cached model
+                if (content.Block.Archetype != null)
+                {
+                    Model3D contentModel;
+                    if (_modelCache.TryGetValue(content.Block.Archetype.ModelPath, out contentModel))
+                    {
+                        return contentModel.Bounds;
+                    }
+                }
+            }
+
+            // return shape model by default
+            return content.GetShapeBounds();
         }
 
         static WireLines GetWireBox(Rect3D bounds)
@@ -637,11 +653,12 @@ namespace FreelancerModStudio.SystemPresenter
                 if (content.Block.IsRealModel())
                 {
                     LoadModel(content);
-                    if (content == _selectedContent)
-                    {
-                        Selection = GetSelectionBox(content);
-                    }
                 }
+            }
+
+            if (_selectedContent != null && _selectedContent.Block.IsRealModel())
+            {
+                Selection = GetSelectionBox(_selectedContent);
             }
         }
 

@@ -588,7 +588,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 // try to get the cached model
                 Model3D contentModel;
-                if (_modelCache.TryGetValue(modelPath, out contentModel))
+                if (ViewerType == ViewerType.System && _modelCache.TryGetValue(modelPath, out contentModel))
                 {
                     return contentModel;
                 }
@@ -599,7 +599,10 @@ namespace FreelancerModStudio.SystemPresenter
                     contentModel = UtfModel.LoadModel(file);
 
                     // cache model
-                    _modelCache[modelPath] = contentModel;
+                    if (ViewerType == ViewerType.System)
+                    {
+                        _modelCache[modelPath] = contentModel;
+                    }
 
                     return contentModel;
                 }

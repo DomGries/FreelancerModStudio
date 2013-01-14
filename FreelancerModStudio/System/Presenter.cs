@@ -607,7 +607,7 @@ namespace FreelancerModStudio.SystemPresenter
             return null;
         }
 
-        public void LoadModel(ContentBase content)
+        void LoadModel(ContentBase content)
         {
             if (IsModelMode && content.Block.IsRealModel())
             {
@@ -624,6 +624,22 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             content.LoadModel();
+        }
+
+        public void ReloadModels()
+        {
+            for (int i = GetContentStartId(); i < Viewport.Children.Count; ++i)
+            {
+                ContentBase content = (ContentBase)Viewport.Children[i];
+                if (content.Block.IsRealModel())
+                {
+                    LoadModel(content);
+                    if (content == _selectedContent)
+                    {
+                        Selection = GetSelectionBox(content);
+                    }
+                }
+            }
         }
 
         ContentBase CreateContent(TableBlock block)

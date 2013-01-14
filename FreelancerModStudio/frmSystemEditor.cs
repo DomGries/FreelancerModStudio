@@ -307,11 +307,7 @@ namespace FreelancerModStudio
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
 #endif
-                for (int i = _presenter.GetContentStartId(); i < _presenter.Viewport.Children.Count; ++i)
-                {
-                    ContentBase content = (ContentBase)_presenter.Viewport.Children[i];
-                    _presenter.LoadModel(content);
-                }
+                _presenter.ReloadModels();
 #if DEBUG
                 sw.Stop();
                 Debug.WriteLine("loading models: " + sw.ElapsedMilliseconds + "ms");

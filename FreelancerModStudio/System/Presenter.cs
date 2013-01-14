@@ -294,42 +294,52 @@ namespace FreelancerModStudio.SystemPresenter
             OnFileOpen((string)((MenuItem)sender).Tag);
         }
 
-        static ModelVisual3D GetSelectionBox(ContentBase content)
+        ModelVisual3D GetSelectionBox(ContentBase content)
         {
-            WireLines lines = GetWireBox(content.GetBaseScale());
+            Rect3D bounds;
+            if (IsModelMode && content.Block.IsRealModel())
+            {
+                bounds = content.Content.Bounds;
+            }
+            else
+            {
+                bounds = content.GetShapeBounds();
+            }
+
+            WireLines lines = GetWireBox(bounds);
             lines.Transform = content.Transform;
 
             return lines;
         }
 
-        static WireLines GetWireBox(Vector3D bounds)
+        static WireLines GetWireBox(Rect3D bounds)
         {
             Point3DCollection points = new Point3DCollection
                 {
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z),
+                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X, bounds.Y, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X, bounds.Y, bounds.Z + bounds.SizeZ),
                     new Point3D(bounds.X, bounds.Y, bounds.Z),
-                    new Point3D(-bounds.X, bounds.Y, bounds.Z),
-                    new Point3D(-bounds.X, bounds.Y, bounds.Z),
-                    new Point3D(-bounds.X, bounds.Y, -bounds.Z),
-                    new Point3D(-bounds.X, bounds.Y, -bounds.Z),
-                    new Point3D(bounds.X, bounds.Y, -bounds.Z),
-                    new Point3D(bounds.X, bounds.Y, -bounds.Z),
                     new Point3D(bounds.X, bounds.Y, bounds.Z),
-                    new Point3D(bounds.X, -bounds.Y, bounds.Z),
-                    new Point3D(-bounds.X, -bounds.Y, bounds.Z),
-                    new Point3D(-bounds.X, -bounds.Y, bounds.Z),
-                    new Point3D(-bounds.X, -bounds.Y, -bounds.Z),
-                    new Point3D(-bounds.X, -bounds.Y, -bounds.Z),
-                    new Point3D(bounds.X, -bounds.Y, -bounds.Z),
-                    new Point3D(bounds.X, -bounds.Y, -bounds.Z),
-                    new Point3D(bounds.X, -bounds.Y, bounds.Z),
-                    new Point3D(bounds.X, bounds.Y, bounds.Z),
-                    new Point3D(bounds.X, -bounds.Y, bounds.Z),
-                    new Point3D(-bounds.X, bounds.Y, bounds.Z),
-                    new Point3D(-bounds.X, -bounds.Y, bounds.Z),
-                    new Point3D(bounds.X, bounds.Y, -bounds.Z),
-                    new Point3D(bounds.X, -bounds.Y, -bounds.Z),
-                    new Point3D(-bounds.X, bounds.Y, -bounds.Z),
-                    new Point3D(-bounds.X, -bounds.Y, -bounds.Z)
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X, bounds.Y, bounds.Z + bounds.SizeZ),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z),
+                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z),
+                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z),
+                    new Point3D(bounds.X, bounds.Y, bounds.Z)
                 };
 
             return new WireLines

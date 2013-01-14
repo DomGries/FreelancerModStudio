@@ -35,22 +35,22 @@ namespace FreelancerModStudio.SystemPresenter.Content
             }
         }
 
-        public override Vector3D GetBaseScale()
+        public override Rect3D GetShapeBounds()
         {
             switch (Block.ObjectType)
             {
                 case ContentType.ZoneBox:
                 case ContentType.ZoneBoxExclusion:
                 case ContentType.ZonePathTradeLane:
-                    return new Vector3D(0.5, 0.5, 0.5); // box base mesh
+                    return new Rect3D(-0.5, -0.5, -0.5, 1, 1, 1); // box base mesh
                 case ContentType.ZoneRing:
                 case ContentType.ZoneCylinder:
                 case ContentType.ZoneCylinderExclusion:
                 case ContentType.ZonePath:
                 case ContentType.ZonePathTrade:
-                    return new Vector3D(1, 0.5, 1); // cylinder base mesh
+                    return new Rect3D(-1, -0.5, -1, 2, 1, 2); // cylinder base mesh
             }
-            return new Vector3D(1, 1, 1);
+            return new Rect3D(-1, -1, -1, 2, 2, 2);
         }
 
         public override bool IsEmissive()

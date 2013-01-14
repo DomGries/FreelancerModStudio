@@ -9,9 +9,9 @@ namespace FreelancerModStudio.SystemPresenter.Content
             return SharedGeometries.LightSource;
         }
 
-        public override Vector3D GetBaseScale()
+        public override Rect3D GetShapeBounds()
         {
-            return new Vector3D(0.5, 0.5, 0.5);
+            return new Rect3D(-0.5, -0.5, -0.5, 1, 1, 1);
         }
 
         public override bool IsEmissive()

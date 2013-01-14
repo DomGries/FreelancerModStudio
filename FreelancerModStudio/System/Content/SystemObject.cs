@@ -37,15 +37,15 @@ namespace FreelancerModStudio.SystemPresenter.Content
             return null;
         }
 
-        public override Vector3D GetBaseScale()
+        public override Rect3D GetShapeBounds()
         {
             switch (Block.ObjectType)
             {
                 case ContentType.Planet:
                 case ContentType.Sun:
-                    return new Vector3D(1, 1, 1);
+                    return new Rect3D(-1, -1, -1, 2, 2, 2);
             }
-            return new Vector3D(0.5, 0.5, 0.5);
+            return new Rect3D(-0.5, -0.5, -0.5, 1, 1, 1);
         }
 
         public override bool IsEmissive()

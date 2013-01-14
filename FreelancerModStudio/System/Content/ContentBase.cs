@@ -8,7 +8,7 @@ namespace FreelancerModStudio.SystemPresenter.Content
         public TableBlock Block;
 
         protected abstract Model3D GetShapeModel();
-        public abstract Vector3D GetBaseScale();
+        public abstract Rect3D GetShapeBounds();
         public abstract bool IsEmissive();
 
         public void SetTransform(Matrix3D matrix, bool animate)

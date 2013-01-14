@@ -44,9 +44,9 @@ namespace FreelancerModStudio.SystemPresenter.Content
             }
         }
 
-        public override Vector3D GetBaseScale()
+        public override Rect3D GetShapeBounds()
         {
-            return new Vector3D(1, 0.5, 1);
+            return new Rect3D(-1, -0.5, -1, 2, 1, 2);
         }
 
         public override bool IsEmissive()

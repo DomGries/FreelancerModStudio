@@ -15,8 +15,6 @@ namespace HelixEngine
     /// </summary>
     public static class DrawingContextExtensions
     {
-        #region Public Methods
-
         /// <summary>
         /// Draws the arc.
         /// </summary>
@@ -158,6 +156,5 @@ namespace HelixEngine
             DrawArc(dc, brush, pen, position, startAngle, endAngle, SweepDirection.Counterclockwise, radiusX, radiusY);
         }
 
-        #endregion
     }
 }

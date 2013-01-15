@@ -13,6 +13,6 @@ namespace HelixEngine
         /// <summary>
         ///   Using a virtual trackball.
         /// </summary>
-        VirtualTrackball
+        Trackball
     }
 }

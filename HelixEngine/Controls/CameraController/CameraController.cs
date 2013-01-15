@@ -25,12 +25,6 @@ namespace HelixEngine
             new UIPropertyMetadata(null));
 
         /// <summary>
-        ///   The inertia factor property.
-        /// </summary>
-        public static readonly DependencyProperty InertiaFactorProperty = DependencyProperty.Register(
-            "InertiaFactor", typeof(double), typeof(CameraController), new UIPropertyMetadata(0.9));
-
-        /// <summary>
         ///   The is pan enabled property.
         /// </summary>
         public static readonly DependencyProperty IsPanEnabledProperty = DependencyProperty.Register(
@@ -48,13 +42,6 @@ namespace HelixEngine
         public static readonly DependencyProperty ShowCameraTargetProperty =
             DependencyProperty.Register(
                 "ShowCameraTarget", typeof(bool), typeof(CameraController), new UIPropertyMetadata(true));
-
-        /// <summary>
-        ///   The spin release time property.
-        /// </summary>
-        public static readonly DependencyProperty SpinReleaseTimeProperty =
-            DependencyProperty.Register(
-                "SpinReleaseTime", typeof(int), typeof(CameraController), new UIPropertyMetadata(200));
 
         /// <summary>
         ///   The camera mode property.
@@ -85,31 +72,10 @@ namespace HelixEngine
             "Viewport", typeof(Viewport3D), typeof(CameraController), new PropertyMetadata(null, ViewportChanged));
 
         /// <summary>
-        ///   The last tick.
-        /// </summary>
-        private long lastTick;
-
-        /// <summary>
-        ///   The pan speed.
-        /// </summary>
-        private Vector3D panSpeed;
-
-        /// <summary>
-        ///   The rotation speed.
-        /// </summary>
-        private Vector rotationSpeed;
-
-        /// <summary>
         ///   The target adorner.
         /// </summary>
         private Adorner targetAdorner;
 
-        /// <summary>
-        ///   The zoom speed.
-        /// </summary>
-        private double zoomSpeed;
-
-        private readonly Stopwatch _watch = new Stopwatch();
         private Point3D? lastPoint3D = new Point3D();
         private Point _lastPosition;
         private Point _mouseDownPosition;
@@ -131,50 +97,12 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Initializes static members of the <see cref="CameraController" /> class.
+        /// Initializes a new instance of the <see cref="CameraController" /> class.
         /// </summary>
         public CameraController()
         {
             Background = Brushes.Transparent;
             SubscribeEvents();
-
-            _watch.Start();
-            lastTick = _watch.ElapsedTicks;
-        }
-
-        /// <summary>
-        ///   Gets or sets InertiaFactor.
-        /// </summary>
-        public double InertiaFactor
-        {
-            get
-            {
-                return (double)this.GetValue(InertiaFactorProperty);
-            }
-
-            set
-            {
-                this.SetValue(InertiaFactorProperty, value);
-            }
-        }
-
-        /// <summary>
-        ///   Max duration of mouse drag to activate spin
-        /// </summary>
-        /// <remarks>
-        ///   If the time between mouse down and mouse up is less than this value, spin is activated.
-        /// </remarks>
-        public int SpinReleaseTime
-        {
-            get
-            {
-                return (int)this.GetValue(SpinReleaseTimeProperty);
-            }
-
-            set
-            {
-                this.SetValue(SpinReleaseTimeProperty, value);
-            }
         }
 
         /// <summary>
@@ -242,29 +170,6 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets ZoomSensitivity.
-        /// </summary>
-        public double ZoomSensitivity
-        {
-            get
-            {
-                return (double)this.GetValue(ZoomSensitivityProperty);
-            }
-
-            set
-            {
-                this.SetValue(ZoomSensitivityProperty, value);
-            }
-        }
-
-        /// <summary>
-        ///   The zoom sensitivity property.
-        /// </summary>
-        public static readonly DependencyProperty ZoomSensitivityProperty =
-            DependencyProperty.Register(
-                "ZoomSensitivity", typeof(double), typeof(CameraController), new UIPropertyMetadata(1.0));
-
-        /// <summary>
         ///   Gets or sets CameraRotationMode.
         /// </summary>
         public CameraRotationMode CameraRotationMode
@@ -329,7 +234,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets a value indicating whether IsActive.
+        /// Gets a value indicating whether IsActive.
         /// </summary>
         public bool IsActive
         {
@@ -337,113 +242,6 @@ namespace HelixEngine
             {
                 return this.Enabled && this.Viewport != null && this.Camera != null;
             }
-        }
-
-        /// <summary>
-        ///   The viewport changed.
-        /// </summary>
-        /// <param name="d"> The sender. </param>
-        /// <param name="e"> The event arguments. </param>
-        private static void ViewportChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((CameraController)d).OnViewportChanged();
-        }
-
-        /// <summary>
-        ///   The on viewport changed.
-        /// </summary>
-        private void OnViewportChanged()
-        {
-            if (Camera == null && Viewport != null)
-                Camera = Viewport.Camera as PerspectiveCamera;
-        }
-
-        /// <summary>
-        ///   The subscribe events.
-        /// </summary>
-        private void SubscribeEvents()
-        {
-            this.MouseMove += MouseMoveHandler;
-            this.MouseDown += MouseDownHandler;
-            this.MouseUp += MouseUpHandler;
-            this.MouseWheel += OnMouseWheel;
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
-        }
-
-        /// <summary>
-        ///   The un subscribe events.
-        /// </summary>
-        private void UnSubscribeEvents()
-        {
-            this.MouseMove -= MouseMoveHandler;
-            this.MouseDown -= MouseDownHandler;
-            this.MouseUp -= MouseUpHandler;
-            this.MouseWheel -= OnMouseWheel;
-            CompositionTarget.Rendering -= CompositionTarget_Rendering;
-        }
-
-        /// <summary>
-        ///   The rendering event handler.
-        /// </summary>
-        /// <param name="sender"> The sender. </param>
-        /// <param name="e"> The event arguments. </param>
-        private void CompositionTarget_Rendering(object sender, EventArgs e)
-        {
-            // Time in seconds
-            double time = 1.0 * (_watch.ElapsedTicks - this.lastTick) / Stopwatch.Frequency;
-            this.lastTick = _watch.ElapsedTicks;
-            OnTimeStep(time);
-        }
-
-        /// <summary>
-        ///   The on time step.
-        /// </summary>
-        /// <param name="time"> The time. </param>
-        private void OnTimeStep(double time)
-        {
-            // should be independent of time
-            double factor = Math.Pow(this.InertiaFactor, time / 0.012);
-            factor = this.Clamp(factor, 0.2, 1);
-
-            if (this.rotationSpeed.LengthSquared > 0.1)
-            {
-                Rotate(this.rotationSpeed.X * time, this.rotationSpeed.Y * time);
-                this.rotationSpeed *= factor;
-            }
-
-            if (Math.Abs(this.panSpeed.LengthSquared) > 0.0001)
-            {
-                Pan(this.panSpeed * time);
-                this.panSpeed *= factor;
-            }
-
-            if (Math.Abs(this.zoomSpeed) > 0.1)
-            {
-                Zoom(this.zoomSpeed * time);
-                this.zoomSpeed *= factor;
-            }
-        }
-
-        /// <summary>
-        ///   The clamp.
-        /// </summary>
-        /// <param name="factor"> The factor. </param>
-        /// <param name="min"> The min. </param>
-        /// <param name="max"> The max. </param>
-        /// <returns> The clamp. </returns>
-        private double Clamp(double factor, double min, double max)
-        {
-            if (factor < min)
-            {
-                return min;
-            }
-
-            if (factor > max)
-            {
-                return max;
-            }
-
-            return factor;
         }
 
         private void MouseDownHandler(object sender, MouseButtonEventArgs e)
@@ -568,8 +366,7 @@ namespace HelixEngine
         private void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
             e.Handled = true;
-            //Zoom(-e.Delta * 0.001);
-            AddZoomForce(-e.Delta * 0.001);
+            Zoom(-e.Delta * 0.001);
         }
 
         /// <summary>
@@ -739,77 +536,6 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   The add pan force.
-        /// </summary>
-        /// <param name="dx"> The dx. </param>
-        /// <param name="dy"> The dy. </param>
-        public void AddPanForce(double dx, double dy)
-        {
-            this.AddPanForce(this.FindPanVector(dx, dy));
-        }
-
-        /// <summary>
-        ///   The find pan vector.
-        /// </summary>
-        /// <param name="dx"> The dx. </param>
-        /// <param name="dy"> The dy. </param>
-        /// <returns> </returns>
-        private Vector3D FindPanVector(double dx, double dy)
-        {
-            PerspectiveCamera pc = Camera;
-            Vector3D axis1 = Vector3D.CrossProduct(pc.LookDirection, pc.UpDirection);
-            Vector3D axis2 = Vector3D.CrossProduct(axis1, pc.LookDirection);
-            axis1.Normalize();
-            axis2.Normalize();
-            double l = pc.LookDirection.Length;
-            double f = l * 0.001;
-            Vector3D move = -axis1 * f * dx + axis2 * f * dy;
-
-            // this should be dependent on distance to target?           
-            return move;
-        }
-
-        /// <summary>
-        ///   The add pan force.
-        /// </summary>
-        /// <param name="pan"> The pan. </param>
-        public void AddPanForce(Vector3D pan)
-        {
-            if (!this.IsPanEnabled)
-            {
-                return;
-            }
-
-            this.panSpeed += pan * 40;
-        }
-
-        /// <summary>
-        ///   The add rotate force.
-        /// </summary>
-        /// <param name="dx"> The dx. </param>
-        /// <param name="dy"> The dy. </param>
-        public void AddRotateForce(double dx, double dy)
-        {
-            this.rotationSpeed.X += dx * 40;
-            this.rotationSpeed.Y += dy * 40;
-        }
-
-        /// <summary>
-        ///   Adds the zoom force.
-        /// </summary>
-        /// <param name="dx"> The dx. </param>
-        public void AddZoomForce(double dx)
-        {
-            if (!this.IsZoomEnabled)
-            {
-                return;
-            }
-
-            zoomSpeed += dx * 8;
-            this.zoomSpeed += dx * 8;
-        }
-
-        /// <summary>
         /// Get the ray into the view volume given by the position in 2D (screen coordinates)
         /// </summary>
         /// <param name="position"></param>
@@ -849,23 +575,29 @@ namespace HelixEngine
             return Viewport3DHelper.Point3DtoPoint2D(Viewport, p);
         }
 
-        public void Select(Point target, double animationTime)
+        /// <summary>
+        /// Hides the target adorner.
+        /// </summary>
+        public void HideTargetAdorner()
         {
-            PerspectiveCamera camera = Camera;
-            if (camera == null) return;
+            AdornerLayer myAdornerLayer = AdornerLayer.GetAdornerLayer(this.Viewport);
+            if (this.targetAdorner != null)
+            {
+                myAdornerLayer.Remove(this.targetAdorner);
+            }
 
-            //Point ptMouse = args.GetPosition(viewport);
-            HitTestResult result = VisualTreeHelper.HitTest(Viewport, target);
+            this.targetAdorner = null;
 
-            //// We're only interested in 3D hits.
-            //RayMeshGeometry3DHitTestResult result3d =
-            //                    result as RayMeshGeometry3DHitTestResult;
+            // the adorner sometimes leaves some 'dust', so refresh the viewport
+            this.RefreshViewport();
         }
 
         /// <summary>
-        ///   Shows the target adorner.
+        /// Shows the target adorner.
         /// </summary>
-        /// <param name="position"> The position. </param>
+        /// <param name="position">
+        /// The position.
+        /// </param>
         public void ShowTargetAdorner(Point position)
         {
             if (!this.ShowCameraTarget)
@@ -884,24 +616,52 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Hides the target adorner.
+        /// The subscribe events.
         /// </summary>
-        public void HideTargetAdorner()
+        private void SubscribeEvents()
         {
-            AdornerLayer myAdornerLayer = AdornerLayer.GetAdornerLayer(this.Viewport);
-            if (this.targetAdorner != null)
-            {
-                myAdornerLayer.Remove(this.targetAdorner);
-            }
-
-            this.targetAdorner = null;
-
-            // the adorner sometimes leaves some 'dust', so refresh the viewport
-            this.RefreshViewport();
+            this.MouseMove += MouseMoveHandler;
+            this.MouseDown += MouseDownHandler;
+            this.MouseUp += MouseUpHandler;
+            this.MouseWheel += OnMouseWheel;
         }
 
         /// <summary>
-        ///   The refresh viewport.
+        ///   The un subscribe events.
+        /// </summary>
+        private void UnSubscribeEvents()
+        {
+            this.MouseMove -= MouseMoveHandler;
+            this.MouseDown -= MouseDownHandler;
+            this.MouseUp -= MouseUpHandler;
+            this.MouseWheel -= OnMouseWheel;
+        }
+
+        /// <summary>
+        /// The viewport changed.
+        /// </summary>
+        /// <param name="d">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The event arguments.
+        /// </param>
+        private static void ViewportChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((CameraController)d).OnViewportChanged();
+        }
+
+        /// <summary>
+        ///   The on viewport changed.
+        /// </summary>
+        private void OnViewportChanged()
+        {
+            if (Camera == null && Viewport != null)
+                Camera = Viewport.Camera as PerspectiveCamera;
+        }
+
+        /// <summary>
+        /// The refresh viewport.
         /// </summary>
         private void RefreshViewport()
         {

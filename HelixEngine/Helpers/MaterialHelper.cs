@@ -8,7 +8,6 @@ namespace HelixEngine
     /// </summary>
     public static class MaterialHelper
     {
-        #region Public Methods
         /// <summary>
         /// Changes the opacity of a material.
         /// </summary>
@@ -92,7 +91,5 @@ namespace HelixEngine
         {
             return new SpecularMaterial(brush, specularPower);
         }
-
-        #endregion
     }
 }

@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adorners\DrawingContextExtensions.cs" />
+    <Compile Include="Adorners\TargetSymbolAdorner.cs" />
     <Compile Include="Controls\CameraController\CameraController.cs" />
     <Compile Include="Controls\CameraController\CameraMode.cs" />
     <Compile Include="Controls\CameraController\CameraRotationMode.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Helpers\LineRange.cs" />
     <Compile Include="Helpers\MaterialHelper.cs" />
     <Compile Include="Helpers\MeshGeometryHelper.cs" />
-    <Compile Include="Helpers\TargetSymbolAdorner.cs" />
     <Compile Include="Helpers\Transform3DHelper.cs" />
     <Compile Include="Helpers\Viewport3DHelper.cs" />
     <Compile Include="Helpers\ViewportInfo.cs" />

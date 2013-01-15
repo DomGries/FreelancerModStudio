@@ -17,40 +17,38 @@ namespace HelixEngine
     /// </summary>
     public class ViewCubeVisual3D : ModelVisual3D
     {
-        #region Constants and Fields
-
         /// <summary>
-        /// The back text property.
+        /// Identifies the <see cref="BackText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty BackTextProperty = DependencyProperty.Register(
             "BackText", typeof(string), typeof(ViewCubeVisual3D), new UIPropertyMetadata("B", VisualModelChanged));
 
         /// <summary>
-        /// The bottom text property.
+        /// Identifies the <see cref="BottomText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty BottomTextProperty = DependencyProperty.Register(
             "BottomText", typeof(string), typeof(ViewCubeVisual3D), new UIPropertyMetadata("D", VisualModelChanged));
 
         /// <summary>
-        /// The center property.
+        /// Identifies the <see cref="Center"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CenterProperty = DependencyProperty.Register(
             "Center", typeof(Point3D), typeof(ViewCubeVisual3D), new UIPropertyMetadata(new Point3D(0, 0, 0)));
 
         /// <summary>
-        /// The front text property.
+        /// Identifies the <see cref="FrontText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty FrontTextProperty = DependencyProperty.Register(
             "FrontText", typeof(string), typeof(ViewCubeVisual3D), new UIPropertyMetadata("F", VisualModelChanged));
 
         /// <summary>
-        /// The left text property.
+        /// Identifies the <see cref="LeftText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LeftTextProperty = DependencyProperty.Register(
             "LeftText", typeof(string), typeof(ViewCubeVisual3D), new UIPropertyMetadata("L", VisualModelChanged));
 
         /// <summary>
-        /// The model up direction property.
+        /// Identifies the <see cref="ModelUpDirection"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ModelUpDirectionProperty =
             DependencyProperty.Register(
@@ -60,25 +58,25 @@ namespace HelixEngine
                 new UIPropertyMetadata(new Vector3D(0, 0, 1), VisualModelChanged));
 
         /// <summary>
-        /// The right text property.
+        /// Identifies the <see cref="RightText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RightTextProperty = DependencyProperty.Register(
             "RightText", typeof(string), typeof(ViewCubeVisual3D), new UIPropertyMetadata("R", VisualModelChanged));
 
         /// <summary>
-        /// The size property.
+        /// Identifies the <see cref="Size"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SizeProperty = DependencyProperty.Register(
             "Size", typeof(double), typeof(ViewCubeVisual3D), new UIPropertyMetadata(5.0));
 
         /// <summary>
-        /// The top text property.
+        /// Identifies the <see cref="TopText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty TopTextProperty = DependencyProperty.Register(
             "TopText", typeof(string), typeof(ViewCubeVisual3D), new UIPropertyMetadata("U", VisualModelChanged));
 
         /// <summary>
-        /// The viewport property.
+        /// Identifies the <see cref="Viewport"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ViewportProperty = DependencyProperty.Register(
             "Viewport", typeof(Viewport3D), typeof(ViewCubeVisual3D), new PropertyMetadata(null, ViewportChanged));
@@ -93,10 +91,6 @@ namespace HelixEngine
         /// </summary>
         private readonly Dictionary<object, Vector3D> faceUpVectors = new Dictionary<object, Vector3D>();
 
-        #endregion
-
-        #region Constructors and Destructors
-
         /// <summary>
         ///   Initializes a new instance of the <see cref = "ViewCubeVisual3D" /> class.
         /// </summary>
@@ -104,10 +98,6 @@ namespace HelixEngine
         {
             this.UpdateVisuals();
         }
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         ///   Gets or sets the back text.
@@ -279,10 +269,6 @@ namespace HelixEngine
             }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// The viewport changed.
         /// </summary>
@@ -396,7 +382,7 @@ namespace HelixEngine
             var bmp = new RenderTargetBitmap((int)grid.Width, (int)grid.Height, 96, 96, PixelFormats.Default);
             bmp.Render(grid);
 
-            Material material = MaterialHelper.CreateMaterial(new ImageBrush(bmp));
+            var material = MaterialHelper.CreateMaterial(new ImageBrush(bmp));
 
             double a = this.Size;
 
@@ -457,7 +443,5 @@ namespace HelixEngine
 
             CameraHelper.AnimateTo(camera, pos, lookdir, updir, 500);
         }
-
-        #endregion
     }
 }

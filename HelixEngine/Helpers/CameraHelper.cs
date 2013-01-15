@@ -11,10 +11,8 @@ namespace HelixEngine
     /// <summary>
     /// Provides helper methods related to Media3D.Camera.
     /// </summary>
-    public class CameraHelper
+    public static class CameraHelper
     {
-        #region Public Methods
-
         /// <summary>
         /// Animates the camera position and directions.
         /// </summary>
@@ -221,7 +219,5 @@ namespace HelixEngine
             camera.LookDirection = new Vector3D(0, 0, -1500);
             camera.UpDirection = new Vector3D(0, 1, 0);
         }
-
-        #endregion
     }
 }

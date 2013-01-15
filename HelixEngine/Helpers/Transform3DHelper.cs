@@ -7,8 +7,6 @@ namespace HelixEngine
     /// </summary>
     public static class Transform3DHelper
     {
-        #region Public Methods
-
         /// <summary>
         /// Combines two transforms.
         /// </summary>
@@ -29,6 +27,5 @@ namespace HelixEngine
             return g;
         }
 
-        #endregion
     }
 }

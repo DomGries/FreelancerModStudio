@@ -8,8 +8,6 @@ namespace HelixEngine
     /// </summary>
     public class Ray3D
     {
-        #region Public Properties
-
         /// <summary>
         ///   Gets or sets the direction.
         /// </summary>
@@ -21,11 +19,6 @@ namespace HelixEngine
         /// </summary>
         /// <value>The origin.</value>
         public Point3D Origin { get; set; }
-
-        #endregion
-
-        #region Public Methods
-
 
         /// <summary>
         /// Finds the intersection with a plane.
@@ -45,7 +38,5 @@ namespace HelixEngine
             double u = Vector3D.DotProduct(normal, position - this.Origin) / dn;
             return this.Origin + u * this.Direction;
         }
-
-        #endregion
     }
 }

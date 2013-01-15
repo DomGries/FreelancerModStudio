@@ -19,14 +19,11 @@ namespace HelixEngine
     /// Helper methods for Viewport3D.
     /// </summary>
     /// <remarks>
-    /// See Charles Petzold's book "3D programming for Windows"
-    ///   and Eric Sink's "Twelve Days of WPF 3D"
+    /// See Charles Petzold's book "3D programming for Windows" and Eric Sink's "Twelve Days of WPF 3D"
     ///   http://www.ericsink.com/wpf3d/index.html
     /// </remarks>
     public static class Viewport3DHelper
     {
-        #region Public Methods
-
         /// <summary>
         /// Copies the specified viewport to the clipboard.
         /// </summary>
@@ -202,7 +199,9 @@ namespace HelixEngine
             Vector3D n;
             DependencyObject obj;
             if (Find(viewport, position, farest, out p, out n, out obj))
+            {
                 return obj as Visual3D;
+            }
 
             return null;
         }
@@ -283,44 +282,44 @@ namespace HelixEngine
                 throw new ArgumentNullException("camera");
             }
 
-            if (camera is MatrixCamera)
+            var perspectiveCamera = camera as PerspectiveCamera;
+            if (perspectiveCamera != null)
             {
-                return (camera as MatrixCamera).ProjectionMatrix;
-            }
-
-            if (camera is OrthographicCamera)
-            {
-                var orthocam = camera as OrthographicCamera;
-
-                double xscale = 2 / orthocam.Width;
-                double yscale = xscale * aspectRatio;
-                double znear = orthocam.NearPlaneDistance;
-                double zfar = orthocam.FarPlaneDistance;
-
-                // Hey, check this out!
-                if (double.IsPositiveInfinity(zfar))
-                {
-                    zfar = 1E10;
-                }
-
-                return new Matrix3D(
-                    xscale, 0, 0, 0, 0, yscale, 0, 0, 0, 0, 1 / (znear - zfar), 0, 0, 0, znear / (znear - zfar), 1);
-            }
-
-            if (camera is PerspectiveCamera)
-            {
-                var perscam = camera as PerspectiveCamera;
-
                 // The angle-to-radian formula is a little off because only
                 // half the angle enters the calculation.
-                double xscale = 1 / Math.Tan(Math.PI * perscam.FieldOfView / 360);
+                double xscale = 1 / Math.Tan(Math.PI * perspectiveCamera.FieldOfView / 360);
                 double yscale = xscale * aspectRatio;
-                double znear = perscam.NearPlaneDistance;
-                double zfar = perscam.FarPlaneDistance;
+                double znear = perspectiveCamera.NearPlaneDistance;
+                double zfar = perspectiveCamera.FarPlaneDistance;
                 double zscale = double.IsPositiveInfinity(zfar) ? -1 : (zfar / (znear - zfar));
                 double zoffset = znear * zscale;
 
                 return new Matrix3D(xscale, 0, 0, 0, 0, yscale, 0, 0, 0, 0, zscale, -1, 0, 0, zoffset, 0);
+            }
+
+            var orthographicCamera = camera as OrthographicCamera;
+            if (orthographicCamera != null)
+            {
+                double xscale = 2.0 / orthographicCamera.Width;
+                double yscale = xscale * aspectRatio;
+                double znear = orthographicCamera.NearPlaneDistance;
+                double zfar = orthographicCamera.FarPlaneDistance;
+
+                if (double.IsPositiveInfinity(zfar))
+                {
+                    zfar = znear * 1e5;
+                }
+
+                double dzinv = 1.0 / (znear - zfar);
+
+                var m = new Matrix3D(xscale, 0, 0, 0, 0, yscale, 0, 0, 0, 0, dzinv, 0, 0, 0, znear * dzinv, 1);
+                return m;
+            }
+
+            var matrixCamera = camera as MatrixCamera;
+            if (matrixCamera != null)
+            {
+                return matrixCamera.ProjectionMatrix;
             }
 
             throw new ApplicationException("unknown camera type");
@@ -445,9 +444,6 @@ namespace HelixEngine
         /// <returns>
         /// A Matrix3D object with the camera view transform matrix, or a Matrix3D with all zeros if the "camera" is null.
         /// </returns>
-        /// <exception cref="ApplicationException">
-        /// if the 'camera' is neither of type MatrixCamera nor ProjectionCamera. 
-        /// </exception>
         public static Matrix3D GetViewMatrix(Camera camera)
         {
             if (camera == null)
@@ -746,10 +742,6 @@ namespace HelixEngine
             return output;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Gets the transform.
         /// </summary>
@@ -789,8 +781,6 @@ namespace HelixEngine
             return null;
         }
 
-        #endregion
-
         /// <summary>
         /// Recursive search for an object of a given type
         /// </summary>
@@ -807,7 +797,7 @@ namespace HelixEngine
                     var model = modelVisual.Content;
                     if (model != null)
                     {
-                        if (type.IsAssignableFrom(model.GetType()))
+                        if (type.IsInstanceOfType(model))
                         {
                             output.Add(model);
                         }
@@ -841,7 +831,7 @@ namespace HelixEngine
         {
             foreach (var model in collection)
             {
-                if (type.IsAssignableFrom(model.GetType()))
+                if (type.IsInstanceOfType(model))
                 {
                     output.Add(model);
                 }

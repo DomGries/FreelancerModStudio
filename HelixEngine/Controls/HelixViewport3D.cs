@@ -28,8 +28,6 @@ namespace HelixEngine
     [Localizability(LocalizationCategory.NeverLocalize)]
     public class HelixViewport3D : Control
     {
-        #region Constants and Fields
-
         /// <summary>
         ///   The camera changed event.
         /// </summary>
@@ -37,13 +35,13 @@ namespace HelixEngine
             "CameraChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(HelixViewport3D));
 
         /// <summary>
-        ///   The camera mode property.
+        /// Identifies the <see cref="CameraMode"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CameraModeProperty = DependencyProperty.Register(
             "CameraMode", typeof(CameraMode), typeof(HelixViewport3D), new UIPropertyMetadata(CameraMode.Inspect));
 
         /// <summary>
-        ///   The camera rotation mode property.
+        /// Identifies the <see cref="CameraRotationMode"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CameraRotationModeProperty =
             DependencyProperty.Register(
@@ -114,10 +112,6 @@ namespace HelixEngine
         /// </summary>
         private Viewport3D viewCubeViewport;
 
-        #endregion
-
-        #region Constructors and Destructors
-
         /// <summary>
         ///   Initializes static members of the <see cref="HelixViewport3D" /> class.
         /// </summary>
@@ -141,12 +135,8 @@ namespace HelixEngine
             this.Viewport.Camera.Changed += this.CameraPropertyChanged;
         }
 
-        #endregion
-
-        #region Public Events
-
         /// <summary>
-        ///   Event when a property has been changed
+        /// Event when a property has been changed
         /// </summary>
         public event RoutedEventHandler CameraChanged
         {
@@ -160,10 +150,6 @@ namespace HelixEngine
                 this.RemoveHandler(CameraChangedEvent, value);
             }
         }
-
-        #endregion
-
-        #region Public Properties
 
         /// <summary>
         ///   Gets or sets the camera.
@@ -290,12 +276,6 @@ namespace HelixEngine
                 return this.viewport;
             }
         }
-
-        /// <summary>
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Copies the view to the clipboard.
@@ -497,10 +477,6 @@ namespace HelixEngine
             CameraHelper.AnimateTo(this.Camera, newPosition, newDirection, newUpDirection, animationTime);
         }
 
-        #endregion
-
-        #region Methods
-
         public delegate void SelectionChangedType(DependencyObject visual);
         public SelectionChangedType SelectionChanged;
 
@@ -603,7 +579,5 @@ namespace HelixEngine
         {
             AnimateOpacity(this.viewCubeViewport, 0.5, 200);
         }
-
-        #endregion
     }
 }

@@ -8,8 +8,6 @@ namespace HelixEngine
     /// </summary>
     public static class BrushHelper
     {
-        #region Public Methods
-
         /// <summary>
         /// Creates a copy of a brush with the specified opacity.
         /// </summary>
@@ -69,7 +67,5 @@ namespace HelixEngine
             brush.GradientStops.Add(new GradientStop(Colors.Violet, 1.00));
             return brush;
         }
-
-        #endregion
     }
 }

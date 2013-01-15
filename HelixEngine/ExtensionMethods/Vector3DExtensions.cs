@@ -8,8 +8,6 @@ namespace HelixEngine
     /// </summary>
     public static class Vector3DExtensions
     {
-        #region Public Methods
-
         /// <summary>
         /// Find a <see cref="Vector3D"/> that is perpendicular to the given <see cref="Vector3D"/>.
         /// </summary>
@@ -24,7 +22,9 @@ namespace HelixEngine
             n.Normalize();
             Vector3D u = Vector3D.CrossProduct(new Vector3D(0, 1, 0), n);
             if (u.LengthSquared < 1e-3)
+            {
                 u = Vector3D.CrossProduct(new Vector3D(1, 0, 0), n);
+            }
 
             return u;
         }
@@ -42,7 +42,5 @@ namespace HelixEngine
         {
             return new Point3D(n.X, n.Y, n.Z);
         }
-
-        #endregion
     }
 }

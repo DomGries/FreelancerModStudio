@@ -36,8 +36,6 @@ namespace HelixEngine
     /// </remarks>
     public class MeshBuilder
     {
-        #region Constants and Fields
-
         /// <summary>
         ///   The normals.
         /// </summary>
@@ -79,10 +77,6 @@ namespace HelixEngine
         /// </summary>
         private static readonly Dictionary<int, IList<Point>> CircleCache = new Dictionary<int, IList<Point>>();
 
-        #endregion
-
-        #region Constructors and Destructors
-
         /// <summary>
         ///   Initializes a new instance of the <see cref = "MeshBuilder" /> class.
         /// </summary>
@@ -118,11 +112,6 @@ namespace HelixEngine
                 this.textureCoordinates = new PointCollection();
             }
         }
-
-        #endregion
-
-
-        #region Public Methods
 
         /// <summary>
         /// Gets a circle section (cached).
@@ -768,10 +757,6 @@ namespace HelixEngine
             return mg;
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Add triangle indices for a rectangular mesh.
         /// </summary>
@@ -810,7 +795,5 @@ namespace HelixEngine
                 }
             }
         }
-
-        #endregion
     }
 }

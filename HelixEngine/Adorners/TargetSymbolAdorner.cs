@@ -13,8 +13,6 @@ namespace HelixEngine
     /// </remarks>
     public class TargetSymbolAdorner : Adorner
     {
-        #region Constructors and Destructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TargetSymbolAdorner"/> class.
         /// </summary>
@@ -30,19 +28,11 @@ namespace HelixEngine
             this.Position = position;
         }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
         ///   Gets or sets the position.
         /// </summary>
         /// <value>The position.</value>
         public Point Position { get; set; }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         /// Called when rendering.
@@ -96,6 +86,5 @@ namespace HelixEngine
                 new Point(this.Position.X + r3, this.Position.Y));
         }
 
-        #endregion
     }
 }

@@ -297,7 +297,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         ModelVisual3D GetSelectionBox(ContentBase content)
         {
-            WireLines lines = GetWireBox(GetBounds(content));
+            ModelVisual3D lines = GetWireBox(GetBounds(content));
             lines.Transform = content.Transform;
 
             return lines;
@@ -328,7 +328,7 @@ namespace FreelancerModStudio.SystemPresenter
             return content.GetShapeBounds();
         }
 
-        static WireLines GetWireBox(Rect3D bounds)
+        static ModelVisual3D GetWireBox(Rect3D bounds)
         {
             Point3DCollection points = new Point3DCollection
                 {

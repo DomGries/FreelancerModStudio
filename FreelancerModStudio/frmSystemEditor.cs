@@ -143,11 +143,6 @@ namespace FreelancerModStudio
 
         ContentBase GetContent(TableBlock block)
         {
-            if (block.ObjectType == ContentType.None)
-            {
-                return null;
-            }
-
             for (int i = _presenter.GetContentStartId(); i < _presenter.Viewport.Children.Count; ++i)
             {
                 ContentBase content = (ContentBase)_presenter.Viewport.Children[i];

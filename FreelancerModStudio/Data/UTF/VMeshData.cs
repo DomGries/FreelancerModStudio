@@ -11,9 +11,8 @@ namespace FreelancerModStudio.Data.UTF
             public ushort StartVertex;
             public ushort EndVertex;
             public ushort NumRefVertices;
-           // public ushort Padding;
+            //public ushort Padding;
 
-            public int BaseVertex;
             public int TriangleStart;
         }
 
@@ -89,7 +88,6 @@ namespace FreelancerModStudio.Data.UTF
 
             // read the mesh headers
             int triangleStartOffset = 0;
-            int vertexBaseOffset = 0;
             Meshes = new TMeshHeader[MeshCount];
             for (int i = 0; i < MeshCount; ++i)
             {
@@ -102,9 +100,6 @@ namespace FreelancerModStudio.Data.UTF
 
                 mesh.TriangleStart = triangleStartOffset;
                 triangleStartOffset += mesh.NumRefVertices;
-
-                mesh.BaseVertex = vertexBaseOffset;
-                vertexBaseOffset += mesh.EndVertex - mesh.StartVertex + 1;
 
                 Meshes[i] = mesh;
             }

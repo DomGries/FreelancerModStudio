@@ -7,7 +7,7 @@ namespace FreelancerModStudio.Data.UTF
         // Header - one per lod for each .3db section of cmp - 60 bytes
         //public uint HeaderSize;
         public uint VMeshLibId;
-        //public ushort VertexStart;
+        public ushort VertexStart;
         //public ushort VertexCount;
         //public ushort IndexStart;
         //public ushort IndexCount;
@@ -32,7 +32,7 @@ namespace FreelancerModStudio.Data.UTF
             int pos = 0;
             CmpParser.ParseUInt32(data, ref pos); //HeaderSize
             VMeshLibId = CmpParser.ParseUInt32(data, ref pos);
-            CmpParser.ParseUInt16(data, ref pos); //VertexStart
+            VertexStart = CmpParser.ParseUInt16(data, ref pos);
             CmpParser.ParseUInt16(data, ref pos); //VertexCount
             CmpParser.ParseUInt16(data, ref pos); //IndexStart
             CmpParser.ParseUInt16(data, ref pos); //IndexCount

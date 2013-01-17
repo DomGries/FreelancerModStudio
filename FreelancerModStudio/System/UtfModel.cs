@@ -59,7 +59,7 @@ namespace FreelancerModStudio.SystemPresenter
                         break;
                     }
 
-                    GeometryModel3D gm = GetCmpModel(meshGroup.Mesh, meshIndex, meshGroup.Transform*ConversionMatrix);
+                    GeometryModel3D gm = GetCmpModel(meshGroup, meshIndex);
                     if (gm != null)
                     {
                         modelGroup.Children.Add(gm);
@@ -70,24 +70,24 @@ namespace FreelancerModStudio.SystemPresenter
             return modelGroup;
         }
 
-        static GeometryModel3D GetCmpModel(VMeshData vmesh, int meshIndex, Matrix3D transform)
+        static GeometryModel3D GetCmpModel(MeshGroup meshGroup, int meshIndex)
         {
-            VMeshData.TMeshHeader mesh = vmesh.Meshes[meshIndex];
+            VMeshData.TMeshHeader mesh = meshGroup.Mesh.Meshes[meshIndex];
             Point3DCollection positions = new Point3DCollection();
             Int32Collection indices = new Int32Collection();
             Vector3DCollection normals = new Vector3DCollection();
             //PointCollection texture = new PointCollection();
 
-            int vertexCount = mesh.BaseVertex + mesh.EndVertex - mesh.StartVertex + 1;
-            if (vmesh.Vertices.Length < vertexCount)
+            int vertexCount = meshGroup.MeshReference.VertexStart + mesh.EndVertex + 1;
+            if (meshGroup.Mesh.Vertices.Length < vertexCount)
             {
                 return null;
             }
 
-            for (int i = mesh.BaseVertex; i < vertexCount; ++i)
+            for (int i = meshGroup.MeshReference.VertexStart + mesh.StartVertex; i < vertexCount; ++i)
             {
-                positions.Add(vmesh.Vertices[i].Position);
-                normals.Add(vmesh.Vertices[i].Normal);
+                positions.Add(meshGroup.Mesh.Vertices[i].Position);
+                normals.Add(meshGroup.Mesh.Vertices[i].Normal);
                 //texture.Add(new Point
                 //{
                 //    X = vMesh.Vertices[i].S,
@@ -96,16 +96,16 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             int triangleCount = (mesh.TriangleStart + mesh.NumRefVertices)/3;
-            if (vmesh.Triangles.Length < triangleCount)
+            if (meshGroup.Mesh.Triangles.Length < triangleCount)
             {
                 return null;
             }
 
             for (int i = mesh.TriangleStart/3; i < triangleCount; ++i)
             {
-                indices.Add(vmesh.Triangles[i].Vertex1);
-                indices.Add(vmesh.Triangles[i].Vertex2);
-                indices.Add(vmesh.Triangles[i].Vertex3);
+                indices.Add(meshGroup.Mesh.Triangles[i].Vertex1);
+                indices.Add(meshGroup.Mesh.Triangles[i].Vertex2);
+                indices.Add(meshGroup.Mesh.Triangles[i].Vertex3);
             }
 
             GeometryModel3D gm = new GeometryModel3D
@@ -118,7 +118,7 @@ namespace FreelancerModStudio.SystemPresenter
                             //TextureCoordinates = texture
                         },
                     Material = SharedMaterials.CmpModel,
-                    Transform = new MatrixTransform3D(transform)
+                    Transform = new MatrixTransform3D(meshGroup.Transform * ConversionMatrix)
                 };
 
             gm.Freeze();

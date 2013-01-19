@@ -243,6 +243,11 @@ namespace FreelancerModStudio
                 Archetype = new ArchetypeManager(archetypeFile, Helper.Template.Data.SolarArchetypeFile);
             }
 
+            SetAllBlockTypes();
+        }
+
+        void SetAllBlockTypes()
+        {
             foreach (TableBlock block in Data.Blocks)
             {
                 SetBlockType(block);
@@ -304,10 +309,7 @@ namespace FreelancerModStudio
                 case ViewerType.SolarArchetype:
                 case ViewerType.ModelPreview:
                     DataPath = Helper.Template.Data.GetDataPath(File, Helper.Template.Data.SolarArchetypeFile);
-                    foreach (TableBlock block in Data.Blocks)
-                    {
-                        SetBlockType(block);
-                    }
+                    SetAllBlockTypes();
                     break;
                 case ViewerType.System:
                 case ViewerType.Universe:

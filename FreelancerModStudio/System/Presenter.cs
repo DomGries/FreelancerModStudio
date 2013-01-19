@@ -570,11 +570,17 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetValues(ContentBase content, TableBlock block)
         {
-            if (ViewerType == ViewerType.SolarArchetype || ViewerType == ViewerType.ModelPreview)
+            bool modelChanged;
+            if (ViewerType == ViewerType.ModelPreview)
             {
-                SystemParser.SetModelPreviewValues(content, block);
+                modelChanged = SystemParser.SetModelPreviewValues(content, block);
             }
-            else if (SystemParser.SetValues(content, block, ViewerType == ViewerType.System) && content.Content != null)
+            else
+            {
+                modelChanged = SystemParser.SetValues(content, block, ViewerType == ViewerType.System);
+            }
+
+            if (modelChanged && content.Content != null)
             {
                 LoadModel(content);
             }

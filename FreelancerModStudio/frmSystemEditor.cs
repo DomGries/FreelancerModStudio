@@ -137,8 +137,8 @@ namespace FreelancerModStudio
         public void Clear(bool clearLight, bool waitForThread)
         {
             Helper.Thread.Abort(ref _universeLoadingThread, waitForThread);
-            _presenter.ClearDisplay(false);
             _presenter.SelectedContent = null;
+            _presenter.ClearDisplay(false);
         }
 
         ContentBase GetContent(TableBlock block)
@@ -156,21 +156,21 @@ namespace FreelancerModStudio
 
         public void Select(TableBlock block)
         {
-            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
-            {
-                _presenter.ClearDisplay(false);
-                _presenter.Add(block);
-                return;
-            }
-
             // return if object is already selected
-            if (_presenter.SelectedContent != null && _presenter.SelectedContent.Block == block)
+            if (_presenter.SelectedContent != null && _presenter.SelectedContent.Block.Id == block.Id)
             {
                 return;
             }
 
             if (block.Visibility)
             {
+                if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
+                {
+                    _presenter.SelectedContent = null;
+                    _presenter.ClearDisplay(false);
+                    _presenter.Add(block);
+                }
+
                 // select object
                 ContentBase content = GetContent(block);
                 if (content != null)
@@ -197,13 +197,12 @@ namespace FreelancerModStudio
 
         public void Deselect()
         {
+            _presenter.SelectedContent = null;
+
             if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
             {
                 _presenter.ClearDisplay(false);
-                return;
             }
-
-            _presenter.SelectedContent = null;
         }
 
         public void SetVisibility(TableBlock block)

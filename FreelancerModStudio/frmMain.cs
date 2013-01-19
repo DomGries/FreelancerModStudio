@@ -705,6 +705,7 @@ namespace FreelancerModStudio
                         _systemEditor.ShowData(editor.Data, editor.File, editor.Archetype);
                         break;
                     case ViewerType.SolarArchetype:
+                    case ViewerType.ModelPreview:
                         _systemEditor.IsModelMode = true;
                         break;
                 }

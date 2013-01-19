@@ -244,7 +244,7 @@ namespace FreelancerModStudio.SystemPresenter
         void camera_SelectionChanged(DependencyObject visual)
         {
             // prevent selecting objects in solararchetype file
-            if (ViewerType == ViewerType.SolarArchetype)
+            if (ViewerType == ViewerType.SolarArchetype || ViewerType == ViewerType.ModelPreview)
             {
                 return;
             }
@@ -570,7 +570,11 @@ namespace FreelancerModStudio.SystemPresenter
 
         void SetValues(ContentBase content, TableBlock block)
         {
-            if (SystemParser.SetValues(content, block, ViewerType == ViewerType.System) && content.Content != null)
+            if (ViewerType == ViewerType.SolarArchetype || ViewerType == ViewerType.ModelPreview)
+            {
+                SystemParser.SetModelPreviewValues(content, block);
+            }
+            else if (SystemParser.SetValues(content, block, ViewerType == ViewerType.System) && content.Content != null)
             {
                 LoadModel(content);
             }
@@ -697,6 +701,7 @@ namespace FreelancerModStudio.SystemPresenter
                 case ContentType.Sun:
                 case ContentType.TradeLane:
                 case ContentType.WeaponsPlatform:
+                case ContentType.ModelPreview:
                     return new SystemObject();
                 default: // zone
                     return new Zone();

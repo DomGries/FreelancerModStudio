@@ -10,6 +10,8 @@ namespace FreelancerModStudio.SystemPresenter
     public static class SystemParser
     {
         public const double SIZE_FACTOR = 0.005;
+        public const double MODEL_PREVIEW_SIZE = 10;
+        public const double UNIVERSE_SIZE = 8;
 
         public static KeyValuePair<string, ArchetypeInfo> GetArchetypeInfo(EditorINIBlock block)
         {
@@ -72,6 +74,26 @@ namespace FreelancerModStudio.SystemPresenter
             return new KeyValuePair<string, ArchetypeInfo>(null, null);
         }
 
+        public static ArchetypeInfo GetModelPreviewInfo(EditorINIBlock block)
+        {
+            foreach (EditorINIOption option in block.Options)
+            {
+                if (option.Values.Count > 0)
+                {
+                    switch (option.Name.ToLowerInvariant())
+                    {
+                        case "da_archetype":
+                            return new ArchetypeInfo
+                            {
+                                Type = ContentType.ModelPreview,
+                                ModelPath = option.Values[0].Value.ToString()
+                            };
+                    }
+                }
+            }
+            return null;
+        }
+
         public static void SetUniverseObjectType(TableBlock block)
         {
             if (block.Block.Name.Equals("system", StringComparison.OrdinalIgnoreCase))
@@ -87,6 +109,16 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 block.Archetype = info.Value;
                 block.ObjectType = info.Value.Type;
+            }
+        }
+
+        public static void SetModelPreviewObjectType(TableBlock block)
+        {
+            ArchetypeInfo info = GetModelPreviewInfo(block.Block);
+            if (info != null)
+            {
+                block.Archetype = info;
+                block.ObjectType = info.Type;
             }
         }
 
@@ -197,6 +229,26 @@ namespace FreelancerModStudio.SystemPresenter
             block.ObjectType = ContentType.None;
         }
 
+        public static bool SetBlock(ContentBase content, TableBlock block)
+        {
+            // update the model if the object type or the archetype was changed
+            bool modelChanged =
+                content.Block == null ||
+                content.Block.ObjectType != block.ObjectType ||
+                content.Block.Archetype != block.Archetype;
+
+            // set reference to block (this one is different than the one passed in the argument because a new copy was create in the undomanager)
+            content.Block = block;
+
+            return modelChanged;
+        }
+
+        public static bool SetModelPreviewValues(ContentBase content, TableBlock block)
+        {
+            content.SetTransform(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(MODEL_PREVIEW_SIZE, MODEL_PREVIEW_SIZE, MODEL_PREVIEW_SIZE), false);
+            return SetBlock(content, block);
+        }
+
         public static bool SetValues(ContentBase content, TableBlock block, bool animate)
         {
             string positionString = "0,0,0";
@@ -237,8 +289,8 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 case ContentType.System:
                     position = ParseUniverseVector(positionString);
-                    scale = new Vector3D(8, 8, 8);
-                    rotation = ParseRotation(rotationString, false);
+                    scale = new Vector3D(UNIVERSE_SIZE, UNIVERSE_SIZE, UNIVERSE_SIZE);
+                    rotation = new Vector3D(0, 0, 0);
 
                     Content.System system = (Content.System)content;
                     system.Path = fileString;
@@ -281,18 +333,8 @@ namespace FreelancerModStudio.SystemPresenter
                     break;
             }
 
-            // update the model if the object type or the archetype was changed
-            bool modelChanged =
-                content.Block == null ||
-                content.Block.ObjectType != block.ObjectType ||
-                content.Block.Archetype != block.Archetype;
-
-            // set reference to block (this one is different than the one passed in the argument because a new copy was create in the undomanager)
-            content.Block = block;
-
             content.SetTransform(position, rotation, scale, animate);
-
-            return modelChanged;
+            return SetBlock(content, block);
         }
 
         public static Vector3D ParseScale(string scale, ContentType type)

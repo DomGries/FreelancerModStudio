@@ -144,6 +144,10 @@ namespace FreelancerModStudio
                 public static int SystemFile { get; set; }
                 public static int UniverseFile { get; set; }
                 public static int SolarArchetypeFile { get; set; }
+                public static int AsteroidArchetypeFile { get; set; }
+                public static int ShipArchetypeFile { get; set; }
+                public static int EquipmentFile { get; set; }
+                public static int EffectExplosionsFile { get; set; }
 
                 public static List<FreelancerModStudio.Data.Template.File> Files
                 {
@@ -190,7 +194,7 @@ namespace FreelancerModStudio
 
                 public static void SetSpecialFiles()
                 {
-                    int count = 3;
+                    int count = 7;
 
                     for (int i = 0; i < Files.Count && count > 0; ++i)
                     {
@@ -206,6 +210,22 @@ namespace FreelancerModStudio
                                 break;
                             case "solar archetype":
                                 SolarArchetypeFile = i;
+                                count--;
+                                break;
+                            case "solar asteroid archetype":
+                                AsteroidArchetypeFile = i;
+                                count--;
+                                break;
+                            case "ship archetype":
+                                ShipArchetypeFile = i;
+                                count--;
+                                break;
+                            case "equipment":
+                                EquipmentFile = i;
+                                count--;
+                                break;
+                            case "effect explosions":
+                                EffectExplosionsFile = i;
                                 count--;
                                 break;
                         }

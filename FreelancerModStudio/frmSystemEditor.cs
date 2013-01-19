@@ -156,7 +156,7 @@ namespace FreelancerModStudio
 
         public void Select(TableBlock block)
         {
-            if (_presenter.ViewerType == ViewerType.SolarArchetype)
+            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
             {
                 _presenter.ClearDisplay(false);
                 _presenter.Add(block);
@@ -197,7 +197,7 @@ namespace FreelancerModStudio
 
         public void Deselect()
         {
-            if (_presenter.ViewerType == ViewerType.SolarArchetype)
+            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
             {
                 _presenter.ClearDisplay(false);
                 return;
@@ -255,15 +255,17 @@ namespace FreelancerModStudio
 
         public void Add(List<TableBlock> blocks)
         {
-            if (_presenter.ViewerType != ViewerType.SolarArchetype)
+            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
             {
-                _presenter.Add(blocks);
+                return;
             }
+
+            _presenter.Add(blocks);
         }
 
         public void Delete(List<TableBlock> blocks)
         {
-            if (_presenter.ViewerType == ViewerType.SolarArchetype)
+            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
             {
                 return;
             }
@@ -312,7 +314,7 @@ namespace FreelancerModStudio
 
         public void FocusSelected()
         {
-            if (_presenter.ViewerType == ViewerType.SolarArchetype)
+            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
             {
                 _presenter.LookAt(new Point3D(0, 0, 0));
                 return;

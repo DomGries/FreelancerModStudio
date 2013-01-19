@@ -157,6 +157,7 @@ namespace FreelancerModStudio.Data
                 case ContentType.Station:
                 case ContentType.TradeLane:
                 case ContentType.WeaponsPlatform:
+                case ContentType.ModelPreview:
                     return true;
                 default:
                     return false;

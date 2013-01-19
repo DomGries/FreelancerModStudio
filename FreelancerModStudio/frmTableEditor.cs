@@ -263,6 +263,9 @@ namespace FreelancerModStudio
                 case ViewerType.SolarArchetype:
                     SystemParser.SetSolarArchetypeObjectType(block);
                     break;
+                case ViewerType.ModelPreview:
+                    SystemParser.SetModelPreviewObjectType(block);
+                    break;
             }
         }
 
@@ -280,6 +283,13 @@ namespace FreelancerModStudio
             {
                 ViewerType = ViewerType.SolarArchetype;
             }
+            else if (Data.TemplateIndex == Helper.Template.Data.AsteroidArchetypeFile ||
+                     Data.TemplateIndex == Helper.Template.Data.ShipArchetypeFile ||
+                     Data.TemplateIndex == Helper.Template.Data.EquipmentFile ||
+                     Data.TemplateIndex == Helper.Template.Data.EffectExplosionsFile)
+            {
+                ViewerType = ViewerType.ModelPreview;
+            }
             else
             {
                 ViewerType = ViewerType.None;
@@ -292,6 +302,7 @@ namespace FreelancerModStudio
             switch (ViewerType)
             {
                 case ViewerType.SolarArchetype:
+                case ViewerType.ModelPreview:
                     DataPath = Helper.Template.Data.GetDataPath(File, Helper.Template.Data.SolarArchetypeFile);
                     foreach (TableBlock block in Data.Blocks)
                     {
@@ -353,8 +364,12 @@ namespace FreelancerModStudio
                 // content type icons
                 cols[0].ImageGetter = delegate(object x)
                     {
-                        // ellipsoid + sphere and cylinder + ring have same icon
+                        // basic model + system and ellipsoid + sphere and cylinder + ring share the same icon
                         ContentType type = ((TableBlock)x).ObjectType;
+                        if (type == ContentType.ModelPreview)
+                        {
+                            return 0;
+                        }
                         if (type >= ContentType.ZoneEllipsoidExclusion)
                         {
                             return (int)type - 4;
@@ -1198,6 +1213,7 @@ namespace FreelancerModStudio
         None,
         System,
         Universe,
-        SolarArchetype
+        SolarArchetype,
+        ModelPreview,
     }
 }

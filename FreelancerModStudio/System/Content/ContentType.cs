@@ -39,6 +39,9 @@ namespace FreelancerModStudio.SystemPresenter.Content
         ZoneVignette,
         ZonePath,
         ZonePathTrade,
-        ZonePathTradeLane
+        ZonePathTradeLane,
+
+        // special types
+        ModelPreview,
     }
 }

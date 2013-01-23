@@ -10,7 +10,7 @@ namespace FreelancerModStudio.SystemPresenter
     public static class SystemParser
     {
         public const double SIZE_FACTOR = 0.005;
-        public const double MODEL_PREVIEW_SCALE = 10;
+        public const double MODEL_PREVIEW_SCALE = 1000;
         public const double UNIVERSE_SCALE = 1;
         public const double UNIVERSE_SYSTEM_SCALE = 0.2 * UNIVERSE_SCALE;
         public const double UNIVERSE_CONNECTION_SCALE = 0.04 * UNIVERSE_SCALE;

@@ -74,6 +74,7 @@
     <Compile Include="Helpers\Transform3DHelper.cs" />
     <Compile Include="Helpers\Viewport3DHelper.cs" />
     <Compile Include="Helpers\ViewportInfo.cs" />
+    <Compile Include="Helpers\Visual3DHelper.cs" />
     <Compile Include="Helpers\VisualInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visual3Ds\Composite\ViewCubeVisual3D.cs" />

@@ -259,7 +259,7 @@ namespace HelixEngine
                 (e.ChangedButton == MouseButton.Middle ||
                 (e.ChangedButton == MouseButton.Right && isShiftDown)))
             {
-                ResetCamera();
+                CameraHelper.ZoomExtents(Camera, Viewport, 0);
                 e.Handled = true;
                 return;
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
 
@@ -218,6 +219,86 @@ namespace HelixEngine
             camera.Position = new Point3D(0, 0, 1500);
             camera.LookDirection = new Vector3D(0, 0, -1500);
             camera.UpDirection = new Vector3D(0, 1, 0);
+        }
+
+        /// <summary>
+        /// Zooms to fit the extents of the specified viewport.
+        /// </summary>
+        /// <param name="actualCamera">
+        /// The actual camera.
+        /// </param>
+        /// <param name="viewport">
+        /// The viewport.
+        /// </param>
+        /// <param name="animationTime">
+        /// The animation time.
+        /// </param>
+        public static void ZoomExtents(PerspectiveCamera actualCamera, Viewport3D viewport, double animationTime)
+        {
+            var bounds = Visual3DHelper.FindBounds(viewport.Children);
+            var diagonal = new Vector3D(bounds.SizeX, bounds.SizeY, bounds.SizeZ);
+
+            if (bounds.IsEmpty || diagonal.LengthSquared == 0)
+            {
+                return;
+            }
+
+            ZoomExtents(actualCamera, viewport, bounds, animationTime);
+        }
+
+        /// <summary>
+        /// Zooms to fit the specified bounding rectangle.
+        /// </summary>
+        /// <param name="actualCamera">
+        /// The actual camera.
+        /// </param>
+        /// <param name="viewport">
+        /// The viewport.
+        /// </param>
+        /// <param name="bounds">
+        /// The bounding rectangle.
+        /// </param>
+        /// <param name="animationTime">
+        /// The animation time.
+        /// </param>
+        public static void ZoomExtents(
+            PerspectiveCamera actualCamera, Viewport3D viewport, Rect3D bounds, double animationTime)
+        {
+            var diagonal = new Vector3D(bounds.SizeX, bounds.SizeY, bounds.SizeZ);
+            var center = bounds.Location + diagonal * 0.5;
+            double radius = diagonal.Length * 0.5;
+            ZoomExtents(actualCamera, viewport, center, radius, animationTime);
+        }
+
+        /// <summary>
+        /// Zooms to fit the specified sphere.
+        /// </summary>
+        /// <param name="camera">
+        /// The camera.
+        /// </param>
+        /// <param name="viewport">
+        /// The viewport.
+        /// </param>
+        /// <param name="center">
+        /// The center of the sphere.
+        /// </param>
+        /// <param name="radius">
+        /// The radius of the sphere.
+        /// </param>
+        /// <param name="animationTime">
+        /// The animation time.
+        /// </param>
+        public static void ZoomExtents(
+            PerspectiveCamera camera, Viewport3D viewport, Point3D center, double radius, double animationTime)
+        {
+            double disth = radius / Math.Tan(0.5 * camera.FieldOfView * Math.PI / 180);
+            double vfov = camera.FieldOfView / viewport.ActualWidth * viewport.ActualHeight;
+            double distv = radius / Math.Tan(0.5 * vfov * Math.PI / 180);
+
+            double dist = Math.Max(disth, distv);
+            var dir = camera.LookDirection;
+            dir.Normalize();
+            LookAt(camera, center, dir * dist, animationTime);
         }
     }
 }

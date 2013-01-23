@@ -477,6 +477,48 @@ namespace HelixEngine
             CameraHelper.AnimateTo(this.Camera, newPosition, newDirection, newUpDirection, animationTime);
         }
 
+        /// <summary>
+        /// Zooms to the extents of the sceen.
+        /// </summary>
+        /// <param name="animationTime">
+        /// The animation time.
+        /// </param>
+        public void ZoomExtents(double animationTime)
+        {
+            CameraHelper.ZoomExtents(this.Camera, this.Viewport, animationTime);
+        }
+
+        /// <summary>
+        /// Zooms to the extents of the specified bounding box.
+        /// </summary>
+        /// <param name="bounds">
+        /// The bounding box.
+        /// </param>
+        /// <param name="animationTime">
+        /// The animation time.
+        /// </param>
+        public void ZoomExtents(Rect3D bounds, double animationTime)
+        {
+            CameraHelper.ZoomExtents(this.Camera, this.Viewport, bounds, animationTime);
+        }
+
+        /// <summary>
+        /// Zooms to fit the specified sphere.
+        /// </summary>
+        /// <param name="center">
+        /// The center of the sphere.
+        /// </param>
+        /// <param name="radius">
+        /// The radius of the sphere.
+        /// </param>
+        /// <param name="animationTime">
+        /// The animation time.
+        /// </param>
+        public void ZoomExtents(Point3D center, double radius, double animationTime)
+        {
+            CameraHelper.ZoomExtents(this.Camera, this.Viewport, center, radius, animationTime);
+        }
+
         public delegate void SelectionChangedType(DependencyObject visual);
         public SelectionChangedType SelectionChanged;
 

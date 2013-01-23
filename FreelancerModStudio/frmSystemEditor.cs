@@ -181,7 +181,7 @@ namespace FreelancerModStudio
                     if (isModelPreview)
                     {
                         // focus and zoom into object
-                        _presenter.LookAtAndZoom(content, 1, false);
+                        _presenter.LookAtAndZoom(content, 1.25, false);
                     }
                     return;
                 }
@@ -332,7 +332,7 @@ namespace FreelancerModStudio
                         zoomFactor = 2;
                         break;
                     default:
-                        zoomFactor = 1;
+                        zoomFactor = 1.25;
                         break;
                 }
                 _presenter.LookAtAndZoom(_presenter.SelectedContent, zoomFactor, true);

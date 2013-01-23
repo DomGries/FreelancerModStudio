@@ -164,14 +164,14 @@ namespace FreelancerModStudio.SystemPresenter
 
             // get distance based on model transform
             matrix.TranslatePrepend(new Vector3D(bounds.SizeX, bounds.SizeY, bounds.SizeZ));
-            double distance = Math.Max(Math.Max(Math.Abs(matrix.OffsetX - point.X), Math.Abs(matrix.OffsetY - point.Y)), Math.Abs(matrix.OffsetZ - point.Z)) * 1.45 * zoomFactor;
+            double distance = Math.Max(Math.Max(Math.Abs(matrix.OffsetX - point.X), Math.Abs(matrix.OffsetY - point.Y)), Math.Abs(matrix.OffsetZ - point.Z));
 
-            Viewport.LookAt(point, distance, animate ? Animator.AnimationDuration.TimeSpan.TotalMilliseconds : 0);
+            Viewport.ZoomExtents(point, distance * 0.5 * zoomFactor, animate ? Animator.AnimationDuration.TimeSpan.TotalMilliseconds : 0);
         }
 
         void AddContent(ContentBase content)
         {
-            //load model it was is not loaded yet
+            // load model if it was not loaded yet
             if (content.Content == null)
             {
                 LoadModel(content);

@@ -103,15 +103,10 @@ namespace FreelancerModStudio
         public void ShowData(TableData data)
         {
             _presenter.Add(data.Blocks);
+            _presenter.Viewport.ZoomExtents(0);
         }
 
-        public void ShowData(TableData data, string file, ArchetypeManager archetype)
-        {
-            _presenter.Add(data.Blocks);
-            DisplayUniverse(file, data.Blocks, archetype);
-        }
-
-        void DisplayUniverse(string file, List<TableBlock> blocks, ArchetypeManager archetype)
+        public void ShowUniverseConnections(string file, List<TableBlock> blocks, ArchetypeManager archetype)
         {
             if (File.Exists(file))
             {
@@ -329,7 +324,7 @@ namespace FreelancerModStudio
                         zoomFactor = 20;
                         break;
                     case ViewerType.System:
-                        zoomFactor = 2;
+                        zoomFactor = 1.75;
                         break;
                     default:
                         zoomFactor = 1.25;

@@ -702,7 +702,8 @@ namespace FreelancerModStudio
                         break;
                     case ViewerType.Universe:
                         _systemEditor.IsModelMode = false;
-                        _systemEditor.ShowData(editor.Data, editor.File, editor.Archetype);
+                        _systemEditor.ShowData(editor.Data);
+                        _systemEditor.ShowUniverseConnections(editor.File, editor.Data.Blocks, editor.Archetype);
                         break;
                     case ViewerType.SolarArchetype:
                     case ViewerType.ModelPreview:

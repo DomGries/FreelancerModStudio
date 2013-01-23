@@ -259,7 +259,7 @@ namespace HelixEngine
                 (e.ChangedButton == MouseButton.Middle ||
                 (e.ChangedButton == MouseButton.Right && isShiftDown)))
             {
-                CameraHelper.ZoomExtents(Camera, Viewport, 0);
+                ResetCamera();
                 e.Handled = true;
                 return;
             }
@@ -375,6 +375,7 @@ namespace HelixEngine
         public void ResetCamera()
         {
             CameraHelper.Reset(Camera);
+            CameraHelper.ZoomExtents(Camera, Viewport, 0);
             lastPoint3D = new Point3D();
         }
 

@@ -26,7 +26,7 @@ namespace FreelancerModStudio.SystemPresenter
         readonly Dictionary<string, Model3D> _modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
 
         ModelVisual3D _lightning;
-        ModelVisual3D _selection;
+        WireBoundingBox _selection;
         ContentBase _selectedContent;
 
         public ModelVisual3D Lightning
@@ -59,7 +59,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public ModelVisual3D Selection
+        public WireBoundingBox Selection
         {
             get
             {
@@ -101,7 +101,7 @@ namespace FreelancerModStudio.SystemPresenter
                 if (value != null)
                 {
                     //select content visually
-                    Selection = GetSelectionBox(value);
+                    SetSelectionBox(value);
                     Viewport.Title = value.Block.Name;
                 }
                 else
@@ -151,6 +151,22 @@ namespace FreelancerModStudio.SystemPresenter
         public void LookAt(Point3D point)
         {
             Viewport.LookAt(point, Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
+        }
+
+        public void LookAtAndZoom(ContentBase content, double zoomFactor, bool animate)
+        {
+            Rect3D bounds = content.Content.Bounds;
+            Matrix3D matrix = content.Transform.Value;
+
+            // prepend translation to account for model scale
+            matrix.TranslatePrepend(new Vector3D(bounds.X + bounds.SizeX * 0.5f, bounds.Y + bounds.SizeY * 0.5f, bounds.Z + bounds.SizeZ * 0.5f));
+            Point3D point = new Point3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
+
+            // get distance based on model transform
+            matrix.TranslatePrepend(new Vector3D(bounds.SizeX, bounds.SizeY, bounds.SizeZ));
+            double distance = Math.Max(Math.Max(Math.Abs(matrix.OffsetX - point.X), Math.Abs(matrix.OffsetY - point.Y)), Math.Abs(matrix.OffsetZ - point.Z)) * 1.45 * zoomFactor;
+
+            Viewport.LookAt(point, distance, animate ? Animator.AnimationDuration.TimeSpan.TotalMilliseconds : 0);
         }
 
         void AddContent(ContentBase content)
@@ -243,12 +259,6 @@ namespace FreelancerModStudio.SystemPresenter
 
         void camera_SelectionChanged(DependencyObject visual)
         {
-            // prevent selecting objects in solararchetype file
-            if (ViewerType == ViewerType.SolarArchetype || ViewerType == ViewerType.ModelPreview)
-            {
-                return;
-            }
-
             ContentBase content = visual as ContentBase;
 
             // prevent selecting wirebox + universe connection
@@ -295,12 +305,22 @@ namespace FreelancerModStudio.SystemPresenter
             OnFileOpen((string)((MenuItem)sender).Tag);
         }
 
-        ModelVisual3D GetSelectionBox(ContentBase content)
+        void SetSelectionBox(ContentBase content)
         {
-            ModelVisual3D lines = GetWireBox(GetBounds(content));
-            lines.Transform = content.Transform;
-
-            return lines;
+            if (Selection != null)
+            {
+                Selection.BoundingBox = GetBounds(content);
+                Selection.Transform = content.Transform;
+            }
+            else
+            {
+                Selection = new WireBoundingBox
+                    {
+                        BoundingBox = GetBounds(content),
+                        Color = Colors.Yellow,
+                        Transform = content.Transform,
+                    };
+            }
         }
 
         Rect3D GetBounds(ContentBase content)
@@ -326,43 +346,6 @@ namespace FreelancerModStudio.SystemPresenter
 
             // return shape model by default
             return content.GetShapeBounds();
-        }
-
-        static ModelVisual3D GetWireBox(Rect3D bounds)
-        {
-            Point3DCollection points = new Point3DCollection
-                {
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z),
-                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X, bounds.Y, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X, bounds.Y, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X, bounds.Y, bounds.Z),
-                    new Point3D(bounds.X, bounds.Y, bounds.Z),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X, bounds.Y, bounds.Z + bounds.SizeZ),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y + bounds.SizeY, bounds.Z),
-                    new Point3D(bounds.X + bounds.SizeX, bounds.Y, bounds.Z),
-                    new Point3D(bounds.X, bounds.Y + bounds.SizeY, bounds.Z),
-                    new Point3D(bounds.X, bounds.Y, bounds.Z)
-                };
-
-            return new WireLines
-                {
-                    Lines = points,
-                    Color = Colors.Yellow
-                };
         }
 
         public void ClearDisplay(bool light)
@@ -571,7 +554,7 @@ namespace FreelancerModStudio.SystemPresenter
         void SetValues(ContentBase content, TableBlock block)
         {
             bool modelChanged;
-            if (ViewerType == ViewerType.ModelPreview)
+            if (ViewerType == ViewerType.SolarArchetype || ViewerType == ViewerType.ModelPreview)
             {
                 modelChanged = SystemParser.SetModelPreviewValues(content, block);
             }
@@ -668,7 +651,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (_selectedContent != null && _selectedContent.Block.IsRealModel())
             {
-                Selection = GetSelectionBox(_selectedContent);
+                SetSelectionBox(_selectedContent);
             }
         }
 

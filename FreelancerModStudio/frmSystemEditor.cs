@@ -164,7 +164,8 @@ namespace FreelancerModStudio
 
             if (block.Visibility)
             {
-                if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
+                bool isModelPreview = _presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview;
+                if (isModelPreview)
                 {
                     _presenter.SelectedContent = null;
                     _presenter.ClearDisplay(false);
@@ -176,6 +177,12 @@ namespace FreelancerModStudio
                 if (content != null)
                 {
                     _presenter.SelectedContent = content;
+
+                    if (isModelPreview)
+                    {
+                        // focus and zoom into object
+                        _presenter.LookAtAndZoom(content, 1, false);
+                    }
                     return;
                 }
             }
@@ -313,15 +320,22 @@ namespace FreelancerModStudio
 
         public void FocusSelected()
         {
-            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
-            {
-                _presenter.LookAt(new Point3D(0, 0, 0));
-                return;
-            }
-
             if (_presenter.SelectedContent != null)
             {
-                _presenter.LookAt(_presenter.SelectedContent);
+                double zoomFactor;
+                switch (_presenter.ViewerType)
+                {
+                    case ViewerType.Universe:
+                        zoomFactor = 20;
+                        break;
+                    case ViewerType.System:
+                        zoomFactor = 2;
+                        break;
+                    default:
+                        zoomFactor = 1;
+                        break;
+                }
+                _presenter.LookAtAndZoom(_presenter.SelectedContent, zoomFactor, true);
             }
         }
 

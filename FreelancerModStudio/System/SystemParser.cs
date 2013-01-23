@@ -10,8 +10,11 @@ namespace FreelancerModStudio.SystemPresenter
     public static class SystemParser
     {
         public const double SIZE_FACTOR = 0.005;
-        public const double MODEL_PREVIEW_SIZE = 10;
-        public const double UNIVERSE_SIZE = 8;
+        public const double MODEL_PREVIEW_SCALE = 10;
+        public const double UNIVERSE_SCALE = 1;
+        public const double UNIVERSE_SYSTEM_SCALE = 0.2 * UNIVERSE_SCALE;
+        public const double UNIVERSE_CONNECTION_SCALE = 0.04 * UNIVERSE_SCALE;
+        public const double UNIVERSE_DOUBLE_CONNECTION_SCALE = 2.5 * UNIVERSE_CONNECTION_SCALE;
 
         public static KeyValuePair<string, ArchetypeInfo> GetArchetypeInfo(EditorINIBlock block)
         {
@@ -245,7 +248,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static bool SetModelPreviewValues(ContentBase content, TableBlock block)
         {
-            content.SetTransform(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(MODEL_PREVIEW_SIZE, MODEL_PREVIEW_SIZE, MODEL_PREVIEW_SIZE), false);
+            content.SetTransform(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE), false);
             return SetBlock(content, block);
         }
 
@@ -289,7 +292,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 case ContentType.System:
                     position = ParseUniverseVector(positionString);
-                    scale = new Vector3D(UNIVERSE_SIZE, UNIVERSE_SIZE, UNIVERSE_SIZE);
+                    scale = new Vector3D(UNIVERSE_SYSTEM_SCALE, UNIVERSE_SYSTEM_SCALE, UNIVERSE_SYSTEM_SCALE);
                     rotation = new Vector3D(0, 0, 0);
 
                     Content.System system = (Content.System)content;
@@ -393,7 +396,6 @@ namespace FreelancerModStudio.SystemPresenter
         public static Vector3D ParseUniverseVector(string vector)
         {
             const double axisCenter = 7.5;
-            const double positionScale = 1/SIZE_FACTOR/4;
 
             //Use Point.Parse after implementation of type handling
             string[] values = vector.Split(new[] { ',' });
@@ -401,7 +403,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 double tempScale1 = Parser.ParseDouble(values[0], 0);
                 double tempScale2 = Parser.ParseDouble(values[1], 0);
-                return new Vector3D(tempScale1 - axisCenter, -tempScale2 + axisCenter, 0)*positionScale;
+                return new Vector3D(tempScale1 - axisCenter, -tempScale2 + axisCenter, 0)*UNIVERSE_SCALE;
             }
             return new Vector3D(0, 0, 0);
         }

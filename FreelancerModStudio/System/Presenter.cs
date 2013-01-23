@@ -472,11 +472,11 @@ namespace FreelancerModStudio.SystemPresenter
             Vector3D toPosition = line.To.GetPosition();
 
             Vector3D position = (fromPosition + toPosition)/2;
-            Vector3D scale = new Vector3D(2.5, (fromPosition - toPosition).Length, 1);
+            Vector3D scale = new Vector3D(SystemParser.UNIVERSE_CONNECTION_SCALE, (fromPosition - toPosition).Length, 1);
 
             if (line.FromType == ConnectionType.JumpGateAndHole || line.ToType == ConnectionType.JumpGateAndHole)
             {
-                scale.X = 4.5;
+                scale.X = SystemParser.UNIVERSE_DOUBLE_CONNECTION_SCALE;
             }
 
             Vector v1 = new Vector(fromPosition.X, fromPosition.Y);

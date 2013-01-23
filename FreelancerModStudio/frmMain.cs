@@ -660,7 +660,7 @@ namespace FreelancerModStudio
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
             {
-                if (!tableEditor.CanDisplay3DViewer() && _systemEditor != null)
+                if (_systemEditor != null && (!tableEditor.CanDisplay3DViewer() || _systemEditor.IsHidden))
                 {
                     CloseSystemEditor();
                 }

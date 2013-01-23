@@ -97,7 +97,7 @@ namespace HelixEngine.Helpers
 
             // At this point, we know obj is Viewport3DVisual
             Viewport3DVisual vis = obj as Viewport3DVisual;
-            Matrix3D matxViewport = ViewportInfo.GetTotalTransform(vis);
+            Matrix3D matxViewport = Viewport3DHelper.GetTotalTransform(vis);
             matx.Append(matxViewport);
 
             return matx;

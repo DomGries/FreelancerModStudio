@@ -10,7 +10,7 @@
 #include "scripts\products\dotnetfx35sp1.iss"
 
 #define MyAppSetupName 'Freelancer Mod Studio'
-#define MyAppVersion '1.0.5'
+#define MyAppVersion '1.0.5.1'
 
 [Setup]
 AppName={#MyAppSetupName}

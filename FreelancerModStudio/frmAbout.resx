@@ -128,6 +128,9 @@
   <data name="logoPictureBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>128, 256</value>
   </data>
+  <data name="logoPictureBox.SizeMode" type="System.Windows.Forms.PictureBoxSizeMode, System.Windows.Forms">
+    <value>Zoom</value>
+  </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="logoPictureBox.TabIndex" type="System.Int32, mscorlib">
     <value>26</value>

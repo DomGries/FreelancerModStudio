@@ -357,7 +357,9 @@ namespace FreelancerModStudio
                 };
 
             cols[0].Width = 150;
-            cols[1].Width = cols[1].MinimumWidth = cols[1].MaximumWidth = 34;
+
+            cols[1].Width = 36;
+
             cols[2].MinimumWidth = 120;
             cols[2].FillsFreeSpace = true;
 

@@ -155,7 +155,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public void LookAtAndZoom(ContentBase content, double zoomFactor, bool animate)
         {
-            Rect3D bounds = content.Content.Bounds;
+            Rect3D bounds = GetBounds(content);
             Matrix3D matrix = content.Transform.Value;
 
             // prepend translation to account for model scale

@@ -795,7 +795,6 @@
             tabGradient8.StartColor = System.Drawing.SystemColors.Control;
             tabGradient8.TextColor = System.Drawing.SystemColors.ControlDarkDark;
             autoHideStripSkin2.TabGradient = tabGradient8;
-            autoHideStripSkin2.TextFont = new System.Drawing.Font("Tahoma", 8.25F);
             dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
             tabGradient9.EndColor = System.Drawing.SystemColors.ControlLightLight;
             tabGradient9.StartColor = System.Drawing.SystemColors.ControlLightLight;
@@ -809,7 +808,6 @@
             tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
             dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
             dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
-            dockPaneStripSkin2.TextFont = new System.Drawing.Font("Tahoma", 8.25F);
             tabGradient11.EndColor = System.Drawing.SystemColors.ActiveCaption;
             tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
             tabGradient11.StartColor = System.Drawing.SystemColors.GradientActiveCaption;

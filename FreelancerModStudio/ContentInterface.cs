@@ -31,6 +31,7 @@ namespace FreelancerModStudio
 
         bool CanChangeVisibility(bool rightNow);
         bool CanFocusSelected(bool rightNow);
+        bool CanTrackSelected(bool rightNow);
 
         bool CanDisplay3DViewer();
 

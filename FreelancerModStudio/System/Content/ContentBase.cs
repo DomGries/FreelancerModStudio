@@ -6,12 +6,13 @@ namespace FreelancerModStudio.SystemPresenter.Content
     public abstract class ContentBase : ModelVisual3D
     {
         public TableBlock Block;
+        public Vector3D Position;
 
         protected abstract Model3D GetShapeModel();
         public abstract Rect3D GetShapeBounds();
         public abstract bool IsEmissive();
 
-        public void SetTransform(Matrix3D matrix, bool animate)
+        void SetTransform(Matrix3D matrix, bool animate)
         {
             if (Content != null && animate)
             {
@@ -30,6 +31,7 @@ namespace FreelancerModStudio.SystemPresenter.Content
 
         public void SetTransform(Vector3D position, Vector3D rotation, Vector3D scale, bool animate)
         {
+            Position = position;
             SetTransform(GetMatrix(position, rotation, scale), animate);
         }
 
@@ -60,16 +62,9 @@ namespace FreelancerModStudio.SystemPresenter.Content
             Content = GetShapeModel();
         }
 
-        public Vector3D GetPosition()
-        {
-            Matrix3D matrix = Transform.Value;
-            return new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
-        }
-
         public Point3D GetPositionPoint()
         {
-            Matrix3D matrix = Transform.Value;
-            return new Point3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
+            return new Point3D(Position.X, Position.Y, Position.Z);
         }
     }
 }

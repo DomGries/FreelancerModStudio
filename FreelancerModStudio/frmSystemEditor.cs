@@ -133,6 +133,7 @@ namespace FreelancerModStudio
         {
             Helper.Thread.Abort(ref _universeLoadingThread, waitForThread);
             _presenter.SelectedContent = null;
+            _presenter.TrackedContent = null;
             _presenter.ClearDisplay(false);
         }
 
@@ -331,6 +332,24 @@ namespace FreelancerModStudio
                         break;
                 }
                 _presenter.LookAtAndZoom(_presenter.SelectedContent, zoomFactor, true);
+            }
+        }
+
+        public void TrackSelected()
+        {
+            if (_presenter.SelectedContent == null)
+            {
+                _presenter.TrackedContent = null;
+            }
+
+            // change tracked object
+            if (_presenter.SelectedContent == _presenter.TrackedContent)
+            {
+                _presenter.TrackedContent = null;
+            }
+            else
+            {
+                _presenter.TrackedContent = _presenter.SelectedContent;
             }
         }
 

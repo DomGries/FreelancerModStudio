@@ -1005,6 +1005,14 @@ namespace FreelancerModStudio
             }
         }
 
+        void mnuTrackSelected_Click(object sender, EventArgs e)
+        {
+            if (_systemEditor != null)
+            {
+                _systemEditor.TrackSelected();
+            }
+        }
+
         void mnuChangeVisibility_Click(object sender, EventArgs e)
         {
             IDocumentForm content = GetDocument();
@@ -1080,6 +1088,7 @@ namespace FreelancerModStudio
                 mnu3dEditor.Enabled = false;
 
                 mnuFocusSelected.Visible = false;
+                mnuTrackSelected.Visible = false;
                 mnuFocusSelectedSeperator.Visible = false;
 
                 mnuShowModels.Visible = false;
@@ -1117,6 +1126,7 @@ namespace FreelancerModStudio
             bool showFocus = document.CanFocusSelected(false);
             mnuFocusSelected.Visible = showFocus;
             mnuFocusSelectedSeperator.Visible = showFocus;
+            mnuTrackSelected.Visible = showFocus;
 
             bool showVisibility = document.CanChangeVisibility(false);
             mnuShowModels.Visible = showVisibility;
@@ -1138,6 +1148,7 @@ namespace FreelancerModStudio
 
                 mnuChangeVisibility.Enabled = false;
                 mnuFocusSelected.Enabled = false;
+                mnuTrackSelected.Enabled = false;
 
                 mnuAdd.DropDown = null;
             }
@@ -1155,11 +1166,13 @@ namespace FreelancerModStudio
                 {
                     mnuChangeVisibility.Enabled = document.CanChangeVisibility(true);
                     mnuFocusSelected.Enabled = document.CanFocusSelected(true);
+                    mnuTrackSelected.Enabled = document.CanTrackSelected(true);
                 }
                 else
                 {
                     mnuChangeVisibility.Enabled = false;
                     mnuFocusSelected.Enabled = false;
+                    mnuTrackSelected.Enabled = false;
                 }
 
                 mnuAdd.DropDown = content.MultipleAddDropDown();

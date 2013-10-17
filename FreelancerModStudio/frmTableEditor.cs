@@ -1141,6 +1141,17 @@ namespace FreelancerModStudio
             return correctFileType;
         }
 
+        public bool CanTrackSelected(bool rightNow)
+        {
+            bool correctFileType = ViewerType == ViewerType.System;
+            if (rightNow)
+            {
+                return correctFileType && objectListView1.SelectedObjects.Count > 0;
+            }
+
+            return correctFileType;
+        }
+
         public void ChangeVisibility()
         {
             HideShowSelected();

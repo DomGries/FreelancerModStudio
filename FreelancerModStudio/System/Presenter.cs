@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -25,11 +26,15 @@ namespace FreelancerModStudio.SystemPresenter
         int _secondLayerId;
         readonly Dictionary<string, Model3D> _modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
 
-        ModelVisual3D _lightning;
-        WireBoundingBox _selection;
+        Visual3D _lightning;
+        WireBoundingBox _selectionBox;
+        WireLine _trackedLine;
         ContentBase _selectedContent;
+        ContentBase _trackedContent;
 
-        public ModelVisual3D Lightning
+        readonly StringBuilder _titleBuilder = new StringBuilder();
+
+        public Visual3D Lightning
         {
             get
             {
@@ -37,54 +42,34 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                int index = Viewport.Children.IndexOf(_lightning);
-                if (index != -1)
-                {
-                    if (value != null)
-                    {
-                        Viewport.Children[index] = value;
-                    }
-                    else
-                    {
-                        Viewport.Children.RemoveAt(index);
-                    }
-                }
-                else if (value != null)
-                {
-                    Viewport.Children.Insert(0, value);
-                    ++_secondLayerId;
-                }
-
+                AddOrReplace(_lightning, value, true);
                 _lightning = value;
             }
         }
 
-        public WireBoundingBox Selection
+        public WireBoundingBox SelectionBox
         {
             get
             {
-                return _selection;
+                return _selectionBox;
             }
             set
             {
-                int index = Viewport.Children.IndexOf(_selection);
-                if (index != -1)
-                {
-                    if (value != null)
-                    {
-                        Viewport.Children[index] = value;
-                    }
-                    else
-                    {
-                        Viewport.Children.RemoveAt(index);
-                    }
-                }
-                else if (value != null)
-                {
-                    Viewport.Children.Insert(0, value);
-                }
+                AddOrReplace(_selectionBox, value, false);
+                _selectionBox = value;
+            }
+        }
 
-                _selection = value;
+        public WireLine TrackedLine
+        {
+            get
+            {
+                return _trackedLine;
+            }
+            set
+            {
+                AddOrReplace(_trackedLine, value, false);
+                _trackedLine = value;
             }
         }
 
@@ -98,17 +83,26 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 _selectedContent = value;
 
-                if (value != null)
-                {
-                    //select content visually
-                    SetSelectionBox(value);
-                    Viewport.Title = value.Block.Name;
-                }
-                else
-                {
-                    Selection = null;
-                    Viewport.Title = null;
-                }
+                //select content visually
+                SetSelectionBox();
+                SetTrackedLine(true);
+                SetTitle();
+            }
+        }
+
+        public ContentBase TrackedContent
+        {
+            get
+            {
+                return _trackedContent;
+            }
+            set
+            {
+                _trackedContent = value;
+
+                //track content visually
+                SetTrackedLine(false);
+                SetTitle();
             }
         }
 
@@ -255,6 +249,10 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 _secondLayerId--;
             }
+            if (content == _trackedContent)
+            {
+                TrackedContent = null;
+            }
         }
 
         void camera_SelectionChanged(DependencyObject visual)
@@ -305,20 +303,78 @@ namespace FreelancerModStudio.SystemPresenter
             OnFileOpen((string)((MenuItem)sender).Tag);
         }
 
-        void SetSelectionBox(ContentBase content)
+        void SetSelectionBox()
         {
-            if (Selection != null)
+            if (_selectedContent == null)
             {
-                Selection.BoundingBox = GetBounds(content);
-                Selection.Transform = content.Transform;
+                SelectionBox = null;
+                return;
+            }
+
+            Color color = Colors.Yellow;
+            if (_trackedContent == _selectedContent)
+            {
+                color = Colors.Red;
+            }
+
+            if (SelectionBox != null)
+            {
+                WireBoundingBox selectionBox = SelectionBox;
+                selectionBox.Color = color;
+                selectionBox.BoundingBox = GetBounds(_selectedContent);
+                selectionBox.Transform = _selectedContent.Transform;
             }
             else
             {
-                Selection = new WireBoundingBox
+                SelectionBox = new WireBoundingBox
                     {
-                        BoundingBox = GetBounds(content),
-                        Color = Colors.Yellow,
-                        Transform = content.Transform,
+                        Color = color,
+                        BoundingBox = GetBounds(_selectedContent),
+                        Transform = _selectedContent.Transform,
+                    };
+            }
+        }
+
+        void SetTrackedLine(bool update)
+        {
+            if (_selectedContent == null)
+            {
+                TrackedLine = null;
+                return;
+            }
+
+            if (!update)
+            {
+                WireBoundingBox selectionBox = SelectionBox;
+                if (_trackedContent == _selectedContent)
+                {
+                    selectionBox.Color = Colors.Red;
+                }
+                else
+                {
+                    selectionBox.Color = Colors.Yellow;
+                }
+            }
+
+            if (_trackedContent == null)
+            {
+                TrackedLine = null;
+                return;
+            }
+
+            if (TrackedLine != null)
+            {
+                WireLine trackedLine = TrackedLine;
+                trackedLine.Point1 = _selectedContent.GetPositionPoint();
+                trackedLine.Point2 = _trackedContent.GetPositionPoint();
+            }
+            else
+            {
+                TrackedLine = new WireLine
+                    {
+                        Point1 = _selectedContent.GetPositionPoint(),
+                        Point2 = _trackedContent.GetPositionPoint(),
+                        Color = Colors.Red,
                     };
             }
         }
@@ -366,7 +422,11 @@ namespace FreelancerModStudio.SystemPresenter
         public int GetContentStartId()
         {
             int index = 0;
-            if (Selection != null)
+            if (SelectionBox != null)
+            {
+                ++index;
+            }
+            if (TrackedLine != null)
             {
                 ++index;
             }
@@ -468,8 +528,8 @@ namespace FreelancerModStudio.SystemPresenter
 
         static void SetConnection(Connection line)
         {
-            Vector3D fromPosition = line.From.GetPosition();
-            Vector3D toPosition = line.To.GetPosition();
+            Vector3D fromPosition = line.From.Position;
+            Vector3D toPosition = line.To.Position;
 
             Vector3D position = (fromPosition + toPosition)/2;
             Vector3D scale = new Vector3D(SystemParser.UNIVERSE_CONNECTION_SCALE, (fromPosition - toPosition).Length, 1);
@@ -560,7 +620,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
-                modelChanged = SystemParser.SetValues(content, block, ViewerType == ViewerType.System);
+                modelChanged = SystemParser.SetValues(content, block, true);
             }
 
             if (modelChanged && content.Content != null)
@@ -583,7 +643,7 @@ namespace FreelancerModStudio.SystemPresenter
                 SelectedContent = content;
 
                 // set title when block name was changed in properties window
-                Viewport.Title = content.Block.Name;
+                SetTitle();
             }
         }
 
@@ -651,7 +711,8 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (_selectedContent != null && _selectedContent.Block.IsRealModel())
             {
-                SetSelectionBox(_selectedContent);
+                // update selection box
+                SelectedContent = _selectedContent;
             }
         }
 
@@ -694,6 +755,87 @@ namespace FreelancerModStudio.SystemPresenter
                     return new SystemObject();
                 default: // zone
                     return new Zone();
+            }
+        }
+
+        void AddOrReplace(Visual3D visual, Visual3D value, bool secondLayer)
+        {
+            int index = Viewport.Children.IndexOf(visual);
+            if (index != -1)
+            {
+                if (value != null)
+                {
+                    Viewport.Children[index] = value;
+                }
+                else
+                {
+                    Viewport.Children.RemoveAt(index);
+                }
+            }
+            else if (value != null)
+            {
+                Viewport.Children.Insert(0, value);
+
+                if (secondLayer)
+                {
+                    ++_secondLayerId;
+                }
+            }
+        }
+
+        void SetTitle()
+        {
+            if (_selectedContent == null)
+            {
+                Viewport.Title = null;
+                return;
+            }
+
+            _titleBuilder.Length = 0;
+            _titleBuilder.AppendLine(_selectedContent.Block.Name);
+
+            if (_trackedContent != null && _trackedContent != _selectedContent)
+            {
+                AddTrackInfo();
+            }
+
+            Viewport.Title = _titleBuilder.ToString();
+        }
+
+        void AddTrackInfo()
+        {
+            _titleBuilder.AppendLine();
+            _titleBuilder.AppendLine(_trackedContent.Block.Name);
+
+            _titleBuilder.Append("Distance: ");
+            Vector3D a = _selectedContent.Position / SystemParser.SIZE_FACTOR;
+            Vector3D b = _trackedContent.Position / SystemParser.SIZE_FACTOR;
+            _titleBuilder.Append(Math.Round((a - b).Length));
+
+            _titleBuilder.AppendLine();
+            _titleBuilder.Append("Angle: ");
+
+            double denominator = -b.Y - -a.Y;
+            if (denominator == 0.0)
+            {
+                _titleBuilder.Append("0, 0, ");
+            }
+            else
+            {
+                _titleBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * 180.0 / Math.PI));
+                _titleBuilder.Append(", ");
+                _titleBuilder.Append(Math.Round(Math.Atan((b.X - a.X) / denominator) * 180.0 / Math.PI));
+                _titleBuilder.Append(", ");
+            }
+
+            denominator = b.X - a.X;
+            if (denominator == 0.0)
+            {
+                _titleBuilder.Append('0');
+            }
+            else
+            {
+                _titleBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * 180.0 / Math.PI));
             }
         }
     }

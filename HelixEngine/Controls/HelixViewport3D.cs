@@ -519,18 +519,18 @@ namespace HelixEngine
             CameraHelper.ZoomExtents(this.Camera, this.Viewport, center, radius, animationTime);
         }
 
-        public delegate void SelectionChangedType(DependencyObject visual);
+        public delegate void SelectionChangedType(DependencyObject visual, bool toggle);
         public SelectionChangedType SelectionChanged;
 
-        private void OnSelectionChanged(DependencyObject visual)
+        private void OnSelectionChanged(DependencyObject visual, bool toggle)
         {
             if (this.SelectionChanged != null)
-                this.SelectionChanged(visual);
+                this.SelectionChanged(visual, toggle);
         }
 
-        private void CameraControllerSelectionChanged(DependencyObject visual)
+        private void CameraControllerSelectionChanged(DependencyObject visual, bool toggle)
         {
-            OnSelectionChanged(visual);
+            OnSelectionChanged(visual, toggle);
         }
 
         /// <summary>

@@ -87,13 +87,13 @@ namespace HelixEngine
         public double RotateSensitivity { get; set; }
         public double PanSensitivity { get; set; }
 
-        public delegate void SelectionChangedType(DependencyObject visual);
+        public delegate void SelectionChangedType(DependencyObject visual, bool toggle);
         public SelectionChangedType SelectionChanged;
 
-        private void OnSelectionChanged(DependencyObject visual)
+        private void OnSelectionChanged(DependencyObject visual, bool toggle)
         {
             if (this.SelectionChanged != null)
-                this.SelectionChanged(visual);
+                this.SelectionChanged(visual, toggle);
         }
 
         /// <summary>
@@ -253,6 +253,7 @@ namespace HelixEngine
             var isDoubleClick = e.ClickCount == 2;
             var isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
             var isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+            var isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
 
             // reset camera
             if (isDoubleClick &&
@@ -284,7 +285,7 @@ namespace HelixEngine
                         CameraHelper.LookAt(Camera, point, 0);
                     else
                         // select object
-                        OnSelectionChanged(visual);
+                        OnSelectionChanged(visual, isCtrlDown);
                 }
                 e.Handled = true;
             }

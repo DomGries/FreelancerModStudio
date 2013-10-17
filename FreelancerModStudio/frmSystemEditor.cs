@@ -20,15 +20,15 @@ namespace FreelancerModStudio
         Presenter _presenter;
         Thread _universeLoadingThread;
 
-        public delegate void SelectionChangedType(TableBlock block);
+        public delegate void SelectionChangedType(TableBlock block, bool toggle);
 
         public SelectionChangedType SelectionChanged;
 
-        void OnSelectionChanged(TableBlock block)
+        void OnSelectionChanged(TableBlock block, bool toggle)
         {
             if (SelectionChanged != null)
             {
-                SelectionChanged(block);
+                SelectionChanged(block, toggle);
             }
         }
 
@@ -84,9 +84,9 @@ namespace FreelancerModStudio
             _presenter.FileOpen += systemPresenter_FileOpen;
         }
 
-        void systemPresenter_SelectionChanged(ContentBase content)
+        void systemPresenter_SelectionChanged(ContentBase content, bool toggle)
         {
-            OnSelectionChanged(content.Block);
+            OnSelectionChanged(content.Block, toggle);
         }
 
         void systemPresenter_FileOpen(string file)

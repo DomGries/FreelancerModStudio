@@ -106,15 +106,15 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public delegate void SelectionChangedType(ContentBase content);
+        public delegate void SelectionChangedType(ContentBase content, bool toggle);
 
         public SelectionChangedType SelectionChanged;
 
-        void OnSelectionChanged(ContentBase content)
+        void OnSelectionChanged(ContentBase content, bool toggle)
         {
             if (SelectionChanged != null)
             {
-                SelectionChanged(content);
+                SelectionChanged(content, toggle);
             }
         }
 
@@ -255,7 +255,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void camera_SelectionChanged(DependencyObject visual)
+        void camera_SelectionChanged(DependencyObject visual, bool toggle)
         {
             ContentBase content = visual as ContentBase;
 
@@ -265,7 +265,7 @@ namespace FreelancerModStudio.SystemPresenter
                 return;
             }
 
-            if (_selectedContent == content)
+            if (!toggle && _selectedContent == content)
             {
                 if (ViewerType == ViewerType.Universe)
                 {
@@ -276,12 +276,8 @@ namespace FreelancerModStudio.SystemPresenter
                     }
                 }
             }
-            else
-            {
-                SelectedContent = content;
-            }
 
-            OnSelectionChanged(content);
+            OnSelectionChanged(content, toggle);
         }
 
         void DisplayContextMenu(string path)

@@ -1233,12 +1233,12 @@ namespace FreelancerModStudio
             }
         }
 
-        void systemEditor_SelectionChanged(TableBlock block)
+        void systemEditor_SelectionChanged(TableBlock block, bool toggle)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
             {
-                tableEditor.Select(block);
+                tableEditor.Select(block, toggle);
             }
         }
     }

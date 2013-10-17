@@ -1066,9 +1066,27 @@ namespace FreelancerModStudio
             //OnDocumentChanged(this); is already called in SetFile
         }
 
-        public void Select(TableBlock block)
+        public void Select(TableBlock block, bool toggle)
         {
-            objectListView1.SelectedObject = block;
+            if (toggle)
+            {
+                IList selectedObjects = objectListView1.SelectedObjects;
+
+                if (objectListView1.IsSelected(block))
+                {
+                    selectedObjects.Remove(block);
+                }
+                else
+                {
+                    selectedObjects.Add(block);
+                }
+
+                objectListView1.SelectedObjects = selectedObjects;
+            }
+            else
+            {
+                objectListView1.SelectedObject = block;
+            }
             EnsureSelectionVisible();
         }
 

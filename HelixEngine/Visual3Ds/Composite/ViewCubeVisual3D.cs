@@ -442,6 +442,8 @@ namespace HelixEngine
             updir.Normalize();
 
             CameraHelper.AnimateTo(camera, pos, lookdir, updir, 500);
+
+            e.Handled = true;
         }
     }
 }

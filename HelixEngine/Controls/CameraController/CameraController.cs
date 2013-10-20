@@ -87,22 +87,12 @@ namespace HelixEngine
         public double RotateSensitivity { get; set; }
         public double PanSensitivity { get; set; }
 
-        public delegate void SelectionChangedType(DependencyObject visual, bool toggle);
-        public SelectionChangedType SelectionChanged;
-
-        private void OnSelectionChanged(DependencyObject visual, bool toggle)
-        {
-            if (this.SelectionChanged != null)
-                this.SelectionChanged(visual, toggle);
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraController" /> class.
         /// </summary>
         public CameraController()
         {
             Background = Brushes.Transparent;
-            SubscribeEvents();
         }
 
         /// <summary>
@@ -244,8 +234,10 @@ namespace HelixEngine
             }
         }
 
-        private void MouseDownHandler(object sender, MouseButtonEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
+            base.OnMouseDown(e);
+
             if (!Enabled) return;
             if (Viewport == null)
                 throw new NullReferenceException("Viewport");
@@ -253,7 +245,6 @@ namespace HelixEngine
             var isDoubleClick = e.ClickCount == 2;
             var isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
             var isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-            var isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
 
             // reset camera
             if (isDoubleClick &&
@@ -265,31 +256,18 @@ namespace HelixEngine
                 return;
             }
 
+            if (isDoubleClick)
+            {
+                return;
+            }
+
             isZooming = e.ChangedButton == MouseButton.Right && isAltDown;
             isPanning = !isZooming &&
                         (e.ChangedButton == MouseButton.Middle ||
                          (e.ChangedButton == MouseButton.Right && isShiftDown));
             isRotating = !isZooming && !isPanning && e.ChangedButton == MouseButton.Right;
-            var isLookAt = e.ChangedButton == MouseButton.Right && isDoubleClick;
 
-            if (e.ChangedButton == MouseButton.Left || isLookAt)
-            {
-                // select or look at visual
-                Point3D point;
-                Vector3D normal;
-                DependencyObject visual;
-                if (Viewport3DHelper.Find(Viewport, e.GetPosition(this), isShiftDown, out point, out normal, out visual))
-                {
-                    if (isLookAt)
-                        // change the 'lookat' point
-                        CameraHelper.LookAt(Camera, point, 0);
-                    else
-                        // select object
-                        OnSelectionChanged(visual, isCtrlDown);
-                }
-                e.Handled = true;
-            }
-            else if (isZooming || isPanning || isRotating)
+            if (isZooming || isPanning || isRotating)
             {
                 _mouseDownPosition = e.GetPosition(this);
 
@@ -297,7 +275,7 @@ namespace HelixEngine
                 ShowTargetAdorner(new Point(Viewport.ActualWidth * 0.5, Viewport.ActualHeight * 0.5));
 
                 e.Handled = true;
-                ((UIElement)sender).CaptureMouse();
+                CaptureMouse();
 
                 _lastPosition = _mouseDownPosition;
                 if (isPanning)
@@ -310,14 +288,15 @@ namespace HelixEngine
             return Camera.Position + Camera.LookDirection;
         }
 
-        private void MouseMoveHandler(object sender, MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
+            base.OnMouseMove(e);
+
             if (!IsActive) return;
 
-            var element = (UIElement)sender;
-            if (element.IsMouseCaptured)
+            if (IsMouseCaptured)
             {
-                Point point = e.MouseDevice.GetPosition(element);
+                Point point = e.MouseDevice.GetPosition(this);
 
                 Vector delta = point - _lastPosition;
                 _lastPosition = point;
@@ -346,26 +325,28 @@ namespace HelixEngine
             Debug.Assert(newPosition == position);
         }
 
-        private void MouseUpHandler(object sender, MouseButtonEventArgs e)
+        protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            if (!Enabled) return;
+            base.OnMouseUp(e);
 
-            var element = (UIElement)sender;
+            if (!Enabled) return;
 
             isRotating = false;
             isZooming = false;
             isPanning = false;
 
-            if (element.IsMouseCaptured)
+            if (IsMouseCaptured)
             {
                 e.Handled = true;
                 HideTargetAdorner();
-                element.ReleaseMouseCapture();
+                ReleaseMouseCapture();
             }
         }
 
-        private void OnMouseWheel(object sender, MouseWheelEventArgs e)
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
+            base.OnMouseWheel(e);
+
             e.Handled = true;
             Zoom(-e.Delta * 0.001);
         }
@@ -615,28 +596,6 @@ namespace HelixEngine
             AdornerLayer myAdornerLayer = AdornerLayer.GetAdornerLayer(this.Viewport);
             this.targetAdorner = new TargetSymbolAdorner(this.Viewport, position);
             myAdornerLayer.Add(this.targetAdorner);
-        }
-
-        /// <summary>
-        /// The subscribe events.
-        /// </summary>
-        private void SubscribeEvents()
-        {
-            this.MouseMove += MouseMoveHandler;
-            this.MouseDown += MouseDownHandler;
-            this.MouseUp += MouseUpHandler;
-            this.MouseWheel += OnMouseWheel;
-        }
-
-        /// <summary>
-        ///   The un subscribe events.
-        /// </summary>
-        private void UnSubscribeEvents()
-        {
-            this.MouseMove -= MouseMoveHandler;
-            this.MouseDown -= MouseDownHandler;
-            this.MouseUp -= MouseUpHandler;
-            this.MouseWheel -= OnMouseWheel;
         }
 
         /// <summary>

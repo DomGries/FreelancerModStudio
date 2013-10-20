@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
@@ -133,7 +134,7 @@ namespace FreelancerModStudio.SystemPresenter
         public Presenter(HelixViewport3D viewport)
         {
             Viewport = viewport;
-            Viewport.SelectionChanged += camera_SelectionChanged;
+            Viewport.MouseDown += Viewport_MouseDown;
             Lightning = new SystemLightsVisual3D();
         }
 
@@ -255,16 +256,143 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void camera_SelectionChanged(DependencyObject visual, bool toggle)
+        static int GetSelectionPriority(ContentBase content)
         {
-            ContentBase content = visual as ContentBase;
-
-            // prevent selecting wirebox + universe connection
-            if (content == null || content.Block == null)
+            switch (content.Block.ObjectType)
             {
-                return;
+                case ContentType.LightSource:
+                case ContentType.Construct:
+                case ContentType.Depot:
+                case ContentType.DockingRing:
+                case ContentType.JumpGate:
+                case ContentType.JumpHole:
+                case ContentType.Planet:
+                case ContentType.Satellite:
+                case ContentType.Ship:
+                case ContentType.Station:
+                case ContentType.Sun:
+                case ContentType.TradeLane:
+                case ContentType.WeaponsPlatform:
+                    return 2;
+                case ContentType.ZonePath:
+                case ContentType.ZonePathTrade:
+                case ContentType.ZonePathTradeLane:
+                    return 1;
+                default:
+                    return 0;
             }
+        }
 
+        public ContentBase GetSelection(Point position, bool farthest)
+        {
+            PointHitTestParameters hitParams = new PointHitTestParameters(position);
+
+            ContentBase visual = null;
+            double distance = 0.0;
+            int selectionPriority = -1;
+
+            VisualTreeHelper.HitTest(
+                Viewport.Viewport,
+                null,
+                delegate(HitTestResult hit)
+                {
+                    RayMeshGeometry3DHitTestResult rayHit = hit as RayMeshGeometry3DHitTestResult;
+                    if (rayHit != null)
+                    {
+                        //if (rayHit.VisualHit is Manipulator)
+                        //{
+                        //    return HitTestResultBehavior.Stop;
+                        //}
+
+                        ContentBase newHit = rayHit.VisualHit as ContentBase;
+                        if (newHit == null || newHit.Block == null)
+                        {
+                            // prevent selecting wirebox + universe connection
+                            return HitTestResultBehavior.Continue;
+                        }
+
+                        MeshGeometry3D mesh = rayHit.MeshHit;
+                        if (mesh != null)
+                        {
+                            Point3D p1 = mesh.Positions[rayHit.VertexIndex1];
+                            Point3D p2 = mesh.Positions[rayHit.VertexIndex2];
+                            Point3D p3 = mesh.Positions[rayHit.VertexIndex3];
+                            double x = p1.X * rayHit.VertexWeight1 + p2.X * rayHit.VertexWeight2
+                                       + p3.X * rayHit.VertexWeight3;
+                            double y = p1.Y * rayHit.VertexWeight1 + p2.Y * rayHit.VertexWeight2
+                                       + p3.Y * rayHit.VertexWeight3;
+                            double z = p1.Z * rayHit.VertexWeight1 + p2.Z * rayHit.VertexWeight2
+                                       + p3.Z * rayHit.VertexWeight3;
+
+                            // point in local coordinates
+                            Point3D p = new Point3D(x, y, z);
+
+                            // transform to global coordinates
+
+                            // first transform the Model3D hierarchy
+                            GeneralTransform3D t2 = Viewport3DHelper.GetTransform(rayHit.VisualHit, rayHit.ModelHit);
+                            if (t2 != null)
+                            {
+                                p = t2.Transform(p);
+                            }
+
+                            // then transform the Visual3D hierarchy up to the Viewport3D ancestor
+                            GeneralTransform3D t = Viewport3DHelper.GetTransform(Viewport.Viewport, rayHit.VisualHit);
+                            if (t != null)
+                            {
+                                p = t.Transform(p);
+                            }
+
+                            double newDistance = (Viewport.Camera.Position - p).LengthSquared;
+                            int newSelectionPriority = GetSelectionPriority(newHit);
+
+                            if (newSelectionPriority > selectionPriority ||
+                                (newSelectionPriority == selectionPriority &&
+                                 (farthest ? newDistance > distance : newDistance < distance)))
+                            {
+                                visual = newHit;
+                                distance = newDistance;
+                                selectionPriority = newSelectionPriority;
+                            }
+                        }
+                    }
+
+                    return HitTestResultBehavior.Continue;
+                },
+                hitParams);
+
+            return visual;
+        }
+
+        void Viewport_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            bool isLookAt = e.ChangedButton == MouseButton.Right && e.ClickCount == 2;
+
+            if (e.ChangedButton == MouseButton.Left || isLookAt)
+            {
+                e.Handled = true;
+
+                bool isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+                bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+
+                ContentBase visual = GetSelection(e.GetPosition((IInputElement)sender), isShiftDown);
+                if (visual != null)
+                {
+                    if (isLookAt)
+                    {
+                        // change the 'lookat' point
+                        Viewport.LookAt(visual.GetPositionPoint());
+                    }
+                    else
+                    {
+                        Select(visual, isCtrlDown);
+                    }
+                }
+            }
+        }
+
+        void Select(ContentBase content, bool toggle)
+        {
             if (!toggle && _selectedContent == content)
             {
                 if (ViewerType == ViewerType.Universe)
@@ -527,7 +655,7 @@ namespace FreelancerModStudio.SystemPresenter
             Vector3D fromPosition = line.From.Position;
             Vector3D toPosition = line.To.Position;
 
-            Vector3D position = (fromPosition + toPosition)/2;
+            Vector3D position = (fromPosition + toPosition) / 2;
             Vector3D scale = new Vector3D(SystemParser.UNIVERSE_CONNECTION_SCALE, (fromPosition - toPosition).Length, 1);
 
             if (line.FromType == ConnectionType.JumpGateAndHole || line.ToType == ConnectionType.JumpGateAndHole)
@@ -554,10 +682,10 @@ namespace FreelancerModStudio.SystemPresenter
                 factor *= -1;
             }
 
-            double c = Math.Sqrt(a*a + b*b);
-            double angle = Math.Acos(a/c)*180/Math.PI;
+            double c = Math.Sqrt(a * a + b * b);
+            double angle = Math.Acos(a / c) * 180 / Math.PI;
 
-            Vector3D rotation = new Vector3D(0, 0, (angle + angleOffset)*factor);
+            Vector3D rotation = new Vector3D(0, 0, (angle + angleOffset) * factor);
 
             line.SetTransform(position, rotation, scale, false);
         }

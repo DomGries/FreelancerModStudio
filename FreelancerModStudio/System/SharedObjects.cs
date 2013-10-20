@@ -22,7 +22,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static readonly MeshGeometry3D Sphere = GetMesh(new SphereMesh
             {
                 Slices = 18,
-                Stacks = 9
+                Stacks = 14
             });
 
         public static readonly MeshGeometry3D Box = GetMesh(new BoxMesh());

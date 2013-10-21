@@ -11,7 +11,6 @@ using FreelancerModStudio.Data;
 using FreelancerModStudio.Properties;
 using FreelancerModStudio.SystemPresenter.Content;
 using HelixEngine;
-using HelixEngine.Wires;
 using ContextMenu = System.Windows.Controls.ContextMenu;
 using MenuItem = System.Windows.Controls.MenuItem;
 
@@ -27,28 +26,28 @@ namespace FreelancerModStudio.SystemPresenter
         int _secondLayerId;
         readonly Dictionary<string, Model3D> _modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
 
-        Visual3D _lightning;
-        WireBoundingBox _selectionBox;
-        WireLine _trackedLine;
+        Visual3D _lighting;
+        BoundingBoxWireFrameVisual3D _selectionBox;
+        LineVisual3D _trackedLine;
         ContentBase _selectedContent;
         ContentBase _trackedContent;
 
         readonly StringBuilder _titleBuilder = new StringBuilder();
 
-        public Visual3D Lightning
+        public Visual3D Lighting
         {
             get
             {
-                return _lightning;
+                return _lighting;
             }
             set
             {
-                AddOrReplace(_lightning, value, true);
-                _lightning = value;
+                AddOrReplace(_lighting, value, true);
+                _lighting = value;
             }
         }
 
-        public WireBoundingBox SelectionBox
+        public BoundingBoxWireFrameVisual3D SelectionBox
         {
             get
             {
@@ -61,7 +60,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public WireLine TrackedLine
+        public LineVisual3D TrackedLine
         {
             get
             {
@@ -135,7 +134,7 @@ namespace FreelancerModStudio.SystemPresenter
         {
             Viewport = viewport;
             Viewport.MouseDown += Viewport_MouseDown;
-            Lightning = new SystemLightsVisual3D();
+            Lighting = new SystemLightsVisual3D();
         }
 
         public void LookAt(ContentBase content)
@@ -443,14 +442,14 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (SelectionBox != null)
             {
-                WireBoundingBox selectionBox = SelectionBox;
+                BoundingBoxWireFrameVisual3D selectionBox = SelectionBox;
                 selectionBox.Color = color;
                 selectionBox.BoundingBox = GetBounds(_selectedContent);
                 selectionBox.Transform = _selectedContent.Transform;
             }
             else
             {
-                SelectionBox = new WireBoundingBox
+                SelectionBox = new BoundingBoxWireFrameVisual3D
                     {
                         Color = color,
                         BoundingBox = GetBounds(_selectedContent),
@@ -469,7 +468,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (!update)
             {
-                WireBoundingBox selectionBox = SelectionBox;
+                BoundingBoxWireFrameVisual3D selectionBox = SelectionBox;
                 if (_trackedContent == _selectedContent)
                 {
                     selectionBox.Color = Colors.Red;
@@ -488,13 +487,13 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (TrackedLine != null)
             {
-                WireLine trackedLine = TrackedLine;
+                LineVisual3D trackedLine = TrackedLine;
                 trackedLine.Point1 = _selectedContent.GetPositionPoint();
                 trackedLine.Point2 = _trackedContent.GetPositionPoint();
             }
             else
             {
-                TrackedLine = new WireLine
+                TrackedLine = new LineVisual3D
                     {
                         Point1 = _selectedContent.GetPositionPoint(),
                         Point2 = _trackedContent.GetPositionPoint(),
@@ -532,13 +531,13 @@ namespace FreelancerModStudio.SystemPresenter
         {
             Viewport.Children.Clear();
 
-            if (light || Lightning == null)
+            if (light || Lighting == null)
             {
                 _secondLayerId = 0;
             }
             else
             {
-                Viewport.Children.Add(Lightning);
+                Viewport.Children.Add(Lighting);
                 _secondLayerId = 1;
             }
         }
@@ -546,15 +545,15 @@ namespace FreelancerModStudio.SystemPresenter
         public int GetContentStartId()
         {
             int index = 0;
+            if (Lighting != null)
+            {
+                ++index;
+            }
             if (SelectionBox != null)
             {
                 ++index;
             }
             if (TrackedLine != null)
-            {
-                ++index;
-            }
-            if (Lightning != null)
             {
                 ++index;
             }
@@ -904,6 +903,21 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     ++_secondLayerId;
                 }
+            }
+        }
+
+        void AddOrReplace(ScreenSpaceVisual3D visual, ScreenSpaceVisual3D value, bool secondLayer)
+        {
+            if (visual != null && value == null)
+            {
+                visual.StopRendering();
+            }
+
+            AddOrReplace(visual, (Visual3D)value, secondLayer);
+
+            if (visual == null && value != null)
+            {
+                value.StartRendering();
             }
         }
 

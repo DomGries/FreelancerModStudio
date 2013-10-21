@@ -75,7 +75,7 @@ namespace FreelancerModStudio.Data
             {
                 if (Block != null)
                 {
-                    StringBuilder values = new StringBuilder();
+                    Helper.String.StringBuilder.Length = 0;
                     foreach (EditorINIOption option in Block.Options)
                     {
                         string append = null;
@@ -90,20 +90,20 @@ namespace FreelancerModStudio.Data
 
                         if (append != null)
                         {
-                            if (values.Length > 0)
+                            if (Helper.String.StringBuilder.Length > 0)
                             {
-                                values.Append(Environment.NewLine + append);
+                                Helper.String.StringBuilder.Append(Environment.NewLine + append);
                             }
                             else
                             {
-                                values.Append(append);
+                                Helper.String.StringBuilder.Append(append);
                             }
                         }
                     }
 
-                    if (values.Length > 0)
+                    if (Helper.String.StringBuilder.Length > 0)
                     {
-                        return values.ToString();
+                        return Helper.String.StringBuilder.ToString();
                     }
                 }
                 return null;

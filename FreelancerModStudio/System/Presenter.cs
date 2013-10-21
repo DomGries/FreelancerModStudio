@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -31,8 +30,6 @@ namespace FreelancerModStudio.SystemPresenter
         LineVisual3D _trackedLine;
         ContentBase _selectedContent;
         ContentBase _trackedContent;
-
-        readonly StringBuilder _titleBuilder = new StringBuilder();
 
         public Visual3D Lighting
         {
@@ -929,51 +926,51 @@ namespace FreelancerModStudio.SystemPresenter
                 return;
             }
 
-            _titleBuilder.Length = 0;
-            _titleBuilder.AppendLine(_selectedContent.Block.Name);
+            Helper.String.StringBuilder.Length = 0;
+            Helper.String.StringBuilder.AppendLine(_selectedContent.Block.Name);
 
             if (_trackedContent != null && _trackedContent != _selectedContent)
             {
                 AddTrackInfo();
             }
 
-            Viewport.Title = _titleBuilder.ToString();
+            Viewport.Title = Helper.String.StringBuilder.ToString();
         }
 
         void AddTrackInfo()
         {
-            _titleBuilder.AppendLine();
-            _titleBuilder.AppendLine(_trackedContent.Block.Name);
+            Helper.String.StringBuilder.AppendLine();
+            Helper.String.StringBuilder.AppendLine(_trackedContent.Block.Name);
 
-            _titleBuilder.Append("Distance: ");
+            Helper.String.StringBuilder.Append("Distance: ");
             Vector3D a = _selectedContent.Position / SystemParser.SIZE_FACTOR;
             Vector3D b = _trackedContent.Position / SystemParser.SIZE_FACTOR;
-            _titleBuilder.Append(Math.Round((a - b).Length));
+            Helper.String.StringBuilder.Append(Math.Round((a - b).Length));
 
-            _titleBuilder.AppendLine();
-            _titleBuilder.Append("Angle: ");
+            Helper.String.StringBuilder.AppendLine();
+            Helper.String.StringBuilder.Append("Angle: ");
 
             double denominator = -b.Y - -a.Y;
             if (denominator == 0.0)
             {
-                _titleBuilder.Append("0, 0, ");
+                Helper.String.StringBuilder.Append("0, 0, ");
             }
             else
             {
-                _titleBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * 180.0 / Math.PI));
-                _titleBuilder.Append(", ");
-                _titleBuilder.Append(Math.Round(Math.Atan((b.X - a.X) / denominator) * 180.0 / Math.PI));
-                _titleBuilder.Append(", ");
+                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * 180.0 / Math.PI));
+                Helper.String.StringBuilder.Append(", ");
+                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.X - a.X) / denominator) * 180.0 / Math.PI));
+                Helper.String.StringBuilder.Append(", ");
             }
 
             denominator = b.X - a.X;
             if (denominator == 0.0)
             {
-                _titleBuilder.Append('0');
+                Helper.String.StringBuilder.Append('0');
             }
             else
             {
-                _titleBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * 180.0 / Math.PI));
+                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * 180.0 / Math.PI));
             }
         }
     }

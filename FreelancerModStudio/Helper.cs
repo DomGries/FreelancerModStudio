@@ -85,7 +85,7 @@ namespace FreelancerModStudio
                 {
                     if (!silentCheck)
                     {
-                        MessageBox.Show(String.Format(Strings.UpdatesDownloadException, Assembly.Name), Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(string.Format(Strings.UpdatesDownloadException, Assembly.Name), Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
@@ -134,7 +134,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Exceptions.Show(String.Format(Strings.TemplateLoadException, Resources.TemplatePath), ex);
+                    Exceptions.Show(string.Format(Strings.TemplateLoadException, Resources.TemplatePath), ex);
                     Environment.Exit(0);
                 }
             }
@@ -253,7 +253,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Exceptions.Show(String.Format(Strings.SettingsSaveException, Resources.SettingsPath), ex);
+                    Exceptions.Show(string.Format(Strings.SettingsSaveException, Resources.SettingsPath), ex);
                 }
             }
 
@@ -270,7 +270,7 @@ namespace FreelancerModStudio
                     }
                     catch (Exception ex)
                     {
-                        Exceptions.Show(String.Format(Strings.SettingsLoadException, Resources.SettingsPath), ex);
+                        Exceptions.Show(string.Format(Strings.SettingsLoadException, Resources.SettingsPath), ex);
                     }
                 }
             }
@@ -349,6 +349,11 @@ namespace FreelancerModStudio
 
                 return (checkSize.Width <= currentSize.Width && checkSize.Height <= currentSize.Height);
             }
+        }
+
+        public struct String
+        {
+            public static readonly StringBuilder StringBuilder = new StringBuilder();
         }
 
         public struct Exceptions

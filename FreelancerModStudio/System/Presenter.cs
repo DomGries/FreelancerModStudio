@@ -495,6 +495,7 @@ namespace FreelancerModStudio.SystemPresenter
                         Point1 = _selectedContent.GetPositionPoint(),
                         Point2 = _trackedContent.GetPositionPoint(),
                         Color = Colors.Red,
+                        DepthOffset = 1,
                     };
             }
         }

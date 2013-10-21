@@ -80,6 +80,8 @@ namespace HelixEngine
             AddEdge(p1, p5);
             AddEdge(p2, p6);
             AddEdge(p3, p7);
+
+            UpdateGeometry();
         }
 
         /// <summary>

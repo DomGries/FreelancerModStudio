@@ -48,7 +48,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                AddOrReplace(_lighting, value, true);
+                AddOrReplace(_lighting, value);
                 _lighting = value;
             }
         }
@@ -61,7 +61,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                AddOrReplace(_selectionBox, value, false);
+                AddOrReplace(_selectionBox, value);
                 _selectionBox = value;
             }
         }
@@ -74,7 +74,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                AddOrReplace(_trackedLine, value, false);
+                AddOrReplace(_trackedLine, value);
                 _trackedLine = value;
             }
         }
@@ -87,7 +87,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                AddOrReplace(_manipulatorX, value, false);
+                AddOrReplace(_manipulatorX, value);
                 _manipulatorX = value;
             }
         }
@@ -100,7 +100,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                AddOrReplace(_manipulatorY, value, false);
+                AddOrReplace(_manipulatorY, value);
                 _manipulatorY = value;
             }
         }
@@ -113,7 +113,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                AddOrReplace(_manipulatorZ, value, false);
+                AddOrReplace(_manipulatorZ, value);
                 _manipulatorZ = value;
             }
         }
@@ -307,7 +307,7 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (!content.IsEmissive())
             {
-                _secondLayerId--;
+                --_secondLayerId;
             }
             if (content == _trackedContent)
             {
@@ -1146,7 +1146,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void AddOrReplace(Visual3D visual, Visual3D value, bool secondLayer)
+        void AddOrReplace(Visual3D visual, Visual3D value)
         {
             int index = Viewport.Children.IndexOf(visual);
             if (index != -1)
@@ -1158,27 +1158,24 @@ namespace FreelancerModStudio.SystemPresenter
                 else
                 {
                     Viewport.Children.RemoveAt(index);
+                    --_secondLayerId;
                 }
             }
             else if (value != null)
             {
                 Viewport.Children.Insert(0, value);
-
-                if (secondLayer)
-                {
-                    ++_secondLayerId;
-                }
+                ++_secondLayerId;
             }
         }
 
-        void AddOrReplace(ScreenSpaceVisual3D visual, ScreenSpaceVisual3D value, bool secondLayer)
+        void AddOrReplace(ScreenSpaceVisual3D visual, ScreenSpaceVisual3D value)
         {
             if (visual != null && value == null)
             {
                 visual.StopRendering();
             }
 
-            AddOrReplace(visual, (Visual3D)value, secondLayer);
+            AddOrReplace(visual, (Visual3D)value);
 
             if (visual == null && value != null)
             {

@@ -31,6 +31,15 @@ namespace FreelancerModStudio.SystemPresenter
         ContentBase _selectedContent;
         ContentBase _trackedContent;
 
+        FixedLineVisual3D _manipulatorX;
+        FixedLineVisual3D _manipulatorY;
+        FixedLineVisual3D _manipulatorZ;
+
+        bool _manipulating = false;
+        ManipulationMode _manipulationMode = ManipulationMode.Translation;
+        ManipulationAxis _manipulationAxis;
+        Point _manipulationLastMousePosition;
+
         public Visual3D Lighting
         {
             get
@@ -70,6 +79,45 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
+        public FixedLineVisual3D ManipulatorLineX
+        {
+            get
+            {
+                return _manipulatorX;
+            }
+            set
+            {
+                AddOrReplace(_manipulatorX, value, false);
+                _manipulatorX = value;
+            }
+        }
+
+        public FixedLineVisual3D ManipulatorLineY
+        {
+            get
+            {
+                return _manipulatorY;
+            }
+            set
+            {
+                AddOrReplace(_manipulatorY, value, false);
+                _manipulatorY = value;
+            }
+        }
+
+        public FixedLineVisual3D ManipulatorLineZ
+        {
+            get
+            {
+                return _manipulatorZ;
+            }
+            set
+            {
+                AddOrReplace(_manipulatorZ, value, false);
+                _manipulatorZ = value;
+            }
+        }
+
         public ContentBase SelectedContent
         {
             get
@@ -83,6 +131,7 @@ namespace FreelancerModStudio.SystemPresenter
                 //select content visually
                 SetSelectionBox();
                 SetTrackedLine(true);
+                SetManipulatorLines();
                 SetTitle();
             }
         }
@@ -131,6 +180,8 @@ namespace FreelancerModStudio.SystemPresenter
         {
             Viewport = viewport;
             Viewport.MouseDown += Viewport_MouseDown;
+            Viewport.MouseUp += Viewport_MouseUp;
+            Viewport.MouseMove += Viewport_MouseMove;
             Lighting = new SystemLightsVisual3D();
         }
 
@@ -295,10 +346,25 @@ namespace FreelancerModStudio.SystemPresenter
                     RayMeshGeometry3DHitTestResult rayHit = hit as RayMeshGeometry3DHitTestResult;
                     if (rayHit != null)
                     {
-                        //if (rayHit.VisualHit is Manipulator)
-                        //{
-                        //    return HitTestResultBehavior.Stop;
-                        //}
+                        // start manipulation on manipulator selection
+                        if (rayHit.VisualHit == _manipulatorX)
+                        {
+                            StartManipulation(ManipulationAxis.X, _manipulatorX, position);
+                            visual = null;
+                            return HitTestResultBehavior.Stop;
+                        }
+                        if (rayHit.VisualHit == _manipulatorY)
+                        {
+                            StartManipulation(ManipulationAxis.Y, _manipulatorY, position);
+                            visual = null;
+                            return HitTestResultBehavior.Stop;
+                        }
+                        if (rayHit.VisualHit == _manipulatorZ)
+                        {
+                            StartManipulation(ManipulationAxis.Z, _manipulatorZ, position);
+                            visual = null;
+                            return HitTestResultBehavior.Stop;
+                        }
 
                         ContentBase newHit = rayHit.VisualHit as ContentBase;
                         if (newHit == null || newHit.Block == null)
@@ -371,7 +437,7 @@ namespace FreelancerModStudio.SystemPresenter
                 bool isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
                 bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
 
-                ContentBase visual = GetSelection(e.GetPosition((IInputElement)sender), isShiftDown);
+                ContentBase visual = GetSelection(e.GetPosition(Viewport.Viewport), isShiftDown);
                 if (visual != null)
                 {
                     if (isLookAt)
@@ -385,6 +451,122 @@ namespace FreelancerModStudio.SystemPresenter
                     }
                 }
             }
+        }
+
+        void Viewport_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!_manipulating)
+            {
+                return;
+            }
+
+            switch (_manipulationAxis)
+            {
+                case ManipulationAxis.X:
+                    ManipulatorLineX.Color = SharedMaterials.ManipulatorX;
+                    break;
+                case ManipulationAxis.Y:
+                    ManipulatorLineY.Color = SharedMaterials.ManipulatorY;
+                    break;
+                case ManipulationAxis.Z:
+                    ManipulatorLineZ.Color = SharedMaterials.ManipulatorZ;
+                    break;
+            }
+
+            _manipulating = false;
+            Viewport.Viewport.ReleaseMouseCapture();
+        }
+
+        Vector3D GetMouseDelta(Point mousePosition)
+        {
+            Vector deltaMouse = mousePosition - _manipulationLastMousePosition;
+            _manipulationLastMousePosition = mousePosition;
+
+            switch (_manipulationAxis)
+            {
+                default:
+                    return new Vector3D(deltaMouse.X, 0, 0);
+                case ManipulationAxis.Y:
+                    return new Vector3D(0, 0, deltaMouse.X);
+                case ManipulationAxis.Z:
+                    return new Vector3D(0, deltaMouse.X, 0);
+            }
+        }
+
+        void Viewport_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!_manipulating)
+            {
+                return;
+            }
+
+            switch (_manipulationMode)
+            {
+                case ManipulationMode.Translation:
+                    ManipulateTranslate(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
+                    break;
+                case ManipulationMode.Rotation:
+                    ManipulateRotate(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
+                    break;
+                case ManipulationMode.Scale:
+                    ManipulateScale(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
+                    break;
+            }
+
+            SelectedContent = _selectedContent;
+        }
+
+        void ManipulateTranslate(Vector3D delta)
+        {
+            // calculate using matrix
+            Matrix3D matrix = ContentBase.RotationMatrix(_selectedContent.Rotation);
+            matrix.TranslatePrepend(delta);
+            matrix.Translate(_selectedContent.Position);
+
+            // update position
+            _selectedContent.Position = new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
+
+            // update transform
+            _selectedContent.UpdateTransform(false);
+        }
+
+        void ManipulateRotate(Vector3D delta)
+        {
+            // calculate using matrix
+            Matrix3D matrix = ContentBase.RotationMatrix(_selectedContent.Rotation);
+            matrix.Prepend(ContentBase.RotationMatrix(delta));
+
+            // update rotation
+            const double radToDeg = 180 / Math.PI;
+            _selectedContent.Rotation.X = Math.Atan2(-matrix.M32, matrix.M22) * radToDeg;
+            _selectedContent.Rotation.Y = Math.Atan2(-matrix.M13, matrix.M11) * radToDeg;
+            _selectedContent.Rotation.Z = Math.Asin(matrix.M12) * radToDeg;
+
+            // update transform
+            _selectedContent.UpdateTransform(false);
+        }
+
+        void ManipulateScale(Vector3D delta)
+        {
+            //TODO: prevent negative scaling
+
+            // update position
+            _selectedContent.Scale += delta;
+
+            // update transform
+            _selectedContent.UpdateTransform(false);
+        }
+
+        void StartManipulation(ManipulationAxis axis, LineVisual3D line, Point mousePoint)
+        {
+            _manipulating = true;
+            _manipulationMode = ManipulationMode.Translation;
+            _manipulationAxis = axis;
+
+            _manipulationLastMousePosition = mousePoint;
+            line.Color = SharedMaterials.Selection;
+
+            Viewport.Viewport.CaptureMouse();
         }
 
         void Select(ContentBase content, bool toggle)
@@ -431,10 +613,10 @@ namespace FreelancerModStudio.SystemPresenter
                 return;
             }
 
-            Color color = Colors.Yellow;
+            Color color = SharedMaterials.Selection;
             if (_trackedContent == _selectedContent)
             {
-                color = Colors.Red;
+                color = SharedMaterials.TrackedLine;
             }
 
             if (SelectionBox != null)
@@ -468,11 +650,11 @@ namespace FreelancerModStudio.SystemPresenter
                 BoundingBoxWireFrameVisual3D selectionBox = SelectionBox;
                 if (_trackedContent == _selectedContent)
                 {
-                    selectionBox.Color = Colors.Red;
+                    selectionBox.Color = SharedMaterials.TrackedLine;
                 }
                 else
                 {
-                    selectionBox.Color = Colors.Yellow;
+                    selectionBox.Color = SharedMaterials.Selection;
                 }
             }
 
@@ -494,8 +676,70 @@ namespace FreelancerModStudio.SystemPresenter
                     {
                         Point1 = _selectedContent.GetPositionPoint(),
                         Point2 = _trackedContent.GetPositionPoint(),
-                        Color = Colors.Red,
+                        Color = SharedMaterials.TrackedLine,
                         DepthOffset = 1,
+                    };
+            }
+        }
+
+        void SetManipulatorLines()
+        {
+            if (_selectedContent == null)
+            {
+                ManipulatorLineX = null;
+                ManipulatorLineY = null;
+                ManipulatorLineZ = null;
+                return;
+            }
+
+            if (ManipulatorLineX != null)
+            {
+                FixedLineVisual3D manipulatorLine = ManipulatorLineX;
+                manipulatorLine.Point2 = new Point3D(1, 0, 0);
+                manipulatorLine.Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(-1, 0, 0) : new Point3D();
+                manipulatorLine.Transform = _selectedContent.Transform;
+
+                manipulatorLine = ManipulatorLineY;
+                manipulatorLine.Point2 = new Point3D(0, 0, 1);
+                manipulatorLine.Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(0, 0, -1) : new Point3D();
+                manipulatorLine.Transform = _selectedContent.Transform;
+
+                manipulatorLine = ManipulatorLineZ;
+                manipulatorLine.Point2 = new Point3D(0, 1, 0);
+                manipulatorLine.Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(0, -1, 0) : new Point3D();
+                manipulatorLine.Transform = _selectedContent.Transform;
+            }
+            else
+            {
+                ManipulatorLineX = new FixedLineVisual3D
+                    {
+                        Point2 = new Point3D(1, 0, 0),
+                        Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(-1, 0, 0) : new Point3D(),
+                        Transform = _selectedContent.Transform,
+                        Color = SharedMaterials.ManipulatorX,
+                        Thickness = 3,
+                        DepthOffset = 0.5,
+                        FixedLength = 100,
+                    };
+                ManipulatorLineY = new FixedLineVisual3D
+                    {
+                        Point2 = new Point3D(0, 0, 1),
+                        Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(0, 0, -1) : new Point3D(),
+                        Transform = _selectedContent.Transform,
+                        Color = SharedMaterials.ManipulatorY,
+                        Thickness = 3,
+                        DepthOffset = 0.5,
+                        FixedLength = 100,
+                    };
+                ManipulatorLineZ = new FixedLineVisual3D
+                    {
+                        Point2 = new Point3D(0, 1, 0),
+                        Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(0, -1, 0) : new Point3D(),
+                        Transform = _selectedContent.Transform,
+                        Color = SharedMaterials.ManipulatorZ,
+                        Thickness = 3,
+                        DepthOffset = 0.5,
+                        FixedLength = 100,
                     };
             }
         }
@@ -552,6 +796,18 @@ namespace FreelancerModStudio.SystemPresenter
                 ++index;
             }
             if (TrackedLine != null)
+            {
+                ++index;
+            }
+            if (ManipulatorLineX != null)
+            {
+                ++index;
+            }
+            if (ManipulatorLineY != null)
+            {
+                ++index;
+            }
+            if (ManipulatorLineZ != null)
             {
                 ++index;
             }
@@ -652,12 +908,12 @@ namespace FreelancerModStudio.SystemPresenter
             Vector3D fromPosition = line.From.Position;
             Vector3D toPosition = line.To.Position;
 
-            Vector3D position = (fromPosition + toPosition) / 2;
-            Vector3D scale = new Vector3D(SystemParser.UNIVERSE_CONNECTION_SCALE, (fromPosition - toPosition).Length, 1);
+            line.Position = (fromPosition + toPosition) / 2;
+            line.Scale = new Vector3D(SystemParser.UNIVERSE_CONNECTION_SCALE, (fromPosition - toPosition).Length, 1);
 
             if (line.FromType == ConnectionType.JumpGateAndHole || line.ToType == ConnectionType.JumpGateAndHole)
             {
-                scale.X = SystemParser.UNIVERSE_DOUBLE_CONNECTION_SCALE;
+                line.Scale.X = SystemParser.UNIVERSE_DOUBLE_CONNECTION_SCALE;
             }
 
             Vector v1 = new Vector(fromPosition.X, fromPosition.Y);
@@ -682,9 +938,8 @@ namespace FreelancerModStudio.SystemPresenter
             double c = Math.Sqrt(a * a + b * b);
             double angle = Math.Acos(a / c) * 180 / Math.PI;
 
-            Vector3D rotation = new Vector3D(0, 0, (angle + angleOffset) * factor);
-
-            line.SetTransform(position, rotation, scale, false);
+            line.Rotation = new Vector3D(0, 0, (angle + angleOffset) * factor);
+            line.UpdateTransform(false);
         }
 
         static ConnectionType GetConnectionType(bool jumpgate, bool jumphole)

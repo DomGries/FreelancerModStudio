@@ -77,6 +77,7 @@ namespace HelixEngine
             IList<Point3D> points,
             double thickness,
             double depthOffset,
+            double fixedLength,
             CohenSutherlandClipping clipping)
         {
             double halfThickness = thickness * 0.5;
@@ -91,81 +92,73 @@ namespace HelixEngine
                 Point3D startPoint = points[startIndex];
                 Point3D endPoint = points[startIndex + 1];
 
-                var s0 = (Point4D)startPoint * this.visualToScreen;
-                var s1 = (Point4D)endPoint * this.visualToScreen;
+                var screenStartPoint = (Point4D)startPoint * this.visualToScreen;
+                var screenEndPoint = (Point4D)endPoint * this.visualToScreen;
+
+                if (fixedLength > 0)
+                {
+                    Point3D screenStartPoint3D = startPoint * this.visualToScreen;
+                    Point3D screenEndPoint3D = endPoint * this.visualToScreen;
+                    double deltaScreenPointX = screenEndPoint3D.X - screenStartPoint3D.X;
+                    double deltaScreenPointY = screenEndPoint3D.Y - screenStartPoint3D.Y;
+                    double magnitudeScreenPoint = Math.Sqrt(deltaScreenPointX * deltaScreenPointX + deltaScreenPointY * deltaScreenPointY);
+                    deltaScreenPointX *= fixedLength * screenEndPoint.W / magnitudeScreenPoint;
+                    deltaScreenPointY *= fixedLength * screenEndPoint.W / magnitudeScreenPoint;
+
+                    screenEndPoint = screenStartPoint;
+                    screenEndPoint.X += deltaScreenPointX;
+                    screenEndPoint.Y += deltaScreenPointY;
+                }
 
                 if (clipping != null)
                 {
-                    double x0 = s0.X / s0.W;
-                    double y0 = s0.Y / s0.W;
-                    double x1 = s1.X / s1.W;
-                    double y1 = s1.Y / s1.W;
+                    double x0 = screenStartPoint.X / screenStartPoint.W;
+                    double y0 = screenStartPoint.Y / screenStartPoint.W;
+                    double x1 = screenEndPoint.X / screenEndPoint.W;
+                    double y1 = screenEndPoint.Y / screenEndPoint.W;
 
                     if (!clipping.ClipLine(ref x0, ref y0, ref x1, ref y1))
                     {
                         continue;
                     }
 
-                    s0.X = x0 * s0.W;
-                    s0.Y = y0 * s0.W;
-                    s1.X = x1 * s1.W;
-                    s1.Y = y1 * s1.W;
+                    screenStartPoint.X = x0 * screenStartPoint.W;
+                    screenStartPoint.Y = y0 * screenStartPoint.W;
+                    screenEndPoint.X = x1 * screenEndPoint.W;
+                    screenEndPoint.Y = y1 * screenEndPoint.W;
                 }
 
-                double lx = s1.X / s1.W - s0.X / s0.W;
-                double ly = s1.Y / s1.W - s0.Y / s0.W;
+                double lx = screenEndPoint.X / screenEndPoint.W - screenStartPoint.X / screenStartPoint.W;
+                double ly = screenEndPoint.Y / screenEndPoint.W - screenStartPoint.Y / screenStartPoint.W;
                 double m = halfThickness / Math.Sqrt(lx * lx + ly * ly);
 
-                double dx = -ly * m;
-                double dy = lx * m;
+                double deltaX = -ly * m;
+                double deltaY = lx * m;
 
-                var p00 = s0;
-                var p01 = s0;
-                var p10 = s1;
-                var p11 = s1;
-
-                p00.X += dx * p00.W;
-                p00.Y += dy * p00.W;
-                p01.X -= dx * p01.W;
-                p01.Y -= dy * p01.W;
-                p10.X += dx * p10.W;
-                p10.Y += dy * p10.W;
-                p11.X -= dx * p11.W;
-                p11.Y -= dy * p11.W;
-                if (depthOffset != 0)
-                {
-                    p00.Z -= depthOffset;
-                    p01.Z -= depthOffset;
-                    p10.Z -= depthOffset;
-                    p11.Z -= depthOffset;
-
-                    p00 *= this.screenToVisual;
-                    p01 *= this.screenToVisual;
-                    p10 *= this.screenToVisual;
-                    p11 *= this.screenToVisual;
-
-                    positions.Add(new Point3D(p00.X / p00.W, p00.Y / p00.W, p00.Z / p00.W));
-                    positions.Add(new Point3D(p01.X / p00.W, p01.Y / p01.W, p01.Z / p01.W));
-                    positions.Add(new Point3D(p10.X / p00.W, p10.Y / p10.W, p10.Z / p10.W));
-                    positions.Add(new Point3D(p11.X / p00.W, p11.Y / p11.W, p11.Z / p11.W));
-                }
-                else
-                {
-                    p00 *= this.screenToVisual;
-                    p01 *= this.screenToVisual;
-                    p10 *= this.screenToVisual;
-                    p11 *= this.screenToVisual;
-
-                    positions.Add(new Point3D(p00.X, p00.Y, p00.Z));
-                    positions.Add(new Point3D(p01.X, p01.Y, p01.Z));
-                    positions.Add(new Point3D(p10.X, p10.Y, p10.Z));
-                    positions.Add(new Point3D(p11.X, p11.Y, p11.Z));
-                }
+                positions.Add(Widen(screenStartPoint, deltaX, deltaY, depthOffset));
+                positions.Add(Widen(screenStartPoint, -deltaX, -deltaY, depthOffset));
+                positions.Add(Widen(screenEndPoint, deltaX, deltaY, depthOffset));
+                positions.Add(Widen(screenEndPoint, -deltaX, -deltaY, depthOffset));
             }
 
             positions.Freeze();
             return positions;
         }
 
+        Point3D Widen(Point4D point, double deltaX, double deltaY, double depthOffset)
+        {
+            point.X += deltaX * point.W;
+            point.Y += deltaY * point.W;
+
+            if (depthOffset != 0)
+            {
+                point.Z -= depthOffset;
+                point *= this.screenToVisual;
+                return new Point3D(point.X / point.W, point.Y / point.W, point.Z / point.W);
+            }
+
+            point *= this.screenToVisual;
+            return new Point3D(point.X, point.Y, point.Z);
+        }
     }
 }

@@ -216,6 +216,8 @@
     <Compile Include="System\Content\Zone.cs" />
     <Compile Include="System\DefaultLightsVisual3D.cs" />
     <Compile Include="System\Content\LightSource.cs" />
+    <Compile Include="System\ManipulationAxis.cs" />
+    <Compile Include="System\ManipulationMode.cs" />
     <Compile Include="System\Matrix3DAnimation.cs" />
     <Compile Include="System\SharedObjects.cs" />
     <Compile Include="System\Analyzer.cs" />

@@ -15,6 +15,12 @@ namespace FreelancerModStudio.SystemPresenter
         public static readonly Color ConnectionJumpGate = Colors.SlateGray;
         public static readonly Color ConnectionJumpGateAndHole = Colors.Snow;
         public static readonly Color ConnectionNone = Colors.Black;
+
+        public static readonly Color Selection = Colors.Yellow;
+        public static readonly Color TrackedLine = Colors.LightYellow;
+        public static readonly Color ManipulatorX = Colors.OrangeRed;
+        public static readonly Color ManipulatorY = Colors.LimeGreen;
+        public static readonly Color ManipulatorZ = Color.FromRgb(0, 120, 255);
     }
 
     public static class SharedMeshes

@@ -103,6 +103,7 @@
     <Compile Include="Visual3Ds\Paths\PolyBezierSegment3D.cs" />
     <Compile Include="Visual3Ds\Paths\PolyLineSegment3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\BoundingBoxWireFrameVisual3D.cs" />
+    <Compile Include="Visual3Ds\ScreenSpaceVisuals\FixedLineVisual3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\LineVisual3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\LinesVisual3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\ScreenSpaceVisual3D.cs" />

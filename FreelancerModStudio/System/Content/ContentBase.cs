@@ -6,13 +6,16 @@ namespace FreelancerModStudio.SystemPresenter.Content
     public abstract class ContentBase : ModelVisual3D
     {
         public TableBlock Block;
+
         public Vector3D Position;
+        public Vector3D Rotation;
+        public Vector3D Scale;
 
         protected abstract Model3D GetShapeModel();
         public abstract Rect3D GetShapeBounds();
         public abstract bool IsEmissive();
 
-        void SetTransform(Matrix3D matrix, bool animate)
+        public void UpdateTransform(Matrix3D matrix, bool animate)
         {
             if (Content != null && animate)
             {
@@ -29,10 +32,9 @@ namespace FreelancerModStudio.SystemPresenter.Content
             }
         }
 
-        public void SetTransform(Vector3D position, Vector3D rotation, Vector3D scale, bool animate)
+        public void UpdateTransform(bool animate)
         {
-            Position = position;
-            SetTransform(GetMatrix(position, rotation, scale), animate);
+            UpdateTransform(GetMatrix(), animate);
         }
 
         static Matrix3D CreateRotationMatrix(Quaternion value)
@@ -42,19 +44,22 @@ namespace FreelancerModStudio.SystemPresenter.Content
             return matrix;
         }
 
-        static Matrix3D GetMatrix(Vector3D position, Vector3D rotation, Vector3D scale)
+        Matrix3D GetMatrix()
         {
             Matrix3D matrix = new Matrix3D();
 
-            matrix.Scale(scale);
-
-            matrix *= CreateRotationMatrix(new Quaternion(new Vector3D(1, 0, 0), rotation.X)) *
-                      CreateRotationMatrix(new Quaternion(new Vector3D(0, 0, 1), rotation.Z)) *
-                      CreateRotationMatrix(new Quaternion(new Vector3D(0, 1, 0), rotation.Y));
-
-            matrix.Translate(position);
+            matrix.Scale(Scale);
+            matrix *= RotationMatrix(Rotation);
+            matrix.Translate(Position);
 
             return matrix;
+        }
+
+        public static Matrix3D RotationMatrix(Vector3D rotation)
+        {
+            return CreateRotationMatrix(new Quaternion(new Vector3D(1, 0, 0), rotation.X)) *
+                   CreateRotationMatrix(new Quaternion(new Vector3D(0, 0, 1), rotation.Z)) *
+                   CreateRotationMatrix(new Quaternion(new Vector3D(0, 1, 0), rotation.Y));
         }
 
         public void LoadModel()

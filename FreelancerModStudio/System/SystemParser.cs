@@ -248,7 +248,8 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static bool SetModelPreviewValues(ContentBase content, TableBlock block)
         {
-            content.SetTransform(new Vector3D(0, 0, 0), new Vector3D(0, 0, 0), new Vector3D(MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE), false);
+            content.Scale = new Vector3D(MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE);
+            content.UpdateTransform(false);
             return SetBlock(content, block);
         }
 
@@ -283,24 +284,21 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
-            Vector3D position = ParsePosition(positionString);
-            Vector3D rotation;
-            Vector3D scale;
+            content.Position = ParsePosition(positionString);
 
             //set content values
             switch (block.ObjectType)
             {
                 case ContentType.System:
-                    position = ParseUniverseVector(positionString);
-                    scale = new Vector3D(UNIVERSE_SYSTEM_SCALE, UNIVERSE_SYSTEM_SCALE, UNIVERSE_SYSTEM_SCALE);
-                    rotation = new Vector3D(0, 0, 0);
+                    content.Position = ParseUniverseVector(positionString);
+                    content.Scale = new Vector3D(UNIVERSE_SYSTEM_SCALE, UNIVERSE_SYSTEM_SCALE, UNIVERSE_SYSTEM_SCALE);
 
                     Content.System system = (Content.System)content;
                     system.Path = fileString;
                     break;
                 case ContentType.LightSource:
-                    scale = new Vector3D(1, 1, 1);
-                    rotation = ParseRotation(rotationString, false);
+                    content.Scale = new Vector3D(1, 1, 1);
+                    content.Rotation = ParseRotation(rotationString, false);
                     break;
                 case ContentType.Construct:
                 case ContentType.Depot:
@@ -314,20 +312,20 @@ namespace FreelancerModStudio.SystemPresenter
                 case ContentType.Sun:
                 case ContentType.TradeLane:
                 case ContentType.WeaponsPlatform:
-                    scale = new Vector3D(1, 1, 1);
-                    rotation = ParseRotation(rotationString, false);
+                    content.Scale = new Vector3D(1, 1, 1);
+                    content.Rotation = ParseRotation(rotationString, false);
 
                     if (block.Archetype != null)
                     {
-                        if (block.Archetype.Radius != 0d)
+                        if (block.Archetype.Radius != 0.0)
                         {
-                            scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius)*SIZE_FACTOR;
+                            content.Scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) * SIZE_FACTOR;
                         }
                     }
                     break;
                 default: // all zones
-                    scale = ParseScale(scaleString, block.ObjectType);
-                    rotation = ParseRotation(rotationString,
+                    content.Scale = ParseScale(scaleString, block.ObjectType);
+                    content.Rotation = ParseRotation(rotationString,
                         block.ObjectType == ContentType.ZonePath ||
                         block.ObjectType == ContentType.ZonePathTrade ||
                         block.ObjectType == ContentType.ZoneCylinder ||
@@ -336,7 +334,7 @@ namespace FreelancerModStudio.SystemPresenter
                     break;
             }
 
-            content.SetTransform(position, rotation, scale, animate);
+            content.UpdateTransform(animate);
             return SetBlock(content, block);
         }
 
@@ -352,7 +350,7 @@ namespace FreelancerModStudio.SystemPresenter
                     if (values.Length > 0)
                     {
                         double tempScale = Parser.ParseDouble(values[0], 1);
-                        return new Vector3D(tempScale, tempScale, tempScale)*SIZE_FACTOR;
+                        return new Vector3D(tempScale, tempScale, tempScale) * SIZE_FACTOR;
                     }
                     break;
                 case ContentType.ZonePath:
@@ -361,13 +359,13 @@ namespace FreelancerModStudio.SystemPresenter
                     {
                         double tempScale1 = Parser.ParseDouble(values[0], 1);
                         double tempScale2 = Parser.ParseDouble(values[1], 1);
-                        return new Vector3D(tempScale1, tempScale2, tempScale1)*SIZE_FACTOR;
+                        return new Vector3D(tempScale1, tempScale2, tempScale1) * SIZE_FACTOR;
                     }
                     break;
                 default:
                     if (values.Length > 2)
                     {
-                        return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1))*SIZE_FACTOR;
+                        return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) * SIZE_FACTOR;
                     }
                     break;
             }
@@ -377,7 +375,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static Vector3D ParsePosition(string vector)
         {
-            return Parser.ParseVector(vector)*SIZE_FACTOR;
+            return Parser.ParseVector(vector) * SIZE_FACTOR;
         }
 
         public static Vector3D ParseRotation(string vector, bool isCylinder)
@@ -403,7 +401,7 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 double tempScale1 = Parser.ParseDouble(values[0], 0);
                 double tempScale2 = Parser.ParseDouble(values[1], 0);
-                return new Vector3D(tempScale1 - axisCenter, -tempScale2 + axisCenter, 0)*UNIVERSE_SCALE;
+                return new Vector3D(tempScale1 - axisCenter, -tempScale2 + axisCenter, 0) * UNIVERSE_SCALE;
             }
             return new Vector3D(0, 0, 0);
         }

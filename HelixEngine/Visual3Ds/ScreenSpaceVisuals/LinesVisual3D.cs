@@ -22,14 +22,14 @@ namespace HelixEngine
         /// <summary>
         /// The builder.
         /// </summary>
-        private readonly LineGeometryBuilder builder;
+        protected readonly LineGeometryBuilder Builder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref = "LinesVisual3D" /> class.
         /// </summary>
         public LinesVisual3D()
         {
-            this.builder = new LineGeometryBuilder(this);
+            this.Builder = new LineGeometryBuilder(this);
         }
 
         /// <summary>
@@ -64,10 +64,10 @@ namespace HelixEngine
                 {
                     if (this.Mesh.TriangleIndices.Count != n * 3)
                     {
-                        this.Mesh.TriangleIndices = this.builder.CreateIndices(n);
+                        this.Mesh.TriangleIndices = this.Builder.CreateIndices(n);
                     }
 
-                    this.Mesh.Positions = this.builder.CreatePositions(this.Points, this.Thickness, this.DepthOffset, null);
+                    this.Mesh.Positions = this.Builder.CreatePositions(this.Points, this.Thickness, this.DepthOffset, 0, null);
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace HelixEngine
         /// </returns>
         protected override bool UpdateTransforms()
         {
-            return this.builder.UpdateTransforms();
+            return this.Builder.UpdateTransforms();
         }
 
     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,7 +8,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
 using System.Windows.Markup;
-using HelixEngine.Meshes;
 
 namespace HelixEngine
 {
@@ -25,9 +23,32 @@ namespace HelixEngine
     ///                                                         </code>
     /// </example>
     [ContentProperty("Children")]
+    [TemplatePart(Name = "PART_CameraController", Type = typeof(CameraController))]
+    [TemplatePart(Name = "PART_AdornerLayer", Type = typeof(AdornerDecorator))]
+    [TemplatePart(Name = "PART_ViewCubeViewport", Type = typeof(Viewport3D))]
     [Localizability(LocalizationCategory.NeverLocalize)]
     public class HelixViewport3D : Control
     {
+        /// <summary>
+        ///   The adorner layer name.
+        /// </summary>
+        private const string PartAdornerLayer = "PART_AdornerLayer";
+
+        /// <summary>
+        ///   The camera controller name.
+        /// </summary>
+        private const string PartCameraController = "PART_CameraController";
+
+        /// <summary>
+        ///   The view cube name.
+        /// </summary>
+        private const string PartViewCube = "PART_ViewCube";
+
+        /// <summary>
+        ///   The view cube viewport name.
+        /// </summary>
+        private const string PartViewCubeViewport = "PART_ViewCubeViewport";
+
         /// <summary>
         ///   The camera changed event.
         /// </summary>
@@ -51,36 +72,111 @@ namespace HelixEngine
                 new UIPropertyMetadata(CameraRotationMode.Turntable));
 
         /// <summary>
-        /// <summary>
         ///   The show view cube property.
         /// </summary>
         public static readonly DependencyProperty ShowViewCubeProperty = DependencyProperty.Register(
             "ShowViewCube", typeof(bool), typeof(HelixViewport3D), new UIPropertyMetadata(true));
 
+        /// <summary>
         ///   The title property.
         /// </summary>
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title", typeof(string), typeof(HelixViewport3D), new UIPropertyMetadata(null));
 
         /// <summary>
-        ///   The adorner layer name.
+        /// Identifies the <see cref="ViewCubeBackBrush"/> dependency property.
         /// </summary>
-        private const string PartAdornerLayer = "PART_AdornerLayer";
+        public static readonly DependencyProperty ViewCubeBackBrushProperty =
+            DependencyProperty.Register(
+                "ViewCubeBackBrush", typeof(Brush), typeof(HelixViewport3D), new UIPropertyMetadata(Brushes.Blue));
 
         /// <summary>
-        ///   The camera controller name.
+        /// Identifies the <see cref="ViewCubeBottomBrush"/> dependency property.
         /// </summary>
-        private const string PartCameraController = "PART_CameraController";
+        public static readonly DependencyProperty ViewCubeBottomBrushProperty =
+            DependencyProperty.Register(
+                "ViewCubeBottomBrush", typeof(Brush), typeof(HelixViewport3D), new UIPropertyMetadata(Brushes.Green));
 
         /// <summary>
-        ///   The view cube name.
+        /// Identifies the <see cref="ViewCubeFrontBrush"/> dependency property.
         /// </summary>
-        private const string PartViewCube = "PART_ViewCube";
+        public static readonly DependencyProperty ViewCubeFrontBrushProperty =
+            DependencyProperty.Register(
+                "ViewCubeFrontBrush", typeof(Brush), typeof(HelixViewport3D), new UIPropertyMetadata(Brushes.Blue));
 
         /// <summary>
-        ///   The view cube viewport name.
+        /// Identifies the <see cref="ViewCubeLeftBrush"/> dependency property.
         /// </summary>
-        private const string PartViewCubeViewport = "PART_ViewCubeViewport";
+        public static readonly DependencyProperty ViewCubeLeftBrushProperty =
+            DependencyProperty.Register(
+                "ViewCubeLeftBrush", typeof(Brush), typeof(HelixViewport3D), new UIPropertyMetadata(Brushes.Red));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewCubeRightBrush"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCubeRightBrushProperty =
+            DependencyProperty.Register(
+                "ViewCubeRightBrush", typeof(Brush), typeof(HelixViewport3D), new UIPropertyMetadata(Brushes.Red));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewCubeTopBrush"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCubeTopBrushProperty =
+            DependencyProperty.Register(
+                "ViewCubeTopBrush", typeof(Brush), typeof(HelixViewport3D), new UIPropertyMetadata(Brushes.Green));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewCubeBackText"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCubeBackTextProperty =
+            DependencyProperty.Register(
+                "ViewCubeBackText", typeof(string), typeof(HelixViewport3D), new UIPropertyMetadata("B"));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewCubeBottomText"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCubeBottomTextProperty =
+            DependencyProperty.Register(
+                "ViewCubeBottomText", typeof(string), typeof(HelixViewport3D), new UIPropertyMetadata("D"));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewCubeFrontText"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCubeFrontTextProperty =
+            DependencyProperty.Register(
+                "ViewCubeFrontText", typeof(string), typeof(HelixViewport3D), new UIPropertyMetadata("F"));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewCubeLeftText"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCubeLeftTextProperty =
+            DependencyProperty.Register(
+                "ViewCubeLeftText", typeof(string), typeof(HelixViewport3D), new UIPropertyMetadata("L"));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewCubeRightText"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCubeRightTextProperty =
+            DependencyProperty.Register(
+                "ViewCubeRightText", typeof(string), typeof(HelixViewport3D), new UIPropertyMetadata("R"));
+
+        /// <summary>
+        /// Identifies the <see cref="ViewCubeTopText"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ViewCubeTopTextProperty =
+            DependencyProperty.Register(
+                "ViewCubeTopText", typeof(string), typeof(HelixViewport3D), new UIPropertyMetadata("U"));
+
+        /// <summary>
+        /// Identifies the <see cref="ModelUpDirection"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ModelUpDirectionProperty =
+            DependencyProperty.Register(
+                "ModelUpDirection",
+                typeof(Vector3D),
+                typeof(HelixViewport3D),
+                new FrameworkPropertyMetadata(
+                    new Vector3D(0, 0, 1), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         /// <summary>
         ///   The viewport.
@@ -249,8 +345,8 @@ namespace HelixEngine
             }
         }
 
-        ///   Gets or sets the title.
         /// </summary>
+        ///   Gets or sets the title.
         /// <value> The title. </value>
         public string Title
         {
@@ -262,6 +358,253 @@ namespace HelixEngine
             set
             {
                 this.SetValue(TitleProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube back text.
+        /// </summary>
+        /// <value>
+        /// The view cube back text.
+        /// </value>
+        public Brush ViewCubeBackBrush
+        {
+            get
+            {
+                return (Brush)this.GetValue(ViewCubeBackBrushProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeBackBrushProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube bottom text.
+        /// </summary>
+        /// <value>
+        /// The view cube bottom text.
+        /// </value>
+        public Brush ViewCubeBottomBrush
+        {
+            get
+            {
+                return (Brush)this.GetValue(ViewCubeBottomBrushProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeBottomBrushProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube front text.
+        /// </summary>
+        /// <value>
+        /// The view cube front text.
+        /// </value>
+        public Brush ViewCubeFrontBrush
+        {
+            get
+            {
+                return (Brush)this.GetValue(ViewCubeFrontBrushProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeFrontBrushProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube left text.
+        /// </summary>
+        /// <value>
+        /// The view cube left text.
+        /// </value>
+        public Brush ViewCubeLeftBrush
+        {
+            get
+            {
+                return (Brush)this.GetValue(ViewCubeLeftBrushProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeLeftBrushProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube right text.
+        /// </summary>
+        /// <value>
+        /// The view cube right text.
+        /// </value>
+        public Brush ViewCubeRightBrush
+        {
+            get
+            {
+                return (Brush)this.GetValue(ViewCubeRightBrushProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeRightBrushProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube top text.
+        /// </summary>
+        /// <value>
+        /// The view cube top text.
+        /// </value>
+        public Brush ViewCubeTopBrush
+        {
+            get
+            {
+                return (Brush)this.GetValue(ViewCubeTopBrushProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeTopBrushProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube back text.
+        /// </summary>
+        /// <value>
+        /// The view cube back text.
+        /// </value>
+        public string ViewCubeBackText
+        {
+            get
+            {
+                return (string)this.GetValue(ViewCubeBackTextProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeBackTextProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube bottom text.
+        /// </summary>
+        /// <value>
+        /// The view cube bottom text.
+        /// </value>
+        public string ViewCubeBottomText
+        {
+            get
+            {
+                return (string)this.GetValue(ViewCubeBottomTextProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeBottomTextProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube front text.
+        /// </summary>
+        /// <value>
+        /// The view cube front text.
+        /// </value>
+        public string ViewCubeFrontText
+        {
+            get
+            {
+                return (string)this.GetValue(ViewCubeFrontTextProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeFrontTextProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube left text.
+        /// </summary>
+        /// <value>
+        /// The view cube left text.
+        /// </value>
+        public string ViewCubeLeftText
+        {
+            get
+            {
+                return (string)this.GetValue(ViewCubeLeftTextProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeLeftTextProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube right text.
+        /// </summary>
+        /// <value>
+        /// The view cube right text.
+        /// </value>
+        public string ViewCubeRightText
+        {
+            get
+            {
+                return (string)this.GetValue(ViewCubeRightTextProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeRightTextProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the view cube top text.
+        /// </summary>
+        /// <value>
+        /// The view cube top text.
+        /// </value>
+        public string ViewCubeTopText
+        {
+            get
+            {
+                return (string)this.GetValue(ViewCubeTopTextProperty);
+            }
+
+            set
+            {
+                this.SetValue(ViewCubeTopTextProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the up direction of the model. This is used by the view cube.
+        /// </summary>
+        /// <value>
+        /// The model up direction.
+        /// </value>
+        public Vector3D ModelUpDirection
+        {
+            get
+            {
+                return (Vector3D)this.GetValue(ModelUpDirectionProperty);
+            }
+
+            set
+            {
+                this.SetValue(ModelUpDirectionProperty, value);
             }
         }
 
@@ -290,51 +633,51 @@ namespace HelixEngine
         /// Finds the nearest object.
         /// </summary>
         /// <param name="pt">
-        /// The pt. 
+        /// The pt.
         /// </param>
         /// <param name="pos">
-        /// The pos. 
+        /// The pos.
         /// </param>
         /// <param name="normal">
-        /// The normal. 
+        /// The normal.
         /// </param>
         /// <param name="obj">
-        /// The obj. 
+        /// The obj.
         /// </param>
         /// <returns>
-        /// The find nearest. 
+        /// The find nearest.
         /// </returns>
-        public bool Find(Point pt, out Point3D pos, bool farest, out Vector3D normal, out DependencyObject obj)
+        public bool FindNearest(Point pt, out Point3D pos, out Vector3D normal, out DependencyObject obj)
         {
-            return Viewport3DHelper.Find(this.Viewport, pt, farest, out pos, out normal, out obj);
+            return Viewport3DHelper.FindNearest(this.Viewport, pt, out pos, out normal, out obj);
         }
 
         /// <summary>
         /// Finds the nearest point.
         /// </summary>
         /// <param name="pt">
-        /// The pt. 
+        /// The pt.
         /// </param>
         /// <returns>
-        /// A point. 
+        /// A point.
         /// </returns>
-        public Point3D? FindPoint(Point pt, bool farest)
+        public Point3D? FindNearestPoint(Point pt)
         {
-            return Viewport3DHelper.FindPoint(this.Viewport, pt, farest);
+            return Viewport3DHelper.FindNearestPoint(this.Viewport, pt);
         }
 
         /// <summary>
         /// Finds the nearest visual.
         /// </summary>
         /// <param name="pt">
-        /// The pt. 
+        /// The pt.
         /// </param>
         /// <returns>
-        /// A visual. 
+        /// A visual.
         /// </returns>
-        public Visual3D FindNearestVisual(Point pt, bool farest)
+        public Visual3D FindNearestVisual(Point pt)
         {
-            return Viewport3DHelper.FindVisual(this.Viewport, pt, farest);
+            return Viewport3DHelper.FindNearestVisual(this.Viewport, pt);
         }
 
         /// <summary>

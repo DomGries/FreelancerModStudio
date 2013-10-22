@@ -79,8 +79,8 @@ namespace HelixEngine
         /// <returns>
         /// The find nearest.
         /// </returns>
-        public static bool Find(
-            Viewport3D viewport, Point position, bool farest, out Point3D point, out Vector3D normal, out DependencyObject visual)
+        public static bool FindNearest(
+            Viewport3D viewport, Point position, out Point3D point, out Vector3D normal, out DependencyObject visual)
         {
             var camera = viewport.Camera as PerspectiveCamera;
             if (camera == null)
@@ -93,7 +93,7 @@ namespace HelixEngine
 
             var hitParams = new PointHitTestParameters(position);
 
-            double minimumDistance = farest ? 0 : double.MaxValue;
+            double minimumDistance = double.MaxValue;
             var nearestPoint = new Point3D();
             var nearestNormal = new Vector3D();
             DependencyObject nearestObject = null;
@@ -139,7 +139,7 @@ namespace HelixEngine
                             }
 
                             double distance = (camera.Position - p).LengthSquared;
-                            if (farest ? distance > minimumDistance : distance < minimumDistance)
+                            if (distance < minimumDistance)
                             {
                                 minimumDistance = distance;
                                 nearestPoint = p;
@@ -172,12 +172,12 @@ namespace HelixEngine
         /// <param name="viewport">The viewport.</param>
         /// <param name="position">The position.</param>
         /// <returns>The nearest point, or null if no point was found.</returns>
-        public static Point3D? FindPoint(Viewport3D viewport, Point position, bool farest)
+        public static Point3D? FindNearestPoint(Viewport3D viewport, Point position)
         {
             Point3D p;
             Vector3D n;
             DependencyObject obj;
-            if (Find(viewport, position, farest, out p, out n, out obj))
+            if (FindNearest(viewport, position, out p, out n, out obj))
             {
                 return p;
             }
@@ -193,12 +193,12 @@ namespace HelixEngine
         /// <returns>
         /// The nearest visual, or null if no visual was found.
         /// </returns>
-        public static Visual3D FindVisual(Viewport3D viewport, Point position, bool farest)
+        public static Visual3D FindNearestVisual(Viewport3D viewport, Point position)
         {
             Point3D p;
             Vector3D n;
             DependencyObject obj;
-            if (Find(viewport, position, farest, out p, out n, out obj))
+            if (FindNearest(viewport, position, out p, out n, out obj))
             {
                 return obj as Visual3D;
             }

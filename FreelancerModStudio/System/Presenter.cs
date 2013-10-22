@@ -182,6 +182,18 @@ namespace FreelancerModStudio.SystemPresenter
             Viewport.MouseDown += Viewport_MouseDown;
             Viewport.MouseUp += Viewport_MouseUp;
             Viewport.MouseMove += Viewport_MouseMove;
+
+            Viewport.ViewCubeLeftBrush = new SolidColorBrush(SharedMaterials.ManipulatorZ);
+            Viewport.ViewCubeRightBrush = Viewport.ViewCubeLeftBrush;
+            Viewport.ViewCubeTopBrush = new SolidColorBrush(SharedMaterials.ManipulatorY);
+            Viewport.ViewCubeBottomBrush = Viewport.ViewCubeTopBrush;
+            Viewport.ViewCubeFrontBrush = new SolidColorBrush(SharedMaterials.ManipulatorX);
+            Viewport.ViewCubeBackBrush = Viewport.ViewCubeFrontBrush;
+            Viewport.ViewCubeLeftText = "F";
+            Viewport.ViewCubeRightText = "B";
+            Viewport.ViewCubeFrontText = "R";
+            Viewport.ViewCubeBackText = "L";
+
             Lighting = new SystemLightsVisual3D();
         }
 

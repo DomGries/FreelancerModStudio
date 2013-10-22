@@ -28,7 +28,21 @@
                         <Viewport3D x:Name="PART_ViewCubeViewport" Width="80" Height="80" Margin="0" Opacity="0.5"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" ClipToBounds="False"
                             Visibility="{TemplateBinding ShowViewCube, Converter={local:BoolToVisibilityConverter}}">
-                            <local:ViewCubeVisual3D x:Name="PART_ViewCube"/>
+                            <local:ViewCubeVisual3D x:Name="PART_ViewCube" 
+                                ModelUpDirection="{Binding ModelUpDirection, RelativeSource={RelativeSource TemplatedParent}}" 
+                                TopBrush="{Binding ViewCubeTopBrush, RelativeSource={RelativeSource TemplatedParent}}"
+                                BottomBrush="{Binding ViewCubeBottomBrush, RelativeSource={RelativeSource TemplatedParent}}"
+                                FrontBrush="{Binding ViewCubeFrontBrush, RelativeSource={RelativeSource TemplatedParent}}"
+                                BackBrush="{Binding ViewCubeBackBrush, RelativeSource={RelativeSource TemplatedParent}}"
+                                LeftBrush="{Binding ViewCubeLeftBrush, RelativeSource={RelativeSource TemplatedParent}}"
+                                RightBrush="{Binding ViewCubeRightBrush, RelativeSource={RelativeSource TemplatedParent}}"
+                                TopText="{Binding ViewCubeTopText, RelativeSource={RelativeSource TemplatedParent}}"
+                                BottomText="{Binding ViewCubeBottomText, RelativeSource={RelativeSource TemplatedParent}}"
+                                FrontText="{Binding ViewCubeFrontText, RelativeSource={RelativeSource TemplatedParent}}"
+                                BackText="{Binding ViewCubeBackText, RelativeSource={RelativeSource TemplatedParent}}"
+                                LeftText="{Binding ViewCubeLeftText, RelativeSource={RelativeSource TemplatedParent}}"
+                                RightText="{Binding ViewCubeRightText, RelativeSource={RelativeSource TemplatedParent}}"
+                                />
                         </Viewport3D>
                     </Grid>
                 </ControlTemplate>

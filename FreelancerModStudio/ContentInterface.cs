@@ -34,6 +34,8 @@ namespace FreelancerModStudio
         bool CanTrackSelected(bool rightNow);
 
         bool CanDisplay3DViewer();
+        bool CanManipulatePosition();
+        bool CanManipulateRotationScale();
 
         string Title { get; }
         string DataPath { get; }

@@ -118,99 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 20</value>
-  </data>
-  <data name="mnuFile.Text" xml:space="preserve">
-    <value>&amp;Datei</value>
-  </data>
-  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 20</value>
-  </data>
-  <data name="mnuEdit.Text" xml:space="preserve">
-    <value>&amp;Bearbeiten</value>
-  </data>
-  <data name="mnuSolutionExplorer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 22</value>
-  </data>
-  <data name="mnuSolutionExplorer.Text" xml:space="preserve">
-    <value>&amp;Projektmappen-Explorer</value>
-  </data>
-  <data name="mnuProperties.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 22</value>
-  </data>
-  <data name="mnuProperties.Text" xml:space="preserve">
-    <value>&amp;Eigenschaftsfenster</value>
-  </data>
-  <data name="mnu3dEditor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 22</value>
-  </data>
-  <data name="toolStripMenuItem3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 6</value>
-  </data>
-  <data name="mnuFocusSelected.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 22</value>
-  </data>
-  <data name="mnuFocusSelected.Text" xml:space="preserve">
-    <value>Auswahl &amp;fokusieren</value>
-  </data>
-  <data name="mnuTrackSelected.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 22</value>
-  </data>
-  <data name="mnuTrackSelected.Text" xml:space="preserve">
-    <value>Auswahl verfolge&amp;n</value>
-  </data>
-  <data name="mnuFocusSelectedSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 6</value>
-  </data>
-  <data name="mnuShowModels.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 22</value>
-  </data>
-  <data name="mnuShowModels.Text" xml:space="preserve">
-    <value>&amp;Modelle anzeige</value>
-  </data>
-  <data name="mnuChangeVisibility.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 22</value>
-  </data>
-  <data name="mnuChangeVisibility.Text" xml:space="preserve">
-    <value>&amp;Sichtbarkeit änder</value>
-  </data>
-  <data name="mnuShowModelsSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 6</value>
-  </data>
-  <data name="mnuFullScreen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>205, 22</value>
-  </data>
-  <data name="mnuFullScreen.Text" xml:space="preserve">
-    <value>&amp;Voller Bildschirm</value>
-  </data>
-  <data name="mnuView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>54, 20</value>
-  </data>
-  <data name="mnuView.Text" xml:space="preserve">
-    <value>&amp;Ansicht</value>
-  </data>
-  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 20</value>
-  </data>
-  <data name="mnuTools.Text" xml:space="preserve">
-    <value>&amp;Extras</value>
-  </data>
-  <data name="mnuWindows.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 20</value>
-  </data>
-  <data name="mnuWindows.Text" xml:space="preserve">
-    <value>&amp;Fenster</value>
-  </data>
-  <data name="mnuHelp.Text" xml:space="preserve">
-    <value>&amp;Hilfe</value>
-  </data>
-  <data name="newToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
-  </data>
-  <data name="newToolStripMenuItem.Text" xml:space="preserve">
-    <value>&amp;Neu</value>
-  </data>
   <data name="mnuNewMod.Size" type="System.Drawing.Size, System.Drawing">
     <value>150, 22</value>
   </data>
@@ -220,14 +127,14 @@
   <data name="mnuNewFile.Text" xml:space="preserve">
     <value>&amp;Datei...</value>
   </data>
+  <data name="newToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>209, 22</value>
+  </data>
+  <data name="newToolStripMenuItem.Text" xml:space="preserve">
+    <value>&amp;Neu</value>
+  </data>
   <data name="toolStripMenuItem6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>210, 6</value>
-  </data>
-  <data name="mnuOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
-  </data>
-  <data name="mnuOpen.Text" xml:space="preserve">
-    <value>&amp;Öffnen</value>
+    <value>206, 6</value>
   </data>
   <data name="mnuOpenMod.Size" type="System.Drawing.Size, System.Drawing">
     <value>151, 22</value>
@@ -241,44 +148,56 @@
   <data name="mnuRecentFilesSeperator.Size" type="System.Drawing.Size, System.Drawing">
     <value>148, 6</value>
   </data>
+  <data name="mnuOpen.Size" type="System.Drawing.Size, System.Drawing">
+    <value>209, 22</value>
+  </data>
+  <data name="mnuOpen.Text" xml:space="preserve">
+    <value>&amp;Öffnen</value>
+  </data>
   <data name="mnuCloseSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>210, 6</value>
+    <value>206, 6</value>
   </data>
   <data name="mnuClose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="mnuClose.Text" xml:space="preserve">
     <value>&amp;Schließen</value>
   </data>
   <data name="mnuCloseMod.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="mnuCloseMod.Text" xml:space="preserve">
     <value>Mod &amp;schließen</value>
   </data>
   <data name="mnuSaveSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>210, 6</value>
+    <value>206, 6</value>
   </data>
   <data name="mnuSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="mnuSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="mnuSaveAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="mnuSaveAll.Text" xml:space="preserve">
     <value>Alle &amp;speichern</value>
   </data>
   <data name="toolStripMenuItem8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>210, 6</value>
+    <value>206, 6</value>
   </data>
   <data name="mnuExit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>213, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="mnuExit.Text" xml:space="preserve">
     <value>&amp;Beenden</value>
+  </data>
+  <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 20</value>
+  </data>
+  <data name="mnuFile.Text" xml:space="preserve">
+    <value>&amp;Datei</value>
   </data>
   <data name="mnuUndo.Size" type="System.Drawing.Size, System.Drawing">
     <value>184, 22</value>
@@ -343,11 +262,110 @@
   <data name="mnuSelectAll.Text" xml:space="preserve">
     <value>&amp;Alle auswählen</value>
   </data>
+  <data name="mnuEdit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
+  </data>
+  <data name="mnuEdit.Text" xml:space="preserve">
+    <value>&amp;Bearbeiten</value>
+  </data>
+  <data name="mnuSolutionExplorer.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuSolutionExplorer.Text" xml:space="preserve">
+    <value>&amp;Projektmappen-Explorer</value>
+  </data>
+  <data name="mnuProperties.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuProperties.Text" xml:space="preserve">
+    <value>&amp;Eigenschaftsfenster</value>
+  </data>
+  <data name="mnu3dEditor.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="toolStripMenuItem3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>216, 6</value>
+  </data>
+  <data name="mnuFocusSelected.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuFocusSelected.Text" xml:space="preserve">
+    <value>Auswahl &amp;fokusieren</value>
+  </data>
+  <data name="mnuTrackSelected.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuTrackSelected.Text" xml:space="preserve">
+    <value>Auswahl verfolge&amp;n</value>
+  </data>
+  <data name="mnuFocusSelectedSeperator.Size" type="System.Drawing.Size, System.Drawing">
+    <value>216, 6</value>
+  </data>
+  <data name="mnuManipulationNone.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuManipulationNone.Text" xml:space="preserve">
+    <value>&amp;Kein Werkzeug</value>
+  </data>
+  <data name="mnuManipulationTranslate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuManipulationTranslate.Text" xml:space="preserve">
+    <value>&amp;Positions-Werkzeug</value>
+  </data>
+  <data name="mnuManipulationRotate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuManipulationRotate.Text" xml:space="preserve">
+    <value>&amp;Rotations-Werkzeug</value>
+  </data>
+  <data name="mnuManipulationScale.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuManipulationScale.Text" xml:space="preserve">
+    <value>&amp;Skalierungs-Werkzeug</value>
+  </data>
+  <data name="mnuManipulationSeperator.Size" type="System.Drawing.Size, System.Drawing">
+    <value>216, 6</value>
+  </data>
+  <data name="mnuShowModels.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuShowModels.Text" xml:space="preserve">
+    <value>&amp;Modelle anzeige</value>
+  </data>
+  <data name="mnuChangeVisibility.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuChangeVisibility.Text" xml:space="preserve">
+    <value>&amp;Sichtbarkeit änder</value>
+  </data>
+  <data name="mnuShowModelsSeperator.Size" type="System.Drawing.Size, System.Drawing">
+    <value>216, 6</value>
+  </data>
+  <data name="mnuFullScreen.Size" type="System.Drawing.Size, System.Drawing">
+    <value>219, 22</value>
+  </data>
+  <data name="mnuFullScreen.Text" xml:space="preserve">
+    <value>&amp;Voller Bildschirm</value>
+  </data>
+  <data name="mnuView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>54, 20</value>
+  </data>
+  <data name="mnuView.Text" xml:space="preserve">
+    <value>&amp;Ansicht</value>
+  </data>
   <data name="mnuOptions.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 22</value>
   </data>
   <data name="mnuOptions.Text" xml:space="preserve">
     <value>&amp;Optionen...</value>
+  </data>
+  <data name="mnuTools.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 20</value>
+  </data>
+  <data name="mnuTools.Text" xml:space="preserve">
+    <value>&amp;Extras</value>
   </data>
   <data name="mnuNewWindow.Size" type="System.Drawing.Size, System.Drawing">
     <value>207, 22</value>
@@ -372,6 +390,12 @@
   </data>
   <data name="mnuWindowsSeperator.Size" type="System.Drawing.Size, System.Drawing">
     <value>204, 6</value>
+  </data>
+  <data name="mnuWindows.Size" type="System.Drawing.Size, System.Drawing">
+    <value>56, 20</value>
+  </data>
+  <data name="mnuWindows.Text" xml:space="preserve">
+    <value>&amp;Fenster</value>
   </data>
   <data name="mnuReportIssue.Size" type="System.Drawing.Size, System.Drawing">
     <value>229, 22</value>
@@ -402,5 +426,8 @@
   </data>
   <data name="mnuAbout.Text" xml:space="preserve">
     <value>&amp;Info</value>
+  </data>
+  <data name="mnuHelp.Text" xml:space="preserve">
+    <value>&amp;Hilfe</value>
   </data>
 </root>

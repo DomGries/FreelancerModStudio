@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Text;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.Properties;
 using FreelancerModStudio.SystemPresenter.Content;

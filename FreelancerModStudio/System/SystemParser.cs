@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.Data.IO;
@@ -15,6 +16,7 @@ namespace FreelancerModStudio.SystemPresenter
         public const double UNIVERSE_SYSTEM_SCALE = 0.2 * UNIVERSE_SCALE;
         public const double UNIVERSE_CONNECTION_SCALE = 0.04 * UNIVERSE_SCALE;
         public const double UNIVERSE_DOUBLE_CONNECTION_SCALE = 2.5 * UNIVERSE_CONNECTION_SCALE;
+        public const double UNIVERSE_AXIS_CENTER = 7.5;
 
         public static KeyValuePair<string, ArchetypeInfo> GetArchetypeInfo(EditorINIBlock block)
         {
@@ -52,25 +54,23 @@ namespace FreelancerModStudio.SystemPresenter
                     if (type == ContentType.Planet || type == ContentType.Sun)
                     {
                         //save radius only for planets and suns
-                        // ReSharper disable CompareOfFloatsByEqualityOperator
-                        if (radius != 0d)
-                        // ReSharper restore CompareOfFloatsByEqualityOperator
+                        if (radius != 0.0)
                         {
                             return new KeyValuePair<string, ArchetypeInfo>(name, new ArchetypeInfo
-                            {
-                                Type = type,
-                                Radius = radius
-                            });
+                                {
+                                    Type = type,
+                                    Radius = radius
+                                });
                         }
                     }
                     else if (type != ContentType.None && cmpFile != null)
                     {
                         //save model path only for supported objects (not planets and suns)
                         return new KeyValuePair<string, ArchetypeInfo>(name, new ArchetypeInfo
-                        {
-                            Type = type,
-                            ModelPath = cmpFile
-                        });
+                            {
+                                Type = type,
+                                ModelPath = cmpFile
+                            });
                     }
                 }
             }
@@ -87,10 +87,10 @@ namespace FreelancerModStudio.SystemPresenter
                     {
                         case "da_archetype":
                             return new ArchetypeInfo
-                            {
-                                Type = ContentType.ModelPreview,
-                                ModelPath = option.Values[0].Value.ToString()
-                            };
+                                {
+                                    Type = ContentType.ModelPreview,
+                                    ModelPath = option.Values[0].Value.ToString()
+                                };
                     }
                 }
             }
@@ -325,17 +325,42 @@ namespace FreelancerModStudio.SystemPresenter
                     break;
                 default: // all zones
                     content.Scale = ParseScale(scaleString, block.ObjectType);
-                    content.Rotation = ParseRotation(rotationString,
-                        block.ObjectType == ContentType.ZonePath ||
-                        block.ObjectType == ContentType.ZonePathTrade ||
-                        block.ObjectType == ContentType.ZoneCylinder ||
-                        block.ObjectType == ContentType.ZoneCylinderExclusion ||
-                        block.ObjectType == ContentType.ZoneRing);
+                    content.Rotation = ParseRotation(rotationString, IsCylinder(block.ObjectType));
                     break;
             }
 
             content.UpdateTransform(animate);
             return SetBlock(content, block);
+        }
+
+        public static Vector3D ParseVector(string vector)
+        {
+            //Use Vector3D.Parse after implementation of type handling
+            string[] values = vector.Split(new[] { ',' });
+            if (values.Length > 2)
+            {
+                return new Vector3D(Parser.ParseDouble(values[0], 0), -Parser.ParseDouble(values[2], 0), Parser.ParseDouble(values[1], 0));
+            }
+
+            return new Vector3D(0, 0, 0);
+        }
+
+        public static Vector3D ParsePosition(string vector)
+        {
+            return ParseVector(vector) * SIZE_FACTOR;
+        }
+
+        public static Vector3D ParseRotation(string vector, bool isCylinder)
+        {
+            Vector3D rotation = ParseVector(vector);
+
+            // our cylinder meshes are by default not rotated like DirectX cylinders
+            if (isCylinder)
+            {
+                rotation.X += 90;
+            }
+
+            return rotation;
         }
 
         public static Vector3D ParseScale(string scale, ContentType type)
@@ -373,35 +398,15 @@ namespace FreelancerModStudio.SystemPresenter
             return new Vector3D(1, 1, 1);
         }
 
-        public static Vector3D ParsePosition(string vector)
-        {
-            return Parser.ParseVector(vector) * SIZE_FACTOR;
-        }
-
-        public static Vector3D ParseRotation(string vector, bool isCylinder)
-        {
-            Vector3D rotation = Parser.ParseVector(vector);
-
-            // our cylinder meshes are by default not rotated like DirectX cylinders
-            if (isCylinder)
-            {
-                rotation.X += 90;
-            }
-
-            return rotation;
-        }
-
         public static Vector3D ParseUniverseVector(string vector)
         {
-            const double axisCenter = 7.5;
-
             //Use Point.Parse after implementation of type handling
             string[] values = vector.Split(new[] { ',' });
             if (values.Length > 1)
             {
                 double tempScale1 = Parser.ParseDouble(values[0], 0);
                 double tempScale2 = Parser.ParseDouble(values[1], 0);
-                return new Vector3D(tempScale1 - axisCenter, -tempScale2 + axisCenter, 0) * UNIVERSE_SCALE;
+                return new Vector3D(tempScale1 - UNIVERSE_AXIS_CENTER, -tempScale2 + UNIVERSE_AXIS_CENTER, 0) * UNIVERSE_SCALE;
             }
             return new Vector3D(0, 0, 0);
         }
@@ -438,6 +443,169 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             return ContentType.None;
+        }
+
+        static bool IsCylinder(ContentType type)
+        {
+            switch (type)
+            {
+                case ContentType.ZonePath:
+                case ContentType.ZonePathTrade:
+                case ContentType.ZoneCylinder:
+                case ContentType.ZoneCylinderExclusion:
+                case ContentType.ZoneRing:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static void WriteBlock(ContentBase content)
+        {
+            bool isUniverse = content.Block.ObjectType == ContentType.System;
+
+            //get properties of content
+            foreach (EditorINIOption option in content.Block.Block.Options)
+            {
+                switch (option.Name.ToLowerInvariant())
+                {
+                    case "pos":
+                        if (option.Values.Count > 0)
+                        {
+                            option.Values[0].Value = WritePosition(content.Position, isUniverse);
+                        }
+                        else
+                        {
+                            option.Values.Add(new EditorINIEntry
+                                (
+                                    WritePosition(content.Position, isUniverse)
+                                ));
+                        }
+                        break;
+                    case "rotate":
+                        if (option.Values.Count > 0)
+                        {
+                            if (!IsZeroRounded(content.Rotation))
+                            {
+                                option.Values[0].Value = WriteRotation(content.Rotation, IsCylinder(content.Block.ObjectType));
+                            }
+                            else
+                            {
+                                option.Values.Clear();
+                            }
+                        }
+                        else if (!IsZeroRounded(content.Rotation))
+                        {
+                            option.Values.Add(new EditorINIEntry
+                                (
+                                    WriteRotation(content.Rotation, IsCylinder(content.Block.ObjectType))
+                                ));
+                        }
+                        break;
+                    case "size":
+                        if (option.Values.Count > 0)
+                        {
+                            option.Values[0].Value = WriteScale(content.Scale, content.Block.ObjectType);
+                        }
+                        else
+                        {
+                            option.Values.Add(new EditorINIEntry
+                                (
+                                    WriteScale(content.Scale, content.Block.ObjectType)
+                                ));
+                        }
+                        break;
+                }
+            }
+        }
+
+        public static string WriteUniverseVector(Vector3D value)
+        {
+            Helper.String.StringBuilder.Length = 0;
+
+            WriteDouble(Math.Round((value.X + UNIVERSE_AXIS_CENTER) / UNIVERSE_SCALE, 1));
+            Helper.String.StringBuilder.Append(", ");
+            WriteDouble(Math.Round((-value.Y + UNIVERSE_AXIS_CENTER) / UNIVERSE_SCALE, 1));
+
+            return Helper.String.StringBuilder.ToString();
+        }
+
+        public static string WriteVector(Vector3D value)
+        {
+            Helper.String.StringBuilder.Length = 0;
+
+            WriteDouble(Math.Round(value.X));
+            Helper.String.StringBuilder.Append(", ");
+            WriteDouble(Math.Round(value.Z));
+            Helper.String.StringBuilder.Append(", ");
+            WriteDouble(Math.Round(-value.Y));
+
+            return Helper.String.StringBuilder.ToString();
+        }
+
+        public static string WritePosition(Vector3D value, bool isUniverse)
+        {
+            if (isUniverse)
+            {
+                return WriteUniverseVector(value);
+            }
+
+            return WriteVector(value / SIZE_FACTOR);
+        }
+
+        public static string WriteRotation(Vector3D value, bool isCylinder)
+        {
+            // our cylinder meshes are by default not rotated like DirectX cylinders
+            if (isCylinder)
+            {
+                value.X -= 90;
+            }
+
+            return WriteVector(value);
+        }
+
+        public static string WriteScale(Vector3D value, ContentType type)
+        {
+            Helper.String.StringBuilder.Length = 0;
+
+            switch (type)
+            {
+                case ContentType.ZoneSphere:
+                case ContentType.ZoneSphereExclusion:
+                case ContentType.ZoneVignette:
+                    WriteDouble(Math.Round(value.X / SIZE_FACTOR));
+                    break;
+                case ContentType.ZonePath:
+                case ContentType.ZonePathTrade:
+                    WriteDouble(Math.Round(value.X / SIZE_FACTOR));
+                    Helper.String.StringBuilder.Append(", ");
+                    WriteDouble(Math.Round(value.Y / SIZE_FACTOR));
+                    break;
+                default:
+                    WriteDouble(Math.Round(value.X / SIZE_FACTOR));
+                    Helper.String.StringBuilder.Append(", ");
+                    WriteDouble(Math.Round(value.Z / SIZE_FACTOR));
+                    Helper.String.StringBuilder.Append(", ");
+                    WriteDouble(Math.Round(value.Y / SIZE_FACTOR));
+                    break;
+            }
+
+            return Helper.String.StringBuilder.ToString();
+        }
+
+        static void WriteDouble(double value)
+        {
+            Helper.String.StringBuilder.Append(value.ToString(CultureInfo.InvariantCulture));
+        }
+
+        static bool IsZeroRounded(Vector3D value)
+        {
+            return IsZeroRounded(value.X) && IsZeroRounded(value.Y) && IsZeroRounded(value.Z);
+        }
+
+        static bool IsZeroRounded(double value)
+        {
+            return value > -0.5 && value < 0.5;
         }
     }
 }

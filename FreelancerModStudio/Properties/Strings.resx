@@ -261,4 +261,10 @@ If that problem persists, download and install the update manually.</value>
   <data name="FileErrorSave" xml:space="preserve">
     <value>The file '{0}' could not be saved. Please check if it is opened in another application or if the file is marked as read-only.</value>
   </data>
+  <data name="SystemPresenterTrackedAngles" xml:space="preserve">
+    <value>Angles: </value>
+  </data>
+  <data name="SystemPresenterTrackedDistance" xml:space="preserve">
+    <value>Distance: </value>
+  </data>
 </root>

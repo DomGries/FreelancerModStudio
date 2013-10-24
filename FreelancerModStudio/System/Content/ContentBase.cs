@@ -1,4 +1,5 @@
-﻿using System.Windows.Media.Media3D;
+﻿using System;
+using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 
 namespace FreelancerModStudio.SystemPresenter.Content
@@ -60,6 +61,16 @@ namespace FreelancerModStudio.SystemPresenter.Content
             return CreateRotationMatrix(new Quaternion(new Vector3D(1, 0, 0), rotation.X)) *
                    CreateRotationMatrix(new Quaternion(new Vector3D(0, 0, 1), rotation.Z)) *
                    CreateRotationMatrix(new Quaternion(new Vector3D(0, 1, 0), rotation.Y));
+        }
+
+        public static Vector3D GetRotation(Matrix3D matrix)
+        {
+            const double radToDeg = 180 / Math.PI;
+
+            return new Vector3D(
+                Math.Atan2(-matrix.M32, matrix.M22) * radToDeg,
+                Math.Atan2(-matrix.M13, matrix.M11) * radToDeg,
+                Math.Asin(matrix.M12) * radToDeg);
         }
 
         public void LoadModel()

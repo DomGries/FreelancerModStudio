@@ -11,7 +11,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static readonly Material ZoneExclusion = MaterialHelper.CreateEmissiveMaterial(Color.FromRgb(30, 15, 0));
         public static readonly Material CmpModel = MaterialHelper.CreateMaterial(Brushes.SlateGray);
 
-        public static readonly Color ConnectionJumpHole = Colors.OrangeRed;
+        public static readonly Color ConnectionJumpHole = Colors.Orange;
         public static readonly Color ConnectionJumpGate = Colors.SlateGray;
         public static readonly Color ConnectionJumpGateAndHole = Colors.Snow;
         public static readonly Color ConnectionNone = Colors.Black;
@@ -19,7 +19,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static readonly Color Selection = Colors.Yellow;
         public static readonly Color TrackedLine = Colors.LightYellow;
         public static readonly Color ManipulatorX = Colors.OrangeRed;
-        public static readonly Color ManipulatorY = Colors.LimeGreen;
+        public static readonly Color ManipulatorY = Colors.LawnGreen;
         public static readonly Color ManipulatorZ = Color.FromRgb(0, 120, 255);
     }
 

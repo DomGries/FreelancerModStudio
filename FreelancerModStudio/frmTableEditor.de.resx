@@ -118,19 +118,40 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>178, 48</value>
+  <data name="mnuCut.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 22</value>
+  </data>
+  <data name="mnuCut.Text" xml:space="preserve">
+    <value>&amp;Ausschneiden</value>
+  </data>
+  <data name="mnuCopy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 22</value>
+  </data>
+  <data name="mnuCopy.Text" xml:space="preserve">
+    <value>&amp;Kopieren</value>
+  </data>
+  <data name="mnuPaste.Size" type="System.Drawing.Size, System.Drawing">
+    <value>178, 22</value>
+  </data>
+  <data name="mnuPaste.Text" xml:space="preserve">
+    <value>&amp;Einfügen</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>175, 6</value>
   </data>
   <data name="mnuAdd.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>178, 22</value>
   </data>
   <data name="mnuAdd.Text" xml:space="preserve">
     <value>&amp;Hinzufügen</value>
   </data>
   <data name="mnuDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>191, 22</value>
+    <value>178, 22</value>
   </data>
   <data name="mnuDelete.Text" xml:space="preserve">
     <value>&amp;Löschen</value>
+  </data>
+  <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>179, 120</value>
   </data>
 </root>

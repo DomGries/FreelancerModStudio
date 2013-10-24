@@ -5,8 +5,9 @@ namespace FreelancerModStudio.SystemPresenter
     [Flags]
     public enum ManipulationMode
     {
-        Translation,
-        Rotation,
+        None,
+        Translate,
+        Rotate,
         Scale,
     }
 }

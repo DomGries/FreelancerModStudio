@@ -35,10 +35,46 @@ namespace FreelancerModStudio.SystemPresenter
         FixedLineVisual3D _manipulatorY;
         FixedLineVisual3D _manipulatorZ;
 
-        bool _manipulating = false;
-        ManipulationMode _manipulationMode = ManipulationMode.Translation;
+        bool _manipulating;
+        ManipulationMode _manipulationMode;
         ManipulationAxis _manipulationAxis;
-        Point _manipulationLastMousePosition;
+        Point3D? _manipulationLastPosition;
+
+        public delegate void SelectionChangedType(TableBlock block, bool toggle);
+
+        public SelectionChangedType SelectionChanged;
+
+        void OnSelectionChanged(TableBlock block, bool toggle)
+        {
+            if (SelectionChanged != null)
+            {
+                SelectionChanged(block, toggle);
+            }
+        }
+
+        public delegate void FileOpenType(string file);
+
+        public FileOpenType FileOpen;
+
+        void OnFileOpen(string file)
+        {
+            if (FileOpen != null)
+            {
+                FileOpen(file);
+            }
+        }
+
+        public delegate void DataManipulatedType(TableBlock newBlock, TableBlock oldBlock);
+
+        public DataManipulatedType DataManipulated;
+
+        void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        {
+            if (DataManipulated != null)
+            {
+                DataManipulated(newBlock, oldBlock);
+            }
+        }
 
         public Visual3D Lighting
         {
@@ -126,6 +162,10 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
+                if (_manipulating && _selectedContent != value)
+                {
+                    StopManipulating(true);
+                }
                 _selectedContent = value;
 
                 //select content visually
@@ -152,27 +192,22 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public delegate void SelectionChangedType(ContentBase content, bool toggle);
-
-        public SelectionChangedType SelectionChanged;
-
-        void OnSelectionChanged(ContentBase content, bool toggle)
+        public ManipulationMode ManipulationMode
         {
-            if (SelectionChanged != null)
+            get
             {
-                SelectionChanged(content, toggle);
+                return _manipulationMode;
             }
-        }
-
-        public delegate void FileOpenType(string file);
-
-        public FileOpenType FileOpen;
-
-        void OnFileOpen(string file)
-        {
-            if (FileOpen != null)
+            set
             {
-                FileOpen(file);
+                if (_manipulating && value == ManipulationMode.None)
+                {
+                    StopManipulating(false);
+                }
+
+                _manipulationMode = value;
+
+                SetManipulatorLines();
             }
         }
 
@@ -467,6 +502,11 @@ namespace FreelancerModStudio.SystemPresenter
 
         void Viewport_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            StopManipulating(false);
+        }
+
+        void StopManipulating(bool cancelled)
+        {
             if (!_manipulating)
             {
                 return;
@@ -485,23 +525,82 @@ namespace FreelancerModStudio.SystemPresenter
                     break;
             }
 
+            if (cancelled)
+            {
+                SystemParser.SetValues(_selectedContent, _selectedContent.Block, true);
+            }
+            else
+            {
+                // update data globally
+                TableBlock oldBlock = _selectedContent.Block;
+                TableBlock newBlock = ObjectClone.Clone(oldBlock);
+                newBlock.Modified = TableModified.Changed;
+
+                _selectedContent.Block = newBlock;
+                SystemParser.WriteBlock(_selectedContent);
+                OnDataManipulated(newBlock, oldBlock);
+            }
+
+            // stop manipulating
             _manipulating = false;
             Viewport.Viewport.ReleaseMouseCapture();
         }
 
         Vector3D GetMouseDelta(Point mousePosition)
         {
-            Vector deltaMouse = mousePosition - _manipulationLastMousePosition;
-            _manipulationLastMousePosition = mousePosition;
+            Point3D? thisPoint3D = Viewport.CameraController.UnProject(mousePosition, Viewport.CameraController.CameraTarget(), Viewport.CameraController.Camera.LookDirection);
+            Vector3D delta3D = thisPoint3D.Value - _manipulationLastPosition.Value;
+            _manipulationLastPosition = thisPoint3D;
+
+            if (_manipulationMode == ManipulationMode.Rotate)
+            {
+                Vector3D crossAxis;
+                switch (_manipulationAxis)
+                {
+                    default:
+                        crossAxis = new Vector3D(0, 0, 1);
+                        break;
+                    case ManipulationAxis.Y:
+                        crossAxis = new Vector3D(0, 1, 0);
+                        break;
+                    case ManipulationAxis.Z:
+                        crossAxis = new Vector3D(-1, 0, 0);
+                        break;
+                }
+
+                delta3D = Vector3D.CrossProduct(crossAxis, delta3D);
+
+                double length = delta3D.Length;
+                if (length > 0)
+                {
+                    delta3D /= length;
+                    delta3D *= 2;
+                }
+            }
+            else if (_manipulationMode == ManipulationMode.Scale)
+            {
+                if (ManipulatorLineY == null)
+                {
+                    if (ManipulatorLineZ == null)
+                    {
+                        return new Vector3D(delta3D.X, delta3D.X, delta3D.X);
+                    }
+
+                    if (_manipulationAxis == ManipulationAxis.X)
+                    {
+                        return new Vector3D(delta3D.X, 0, delta3D.Z);
+                    }
+                }
+            }
 
             switch (_manipulationAxis)
             {
                 default:
-                    return new Vector3D(deltaMouse.X, 0, 0);
+                    return new Vector3D(delta3D.X, 0, 0);
                 case ManipulationAxis.Y:
-                    return new Vector3D(0, 0, deltaMouse.X);
+                    return new Vector3D(0, 0, delta3D.Z);
                 case ManipulationAxis.Z:
-                    return new Vector3D(0, deltaMouse.X, 0);
+                    return new Vector3D(0, delta3D.Y, 0);
             }
         }
 
@@ -514,10 +613,10 @@ namespace FreelancerModStudio.SystemPresenter
 
             switch (_manipulationMode)
             {
-                case ManipulationMode.Translation:
+                case ManipulationMode.Translate:
                     ManipulateTranslate(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
                     break;
-                case ManipulationMode.Rotation:
+                case ManipulationMode.Rotate:
                     ManipulateRotate(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
                     break;
                 case ManipulationMode.Scale:
@@ -525,6 +624,7 @@ namespace FreelancerModStudio.SystemPresenter
                     break;
             }
 
+            // update selection box and tracked line
             SelectedContent = _selectedContent;
         }
 
@@ -549,10 +649,7 @@ namespace FreelancerModStudio.SystemPresenter
             matrix.Prepend(ContentBase.RotationMatrix(delta));
 
             // update rotation
-            const double radToDeg = 180 / Math.PI;
-            _selectedContent.Rotation.X = Math.Atan2(-matrix.M32, matrix.M22) * radToDeg;
-            _selectedContent.Rotation.Y = Math.Atan2(-matrix.M13, matrix.M11) * radToDeg;
-            _selectedContent.Rotation.Z = Math.Asin(matrix.M12) * radToDeg;
+            _selectedContent.Rotation = ContentBase.GetRotation(matrix);
 
             // update transform
             _selectedContent.UpdateTransform(false);
@@ -560,22 +657,29 @@ namespace FreelancerModStudio.SystemPresenter
 
         void ManipulateScale(Vector3D delta)
         {
-            //TODO: prevent negative scaling
-
             // update position
             _selectedContent.Scale += delta;
+
+            // prevent negative scaling
+            const double minScale = 10 * SystemParser.SIZE_FACTOR;
+
+            double minValue = Math.Min(_selectedContent.Scale.X, Math.Min(_selectedContent.Scale.Y, _selectedContent.Scale.Z));
+            if (minValue < minScale)
+            {
+                _selectedContent.Scale -= delta;
+                return;
+            }
 
             // update transform
             _selectedContent.UpdateTransform(false);
         }
 
-        void StartManipulation(ManipulationAxis axis, LineVisual3D line, Point mousePoint)
+        void StartManipulation(ManipulationAxis axis, LineVisual3D line, Point mousePosition)
         {
             _manipulating = true;
-            _manipulationMode = ManipulationMode.Translation;
             _manipulationAxis = axis;
 
-            _manipulationLastMousePosition = mousePoint;
+            _manipulationLastPosition = Viewport.CameraController.UnProject(mousePosition, Viewport.CameraController.CameraTarget(), Viewport.CameraController.Camera.LookDirection);
             line.Color = SharedMaterials.Selection;
 
             Viewport.Viewport.CaptureMouse();
@@ -595,7 +699,7 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
 
-            OnSelectionChanged(content, toggle);
+            OnSelectionChanged(content.Block, toggle);
         }
 
         void DisplayContextMenu(string path)
@@ -694,9 +798,14 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void SetManipulatorLines()
+        public void SetManipulatorLines()
         {
-            if (_selectedContent == null)
+            if (ViewerType != ViewerType.System && ViewerType != ViewerType.Universe)
+            {
+                return;
+            }
+
+            if (_selectedContent == null || _manipulationMode == ManipulationMode.None)
             {
                 ManipulatorLineX = null;
                 ManipulatorLineY = null;
@@ -704,55 +813,127 @@ namespace FreelancerModStudio.SystemPresenter
                 return;
             }
 
+            if (ViewerType == ViewerType.Universe && _manipulationMode != ManipulationMode.Translate)
+            {
+                return;
+            }
+
+            int axisCount = 3;
+            if (_manipulationMode == ManipulationMode.Scale || ViewerType == ViewerType.Universe)
+            {
+                axisCount = GetAxisCount(_selectedContent.Block.ObjectType);
+                if (axisCount == 0)
+                {
+                    ManipulatorLineX = null;
+                    ManipulatorLineY = null;
+                    ManipulatorLineZ = null;
+                    return;
+                }
+            }
+
+            Matrix3D matrix = new Matrix3D();
+            // scale used as workaround for fixed screen space line visual glitches
+            matrix.Scale(new Vector3D(0.0001, 0.0001, 0.0001));
+            matrix *= ContentBase.RotationMatrix(_selectedContent.Rotation);
+            matrix.Translate(_selectedContent.Position);
+
+            Transform3D transform = new MatrixTransform3D(matrix);
+
+            if (axisCount >= 3)
+            {
+                if (ManipulatorLineY != null)
+                {
+                    FixedLineVisual3D manipulatorLine = ManipulatorLineY;
+                    manipulatorLine.Point2 = new Point3D(0, 0, 1);
+                    manipulatorLine.Transform = transform;
+                }
+                else
+                {
+                    ManipulatorLineY = new FixedLineVisual3D
+                        {
+                            Point2 = new Point3D(0, 0, 1),
+                            Transform = transform,
+                            Color = SharedMaterials.ManipulatorY,
+                            Thickness = 5,
+                            DepthOffset = 0.5,
+                            FixedLength = 100,
+                        };
+                }
+            }
+            else
+            {
+                ManipulatorLineY = null;
+            }
+
+            if (axisCount >= 2)
+            {
+                if (ManipulatorLineZ != null)
+                {
+                    FixedLineVisual3D manipulatorLine = ManipulatorLineZ;
+                    manipulatorLine.Point2 = new Point3D(0, 1, 0);
+                    manipulatorLine.Transform = transform;
+                }
+                else
+                {
+                    ManipulatorLineZ = new FixedLineVisual3D
+                        {
+                            Point2 = new Point3D(0, 1, 0),
+                            Transform = transform,
+                            Color = SharedMaterials.ManipulatorZ,
+                            Thickness = 5,
+                            DepthOffset = 0.5,
+                            FixedLength = 100,
+                        };
+                }
+            }
+            else
+            {
+                ManipulatorLineZ = null;
+            }
+
             if (ManipulatorLineX != null)
             {
                 FixedLineVisual3D manipulatorLine = ManipulatorLineX;
                 manipulatorLine.Point2 = new Point3D(1, 0, 0);
-                manipulatorLine.Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(-1, 0, 0) : new Point3D();
-                manipulatorLine.Transform = _selectedContent.Transform;
-
-                manipulatorLine = ManipulatorLineY;
-                manipulatorLine.Point2 = new Point3D(0, 0, 1);
-                manipulatorLine.Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(0, 0, -1) : new Point3D();
-                manipulatorLine.Transform = _selectedContent.Transform;
-
-                manipulatorLine = ManipulatorLineZ;
-                manipulatorLine.Point2 = new Point3D(0, 1, 0);
-                manipulatorLine.Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(0, -1, 0) : new Point3D();
-                manipulatorLine.Transform = _selectedContent.Transform;
+                manipulatorLine.Transform = transform;
             }
             else
             {
                 ManipulatorLineX = new FixedLineVisual3D
                     {
                         Point2 = new Point3D(1, 0, 0),
-                        Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(-1, 0, 0) : new Point3D(),
-                        Transform = _selectedContent.Transform,
+                        Transform = transform,
                         Color = SharedMaterials.ManipulatorX,
-                        Thickness = 3,
+                        Thickness = 5,
                         DepthOffset = 0.5,
                         FixedLength = 100,
                     };
-                ManipulatorLineY = new FixedLineVisual3D
-                    {
-                        Point2 = new Point3D(0, 0, 1),
-                        Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(0, 0, -1) : new Point3D(),
-                        Transform = _selectedContent.Transform,
-                        Color = SharedMaterials.ManipulatorY,
-                        Thickness = 3,
-                        DepthOffset = 0.5,
-                        FixedLength = 100,
-                    };
-                ManipulatorLineZ = new FixedLineVisual3D
-                    {
-                        Point2 = new Point3D(0, 1, 0),
-                        Point1 = _manipulationMode == ManipulationMode.Rotation ? new Point3D(0, -1, 0) : new Point3D(),
-                        Transform = _selectedContent.Transform,
-                        Color = SharedMaterials.ManipulatorZ,
-                        Thickness = 3,
-                        DepthOffset = 0.5,
-                        FixedLength = 100,
-                    };
+            }
+        }
+
+        static int GetAxisCount(ContentType type)
+        {
+            switch (type)
+            {
+                case ContentType.ZoneSphere:
+                case ContentType.ZoneSphereExclusion:
+                case ContentType.ZoneVignette:
+                    return 1;
+                case ContentType.ZonePath:
+                case ContentType.ZonePathTrade:
+                case ContentType.System:
+                    return 2;
+                case ContentType.ZoneEllipsoid:
+                case ContentType.ZoneEllipsoidExclusion:
+                case ContentType.ZoneCylinder:
+                case ContentType.ZoneCylinderExclusion:
+                case ContentType.ZoneRing:
+                case ContentType.ZoneBox:
+                case ContentType.ZoneBoxExclusion:
+                case ContentType.ZonePathTradeLane:
+                    return 3;
+                default:
+                    return 0;
             }
         }
 
@@ -947,8 +1128,10 @@ namespace FreelancerModStudio.SystemPresenter
                 factor *= -1;
             }
 
+            const double radToDeg = 180 / Math.PI;
+
             double c = Math.Sqrt(a * a + b * b);
-            double angle = Math.Acos(a / c) * 180 / Math.PI;
+            double angle = Math.Acos(a / c) * radToDeg;
 
             line.Rotation = new Vector3D(0, 0, (angle + angleOffset) * factor);
             line.UpdateTransform(false);
@@ -1183,7 +1366,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void SetTitle()
+        public void SetTitle()
         {
             if (_selectedContent == null)
             {
@@ -1207,13 +1390,15 @@ namespace FreelancerModStudio.SystemPresenter
             Helper.String.StringBuilder.AppendLine();
             Helper.String.StringBuilder.AppendLine(_trackedContent.Block.Name);
 
-            Helper.String.StringBuilder.Append("Distance: ");
+            Helper.String.StringBuilder.Append(Strings.SystemPresenterTrackedDistance);
             Vector3D a = _selectedContent.Position / SystemParser.SIZE_FACTOR;
             Vector3D b = _trackedContent.Position / SystemParser.SIZE_FACTOR;
             Helper.String.StringBuilder.Append(Math.Round((a - b).Length));
 
             Helper.String.StringBuilder.AppendLine();
-            Helper.String.StringBuilder.Append("Angle: ");
+            Helper.String.StringBuilder.Append(Strings.SystemPresenterTrackedAngles);
+
+            const double radToDeg = 180 / Math.PI;
 
             double denominator = -b.Y - -a.Y;
             if (denominator == 0.0)
@@ -1222,9 +1407,9 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
-                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * 180.0 / Math.PI));
+                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * radToDeg));
                 Helper.String.StringBuilder.Append(", ");
-                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.X - a.X) / denominator) * 180.0 / Math.PI));
+                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.X - a.X) / denominator) * radToDeg));
                 Helper.String.StringBuilder.Append(", ");
             }
 
@@ -1235,8 +1420,21 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
-                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * 180.0 / Math.PI));
+                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * radToDeg));
             }
+        }
+
+        public ContentBase FindContent(TableBlock block)
+        {
+            for (int i = GetContentStartId(); i < Viewport.Children.Count; ++i)
+            {
+                ContentBase content = (ContentBase)Viewport.Children[i];
+                if (content.Block != null && content.Block.Id == block.Id)
+                {
+                    return content;
+                }
+            }
+            return null;
         }
     }
 }

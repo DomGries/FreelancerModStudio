@@ -592,7 +592,7 @@ namespace FreelancerModStudio
                 selectedData.Add(tableBlock);
             }
 
-            Data.RefreshIndexes(blocks[0].Index);
+            Data.RefreshIndices(blocks[0].Index);
 
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.SelectedObjects = selectedData;
@@ -736,6 +736,11 @@ namespace FreelancerModStudio
                 SetBlockType(block);
             }
 
+            SetBlocks(newBlocks, oldBlocks);
+        }
+
+        public void SetBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
+        {
             _undoManager.Execute(new ChangedData
                 {
                     NewBlocks = newBlocks,
@@ -776,7 +781,7 @@ namespace FreelancerModStudio
                 Data.Blocks.Insert(newBlocks[i].Index, blocks[oldBlocks.Count - i - 1]);
             }
 
-            Data.RefreshIndexes(Math.Min(oldBlocks[0].Index, newBlocks[0].Index));
+            Data.RefreshIndices(Math.Min(oldBlocks[0].Index, newBlocks[0].Index));
             objectListView1.SetObjects(Data.Blocks);
             objectListView1.RefreshObjects(Data.Blocks);
 
@@ -794,7 +799,7 @@ namespace FreelancerModStudio
                 Data.Blocks.Remove(tableBlock);
             }
 
-            Data.RefreshIndexes(blocks[0].Index);
+            Data.RefreshIndices(blocks[0].Index);
             objectListView1.RemoveObjects(blocks);
 
             //select objects which were selected before
@@ -837,11 +842,6 @@ namespace FreelancerModStudio
             objectListView1.SelectAll();
         }
 
-        void mnuDelete_Click(object sender, EventArgs e)
-        {
-            DeleteSelectedBlocks();
-        }
-
         void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             SetContextMenuEnabled();
@@ -849,17 +849,45 @@ namespace FreelancerModStudio
 
         void SetContextMenuEnabled()
         {
-            bool isSelected = objectListView1.SelectedObjects.Count > 0;
+            bool active = CanCut();
+            mnuCut.Visible = active;
+            mnuCut.Enabled = active;
 
-            mnuDeleteSeperator.Visible = isSelected;
-            mnuDelete.Visible = isSelected;
-            mnuDelete.Enabled = isSelected;
+            active = CanCopy();
+            mnuCopy.Visible = active;
+            mnuCopy.Enabled = active;
+
+            mnuPaste.Enabled = CanPaste();
+
+            active = CanDelete();
+            mnuDelete.Visible = active;
+            mnuDelete.Enabled = active;
         }
 
         void mnuAddItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
             AddNewBlock(menuItem.Text, (int)menuItem.Tag);
+        }
+
+        void mnuDelete_Click(object sender, EventArgs e)
+        {
+            DeleteSelectedBlocks();
+        }
+
+        private void mnuCut_Click(object sender, EventArgs e)
+        {
+            Cut();
+        }
+
+        private void mnuCopy_Click(object sender, EventArgs e)
+        {
+            Copy();
+        }
+
+        private void mnuPaste_Click(object sender, EventArgs e)
+        {
+            Paste();
         }
 
         public bool CanSave()
@@ -874,7 +902,7 @@ namespace FreelancerModStudio
 
         public bool CanCut()
         {
-            return CanCopy();
+            return objectListView1.SelectedObjects.Count > 0;
         }
 
         public bool CanPaste()
@@ -1032,6 +1060,16 @@ namespace FreelancerModStudio
         public bool CanDisplay3DViewer()
         {
             return ViewerType != ViewerType.None;
+        }
+
+        public bool CanManipulatePosition()
+        {
+            return ViewerType == ViewerType.System || ViewerType == ViewerType.Universe;
+        }
+
+        public bool CanManipulateRotationScale()
+        {
+            return ViewerType == ViewerType.System;
         }
 
         void ExecuteDataChanged(ChangedData data, int undoBlock, bool undo)

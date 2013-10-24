@@ -261,4 +261,10 @@ Falls das Problem fortbesteht, downloaden und installieren Sie das Update händi
   <data name="FileErrorSave" xml:space="preserve">
     <value>Die Datei '{0}' konnte nicht gespeichert werden. Bitte überprüfen Sie ob die die Datei in einer anderen Anwendung geöffnet oder schreibgeschützt ist.</value>
   </data>
+  <data name="SystemPresenterTrackedAngles" xml:space="preserve">
+    <value>Winkel: </value>
+  </data>
+  <data name="SystemPresenterTrackedDistance" xml:space="preserve">
+    <value>Entfernung: </value>
+  </data>
 </root>

@@ -6,7 +6,6 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
-using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
 using FreelancerModStudio.SystemPresenter;
 using FreelancerModStudio.SystemPresenter.Content;
@@ -20,9 +19,7 @@ namespace FreelancerModStudio
         Presenter _presenter;
         Thread _universeLoadingThread;
 
-        public delegate void SelectionChangedType(TableBlock block, bool toggle);
-
-        public SelectionChangedType SelectionChanged;
+        public Presenter.SelectionChangedType SelectionChanged;
 
         void OnSelectionChanged(TableBlock block, bool toggle)
         {
@@ -42,10 +39,25 @@ namespace FreelancerModStudio
             }
         }
 
+        public Presenter.DataManipulatedType DataManipulated;
+
+        void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        {
+            if (DataManipulated != null)
+            {
+                DataManipulated(newBlock, oldBlock);
+            }
+        }
+
         public frmSystemEditor()
         {
             InitializeComponent();
             InitializeView();
+        }
+
+        public void RefreshSettings()
+        {
+            _presenter.SetTitle();
         }
 
         void InitializeView()
@@ -82,16 +94,22 @@ namespace FreelancerModStudio
             _presenter = new Presenter(viewport);
             _presenter.SelectionChanged += systemPresenter_SelectionChanged;
             _presenter.FileOpen += systemPresenter_FileOpen;
+            _presenter.DataManipulated += systemPresenter_DataManipulated;
         }
 
-        void systemPresenter_SelectionChanged(ContentBase content, bool toggle)
+        void systemPresenter_SelectionChanged(TableBlock block, bool toggle)
         {
-            OnSelectionChanged(content.Block, toggle);
+            OnSelectionChanged(block, toggle);
         }
 
         void systemPresenter_FileOpen(string file)
         {
             OnFileOpen(file);
+        }
+
+        void systemPresenter_DataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        {
+            OnDataManipulated(newBlock, oldBlock);
         }
 
         public void ShowViewer(ViewerType viewerType)
@@ -137,19 +155,6 @@ namespace FreelancerModStudio
             _presenter.ClearDisplay(false);
         }
 
-        ContentBase GetContent(TableBlock block)
-        {
-            for (int i = _presenter.GetContentStartId(); i < _presenter.Viewport.Children.Count; ++i)
-            {
-                ContentBase content = (ContentBase)_presenter.Viewport.Children[i];
-                if (content.Block != null && content.Block.Id == block.Id)
-                {
-                    return content;
-                }
-            }
-            return null;
-        }
-
         public void Select(TableBlock block)
         {
             // return if object is already selected
@@ -169,7 +174,7 @@ namespace FreelancerModStudio
                 }
 
                 // select object
-                ContentBase content = GetContent(block);
+                ContentBase content = _presenter.FindContent(block);
                 if (content != null)
                 {
                     _presenter.SelectedContent = content;
@@ -216,7 +221,7 @@ namespace FreelancerModStudio
             }
             else
             {
-                ContentBase content = GetContent(block);
+                ContentBase content = _presenter.FindContent(block);
                 if (content != null)
                 {
                     _presenter.Delete(content);
@@ -230,7 +235,7 @@ namespace FreelancerModStudio
 
             foreach (TableBlock block in blocks)
             {
-                ContentBase content = GetContent(block);
+                ContentBase content = _presenter.FindContent(block);
                 if (content != null)
                 {
                     // visual is visible as it was found so we need to remove it
@@ -274,7 +279,7 @@ namespace FreelancerModStudio
 
             foreach (TableBlock block in blocks)
             {
-                ContentBase content = GetContent(block);
+                ContentBase content = _presenter.FindContent(block);
                 if (content != null)
                 {
                     _presenter.Delete(content);
@@ -314,6 +319,24 @@ namespace FreelancerModStudio
             }
         }
 
+        public ManipulationMode ManipulationMode
+        {
+            get
+            {
+                return _presenter.ManipulationMode;
+            }
+            set
+            {
+                if (_presenter.ManipulationMode == value)
+                {
+                    return;
+                }
+
+                // switch manipulation mode
+                _presenter.ManipulationMode = value;
+            }
+        }
+
         public void FocusSelected()
         {
             if (_presenter.SelectedContent != null)
@@ -337,11 +360,6 @@ namespace FreelancerModStudio
 
         public void TrackSelected()
         {
-            if (_presenter.SelectedContent == null)
-            {
-                _presenter.TrackedContent = null;
-            }
-
             // change tracked object
             if (_presenter.SelectedContent == _presenter.TrackedContent)
             {

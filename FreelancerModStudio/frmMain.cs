@@ -98,6 +98,7 @@ namespace FreelancerModStudio
             _systemEditor = new frmSystemEditor();
             _systemEditor.SelectionChanged += systemEditor_SelectionChanged;
             _systemEditor.FileOpen += systemEditor_FileOpen;
+            _systemEditor.DataManipulated += systemEditor_DataManipulated;
         }
 
         IDockContent GetContentFromPersistString(string persistString)
@@ -777,6 +778,11 @@ namespace FreelancerModStudio
                 _propertiesForm.RefreshSettings();
             }
 
+            if (_systemEditor != null)
+            {
+                _systemEditor.RefreshSettings();
+            }
+
             //if (solutionExplorerForm != null)
             //    solutionExplorerForm.RefreshSettings();
 
@@ -997,6 +1003,58 @@ namespace FreelancerModStudio
             }
         }
 
+        void mnuManipulationNone_Click(object sender, EventArgs e)
+        {
+            mnuManipulationNone.Checked = true;
+            mnuManipulationTranslate.Checked = false;
+            mnuManipulationRotate.Checked = false;
+            mnuManipulationScale.Checked = false;
+
+            if (_systemEditor != null)
+            {
+                _systemEditor.ManipulationMode = SystemPresenter.ManipulationMode.None;
+            }
+        }
+
+        void mnuManipulationTranslate_Click(object sender, EventArgs e)
+        {
+            mnuManipulationNone.Checked = false;
+            mnuManipulationTranslate.Checked = true;
+            mnuManipulationRotate.Checked = false;
+            mnuManipulationScale.Checked = false;
+
+            if (_systemEditor != null)
+            {
+                _systemEditor.ManipulationMode = SystemPresenter.ManipulationMode.Translate;
+            }
+        }
+
+        void mnuManipulationRotate_Click(object sender, EventArgs e)
+        {
+            mnuManipulationNone.Checked = false;
+            mnuManipulationTranslate.Checked = false;
+            mnuManipulationRotate.Checked = true;
+            mnuManipulationScale.Checked = false;
+
+            if (_systemEditor != null)
+            {
+                _systemEditor.ManipulationMode = SystemPresenter.ManipulationMode.Rotate;
+            }
+        }
+
+        void mnuManipulationScale_Click(object sender, EventArgs e)
+        {
+            mnuManipulationNone.Checked = false;
+            mnuManipulationTranslate.Checked = false;
+            mnuManipulationRotate.Checked = false;
+            mnuManipulationScale.Checked = true;
+
+            if (_systemEditor != null)
+            {
+                _systemEditor.ManipulationMode = SystemPresenter.ManipulationMode.Scale;
+            }
+        }
+
         void mnuFocusSelected_Click(object sender, EventArgs e)
         {
             if (_systemEditor != null)
@@ -1123,16 +1181,29 @@ namespace FreelancerModStudio
 
             mnu3dEditor.Enabled = document.CanDisplay3DViewer();
 
-            bool showFocus = document.CanFocusSelected(false);
-            mnuFocusSelected.Visible = showFocus;
-            mnuFocusSelectedSeperator.Visible = showFocus;
-            mnuTrackSelected.Visible = showFocus;
+            bool active = document.CanFocusSelected(false);
+            mnuFocusSelected.Visible = active;
+            mnuFocusSelectedSeperator.Visible = active;
+            mnuTrackSelected.Visible = active;
 
-            bool showVisibility = document.CanChangeVisibility(false);
-            mnuShowModels.Visible = showVisibility;
-            mnuShowModels.Enabled = showVisibility;
-            mnuChangeVisibility.Visible = showVisibility;
-            mnuShowModelsSeperator.Visible = showVisibility;
+            active = document.CanManipulatePosition();
+            mnuManipulationSeperator.Visible = active;
+            mnuManipulationNone.Visible = active;
+            mnuManipulationNone.Enabled = active;
+            mnuManipulationTranslate.Visible = active;
+            mnuManipulationTranslate.Enabled = active;
+            mnuManipulationRotate.Visible = active;
+            mnuManipulationScale.Visible = active;
+
+            active = document.CanManipulateRotationScale();
+            mnuManipulationRotate.Enabled = active;
+            mnuManipulationScale.Enabled = active;
+
+            active = document.CanChangeVisibility(false);
+            mnuShowModels.Visible = active;
+            mnuShowModels.Enabled = active;
+            mnuChangeVisibility.Visible = active;
+            mnuShowModelsSeperator.Visible = active;
         }
 
         void Content_DisplayChanged(IContentForm content)
@@ -1239,6 +1310,15 @@ namespace FreelancerModStudio
             if (tableEditor != null)
             {
                 tableEditor.Select(block, toggle);
+            }
+        }
+
+        void systemEditor_DataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        {
+            frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
+            if (tableEditor != null)
+            {
+                tableEditor.SetBlocks(new List<TableBlock> { newBlock }, new List<TableBlock> { oldBlock });
             }
         }
     }

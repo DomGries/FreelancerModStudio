@@ -1,1 +1,1 @@
-1.0.6.0;http://freelancermodstudio.googlecode.com/files/FreelancerModStudio-1.0.6.exe;0
+1.1.0.0;http://freelancermodstudio.googlecode.com/files/FreelancerModStudio-1.1.exe;0

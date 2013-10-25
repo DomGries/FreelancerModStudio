@@ -546,30 +546,25 @@ namespace FreelancerModStudio.SystemPresenter
             Viewport.Viewport.ReleaseMouseCapture();
         }
 
+        Point3D? GetMousePoint(Point mousePosition)
+        {
+            return Viewport.CameraController.UnProject(mousePosition, Viewport.CameraController.CameraTarget(), Viewport.CameraController.Camera.LookDirection);
+        }
+
         Vector3D GetMouseDelta(Point mousePosition)
         {
-            Point3D? thisPoint3D = Viewport.CameraController.UnProject(mousePosition, Viewport.CameraController.CameraTarget(), Viewport.CameraController.Camera.LookDirection);
+            // get mouse delta
+            Point3D? thisPoint3D = GetMousePoint(mousePosition);
             Vector3D delta3D = thisPoint3D.Value - _manipulationLastPosition.Value;
             _manipulationLastPosition = thisPoint3D;
 
+            // transform mouse delta using matrix
+            Matrix3D matrix = ContentBase.RotationMatrix(_selectedContent.Rotation);
+            matrix.Invert();
+            delta3D = matrix.Transform(delta3D);
+
             if (_manipulationMode == ManipulationMode.Rotate)
             {
-                Vector3D crossAxis;
-                switch (_manipulationAxis)
-                {
-                    default:
-                        crossAxis = new Vector3D(0, 0, 1);
-                        break;
-                    case ManipulationAxis.Y:
-                        crossAxis = new Vector3D(0, 1, 0);
-                        break;
-                    case ManipulationAxis.Z:
-                        crossAxis = new Vector3D(-1, 0, 0);
-                        break;
-                }
-
-                delta3D = Vector3D.CrossProduct(crossAxis, delta3D);
-
                 double length = delta3D.Length;
                 if (length > 0)
                 {
@@ -632,8 +627,8 @@ namespace FreelancerModStudio.SystemPresenter
         {
             // calculate using matrix
             Matrix3D matrix = ContentBase.RotationMatrix(_selectedContent.Rotation);
-            matrix.TranslatePrepend(delta);
             matrix.Translate(_selectedContent.Position);
+            matrix.TranslatePrepend(delta);
 
             // update position
             _selectedContent.Position = new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
@@ -663,8 +658,9 @@ namespace FreelancerModStudio.SystemPresenter
             // prevent negative scaling
             const double minScale = 10 * SystemParser.SIZE_FACTOR;
 
-            double minValue = Math.Min(_selectedContent.Scale.X, Math.Min(_selectedContent.Scale.Y, _selectedContent.Scale.Z));
-            if (minValue < minScale)
+            if (_selectedContent.Scale.X < minScale ||
+                _selectedContent.Scale.Y < minScale ||
+                _selectedContent.Scale.Z < minScale)
             {
                 _selectedContent.Scale -= delta;
                 return;
@@ -674,12 +670,12 @@ namespace FreelancerModStudio.SystemPresenter
             _selectedContent.UpdateTransform(false);
         }
 
-        void StartManipulation(ManipulationAxis axis, LineVisual3D line, Point mousePosition)
+        void StartManipulation(ManipulationAxis axis, ScreenSpaceVisual3D line, Point mousePosition)
         {
             _manipulating = true;
             _manipulationAxis = axis;
+            _manipulationLastPosition = GetMousePoint(mousePosition);
 
-            _manipulationLastPosition = Viewport.CameraController.UnProject(mousePosition, Viewport.CameraController.CameraTarget(), Viewport.CameraController.Camera.LookDirection);
             line.Color = SharedMaterials.Selection;
 
             Viewport.Viewport.CaptureMouse();

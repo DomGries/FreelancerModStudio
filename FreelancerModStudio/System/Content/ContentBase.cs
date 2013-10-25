@@ -67,6 +67,24 @@ namespace FreelancerModStudio.SystemPresenter.Content
         {
             const double radToDeg = 180 / Math.PI;
 
+            if (matrix.M12 >= 1)
+            {
+                // Not a unique solution: thetaY - thetaX = atan2(M31, M33)
+                return new Vector3D(
+                    Math.Atan2(matrix.M31, matrix.M33) * radToDeg,
+                    0,
+                    0.5 * Math.PI * radToDeg);
+            }
+
+            if (matrix.M12 <= -1)
+            {
+                // Not a unique solution: thetaY + thetaX = atan2(M31, M33)
+                return new Vector3D(
+                    Math.Atan2(matrix.M31, matrix.M33) * radToDeg,
+                    0,
+                    -0.5 * Math.PI * radToDeg);
+            }
+
             return new Vector3D(
                 Math.Atan2(-matrix.M32, matrix.M22) * radToDeg,
                 Math.Atan2(-matrix.M13, matrix.M11) * radToDeg,

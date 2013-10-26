@@ -61,6 +61,11 @@ namespace FreelancerModStudio.Data
 
             [XmlIgnore]
             [Category("INI Editor")]
+            [DisplayName("Added row color")]
+            public Color EditorModifiedAddedColor { get; set; }
+
+            [XmlIgnore]
+            [Category("INI Editor")]
             [DisplayName("Modified row color")]
             public Color EditorModifiedColor { get; set; }
 
@@ -71,7 +76,7 @@ namespace FreelancerModStudio.Data
 
             [XmlIgnore]
             [Category("INI Editor")]
-            [DisplayName("Hidden row color")]
+            [DisplayName("Hidden text color")]
             public Color EditorHiddenColor { get; set; }
 
             [Category("INI Formatting")]
@@ -83,15 +88,15 @@ namespace FreelancerModStudio.Data
             public bool FormattingEmptyLine { get; set; }
 
             [Browsable(false)]
-            public string EditorModifiedSavedColorXML
+            public string EditorModifiedAddedColorXML
             {
                 get
                 {
-                    return ColorTranslator.ToHtml(EditorModifiedSavedColor);
+                    return ColorTranslator.ToHtml(EditorModifiedAddedColor);
                 }
                 set
                 {
-                    EditorModifiedSavedColor = ColorTranslator.FromHtml(value);
+                    EditorModifiedAddedColor = ColorTranslator.FromHtml(value);
                 }
             }
 
@@ -105,6 +110,19 @@ namespace FreelancerModStudio.Data
                 set
                 {
                     EditorModifiedColor = ColorTranslator.FromHtml(value);
+                }
+            }
+
+            [Browsable(false)]
+            public string EditorModifiedSavedColorXML
+            {
+                get
+                {
+                    return ColorTranslator.ToHtml(EditorModifiedSavedColor);
+                }
+                set
+                {
+                    EditorModifiedSavedColor = ColorTranslator.FromHtml(value);
                 }
             }
 
@@ -131,7 +149,8 @@ namespace FreelancerModStudio.Data
                 PropertiesSortType = PropertySort.NoSort;
                 PropertiesShowHelp = false;
 
-                EditorModifiedColor = Color.FromArgb(255, 255, 164);
+                EditorModifiedAddedColor = Color.FromArgb(255, 255, 164);
+                EditorModifiedColor = Color.FromArgb(255, 227, 164);
                 EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
                 EditorHiddenColor = Color.FromArgb(128, 128, 128);
 

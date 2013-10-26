@@ -179,13 +179,17 @@ namespace FreelancerModStudio
             objectListView1.RowFormatter = delegate(OLVListItem lvi)
                 {
                     TableBlock block = (TableBlock)lvi.RowObject;
-                    if (block.Modified == TableModified.Changed)
+                    switch (block.Modified)
                     {
-                        lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedColor;
-                    }
-                    else if (block.Modified == TableModified.ChangedSaved)
-                    {
-                        lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
+                        case TableModified.ChangedAdded:
+                            lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedAddedColor;
+                            break;
+                        case TableModified.Changed:
+                            lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedColor;
+                            break;
+                        case TableModified.ChangedSaved:
+                            lvi.BackColor = Helper.Settings.Data.Data.General.EditorModifiedSavedColor;
+                            break;
                     }
 
                     if (ViewerType == ViewerType.System && block.ObjectType != ContentType.None && !block.Visibility)
@@ -493,7 +497,8 @@ namespace FreelancerModStudio
                 //set objects in listview as unmodified
                 foreach (TableBlock tableData in objectListView1.Objects)
                 {
-                    if (tableData.Modified == TableModified.Changed)
+                    if (tableData.Modified == TableModified.Changed ||
+                        tableData.Modified == TableModified.ChangedAdded)
                     {
                         tableData.Modified = TableModified.ChangedSaved;
                         objectListView1.RefreshObject(tableData);
@@ -531,7 +536,7 @@ namespace FreelancerModStudio
                 //set block to be modified except in undo mode
                 if (!undo)
                 {
-                    tableBlock.Modified = TableModified.Changed;
+                    tableBlock.Modified = TableModified.ChangedAdded;
                 }
 
                 //set archetype of block and make visible if possible
@@ -662,12 +667,15 @@ namespace FreelancerModStudio
 
             for (int i = 0; i < blocks.Length; ++i)
             {
-                oldBlocks.Add((TableBlock)objectListView1.SelectedObjects[i]);
-                newBlocks.Add(ObjectClone.Clone(oldBlocks[i]));
+                TableBlock oldBlock = (TableBlock)objectListView1.SelectedObjects[i];
+                TableBlock newBlock = ObjectClone.Clone(oldBlock);
+
+                oldBlocks.Add(oldBlock);
+                newBlocks.Add(newBlock);
 
                 for (int j = 0; j < blocks[i].Count; ++j)
                 {
-                    List<EditorINIEntry> options = newBlocks[i].Block.Options[j].Values;
+                    List<EditorINIEntry> options = newBlock.Block.Options[j].Values;
 
                     if (blocks[i][j].Value is PropertySubOptions)
                     {
@@ -721,14 +729,17 @@ namespace FreelancerModStudio
                         }
 
                         //change data in listview
-                        if (newBlocks[i].Block.MainOptionIndex == j)
+                        if (newBlock.Block.MainOptionIndex == j)
                         {
-                            newBlocks[i].Name = text;
+                            newBlock.Name = text;
                         }
                     }
                 }
 
-                newBlocks[i].Modified = TableModified.Changed;
+                if (newBlock.Modified != TableModified.ChangedAdded)
+                {
+                    newBlock.Modified = TableModified.Changed;
+                }
             }
 
             foreach (TableBlock block in newBlocks)

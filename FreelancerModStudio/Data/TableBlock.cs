@@ -162,5 +162,13 @@ namespace FreelancerModStudio.Data
                     return false;
             }
         }
+
+        public void SetModifiedChanged()
+        {
+            if (Modified != TableModified.ChangedAdded)
+            {
+                Modified = TableModified.Changed;
+            }
+        }
     }
 }

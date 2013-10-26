@@ -736,10 +736,7 @@ namespace FreelancerModStudio
                     }
                 }
 
-                if (newBlock.Modified != TableModified.ChangedAdded)
-                {
-                    newBlock.Modified = TableModified.Changed;
-                }
+                newBlock.SetModifiedChanged();
             }
 
             foreach (TableBlock block in newBlocks)

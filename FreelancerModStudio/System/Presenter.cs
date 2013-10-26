@@ -537,7 +537,7 @@ namespace FreelancerModStudio.SystemPresenter
                 // update data globally
                 TableBlock oldBlock = _selectedContent.Block;
                 TableBlock newBlock = ObjectClone.Clone(oldBlock);
-                newBlock.Modified = TableModified.Changed;
+                newBlock.SetModifiedChanged();
 
                 _selectedContent.Block = newBlock;
                 SystemParser.WriteBlock(_selectedContent);

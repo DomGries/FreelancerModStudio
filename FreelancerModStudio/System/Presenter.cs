@@ -377,7 +377,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public ContentBase GetSelection(Point position, bool farthest)
+        public ContentBase GetSelection(Point position, bool farthest, bool checkManipulators)
         {
             PointHitTestParameters hitParams = new PointHitTestParameters(position);
 
@@ -393,24 +393,27 @@ namespace FreelancerModStudio.SystemPresenter
                     RayMeshGeometry3DHitTestResult rayHit = hit as RayMeshGeometry3DHitTestResult;
                     if (rayHit != null)
                     {
-                        // start manipulation on manipulator selection
-                        if (rayHit.VisualHit == _manipulatorX)
+                        if (checkManipulators)
                         {
-                            StartManipulation(ManipulationAxis.X, _manipulatorX, position);
-                            visual = null;
-                            return HitTestResultBehavior.Stop;
-                        }
-                        if (rayHit.VisualHit == _manipulatorY)
-                        {
-                            StartManipulation(ManipulationAxis.Y, _manipulatorY, position);
-                            visual = null;
-                            return HitTestResultBehavior.Stop;
-                        }
-                        if (rayHit.VisualHit == _manipulatorZ)
-                        {
-                            StartManipulation(ManipulationAxis.Z, _manipulatorZ, position);
-                            visual = null;
-                            return HitTestResultBehavior.Stop;
+                            // start manipulation on manipulator selection
+                            if (rayHit.VisualHit == _manipulatorX)
+                            {
+                                StartManipulation(ManipulationAxis.X, _manipulatorX, position);
+                                visual = null;
+                                return HitTestResultBehavior.Stop;
+                            }
+                            if (rayHit.VisualHit == _manipulatorY)
+                            {
+                                StartManipulation(ManipulationAxis.Y, _manipulatorY, position);
+                                visual = null;
+                                return HitTestResultBehavior.Stop;
+                            }
+                            if (rayHit.VisualHit == _manipulatorZ)
+                            {
+                                StartManipulation(ManipulationAxis.Z, _manipulatorZ, position);
+                                visual = null;
+                                return HitTestResultBehavior.Stop;
+                            }
                         }
 
                         ContentBase newHit = rayHit.VisualHit as ContentBase;
@@ -484,13 +487,13 @@ namespace FreelancerModStudio.SystemPresenter
                 bool isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
                 bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
 
-                ContentBase visual = GetSelection(e.GetPosition(Viewport.Viewport), isShiftDown);
+                ContentBase visual = GetSelection(e.GetPosition(Viewport.Viewport), isShiftDown, !isLookAt);
                 if (visual != null)
                 {
                     if (isLookAt)
                     {
                         // change the 'lookat' point
-                        Viewport.LookAt(visual.GetPositionPoint());
+                        LookAt(visual);
                     }
                     else
                     {

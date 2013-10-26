@@ -583,7 +583,7 @@ namespace FreelancerModStudio.SystemPresenter
 
                     if (_manipulationAxis == ManipulationAxis.X)
                     {
-                        return new Vector3D(delta3D.X, 0, delta3D.Z);
+                        return new Vector3D(delta3D.X, 0, delta3D.X);
                     }
                 }
             }

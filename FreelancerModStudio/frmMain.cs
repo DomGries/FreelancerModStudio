@@ -328,8 +328,10 @@ namespace FreelancerModStudio
             if (Helper.Settings.Data.Data.Forms.Main.FullScreen)
             {
                 //show fullscreen
-                ToolStripMenuItem fullScreenMenuItem = new ToolStripMenuItem(mnuFullScreen.Text, mnuFullScreen.Image, mnuFullScreen_Click);
-                fullScreenMenuItem.Checked = true;
+                ToolStripMenuItem fullScreenMenuItem = new ToolStripMenuItem(mnuFullScreen.Text, mnuFullScreen.Image, mnuFullScreen_Click)
+                    {
+                        Checked = true
+                    };
                 MainMenuStrip.Items.Add(fullScreenMenuItem);
 
                 Helper.Settings.Data.Data.Forms.Main.Location = Location;
@@ -337,17 +339,20 @@ namespace FreelancerModStudio
 
                 Helper.Settings.Data.Data.Forms.Main.Maximized = (WindowState == FormWindowState.Maximized);
 
+                WindowState = FormWindowState.Normal;
                 FormBorderStyle = FormBorderStyle.None;
-                WindowState = FormWindowState.Maximized;
+                Bounds = Screen.PrimaryScreen.Bounds;
             }
             else
             {
                 //exit fullscreen
                 MainMenuStrip.Items.RemoveAt(MainMenuStrip.Items.Count - 1);
 
+                WindowState = Helper.Settings.Data.Data.Forms.Main.Maximized ? FormWindowState.Maximized : FormWindowState.Normal;
                 FormBorderStyle = FormBorderStyle.Sizable;
 
-                WindowState = Helper.Settings.Data.Data.Forms.Main.Maximized ? FormWindowState.Maximized : FormWindowState.Normal;
+                Location = Helper.Settings.Data.Data.Forms.Main.Location;
+                Size = Helper.Settings.Data.Data.Forms.Main.Size;
             }
         }
 

@@ -119,10 +119,10 @@
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="mnuNewMod.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>150, 22</value>
   </data>
   <data name="mnuNewFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>150, 22</value>
   </data>
   <data name="mnuNewFile.Text" xml:space="preserve">
     <value>&amp;Datei...</value>
@@ -137,16 +137,16 @@
     <value>206, 6</value>
   </data>
   <data name="mnuOpenMod.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>151, 22</value>
   </data>
   <data name="mnuOpenFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>151, 22</value>
   </data>
   <data name="mnuOpenFile.Text" xml:space="preserve">
     <value>&amp;Datei...</value>
   </data>
   <data name="mnuRecentFilesSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>149, 6</value>
+    <value>148, 6</value>
   </data>
   <data name="mnuOpen.Size" type="System.Drawing.Size, System.Drawing">
     <value>209, 22</value>
@@ -191,7 +191,7 @@
     <value>209, 22</value>
   </data>
   <data name="mnuExit.Text" xml:space="preserve">
-    <value>&amp;Beenden</value>
+    <value>B&amp;eenden</value>
   </data>
   <data name="mnuFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 20</value>
@@ -356,7 +356,7 @@
     <value>&amp;Ansicht</value>
   </data>
   <data name="mnuOptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>130, 22</value>
   </data>
   <data name="mnuOptions.Text" xml:space="preserve">
     <value>&amp;Optionen...</value>

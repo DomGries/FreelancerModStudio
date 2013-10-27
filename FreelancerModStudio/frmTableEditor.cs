@@ -206,10 +206,8 @@ namespace FreelancerModStudio
             }
 
             //update 'New file' to new language
-            if (File.Length == 0)
-            {
-                SetFile(string.Empty);
-            }
+            //also needed to reset title after culture changer changed it
+            SetFile(File);
 
             objectListView1.Refresh();
         }

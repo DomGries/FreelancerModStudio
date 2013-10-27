@@ -200,7 +200,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
             set
             {
-                if (_manipulating && value == ManipulationMode.None)
+                if (_manipulating && _manipulationMode != value)
                 {
                     StopManipulating(false);
                 }

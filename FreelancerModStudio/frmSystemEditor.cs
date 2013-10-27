@@ -420,10 +420,6 @@ namespace FreelancerModStudio
             return null;
         }
 
-        public void Add()
-        {
-        }
-
         public void Copy()
         {
         }

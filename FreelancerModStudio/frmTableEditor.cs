@@ -960,11 +960,6 @@ namespace FreelancerModStudio
             }
         }
 
-        public void Add()
-        {
-            //AddNewBlock(mnuAdd.DropDownItems[index].Text, (int)mnuAdd.DropDownItems[index].Tag);
-        }
-
         public void Delete()
         {
             DeleteSelectedBlocks();

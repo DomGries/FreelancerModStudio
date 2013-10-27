@@ -15,7 +15,6 @@ namespace FreelancerModStudio
 
         ToolStripDropDown MultipleAddDropDown();
 
-        void Add();
         void Copy();
         void Cut();
         void Paste();

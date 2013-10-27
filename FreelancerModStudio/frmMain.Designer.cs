@@ -446,7 +446,6 @@
             this.mnuAdd.Image = global::FreelancerModStudio.Properties.Resources.Add;
             this.mnuAdd.Name = "mnuAdd";
             this.mnuAdd.ShortcutKeyDisplayString = null;
-            this.mnuAdd.Click += new System.EventHandler(this.mnuAdd_Click);
             // 
             // mnuDelete
             // 

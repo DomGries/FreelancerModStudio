@@ -135,18 +135,6 @@ namespace FreelancerModStudio
             return false;
         }
 
-        public void Add()
-        {
-            if (propertyGrid.SelectedGridItem.Value is PropertySubOptions)
-            {
-                propertyGrid.SelectedGridItem.GridItems[propertyGrid.SelectedGridItem.GridItems.Count - 1].Select();
-            }
-            else if (propertyGrid.SelectedGridItem.Parent.Value is PropertySubOptions)
-            {
-                propertyGrid.SelectedGridItem.Parent.GridItems[propertyGrid.SelectedGridItem.Parent.GridItems.Count - 1].Select();
-            }
-        }
-
         public void Delete()
         {
             PropertyOptionDescriptor propertyOptionDescriptor = propertyGrid.SelectedGridItem.PropertyDescriptor as PropertyOptionDescriptor;

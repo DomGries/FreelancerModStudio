@@ -964,21 +964,6 @@ namespace FreelancerModStudio
             dockPanel1.ActiveContent.DockHandler.Close();
         }
 
-        void mnuAdd_Click(object sender, EventArgs e)
-        {
-            IContentForm content = GetContent();
-            if (content != null)
-            {
-                /*int index = 0;
-                ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-                if (menuItem.Tag != null)
-                {
-                    index = (int)menuItem.Tag;
-                }*/
-                content.Add();
-            }
-        }
-
         void mnuDelete_Click(object sender, EventArgs e)
         {
             IContentForm content = GetContent();

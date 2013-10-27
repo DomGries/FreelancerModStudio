@@ -1389,37 +1389,37 @@ namespace FreelancerModStudio.SystemPresenter
             Helper.String.StringBuilder.AppendLine();
             Helper.String.StringBuilder.AppendLine(_trackedContent.Block.Name);
 
-            Helper.String.StringBuilder.Append(Strings.SystemPresenterTrackedDistance);
             Vector3D a = _selectedContent.Position / SystemParser.SIZE_FACTOR;
             Vector3D b = _trackedContent.Position / SystemParser.SIZE_FACTOR;
-            Helper.String.StringBuilder.Append(Math.Round((a - b).Length));
+            Vector3D delta = b - a;
+
+            Helper.String.StringBuilder.Append(Strings.SystemPresenterTrackedDistance);
+            Helper.String.StringBuilder.Append(Math.Round(delta.Length));
 
             Helper.String.StringBuilder.AppendLine();
             Helper.String.StringBuilder.Append(Strings.SystemPresenterTrackedAngles);
 
             const double radToDeg = 180 / Math.PI;
 
-            double denominator = -b.Y - -a.Y;
-            if (denominator == 0.0)
+            if (delta.Y == 0.0)
             {
                 Helper.String.StringBuilder.Append("0, 0, ");
             }
             else
             {
-                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * radToDeg));
+                Helper.String.StringBuilder.Append(Math.Round(-Math.Atan(delta.Z / delta.Y) * radToDeg));
                 Helper.String.StringBuilder.Append(", ");
-                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.X - a.X) / denominator) * radToDeg));
+                Helper.String.StringBuilder.Append(Math.Round(-Math.Atan(delta.X / delta.Y) * radToDeg));
                 Helper.String.StringBuilder.Append(", ");
             }
 
-            denominator = b.X - a.X;
-            if (denominator == 0.0)
+            if (delta.X == 0.0)
             {
                 Helper.String.StringBuilder.Append('0');
             }
             else
             {
-                Helper.String.StringBuilder.Append(Math.Round(Math.Atan((b.Z - a.Z) / denominator) * radToDeg));
+                Helper.String.StringBuilder.Append(Math.Round(Math.Atan(delta.Z / delta.X) * radToDeg));
             }
         }
 

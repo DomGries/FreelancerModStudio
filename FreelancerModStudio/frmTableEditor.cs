@@ -734,12 +734,17 @@ namespace FreelancerModStudio
                     }
                 }
 
-                newBlock.SetModifiedChanged();
-            }
+                // update block object type
+                SetBlockType(newBlock);
 
-            foreach (TableBlock block in newBlocks)
-            {
-                SetBlockType(block);
+                // make block visible if it can be made visible now
+                if (oldBlock.ObjectType == ContentType.None)
+                {
+                    newBlock.SetVisibleIfPossible();
+                }
+
+                // mark block as modified
+                newBlock.SetModifiedChanged();
             }
 
             SetBlocks(newBlocks, oldBlocks);

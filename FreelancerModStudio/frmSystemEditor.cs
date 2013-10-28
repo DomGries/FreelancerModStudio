@@ -14,7 +14,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace FreelancerModStudio
 {
-    public partial class frmSystemEditor : DockContent, IContentForm
+    public partial class frmSystemEditor : DockContent
     {
         Presenter _presenter;
         Thread _universeLoadingThread;
@@ -287,11 +287,6 @@ namespace FreelancerModStudio
             }
         }
 
-        public bool UseDocument()
-        {
-            return true;
-        }
-
         public bool IsModelMode
         {
             get
@@ -382,64 +377,5 @@ namespace FreelancerModStudio
                 _presenter.DataPath = value;
             }
         }
-
-        #region ContentInterface Members
-
-        public bool CanCopy()
-        {
-            return false;
-        }
-
-        public bool CanCut()
-        {
-            return false;
-        }
-
-        public bool CanPaste()
-        {
-            return false;
-        }
-
-        public bool CanAdd()
-        {
-            return false;
-        }
-
-        public bool CanDelete()
-        {
-            return false;
-        }
-
-        public bool CanSelectAll()
-        {
-            return false;
-        }
-
-        public ToolStripDropDown MultipleAddDropDown()
-        {
-            return null;
-        }
-
-        public void Copy()
-        {
-        }
-
-        public void Cut()
-        {
-        }
-
-        public void Paste()
-        {
-        }
-
-        public void Delete()
-        {
-        }
-
-        public void SelectAll()
-        {
-        }
-
-        #endregion
     }
 }

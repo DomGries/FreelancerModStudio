@@ -17,7 +17,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace FreelancerModStudio
 {
-    public partial class frmTableEditor : DockContent, IDocumentForm, IContentForm
+    public partial class frmTableEditor : DockContent, IDocumentForm
     {
         public TableData Data;
         public string File;
@@ -41,10 +41,6 @@ namespace FreelancerModStudio
         public delegate void DataVisibilityChangedType(TableBlock block);
 
         public DataVisibilityChangedType DataVisibilityChanged;
-
-        public delegate void ContentChangedType(IContentForm content);
-
-        public ContentChangedType ContentChanged;
 
         public delegate void DocumentChangedType(IDocumentForm document);
 
@@ -71,14 +67,6 @@ namespace FreelancerModStudio
             if (DataVisibilityChanged != null)
             {
                 DataVisibilityChanged(block);
-            }
-        }
-
-        void OnContentChanged(IContentForm content)
-        {
-            if (ContentChanged != null)
-            {
-                ContentChanged(content);
             }
         }
 
@@ -444,7 +432,7 @@ namespace FreelancerModStudio
         void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
             OnSelectionChanged(GetSelectedBlocks(), Data.TemplateIndex);
-            OnContentChanged(this);
+            OnDocumentChanged(this);
         }
 
         void Save(string file)
@@ -471,16 +459,21 @@ namespace FreelancerModStudio
         void SetFile(string file)
         {
             File = file;
+            ToolTipText = File;
 
-            string title = Title;
+            string title = GetTitle();
             if (_undoManager.IsModified())
             {
                 title += "*";
             }
 
-            TabText = title;
+            if (Text == title)
+            {
+                return;
+            }
+
             Text = title;
-            ToolTipText = File;
+            TabText = title;
 
             OnDocumentChanged(this);
         }
@@ -508,7 +501,7 @@ namespace FreelancerModStudio
         {
             if (_undoManager.IsModified())
             {
-                DialogResult dialogResult = MessageBox.Show(String.Format(Strings.FileCloseSave, Title), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult dialogResult = MessageBox.Show(String.Format(Strings.FileCloseSave, GetTitle()), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Cancel)
                 {
                     return true;
@@ -968,12 +961,9 @@ namespace FreelancerModStudio
             return Path.GetFileName(File);
         }
 
-        public string Title
+        public string GetTitle()
         {
-            get
-            {
-                return File.Length == 0 ? Strings.FileEditorNewFile : Path.GetFileName(File);
-            }
+            return File.Length == 0 ? Strings.FileEditorNewFile : Path.GetFileName(File);
         }
 
         public void Copy()
@@ -986,7 +976,7 @@ namespace FreelancerModStudio
 
             Clipboard.Copy(data, typeof(EditorINIData));
 
-            OnContentChanged(this);
+            OnDocumentChanged(this);
         }
 
         public void Cut()

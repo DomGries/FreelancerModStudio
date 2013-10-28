@@ -4,29 +4,20 @@ namespace FreelancerModStudio
 {
     public interface IContentForm
     {
-        bool UseDocument();
+        bool CanDelete();
+    }
+
+    public interface IDocumentForm : IContentForm
+    {
+        bool CanSave();
+        bool CanUndo();
+        bool CanRedo();
 
         bool CanCopy();
         bool CanCut();
         bool CanPaste();
         bool CanAdd();
-        bool CanDelete();
         bool CanSelectAll();
-
-        ToolStripDropDown MultipleAddDropDown();
-
-        void Copy();
-        void Cut();
-        void Paste();
-        void Delete();
-        void SelectAll();
-    }
-
-    public interface IDocumentForm
-    {
-        bool CanSave();
-        bool CanUndo();
-        bool CanRedo();
 
         bool CanChangeVisibility(bool rightNow);
         bool CanFocusSelected(bool rightNow);
@@ -36,13 +27,21 @@ namespace FreelancerModStudio
         bool CanManipulatePosition();
         bool CanManipulateRotationScale();
 
-        string Title { get; }
+        ToolStripDropDown MultipleAddDropDown();
+
+        string GetTitle();
         string DataPath { get; }
 
         void Save();
         void SaveAs();
         void Undo();
         void Redo();
+
+        void Copy();
+        void Cut();
+        void Paste();
+        void Delete();
+        void SelectAll();
 
         void ChangeVisibility();
     }

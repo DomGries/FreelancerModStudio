@@ -76,7 +76,7 @@ namespace FreelancerModStudio
 
             if (dockPanel1.DocumentsCount == 0)
             {
-                SetDocumentMenus(false);
+                SetDocumentMenus(null);
             }
 
             SettingsChanged();
@@ -88,7 +88,6 @@ namespace FreelancerModStudio
             //solutionExplorerForm = new frmSolutionExplorer();
 
             _propertiesForm.OptionsChanged += Properties_OptionsChanged;
-            _propertiesForm.ContentChanged += Content_DisplayChanged;
 
             InitSystemEditor();
         }
@@ -502,7 +501,6 @@ namespace FreelancerModStudio
             defaultEditor.DataChanged += DefaultEditor_DataChanged;
             defaultEditor.SelectionChanged += DefaultEditor_SelectionChanged;
             defaultEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
-            defaultEditor.ContentChanged += Content_DisplayChanged;
             defaultEditor.DocumentChanged += Document_DisplayChanged;
             defaultEditor.Show(dockPanel1, DockState.Document);
 
@@ -667,13 +665,13 @@ namespace FreelancerModStudio
                     ShowSystemEditor(tableEditor);
                 }
 
-                // set selection changed after showing/closing the system editor as this needs to be forwarded to system editor
-                DefaultEditor_SelectionChanged(tableEditor.GetSelectedBlocks(), tableEditor.Data.TemplateIndex);
+                // update property window after changing active document
+                _propertiesForm.ShowData(tableEditor.GetSelectedBlocks(), tableEditor.Data.TemplateIndex);
                 Document_DisplayChanged(tableEditor);
             }
             else
             {
-                DefaultEditor_SelectionChanged(null, 0);
+                _propertiesForm.ClearData();
 
                 if (_systemEditor != null)
                 {
@@ -853,7 +851,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, document.Title), ex);
+                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, document.GetTitle()), ex);
                 }
             }
         }
@@ -871,26 +869,9 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, tableEditor.Title), ex);
+                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, tableEditor.GetTitle()), ex);
                 }
             }
-        }
-
-        IContentForm GetContent()
-        {
-            IContentForm content = dockPanel1.ActiveContent as IContentForm;
-            if (content != null && content.UseDocument())
-            {
-                content = dockPanel1.ActiveDocument as IContentForm;
-                if (content != null)
-                {
-                    return content;
-                }
-
-                return null;
-            }
-
-            return content;
         }
 
         IDocumentForm GetDocument()
@@ -900,69 +881,72 @@ namespace FreelancerModStudio
 
         void mnuCut_Click(object sender, EventArgs e)
         {
-            IContentForm content = GetContent();
-            if (content != null)
+            IDocumentForm document = GetDocument();
+            if (document != null)
             {
-                content.Cut();
+                document.Cut();
             }
         }
 
         void mnuCopy_Click(object sender, EventArgs e)
         {
-            IContentForm content = GetContent();
-            if (content != null)
+            IDocumentForm document = GetDocument();
+            if (document != null)
             {
-                content.Copy();
+                document.Copy();
             }
         }
 
         void mnuPaste_Click(object sender, EventArgs e)
         {
-            IContentForm content = GetContent();
-            if (content != null)
+            IDocumentForm document = GetDocument();
+            if (document != null)
             {
-                content.Paste();
+                document.Paste();
             }
         }
 
         void mnuUndo_Click(object sender, EventArgs e)
         {
-            IDocumentForm content = GetDocument();
-            if (content != null)
+            IDocumentForm document = GetDocument();
+            if (document != null)
             {
-                content.Undo();
+                document.Undo();
             }
         }
 
         void mnuRedo_Click(object sender, EventArgs e)
         {
-            IDocumentForm content = GetDocument();
-            if (content != null)
+            IDocumentForm document = GetDocument();
+            if (document != null)
             {
-                content.Redo();
+                document.Redo();
             }
         }
 
         void mnuClose_Click(object sender, EventArgs e)
         {
-            dockPanel1.ActiveContent.DockHandler.Close();
+            if (dockPanel1.ActiveDocument != null)
+            {
+                dockPanel1.ActiveDocument.DockHandler.Close();
+            }
         }
 
         void mnuDelete_Click(object sender, EventArgs e)
         {
-            IContentForm content = GetContent();
-            if (content != null)
+            IDocumentForm document = GetDocument();
+            if (document != null)
             {
-                content.Delete();
+                document.Delete();
             }
         }
 
         void mnuSelectAll_Click(object sender, EventArgs e)
         {
-            IContentForm content = GetContent();
-            if (content != null)
+            IDocumentForm document = GetDocument();
+            if (document != null)
             {
-                content.SelectAll();
+                document.SelectAll();
             }
         }
 
@@ -1067,9 +1051,10 @@ namespace FreelancerModStudio
 
         void dockPanel1_ContentAdded(object sender, DockContentEventArgs e)
         {
-            if (e.Content is frmTableEditor)
+            frmTableEditor tableEditor = e.Content as frmTableEditor;
+            if (tableEditor != null)
             {
-                SetDocumentMenus(true);
+                SetDocumentMenus(tableEditor);
             }
         }
 
@@ -1091,7 +1076,7 @@ namespace FreelancerModStudio
                 }
 
                 //no editors found
-                SetDocumentMenus(false);
+                SetDocumentMenus(null);
 
                 if (_systemEditor != null)
                 {
@@ -1100,41 +1085,96 @@ namespace FreelancerModStudio
             }
         }
 
-        void SetDocumentMenus(bool value)
+        void SetMenuVisible(ToolStripMenuItem menuItem, bool value)
         {
-            mnuSave.Visible = value;
-            mnuSaveAs.Visible = value;
-            mnuSaveAll.Visible = value;
-            mnuSaveSeperator.Visible = value;
-            mnuWindowsSeperator.Visible = value;
-            mnuClose.Visible = value;
+            menuItem.Enabled = value;
+            menuItem.Visible = value;
+        }
 
-            mnuSave.Enabled = value;
-            mnuSaveAs.Enabled = value;
-            mnuSaveAll.Enabled = value;
-            mnuClose.Enabled = value;
-            mnuCloseAllDocuments.Enabled = value;
+        void SetMenuVisible(ToolStripMenuItem menuItem, bool value, bool enabled)
+        {
+            menuItem.Enabled = enabled;
+            menuItem.Visible = value;
+        }
 
-            if (!value)
+        void SetMenuVisible(ToolStripSeparator menuItem, bool value)
+        {
+            menuItem.Visible = value;
+        }
+
+        void SetDocumentMenus(IDocumentForm document)
+        {
+            bool isDocument = document != null;
+            bool isVisible;
+            bool isEnabled;
+
+            SetMenuVisible(mnuSave, isDocument);
+            SetMenuVisible(mnuSaveAs, isDocument);
+            SetMenuVisible(mnuSaveAll, isDocument);
+            SetMenuVisible(mnuSaveSeperator, isDocument);
+
+            SetMenuVisible(mnuWindowsSeperator, isDocument);
+
+            SetMenuVisible(mnuClose, isDocument);
+            mnuCloseAllDocuments.Enabled = isDocument;
+
+            isVisible = isDocument && document.CanSave();
+            SetMenuVisible(mnuSave, isVisible);
+            SetMenuVisible(mnuSaveAs, isVisible);
+
+            if (isVisible)
             {
-                mnu3dEditor.Enabled = false;
-
-                mnuFocusSelected.Visible = false;
-                mnuTrackSelected.Visible = false;
-                mnuFocusSelectedSeperator.Visible = false;
-
-                mnuShowModels.Visible = false;
-                mnuShowModels.Enabled = false;
-                mnuChangeVisibility.Visible = false;
-                mnuShowModelsSeperator.Visible = false;
+                string title = document.GetTitle();
+                mnuSave.Text = String.Format(Strings.FileEditorSave, title);
+                mnuSaveAs.Text = String.Format(Strings.FileEditorSaveAs, title);
             }
+
+            mnuUndo.Enabled = isDocument && document.CanUndo();
+            mnuRedo.Enabled = isDocument && document.CanRedo();
+            mnuCopy.Enabled = isDocument && document.CanCopy();
+            mnuCut.Enabled = isDocument && document.CanCut();
+            mnuPaste.Enabled = isDocument && document.CanPaste();
+            mnuAdd.Enabled = isDocument && document.CanAdd();
+            mnuAdd.DropDown = isDocument ? document.MultipleAddDropDown() : null;
+            mnuDelete.Enabled = isDocument && document.CanDelete();
+            mnuSelectAll.Enabled = isDocument && document.CanSelectAll();
+
+            mnu3dEditor.Enabled = isDocument && document.CanDisplay3DViewer();
+
+            isVisible = isDocument && document.CanFocusSelected(false);
+            isEnabled = isVisible && document.CanFocusSelected(true);
+            SetMenuVisible(mnuFocusSelected, isVisible, isEnabled);
+            SetMenuVisible(mnuFocusSelectedSeperator, isVisible);
+
+            isVisible = isDocument && document.CanTrackSelected(false);
+            isEnabled = isVisible && document.CanTrackSelected(true);
+            SetMenuVisible(mnuTrackSelected, isVisible, isEnabled);
+
+            isVisible = isDocument && document.CanManipulatePosition();
+            isEnabled = isVisible && document.CanManipulateRotationScale();
+            SetMenuVisible(mnuManipulationNone, isVisible);
+            SetMenuVisible(mnuManipulationTranslate, isVisible);
+            SetMenuVisible(mnuManipulationRotate, isVisible, isEnabled);
+            SetMenuVisible(mnuManipulationScale, isVisible, isEnabled);
+            SetMenuVisible(mnuManipulationSeperator, isVisible);
+
+            isVisible = isDocument && document.CanChangeVisibility(false);
+            isEnabled = isVisible && document.CanChangeVisibility(true);
+            SetMenuVisible(mnuShowModels, isVisible, isEnabled);
+            SetMenuVisible(mnuChangeVisibility, isVisible, isEnabled);
+            SetMenuVisible(mnuShowModelsSeperator, isVisible);
+        }
+
+        void SetContentMenus(IContentForm content)
+        {
+            mnuDelete.Enabled = content != null && content.CanDelete();
         }
 
         void Document_DisplayChanged(IDocumentForm document)
         {
             if (document == null)
             {
-                SetDocumentMenus(false);
+                SetDocumentMenus(null);
                 return;
             }
 
@@ -1143,90 +1183,12 @@ namespace FreelancerModStudio
                 _systemEditor.DataPath = document.DataPath;
             }
 
-            if (document.CanSave())
-            {
-                string title = document.Title;
-                mnuSave.Text = String.Format(Strings.FileEditorSave, title);
-                mnuSaveAs.Text = String.Format(Strings.FileEditorSaveAs, title);
-            }
-
-            mnuUndo.Enabled = document.CanUndo();
-            mnuRedo.Enabled = document.CanRedo();
-
-            mnu3dEditor.Enabled = document.CanDisplay3DViewer();
-
-            bool active = document.CanFocusSelected(false);
-            mnuFocusSelected.Visible = active;
-            mnuFocusSelectedSeperator.Visible = active;
-            mnuTrackSelected.Visible = active;
-
-            active = document.CanManipulatePosition();
-            mnuManipulationSeperator.Visible = active;
-            mnuManipulationNone.Visible = active;
-            mnuManipulationNone.Enabled = active;
-            mnuManipulationTranslate.Visible = active;
-            mnuManipulationTranslate.Enabled = active;
-            mnuManipulationRotate.Visible = active;
-            mnuManipulationScale.Visible = active;
-
-            active = document.CanManipulateRotationScale();
-            mnuManipulationRotate.Enabled = active;
-            mnuManipulationScale.Enabled = active;
-
-            active = document.CanChangeVisibility(false);
-            mnuShowModels.Visible = active;
-            mnuShowModels.Enabled = active;
-            mnuChangeVisibility.Visible = active;
-            mnuShowModelsSeperator.Visible = active;
-        }
-
-        void Content_DisplayChanged(IContentForm content)
-        {
-            if (content == null)
-            {
-                mnuCopy.Enabled = false;
-                mnuCut.Enabled = false;
-                mnuPaste.Enabled = false;
-                mnuAdd.Enabled = false;
-                mnuDelete.Enabled = false;
-                mnuSelectAll.Enabled = false;
-
-                mnuChangeVisibility.Enabled = false;
-                mnuFocusSelected.Enabled = false;
-                mnuTrackSelected.Enabled = false;
-
-                mnuAdd.DropDown = null;
-            }
-            else
-            {
-                mnuCopy.Enabled = content.CanCopy();
-                mnuCut.Enabled = content.CanCut();
-                mnuPaste.Enabled = content.CanPaste();
-                mnuAdd.Enabled = content.CanAdd();
-                mnuDelete.Enabled = content.CanDelete();
-                mnuSelectAll.Enabled = content.CanSelectAll();
-
-                IDocumentForm document = content as IDocumentForm;
-                if (document != null)
-                {
-                    mnuChangeVisibility.Enabled = document.CanChangeVisibility(true);
-                    mnuFocusSelected.Enabled = document.CanFocusSelected(true);
-                    mnuTrackSelected.Enabled = document.CanTrackSelected(true);
-                }
-                else
-                {
-                    mnuChangeVisibility.Enabled = false;
-                    mnuFocusSelected.Enabled = false;
-                    mnuTrackSelected.Enabled = false;
-                }
-
-                mnuAdd.DropDown = content.MultipleAddDropDown();
-            }
+            SetDocumentMenus(document);
         }
 
         void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
         {
-            Content_DisplayChanged(GetContent());
+            SetContentMenus(e as IContentForm);
         }
 
         void mnu3dEditor_Click(object sender, EventArgs e)

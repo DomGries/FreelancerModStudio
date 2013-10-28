@@ -8,29 +8,17 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace FreelancerModStudio
 {
-    public partial class frmProperties : DockContent, IContentForm
+    public partial class frmProperties : DockContent
     {
         public delegate void OptionsChangedType(PropertyBlock[] blocks);
 
         public OptionsChangedType OptionsChanged;
-
-        public delegate void ContentChangedType(IContentForm content);
-
-        public ContentChangedType ContentChanged;
 
         void OnOptionsChanged(PropertyBlock[] blocks)
         {
             if (OptionsChanged != null)
             {
                 OptionsChanged(blocks);
-            }
-        }
-
-        void OnContentChanged(IContentForm content)
-        {
-            if (ContentChanged != null)
-            {
-                ContentChanged(content);
             }
         }
 
@@ -90,74 +78,6 @@ namespace FreelancerModStudio
             {
                 OnOptionsChanged((PropertyBlock[])propertyGrid.SelectedObjects);
             }
-        }
-
-        void propertyGrid_SelectedGridItemChanged(object sender, SelectedGridItemChangedEventArgs e)
-        {
-            if (DockHandler.IsActivated)
-            {
-                OnContentChanged(this);
-            }
-        }
-
-        public bool CanAdd()
-        {
-            return false;
-        }
-
-        public bool CanCopy()
-        {
-            return false;
-        }
-
-        public bool CanCut()
-        {
-            return false;
-        }
-
-        public bool CanPaste()
-        {
-            return false;
-        }
-
-        public bool CanDelete()
-        {
-            return false;
-        }
-
-        public bool CanSelectAll()
-        {
-            return false;
-        }
-
-        public void Delete()
-        {
-        }
-
-        public void SelectAll()
-        {
-        }
-
-        public ToolStripDropDown MultipleAddDropDown()
-        {
-            return null;
-        }
-
-        public void Copy()
-        {
-        }
-
-        public void Paste()
-        {
-        }
-
-        public void Cut()
-        {
-        }
-
-        public bool UseDocument()
-        {
-            return false;
         }
     }
 }

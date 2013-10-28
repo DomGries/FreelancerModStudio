@@ -1275,13 +1275,4 @@ namespace FreelancerModStudio
             return Data.Blocks.Count;
         }
     }
-
-    public enum ViewerType
-    {
-        None,
-        System,
-        Universe,
-        SolarArchetype,
-        ModelPreview,
-    }
 }

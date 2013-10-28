@@ -84,7 +84,7 @@
     <Compile Include="AutoUpdate\StatusType.cs" />
     <Compile Include="AutoUpdate\UpdateInformation.cs" />
     <Compile Include="AutoUpdate\UpdateInformationParser.cs" />
-    <Compile Include="Clipboard.cs" />
+    <Compile Include="Data\Clipboard.cs" />
     <Compile Include="Clone.cs" />
     <Compile Include="ContentInterface.cs" />
     <Compile Include="Controls\PropertyGridExtension.cs" />
@@ -224,6 +224,7 @@
     <Compile Include="System\Presenter.cs" />
     <Compile Include="System\SystemParser.cs" />
     <Compile Include="System\UtfModel.cs" />
+    <Compile Include="System\ViewerType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\LogoIcon.ico" />

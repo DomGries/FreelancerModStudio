@@ -102,11 +102,6 @@ namespace FreelancerModStudio
 
         public bool CanAdd()
         {
-            if (propertyGrid.SelectedGridItem != null)
-            {
-                return propertyGrid.SelectedGridItem.Value is PropertySubOptions || (propertyGrid.SelectedGridItem.Parent != null && propertyGrid.SelectedGridItem.Parent.Value is PropertySubOptions);
-            }
-
             return false;
         }
 
@@ -137,15 +132,6 @@ namespace FreelancerModStudio
 
         public void Delete()
         {
-            PropertyOptionDescriptor propertyOptionDescriptor = propertyGrid.SelectedGridItem.PropertyDescriptor as PropertyOptionDescriptor;
-            if (propertyOptionDescriptor != null)
-            {
-                PropertyOption option = propertyOptionDescriptor.PropertyOption;
-                object oldValue = option.Value;
-                option.Value = string.Empty;
-
-                propertyGrid_PropertyValueChanged(propertyGrid, new PropertyValueChangedEventArgs(propertyGrid.SelectedGridItem, oldValue));
-            }
         }
 
         public void SelectAll()

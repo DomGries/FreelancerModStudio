@@ -17,7 +17,7 @@ namespace FreelancerModStudio.SystemPresenter
         public static double AnimationAccelerationRatio = 0.3;
         public static double AnimationDecelerationRatio = 0.5;
 
-        public static void Animate(ModelVisual3D model, ContentAnimation animation)
+        public static void Animate(Visual3D model, ContentAnimation animation)
         {
             if (AnimationDuration.TimeSpan == TimeSpan.Zero)
             {

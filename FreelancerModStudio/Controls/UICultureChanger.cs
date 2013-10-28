@@ -256,19 +256,21 @@ public class UICultureChanger
                     {
                         if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
                         {
+                            Size newSize = (Size)size;
+
                             // In case of an inheritor of Control take into account the Anchor property.
                             control = (Control)changeInfos[index].Value;
                             if ((control.Anchor & (AnchorStyles.Left | AnchorStyles.Right)) == (AnchorStyles.Left | AnchorStyles.Right))
                             {
                                 // Control is bound to the left and right edge, so preserve its width.
-                                size = new Size(control.Width, ((Size)size).Height);
+                                newSize.Width = control.Width;
                             }
                             if ((control.Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == (AnchorStyles.Top | AnchorStyles.Bottom))
                             {
                                 // Control is bound to the top and bottom edge, so preserve its height.
-                                size = new Size(((Size)size).Width, control.Height);
+                                newSize.Height = control.Height;
                             }
-                            control.Size = (Size)size;
+                            control.Size = newSize;
                         }
                         else
                         {
@@ -286,19 +288,21 @@ public class UICultureChanger
                     {
                         if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
                         {
+                            Size newSize = (Size)size;
+
                             // In case of an inheritor of Control take into account the Anchor property.
                             control = (Control)changeInfos[index].Value;
                             if ((control.Anchor & (AnchorStyles.Left | AnchorStyles.Right)) == (AnchorStyles.Left | AnchorStyles.Right))
                             {
                                 // Control is bound to the left and right edge, so preserve the width of its client area.
-                                size = new Size(control.ClientSize.Width, ((Size)size).Height);
+                                newSize.Width = control.ClientSize.Width;
                             }
                             if ((control.Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == (AnchorStyles.Top | AnchorStyles.Bottom))
                             {
                                 // Control is bound to the top and bottom edge, so preserve the height of its client area.
-                                size = new Size(((Size)size).Width, control.ClientSize.Height);
+                                newSize.Height = control.ClientSize.Height;
                             }
-                            control.ClientSize = (Size)size;
+                            control.ClientSize = newSize;
                         }
                         else
                         {

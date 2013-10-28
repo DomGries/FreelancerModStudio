@@ -12,22 +12,22 @@ namespace FreelancerModStudio.Data
 
         public void Load(Stream stream)
         {
-            Data = (TemplateData)Serializer.Load(stream, Data.GetType());
+            Data = (TemplateData)Serializer.Load(stream, typeof(TemplateData));
         }
 
         public void Load(string path)
         {
-            Data = (TemplateData)Serializer.Load(path, Data.GetType());
+            Data = (TemplateData)Serializer.Load(path, typeof(TemplateData));
         }
 
         public void Save(Stream stream)
         {
-            Serializer.Save(stream, Data);
+            Serializer.Save(stream, Data, typeof(TemplateData));
         }
 
         public void Save(string path)
         {
-            Serializer.Save(path, Data);
+            Serializer.Save(path, Data, typeof(TemplateData));
         }
 
         [XmlRoot("FreelancerModStudio-Template-1.0")]

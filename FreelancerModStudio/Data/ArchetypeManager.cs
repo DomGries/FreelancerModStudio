@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.SystemPresenter;
-using FreelancerModStudio.SystemPresenter.Content;
 
 namespace FreelancerModStudio.Data
 {
@@ -40,7 +39,7 @@ namespace FreelancerModStudio.Data
             string dataPath = Helper.Template.Data.GetDataPath(file, fileTemplate);
             if (dataPath != null)
             {
-                string archetypePath = dataPath + @"\Solar\SolarArch.ini";
+                string archetypePath = Path.Combine(dataPath, Path.Combine("Solar", "SolarArch.ini"));
                 if (File.Exists(archetypePath))
                 {
                     return archetypePath;

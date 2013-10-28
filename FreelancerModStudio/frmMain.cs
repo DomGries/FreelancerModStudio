@@ -466,15 +466,7 @@ namespace FreelancerModStudio
                 if (templateIndex == -1)
                 {
                     //let the user choose the ini file type
-                    frmFileType fileTypeForm = new frmFileType(file);
-                    if (fileTypeForm.ShowDialog() == DialogResult.OK && fileTypeForm.FileTypeIndex >= 0)
-                    {
-                        templateIndex = fileTypeForm.FileTypeIndex;
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    templateIndex = GetTemplateIndexDialog(file);
                 }
             }
 
@@ -842,20 +834,12 @@ namespace FreelancerModStudio
 
         void mnuNewFile_Click(object sender, EventArgs e)
         {
-            int templateIndex;
-
             //let the user choose the ini file type
-            frmFileType fileTypeForm = new frmFileType(null);
-            if (fileTypeForm.ShowDialog() == DialogResult.OK && fileTypeForm.FileTypeIndex >= 0)
+            int templateIndex = GetTemplateIndexDialog(null);
+            if (templateIndex != -1)
             {
-                templateIndex = fileTypeForm.FileTypeIndex;
+                DisplayFile(null, templateIndex);
             }
-            else
-            {
-                return;
-            }
-
-            DisplayFile(null, templateIndex);
         }
 
         void mnuSave_Click(object sender, EventArgs e)
@@ -1310,6 +1294,17 @@ namespace FreelancerModStudio
             {
                 tableEditor.SetBlocks(new List<TableBlock> { newBlock }, new List<TableBlock> { oldBlock });
             }
+        }
+
+        static int GetTemplateIndexDialog(string file)
+        {
+            frmFileType fileTypeForm = new frmFileType(file);
+            if (fileTypeForm.ShowDialog() == DialogResult.OK && fileTypeForm.FileTypeIndex >= 0)
+            {
+                return fileTypeForm.FileTypeIndex;
+            }
+
+            return -1;
         }
     }
 }

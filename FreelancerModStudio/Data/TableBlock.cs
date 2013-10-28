@@ -16,7 +16,7 @@ namespace FreelancerModStudio.Data
         public ContentType ObjectType;
 
         public EditorINIBlock Block;
-        public TableModified Modified = TableModified.Normal;
+        public TableModified Modified;
 
         public ArchetypeInfo Archetype;
         public bool Visibility;
@@ -25,14 +25,12 @@ namespace FreelancerModStudio.Data
         {
             Index = index;
             Id = id;
-            ObjectType = ContentType.None;
         }
 
         public TableBlock(int index, int id, EditorINIBlock block, int templateIndex)
         {
             Index = index;
             Id = id;
-            ObjectType = ContentType.None;
 
             //name of block
             if (block.MainOptionIndex > -1 && block.Options.Count >= block.MainOptionIndex + 1)

@@ -5,10 +5,10 @@ namespace FreelancerModStudio
 {
     public static class Clipboard
     {
-        public static void Copy(object o)
+        public static void Copy(object o, Type type)
         {
             //serialize object to clipboard
-            DataFormats.Format format = DataFormats.GetFormat(o.GetType().FullName);
+            DataFormats.Format format = DataFormats.GetFormat(type.FullName);
 
             IDataObject dataObj = new DataObject();
             dataObj.SetData(format.Name, false, o);

@@ -31,19 +31,10 @@ namespace FreelancerModStudio.SystemPresenter
                 {
                     if (option.Name.Equals("file", StringComparison.OrdinalIgnoreCase) && option.Values.Count > 0)
                     {
-                        // GetConnections could throw an exception if the file can't be opened
-                        try
+                        Table<int, ConnectionPart> systemConnections = GetConnections(block.Index, Path.Combine(UniversePath, option.Values[0].Value.ToString()));
+                        if (systemConnections != null)
                         {
-                            Table<int, ConnectionPart> systemConnections = GetConnections(block.Index, Path.Combine(UniversePath, option.Values[0].Value.ToString()));
-                            if (systemConnections != null)
-                            {
-                                AddConnections(block.Index, systemConnections);
-                            }
-                        }
-                            // ReSharper disable EmptyGeneralCatchClause
-                        catch
-                            // ReSharper restore EmptyGeneralCatchClause
-                        {
+                            AddConnections(block.Index, systemConnections);
                         }
 
                         break;
@@ -91,10 +82,20 @@ namespace FreelancerModStudio.SystemPresenter
                 return null;
             }
 
-            Table<int, ConnectionPart> connections = new Table<int, ConnectionPart>();
-
             FileManager fileManager = new FileManager(file);
-            EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, SystemTemplate);
+            EditorINIData iniContent;
+
+            try
+            {
+                iniContent = fileManager.Read(FileEncoding.Automatic, SystemTemplate);
+            }
+            catch
+            {
+                // FileManager could throw an exception if the file can't be opened
+                return null;
+            }
+
+            Table<int, ConnectionPart> connections = new Table<int, ConnectionPart>();
 
             foreach (EditorINIBlock block in iniContent.Blocks)
             {
@@ -201,6 +202,11 @@ namespace FreelancerModStudio.SystemPresenter
             }
 
             return -1;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this == obj;
         }
 
         public ConnectionPart From { get; set; }

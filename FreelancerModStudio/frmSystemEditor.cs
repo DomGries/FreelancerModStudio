@@ -152,7 +152,7 @@ namespace FreelancerModStudio
             Helper.Thread.Abort(ref _universeLoadingThread, waitForThread);
             _presenter.SelectedContent = null;
             _presenter.TrackedContent = null;
-            _presenter.ClearDisplay(false);
+            _presenter.ClearDisplay(clearLight);
         }
 
         public void Select(TableBlock block)

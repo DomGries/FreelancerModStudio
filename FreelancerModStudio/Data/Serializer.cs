@@ -24,16 +24,16 @@ namespace FreelancerModStudio.Data
             return o;
         }
 
-        public static void Save(string path, object o)
+        public static void Save(string path, object o, Type type)
         {
-            Save(new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write), o);
+            Save(new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Write), o, type);
         }
 
-        public static void Save(Stream stream, object o)
+        public static void Save(Stream stream, object o, Type type)
         {
             using (StreamWriter textWriter = new StreamWriter(stream, Encoding.UTF8))
             {
-                XmlSerializer serializer = new XmlSerializer(o.GetType());
+                XmlSerializer serializer = new XmlSerializer(type);
                 serializer.Serialize(textWriter, o);
             }
         }

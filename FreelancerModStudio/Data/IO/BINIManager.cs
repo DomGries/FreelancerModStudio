@@ -25,7 +25,9 @@ namespace FreelancerModStudio.Data.IO
             using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default))
             {
-                if (stream.Length < ByteLen.FILE_TAG + ByteLen.INT ||
+                long streamLength = stream.Length;
+
+                if (streamLength < ByteLen.FILE_TAG + ByteLen.INT ||
                     Encoding.ASCII.GetString(reader.ReadBytes(ByteLen.FILE_TAG)) != FILE_TYPE ||
                     reader.ReadInt32() != FILE_VERSION)
                 {
@@ -40,7 +42,7 @@ namespace FreelancerModStudio.Data.IO
                 stream.Position = stringBlockOffset;
 
                 // read string block
-                byte[] buffer = new byte[stream.Length - stringBlockOffset];
+                byte[] buffer = new byte[streamLength - stringBlockOffset];
                 reader.Read(buffer, 0, buffer.Length);
                 string stringBlock = Encoding.ASCII.GetString(buffer);
 
@@ -48,7 +50,7 @@ namespace FreelancerModStudio.Data.IO
                 stream.Position = dataPosition;
 
                 // read data
-                while (stream.Position < stringBlockOffset && stream.Position < stream.Length)
+                while (stream.Position < stringBlockOffset && stream.Position < streamLength)
                 {
                     // read section
                     int sectionNameOffset = reader.ReadInt16();

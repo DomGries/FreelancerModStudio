@@ -1211,9 +1211,6 @@ namespace FreelancerModStudio.SystemPresenter
             {
                 //update selection if changed content is selected
                 SelectedContent = content;
-
-                // set title when block name was changed in properties window
-                SetTitle();
             }
         }
 

@@ -15,22 +15,22 @@ namespace FreelancerModStudio.Data
 
         public void Load(Stream stream)
         {
-            Data = (SettingsData)Serializer.Load(stream, Data.GetType());
+            Data = (SettingsData)Serializer.Load(stream, typeof(SettingsData));
         }
 
         public void Load(string path)
         {
-            Data = (SettingsData)Serializer.Load(path, Data.GetType());
+            Data = (SettingsData)Serializer.Load(path, typeof(SettingsData));
         }
 
         public void Save(Stream stream)
         {
-            Serializer.Save(stream, Data);
+            Serializer.Save(stream, Data, typeof(SettingsData));
         }
 
         public void Save(string path)
         {
-            Serializer.Save(path, Data);
+            Serializer.Save(path, Data, typeof(SettingsData));
         }
 
         [XmlRoot("FreelancerModStudio-Settings-1.0")]

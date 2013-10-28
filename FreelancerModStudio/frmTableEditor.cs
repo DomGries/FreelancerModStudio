@@ -113,7 +113,6 @@ namespace FreelancerModStudio
                     {
                         TemplateIndex = templateIndex
                     };
-                _isBINI = false;
 
                 SetFile(string.Empty);
             }
@@ -620,23 +619,12 @@ namespace FreelancerModStudio
                 }
             }
 
-            //add new block under selected one if it exists otherwise at the end
-            int id;
-            if (objectListView1.SelectedIndices.Count > 0)
-            {
-                id = objectListView1.SelectedIndices[objectListView1.SelectedIndices.Count - 1] + 1;
-            }
-            else
-            {
-                id = Data.Blocks.Count;
-            }
-
             //add actual block
             _undoManager.Execute(new ChangedData
                 {
                     NewBlocks = new List<TableBlock>
                         {
-                            new TableBlock(id, Data.MaxId++, editorBlock, Data.TemplateIndex)
+                            new TableBlock(GetNewBlockId(), Data.MaxId++, editorBlock, Data.TemplateIndex)
                         },
                     Type = ChangedType.Add
                 });
@@ -803,7 +791,7 @@ namespace FreelancerModStudio
 
         void DeleteBlocks(List<TableBlock> blocks)
         {
-            IList selection = objectListView1.SelectedObjects;
+            IList selectedObjects = objectListView1.SelectedObjects;
 
             foreach (TableBlock tableBlock in blocks)
             {
@@ -814,7 +802,7 @@ namespace FreelancerModStudio
             objectListView1.RemoveObjects(blocks);
 
             //select objects which were selected before
-            objectListView1.SelectObjects(selection);
+            objectListView1.SelectObjects(selectedObjects);
             EnsureSelectionVisible();
         }
 
@@ -996,7 +984,7 @@ namespace FreelancerModStudio
                 data.Blocks.Add(tableData.Block);
             }
 
-            Clipboard.Copy(data);
+            Clipboard.Copy(data, typeof(EditorINIData));
 
             OnContentChanged(this);
         }
@@ -1013,16 +1001,7 @@ namespace FreelancerModStudio
 
             if (editorData.TemplateIndex == Data.TemplateIndex)
             {
-                //add new block under selected one if it exists otherwise at the end
-                int id;
-                if (objectListView1.SelectedIndices.Count > 0)
-                {
-                    id = objectListView1.SelectedIndices[objectListView1.SelectedIndices.Count - 1] + 1;
-                }
-                else
-                {
-                    id = Data.Blocks.Count;
-                }
+                int id = GetNewBlockId();
 
                 List<TableBlock> blocks = new List<TableBlock>();
                 for (int i = 0; i < editorData.Blocks.Count; ++i)
@@ -1157,19 +1136,20 @@ namespace FreelancerModStudio
         //overwrite to add extra information to layout.xml
         protected override string GetPersistString()
         {
-            return GetType() + "," + File + "," + Data.TemplateIndex;
+            return typeof(frmTableEditor) + "," + File + "," + Data.TemplateIndex;
         }
 
         public void HideShowSelected()
         {
-            if (objectListView1.SelectedObjects.Count == 0)
+            IList selectedObjects = objectListView1.SelectedObjects;
+            if (selectedObjects.Count == 0)
             {
                 return;
             }
 
-            bool visibility = !((TableBlock)objectListView1.SelectedObjects[0]).Visibility;
+            bool visibility = !((TableBlock)selectedObjects[0]).Visibility;
 
-            foreach (TableBlock block in objectListView1.SelectedObjects)
+            foreach (TableBlock block in selectedObjects)
             {
                 if (block.ObjectType != ContentType.None && block.Visibility != visibility)
                 {
@@ -1178,7 +1158,7 @@ namespace FreelancerModStudio
                 }
             }
 
-            objectListView1.RefreshObjects(objectListView1.SelectedObjects);
+            objectListView1.RefreshObjects(selectedObjects);
         }
 
         public bool CanChangeVisibility(bool rightNow)
@@ -1282,6 +1262,17 @@ namespace FreelancerModStudio
                         Type = ChangedType.Move
                     });
             }
+        }
+
+        int GetNewBlockId()
+        {
+            //add new block under selected one if it exists otherwise at the end
+            if (objectListView1.SelectedIndices.Count > 0)
+            {
+                return objectListView1.SelectedIndices[objectListView1.SelectedIndices.Count - 1] + 1;
+            }
+
+            return Data.Blocks.Count;
         }
     }
 

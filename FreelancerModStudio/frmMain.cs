@@ -1167,7 +1167,18 @@ namespace FreelancerModStudio
 
         void SetContentMenus(IContentForm content)
         {
-            mnuDelete.Enabled = content != null && content.CanDelete();
+            if (content != null)
+            {
+                mnuDelete.Enabled = content.CanDelete();
+            }
+            else
+            {
+                IDocumentForm document = dockPanel1.ActiveDocument as IDocumentForm;
+                if (document != null)
+                {
+                    mnuDelete.Enabled = document.CanDelete();
+                }
+            }
         }
 
         void Document_DisplayChanged(IDocumentForm document)
@@ -1188,7 +1199,7 @@ namespace FreelancerModStudio
 
         void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
         {
-            SetContentMenus(e as IContentForm);
+            SetContentMenus(dockPanel1.ActiveContent as IContentForm);
         }
 
         void mnu3dEditor_Click(object sender, EventArgs e)

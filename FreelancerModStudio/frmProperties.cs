@@ -8,7 +8,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace FreelancerModStudio
 {
-    public partial class frmProperties : DockContent
+    public partial class frmProperties : DockContent, IContentForm
     {
         public delegate void OptionsChangedType(PropertyBlock[] blocks);
 
@@ -79,5 +79,14 @@ namespace FreelancerModStudio
                 OnOptionsChanged((PropertyBlock[])propertyGrid.SelectedObjects);
             }
         }
+
+        #region IContentForm Member
+
+        public bool CanDelete()
+        {
+            return false;
+        }
+
+        #endregion
     }
 }

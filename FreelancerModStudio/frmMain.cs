@@ -1136,7 +1136,6 @@ namespace FreelancerModStudio
             mnuPaste.Enabled = isDocument && document.CanPaste();
             mnuAdd.Enabled = isDocument && document.CanAdd();
             mnuAdd.DropDown = isDocument ? document.MultipleAddDropDown() : null;
-            mnuDelete.Enabled = isDocument && document.CanDelete();
             mnuSelectAll.Enabled = isDocument && document.CanSelectAll();
 
             mnu3dEditor.Enabled = isDocument && document.CanDisplay3DViewer();
@@ -1163,22 +1162,13 @@ namespace FreelancerModStudio
             SetMenuVisible(mnuShowModels, isVisible, isEnabled);
             SetMenuVisible(mnuChangeVisibility, isVisible, isEnabled);
             SetMenuVisible(mnuShowModelsSeperator, isVisible);
+
+            SetContentMenus(document);
         }
 
         void SetContentMenus(IContentForm content)
         {
-            if (content != null)
-            {
-                mnuDelete.Enabled = content.CanDelete();
-            }
-            else
-            {
-                IDocumentForm document = dockPanel1.ActiveDocument as IDocumentForm;
-                if (document != null)
-                {
-                    mnuDelete.Enabled = document.CanDelete();
-                }
-            }
+            mnuDelete.Enabled = content != null && content.CanDelete();
         }
 
         void Document_DisplayChanged(IDocumentForm document)
@@ -1199,7 +1189,13 @@ namespace FreelancerModStudio
 
         void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
         {
-            SetContentMenus(dockPanel1.ActiveContent as IContentForm);
+            IContentForm content = dockPanel1.ActiveContent as IContentForm;
+            if (content == null)
+            {
+                content = dockPanel1.ActiveDocument as IContentForm;
+            }
+
+            SetContentMenus(content);
         }
 
         void mnu3dEditor_Click(object sender, EventArgs e)

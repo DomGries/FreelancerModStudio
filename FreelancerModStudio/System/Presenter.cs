@@ -217,6 +217,8 @@ namespace FreelancerModStudio.SystemPresenter
             Viewport.MouseDown += Viewport_MouseDown;
             Viewport.MouseUp += Viewport_MouseUp;
             Viewport.MouseMove += Viewport_MouseMove;
+            Viewport.KeyDown += Viewport_KeyDown;
+            Viewport.KeyUp += Viewport_KeyUp;
 
             Viewport.ViewCubeLeftBrush = new SolidColorBrush(SharedMaterials.ManipulatorZ);
             Viewport.ViewCubeRightBrush = Viewport.ViewCubeLeftBrush;
@@ -476,17 +478,115 @@ namespace FreelancerModStudio.SystemPresenter
             return visual;
         }
 
+        void Viewport_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            ViewportKeyEvent(e, false);
+        }
+
+        void Viewport_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            ViewportKeyEvent(e, true);
+        }
+
+        void ViewportKeyEvent(System.Windows.Input.KeyEventArgs e, bool isKeyUp)
+        {
+            if (e.IsRepeat)
+            {
+                return;
+            }
+
+            bool isAlt = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
+            bool isShift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+            bool isCtrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            bool isModifier = isAlt || isShift || isCtrl;
+
+            // catch key short-cuts on the viewport(though arrow keys still do not work due to docking panel)
+            switch (e.Key)
+            {
+                case Key.W:
+                    if (isKeyUp || !isModifier)
+                    {
+                        Walk(CameraFlyMode.Forward, isKeyUp);
+                    }
+                    break;
+                case Key.A:
+                    if (isKeyUp || !isModifier)
+                    {
+                        Walk(CameraFlyMode.Left, isKeyUp);
+                    }
+                    break;
+                case Key.S:
+                    if (isKeyUp || !isModifier)
+                    {
+                        Walk(CameraFlyMode.Backward, isKeyUp);
+                    }
+                    break;
+                case Key.D:
+                    if (isKeyUp || !isModifier)
+                    {
+                        Walk(CameraFlyMode.Right, isKeyUp);
+                    }
+                    break;
+                case Key.Space:
+                    if (isKeyUp || !isModifier)
+                    {
+                        Walk(CameraFlyMode.Up, isKeyUp);
+                    }
+                    break;
+                case Key.E:
+                    if (isKeyUp || !isModifier)
+                    {
+                        Walk(CameraFlyMode.Down, isKeyUp);
+                    }
+                    break;
+                case Key.F:
+                    if (!isKeyUp)
+                    {
+                        if (isShift)
+                        {
+                            LookAtSelected();
+                        }
+                        else if (!isModifier)
+                        {
+                            FocusSelected();
+                        }
+                    }
+                    break;
+                case Key.T:
+                    if (!isKeyUp && !isModifier)
+                    {
+                        TrackSelected();
+                    }
+                    break;
+            }
+        }
+
+        void Walk(CameraFlyMode mode, bool stop)
+        {
+            if (stop)
+            {
+                Viewport.CameraController.StopFly(mode);
+            }
+            else
+            {
+                Viewport.CameraController.StartFly(mode);
+            }
+        }
+
         void Viewport_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            // workaround to focus viewport for key events
+            Viewport.Focus();
+            
+            bool isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+            bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+            bool isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
+
+            bool isSelect = e.ChangedButton == MouseButton.Left && !isAltDown;
             bool isLookAt = e.ChangedButton == MouseButton.Right && e.ClickCount == 2;
 
-            if (e.ChangedButton == MouseButton.Left || isLookAt)
+            if (isSelect || isLookAt)
             {
-                e.Handled = true;
-
-                bool isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-                bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-
                 ContentBase visual = GetSelection(e.GetPosition(Viewport.Viewport), isShiftDown, !isLookAt);
                 if (visual != null)
                 {
@@ -551,7 +651,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         Point3D? GetMousePoint(Point mousePosition)
         {
-            return Viewport.CameraController.UnProject(mousePosition, Viewport.CameraController.CameraTarget(), Viewport.CameraController.Camera.LookDirection);
+            return Viewport.CameraController.UnProject(mousePosition, _selectedContent.GetPositionPoint(), Viewport.CameraController.Camera.LookDirection);
         }
 
         Vector3D GetMouseDelta(Point mousePosition)
@@ -1431,6 +1531,57 @@ namespace FreelancerModStudio.SystemPresenter
                 }
             }
             return null;
+        }
+
+        public void LookAtSelected()
+        {
+            if (SelectedContent == null)
+            {
+                return;
+            }
+
+            LookAt(SelectedContent);
+        }
+
+        public void FocusSelected()
+        {
+            if (SelectedContent == null)
+            {
+                return;
+            }
+
+            double zoomFactor;
+            switch (ViewerType)
+            {
+                case ViewerType.Universe:
+                    zoomFactor = 20;
+                    break;
+                case ViewerType.System:
+                    zoomFactor = 1.75;
+                    break;
+                default:
+                    zoomFactor = 1.25;
+                    break;
+            }
+            LookAtAndZoom(SelectedContent, zoomFactor, true);
+        }
+
+        public void TrackSelected()
+        {
+            if (ViewerType != ViewerType.System)
+            {
+                return;
+            }
+
+            // change tracked object
+            if (SelectedContent == TrackedContent)
+            {
+                TrackedContent = null;
+            }
+            else
+            {
+                TrackedContent = SelectedContent;
+            }
         }
     }
 }

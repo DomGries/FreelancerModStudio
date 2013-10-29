@@ -82,7 +82,12 @@ namespace HelixEngine
 
         private bool isPanning;
         private bool isRotating;
+        private bool isAltRotating;
         private bool isZooming;
+
+        private CameraFlyMode flyMode;
+        private long lastTick;
+        private double flyIncrement;
 
         public double RotateSensitivity { get; set; }
         public double PanSensitivity { get; set; }
@@ -242,6 +247,11 @@ namespace HelixEngine
             if (Viewport == null)
                 throw new NullReferenceException("Viewport");
 
+            if (flyMode != CameraFlyMode.None)
+            {
+                return;
+            }
+
             var isDoubleClick = e.ClickCount == 2;
             var isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
             var isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
@@ -252,7 +262,6 @@ namespace HelixEngine
                 (e.ChangedButton == MouseButton.Right && isShiftDown)))
             {
                 ResetCamera();
-                e.Handled = true;
                 return;
             }
 
@@ -265,16 +274,21 @@ namespace HelixEngine
             isPanning = !isZooming &&
                         (e.ChangedButton == MouseButton.Middle ||
                          (e.ChangedButton == MouseButton.Right && isShiftDown));
-            isRotating = !isZooming && !isPanning && e.ChangedButton == MouseButton.Right;
+            isRotating = !isZooming && !isPanning &&
+                e.ChangedButton == MouseButton.Right;
+            isAltRotating = !isZooming && !isPanning && !isRotating &&
+                e.ChangedButton == MouseButton.Left && isAltDown;
 
-            if (isZooming || isPanning || isRotating)
+            if (isZooming || isPanning || isRotating || isAltRotating)
             {
                 _mouseDownPosition = e.GetPosition(this);
 
                 // zoom, pan, rotate
-                ShowTargetAdorner(new Point(Viewport.ActualWidth * 0.5, Viewport.ActualHeight * 0.5));
+                if (!isRotating)
+                {
+                    ShowTargetAdorner(new Point(Viewport.ActualWidth * 0.5, Viewport.ActualHeight * 0.5));
+                }
 
-                e.Handled = true;
                 CaptureMouse();
 
                 _lastPosition = _mouseDownPosition;
@@ -303,6 +317,8 @@ namespace HelixEngine
 
                 if (isRotating)
                     Rotate(delta.X, delta.Y);
+                if (isAltRotating)
+                    RotateAlt(delta.X, delta.Y);
                 if (isZooming)
                     Zoom(delta.Y * 0.01);
                 if (isPanning)
@@ -312,8 +328,6 @@ namespace HelixEngine
                     lastPoint3D = thisPoint3D + delta3D;
                     Pan(delta3D);
                 }
-
-                e.Handled = true;
             }
         }
 
@@ -331,23 +345,26 @@ namespace HelixEngine
 
             if (!Enabled) return;
 
-            isRotating = false;
-            isZooming = false;
-            isPanning = false;
-
             if (IsMouseCaptured)
             {
-                e.Handled = true;
-                HideTargetAdorner();
+                if (!isRotating)
+                {
+                    HideTargetAdorner();
+                }
+
                 ReleaseMouseCapture();
             }
+
+            isRotating = false;
+            isAltRotating = false;
+            isZooming = false;
+            isPanning = false;
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);
 
-            e.Handled = true;
             Zoom(-e.Delta * 0.001);
         }
 
@@ -366,11 +383,7 @@ namespace HelixEngine
             if (!IsZoomEnabled)
                 return;
 
-            CameraMode cm = CameraMode;
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                cm = (CameraMode)(((int)CameraMode + 1) % 2);
-
-            switch (cm)
+            switch (CameraMode)
             {
                 case CameraMode.Inspect:
                     // prevent zooming in too fast
@@ -414,34 +427,41 @@ namespace HelixEngine
         {
             PerspectiveCamera c = Camera;
 
+            var up = new Vector3D(0, 0, 1);
+            Vector3D dir = c.LookDirection;
+            dir.Normalize();
+
+            Vector3D right = Vector3D.CrossProduct(dir, c.UpDirection);
+            right.Normalize();
+
+            const double d = 0.5;
+
+            var q1 = new Quaternion(-up, d * dx);
+            var q2 = new Quaternion(-right, d * dy);
+            Quaternion q = q1 * q2;
+
+            var m = new Matrix3D();
+            m.Rotate(q);
+
+            Vector3D newLookDir = m.Transform(c.LookDirection);
+            Vector3D newUpDir = m.Transform(c.UpDirection);
+
+            c.LookDirection = newLookDir;
+            c.UpDirection = newUpDir;
+        }
+
+        public void RotateAlt(double dx, double dy)
+        {
+            PerspectiveCamera c = Camera;
+
             Point3D target = c.Position + c.LookDirection;
 
-            // toggle rotation mode if the user presses alt
-            //bool alt = (Keyboard.IsKeyDown(Key.LeftAlt));
-
-            //if ((CameraRotationMode == CameraRotationMode.VirtualTrackball) != alt)
-            //{
-            //    RotateRoam(dx, dy);
-            //}
-            //else
-            //{
             RotateTwoAxes(dx, dy);
-            //}
 
             if (Math.Abs(c.UpDirection.Length - 1) > 1e-8)
                 c.UpDirection.Normalize();
 
-            if (IsFixedPosition())
-                c.Position = target - c.LookDirection;
-        }
-
-        public bool IsFixedPosition()
-        {
-            // fix the camera position if user presses a specific key
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                return CameraMode != CameraMode.Inspect;
-
-            return CameraMode == CameraMode.Inspect;
+            c.Position = target - c.LookDirection;
         }
 
         // http://www.codeplex.com/3DTools/Thread/View.aspx?ThreadId=22310
@@ -640,6 +660,104 @@ namespace HelixEngine
             // Viewport.Width = w;
 
             // Viewport.InvalidateVisual();
+        }
+
+        public void StartFly(CameraFlyMode mode)
+        {
+            if (isZooming || isPanning || isRotating || isAltRotating)
+            {
+                return;
+            }
+
+            CameraFlyMode oldMode = flyMode;
+
+            flyMode |= mode;
+
+            if (oldMode == CameraFlyMode.None &&
+                flyMode != CameraFlyMode.None)
+            {
+                this.lastTick = 0;
+                this.flyIncrement = 0;
+                CompositionTarget.Rendering += OnCompositionTargetRendering;
+            }
+        }
+
+        public void StopFly(CameraFlyMode mode)
+        {
+            CameraFlyMode oldMode = flyMode;
+
+            flyMode &= ~mode;
+
+            if (oldMode != CameraFlyMode.None &&
+                flyMode == CameraFlyMode.None)
+            {
+                CompositionTarget.Rendering -= OnCompositionTargetRendering;
+            }
+        }
+
+        void Fly(double delta)
+        {
+            Vector3D direction = Camera.LookDirection;
+            direction.Normalize();
+            Vector3D up = Camera.UpDirection;
+            up.Normalize();
+            Vector3D right = Vector3D.CrossProduct(direction, up);
+
+            Vector3D offset = new Vector3D();
+
+            if ((flyMode & CameraFlyMode.Forward) != CameraFlyMode.None)
+            {
+                offset += direction;
+            }
+            if ((flyMode & CameraFlyMode.Backward) != CameraFlyMode.None)
+            {
+                offset -= direction;
+            }
+
+            if ((flyMode & CameraFlyMode.Left) != CameraFlyMode.None)
+            {
+                offset -= right;
+            }
+            if ((flyMode & CameraFlyMode.Right) != CameraFlyMode.None)
+            {
+                offset += right;
+            }
+
+            if ((flyMode & CameraFlyMode.Up) != CameraFlyMode.None)
+            {
+                offset += up;
+            }
+            if ((flyMode & CameraFlyMode.Down) != CameraFlyMode.None)
+            {
+                offset -= up;
+            }
+
+            Camera.Position += offset * delta;
+        }
+
+        void OnCompositionTargetRendering(object sender, EventArgs e)
+        {
+            var ticks = ((RenderingEventArgs)e).RenderingTime.Ticks;
+            double time = 100e-9 * (ticks - this.lastTick);
+
+            if (this.lastTick != 0)
+            {
+                this.OnTimeStep(time);
+            }
+
+            this.lastTick = ticks;
+        }
+
+        /// <summary>
+        /// The on time step.
+        /// </summary>
+        /// <param name="time">
+        /// The time.
+        /// </param>
+        private void OnTimeStep(double time)
+        {
+            flyIncrement += time;
+            Fly(flyIncrement);
         }
     }
 }

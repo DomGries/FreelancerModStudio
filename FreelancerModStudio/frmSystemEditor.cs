@@ -334,36 +334,12 @@ namespace FreelancerModStudio
 
         public void FocusSelected()
         {
-            if (_presenter.SelectedContent != null)
-            {
-                double zoomFactor;
-                switch (_presenter.ViewerType)
-                {
-                    case ViewerType.Universe:
-                        zoomFactor = 20;
-                        break;
-                    case ViewerType.System:
-                        zoomFactor = 1.75;
-                        break;
-                    default:
-                        zoomFactor = 1.25;
-                        break;
-                }
-                _presenter.LookAtAndZoom(_presenter.SelectedContent, zoomFactor, true);
-            }
+            _presenter.FocusSelected();
         }
 
         public void TrackSelected()
         {
-            // change tracked object
-            if (_presenter.SelectedContent == _presenter.TrackedContent)
-            {
-                _presenter.TrackedContent = null;
-            }
-            else
-            {
-                _presenter.TrackedContent = _presenter.SelectedContent;
-            }
+            _presenter.TrackSelected();
         }
 
         public string DataPath

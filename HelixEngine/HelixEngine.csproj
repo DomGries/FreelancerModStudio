@@ -59,6 +59,7 @@
     <Compile Include="Controls\CameraController\CameraController.cs" />
     <Compile Include="Controls\CameraController\CameraMode.cs" />
     <Compile Include="Controls\CameraController\CameraRotationMode.cs" />
+    <Compile Include="Controls\CameraController\CameraFlyMode.cs" />
     <Compile Include="Controls\HelixViewport3D.cs" />
     <Compile Include="Controls\ManipulatorControl.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />

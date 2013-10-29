@@ -501,7 +501,7 @@ namespace FreelancerModStudio
             defaultEditor.DataChanged += DefaultEditor_DataChanged;
             defaultEditor.SelectionChanged += DefaultEditor_SelectionChanged;
             defaultEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
-            defaultEditor.DocumentChanged += Document_DisplayChanged;
+            defaultEditor.DocumentChanged += SetDocumentMenus;
             defaultEditor.Show(dockPanel1, DockState.Document);
 
             return defaultEditor;
@@ -667,7 +667,7 @@ namespace FreelancerModStudio
 
                 // update property window after changing active document
                 _propertiesForm.ShowData(tableEditor.GetSelectedBlocks(), tableEditor.Data.TemplateIndex);
-                Document_DisplayChanged(tableEditor);
+                SetDocumentMenus(tableEditor);
             }
             else
             {
@@ -756,9 +756,9 @@ namespace FreelancerModStudio
             _uiCultureChanger.ApplyCulture(new CultureInfo(Helper.Settings.ShortLanguage));
             _uiCultureChanger.ApplyCultureToForm(this);
 
-            foreach (IDockContent document in dockPanel1.Contents)
+            foreach (IDockContent dockContent in dockPanel1.Contents)
             {
-                frmTableEditor tableEditor = document as frmTableEditor;
+                frmTableEditor tableEditor = dockContent as frmTableEditor;
                 if (tableEditor != null)
                 {
                     _uiCultureChanger.ApplyCultureToForm(tableEditor);
@@ -781,10 +781,10 @@ namespace FreelancerModStudio
             //if (solutionExplorerForm != null)
             //    solutionExplorerForm.RefreshSettings();
 
-            IDockContent activeDocument = dockPanel1.ActiveDocument;
-            if (activeDocument != null)
+            IDocumentForm document = dockPanel1.ActiveDocument as IDocumentForm;
+            if (document != null)
             {
-                Document_DisplayChanged((IDocumentForm)activeDocument);
+                SetDocumentMenus(document);
             }
         }
 
@@ -1108,6 +1108,11 @@ namespace FreelancerModStudio
             bool isVisible;
             bool isEnabled;
 
+            if (isDocument && _systemEditor != null)
+            {
+                _systemEditor.DataPath = document.DataPath;
+            }
+
             SetMenuVisible(mnuSave, isDocument);
             SetMenuVisible(mnuSaveAs, isDocument);
             SetMenuVisible(mnuSaveAll, isDocument);
@@ -1157,11 +1162,13 @@ namespace FreelancerModStudio
             SetMenuVisible(mnuManipulationScale, isVisible, isEnabled);
             SetMenuVisible(mnuManipulationSeperator, isVisible);
 
+            isVisible = isDocument && document.CanDisplay3DViewer();
+            SetMenuVisible(mnuShowModels, isVisible);
+            SetMenuVisible(mnuShowModelsSeperator, isVisible);
+
             isVisible = isDocument && document.CanChangeVisibility(false);
             isEnabled = isVisible && document.CanChangeVisibility(true);
-            SetMenuVisible(mnuShowModels, isVisible, isEnabled);
             SetMenuVisible(mnuChangeVisibility, isVisible, isEnabled);
-            SetMenuVisible(mnuShowModelsSeperator, isVisible);
 
             SetContentMenus(document);
         }
@@ -1169,22 +1176,6 @@ namespace FreelancerModStudio
         void SetContentMenus(IContentForm content)
         {
             mnuDelete.Enabled = content != null && content.CanDelete();
-        }
-
-        void Document_DisplayChanged(IDocumentForm document)
-        {
-            if (document == null)
-            {
-                SetDocumentMenus(null);
-                return;
-            }
-
-            if (_systemEditor != null)
-            {
-                _systemEditor.DataPath = document.DataPath;
-            }
-
-            SetDocumentMenus(document);
         }
 
         void dockPanel1_ActiveContentChanged(object sender, EventArgs e)

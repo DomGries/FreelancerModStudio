@@ -101,14 +101,19 @@ namespace FreelancerModStudio.Data.IO
 
                         //get ini options based on all possible template option names
                         List<INIOption> iniOptions;
-                        if (!iniBlock.Options.TryGetValue(templateOption.Name, out iniOptions) && templateOption.RenameFrom != null)
+                        iniBlock.Options.TryGetValue(templateOption.Name, out iniOptions);
+
+                        //search for options with alternative names
+                        if (templateOption.RenameFrom != null)
                         {
-                            //search for alternative names
                             string[] namesFromRename = templateOption.RenameFrom.Split(new[] { ',' });
                             for (int nameIndex = 0; nameIndex < namesFromRename.Length; ++nameIndex)
                             {
-                                if (iniBlock.Options.TryGetValue(namesFromRename[nameIndex], out iniOptions))
+                                List<INIOption> alternativeOptions;
+                                if (iniBlock.Options.TryGetValue(namesFromRename[nameIndex], out alternativeOptions))
                                 {
+                                    iniOptions.AddRange(alternativeOptions);
+
                                     //stop searching after we found the first option group with the correct name
                                     break;
                                 }

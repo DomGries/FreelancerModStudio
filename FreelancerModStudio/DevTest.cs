@@ -22,7 +22,7 @@ namespace FreelancerModStudio
 
         public static void CreateTemplate(string path)
         {
-            CreateTemplate(Directory.GetFiles(path, "*.ini"), path, path.Length + 1);
+            CreateTemplate(path, path.Length + 1);
 
             Template template = new Template();
             foreach (INIDataTemplate iniDataTemplate in DataList) //each file
@@ -99,16 +99,16 @@ namespace FreelancerModStudio
             template.Save("newTemplate.xml");
         }
 
-        static void CreateTemplate(string[] files, string path, int dataPathIndex)
+        static void CreateTemplate(string path, int dataPathIndex)
         {
-            foreach (string file in files)
+            foreach (string file in Directory.GetFiles(path, "*.ini"))
             {
                 CreateTemplateFromFile(file, dataPathIndex);
             }
 
             foreach (string directory in Directory.GetDirectories(path))
             {
-                CreateTemplate(Directory.GetFiles(directory, "*.ini"), directory, dataPathIndex);
+                CreateTemplate(directory, dataPathIndex);
             }
         }
 
@@ -1491,6 +1491,49 @@ namespace FreelancerModStudio
             {
                 TestUtfModels(subDirectory, include3db);
             }
+        }
+
+        public static void ResaveFiles(string sourcePath, string targetPath)
+        {
+            DirectoryInfo directory = new DirectoryInfo(sourcePath);
+            FileInfo[] files = directory.GetFiles("*.ini");
+
+            if (files.Length > 0)
+            {
+                if (!Directory.Exists(targetPath))
+                {
+                    Directory.CreateDirectory(targetPath);
+                }
+
+                foreach (FileInfo file in files)
+                {
+                    ResaveFile(file.FullName, Path.Combine(targetPath, file.Name));
+                }
+            }
+
+            foreach (DirectoryInfo subDirectory in directory.GetDirectories())
+            {
+                ResaveFiles(subDirectory.FullName, Path.Combine(targetPath, subDirectory.Name));
+            }
+        }
+
+        static void ResaveFile(string sourceFile, string targetFile)
+        {
+            int templateIndex = FileManager.GetTemplateIndex(sourceFile);
+            if (templateIndex == -1)
+            {
+                return;
+            }
+
+            FileManager fileManager = new FileManager(sourceFile)
+                {
+                    WriteEmptyLine = true,
+                    WriteSpaces = true,
+                };
+            EditorINIData data = fileManager.Read(FileEncoding.Automatic, templateIndex);
+
+            fileManager.File = targetFile;
+            fileManager.Write(data);
         }
     }
 }

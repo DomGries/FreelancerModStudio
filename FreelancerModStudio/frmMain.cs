@@ -241,6 +241,20 @@ namespace FreelancerModStudio
             }
         }
 
+        void DefaultEditor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (e.CloseReason != CloseReason.UserClosing)
+            {
+                return;
+            }
+
+            frmTableEditor tableEditor = sender as frmTableEditor;
+            if (tableEditor != null)
+            {
+                AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
+            }
+        }
+
         void Properties_OptionsChanged(PropertyBlock[] blocks)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
@@ -489,22 +503,22 @@ namespace FreelancerModStudio
             else
             {
                 DisplayFile(file, templateIndex);
-                AddToRecentFiles(file, templateIndex);
             }
         }
 
         frmTableEditor DisplayFile(string file, int templateIndex)
         {
-            frmTableEditor defaultEditor = new frmTableEditor(templateIndex, file);
-            defaultEditor.ShowData();
+            frmTableEditor tableEditor = new frmTableEditor(templateIndex, file);
+            tableEditor.ShowData();
 
-            defaultEditor.DataChanged += DefaultEditor_DataChanged;
-            defaultEditor.SelectionChanged += DefaultEditor_SelectionChanged;
-            defaultEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
-            defaultEditor.DocumentChanged += SetDocumentMenus;
-            defaultEditor.Show(dockPanel1, DockState.Document);
+            tableEditor.DataChanged += DefaultEditor_DataChanged;
+            tableEditor.SelectionChanged += DefaultEditor_SelectionChanged;
+            tableEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
+            tableEditor.DocumentChanged += SetDocumentMenus;
+            tableEditor.FormClosed += DefaultEditor_FormClosed;
+            tableEditor.Show(dockPanel1, DockState.Document);
 
-            return defaultEditor;
+            return tableEditor;
         }
 
         void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -680,26 +694,26 @@ namespace FreelancerModStudio
             }
         }
 
-        void ShowSystemEditor(frmTableEditor editor)
+        void ShowSystemEditor(frmTableEditor tableEditor)
         {
             if (_systemEditor != null)
             {
-                _systemEditor.ShowViewer(editor.ViewerType);
+                _systemEditor.ShowViewer(tableEditor.ViewerType);
 
                 // set data path before showing the models
-                _systemEditor.DataPath = editor.DataPath;
+                _systemEditor.DataPath = tableEditor.DataPath;
 
-                switch (editor.ViewerType)
+                switch (tableEditor.ViewerType)
                 {
                     case ViewerType.System:
                         // set model mode as it was reset if the editor was closed
                         _systemEditor.IsModelMode = mnuShowModels.Checked;
-                        _systemEditor.ShowData(editor.Data);
+                        _systemEditor.ShowData(tableEditor.Data);
                         break;
                     case ViewerType.Universe:
                         _systemEditor.IsModelMode = false;
-                        _systemEditor.ShowData(editor.Data);
-                        _systemEditor.ShowUniverseConnections(editor.File, editor.Data.Blocks, editor.Archetype);
+                        _systemEditor.ShowData(tableEditor.Data);
+                        _systemEditor.ShowUniverseConnections(tableEditor.File, tableEditor.Data.Blocks, tableEditor.Archetype);
                         break;
                     case ViewerType.SolarArchetype:
                     case ViewerType.ModelPreview:
@@ -708,7 +722,7 @@ namespace FreelancerModStudio
                 }
 
                 //select initially
-                List<TableBlock> blocks = editor.GetSelectedBlocks();
+                List<TableBlock> blocks = tableEditor.GetSelectedBlocks();
                 if (blocks != null)
                 {
                     _systemEditor.Select(blocks[0]);
@@ -864,8 +878,6 @@ namespace FreelancerModStudio
                 try
                 {
                     tableEditor.SaveAs();
-
-                    AddToRecentFiles(tableEditor.File, tableEditor.Data.TemplateIndex);
                 }
                 catch (Exception ex)
                 {

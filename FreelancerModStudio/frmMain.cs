@@ -420,7 +420,7 @@ namespace FreelancerModStudio
 
                         if (i == 0)
                         {
-                            menuItem.ShortcutKeys = Keys.Control & Keys.Shift & Keys.O;
+                            menuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.O;
                         }
 
                         mnuOpen.DropDownItems.Add(menuItem);

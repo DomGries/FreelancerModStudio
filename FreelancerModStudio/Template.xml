@@ -417,7 +417,7 @@
             <Option>mesh</Option>
           </Options>
         </Block>
-        <Block name="Skeleton" multiple="true">
+        <Block name="Skeleton" multiple="true" identifier="sex">
           <Options>
             <Option>sex</Option>
           </Options>
@@ -1155,16 +1155,16 @@
           <Options>
             <Option>nickname</Option>
             <Option>effect_type</Option>
-            <Option>snd_effect</Option>
             <Option>vis_effect</Option>
             <Option>vis_generic</Option>
             <Option>vis_beam</Option>
+            <Option>snd_effect</Option>
             <Option>lgt_effect</Option>
             <Option>lgt_range_scale</Option>
             <Option>lgt_radius</Option>
           </Options>
         </Block>
-        <Block name="EffectLOD" multiple="true">
+        <Block name="EffectLOD" multiple="true" identifier="type">
           <Options>
             <Option>type</Option>
             <Option>max_lod_screen_size</Option>
@@ -1257,7 +1257,7 @@
         <Path>fx\fuse*.ini</Path>
       </Paths>
       <Blocks>
-        <Block name="damage_group" multiple="true">
+        <Block name="damage_group" multiple="true" identifier="group_name">
           <Options>
             <Option>group_name</Option>
             <Option>at_t</Option>
@@ -1272,14 +1272,14 @@
             <Option>hitpoints</Option>
           </Options>
         </Block>
-        <Block name="destroy_group" multiple="true">
+        <Block name="destroy_group" multiple="true" identifier="group_name">
           <Options>
             <Option>at_t</Option>
             <Option>group_name</Option>
             <Option>fate</Option>
           </Options>
         </Block>
-        <Block name="destroy_hp_attachment" multiple="true">
+        <Block name="destroy_hp_attachment" multiple="true" identifier="hardpoint">
           <Options>
             <Option>hardpoint</Option>
             <Option>at_t</Option>
@@ -1311,7 +1311,7 @@
             <Option>fuse_t</Option>
           </Options>
         </Block>
-        <Block name="impulse" multiple="true">
+        <Block name="impulse" multiple="true" identifier="hardpoint">
           <Options>
             <Option>at_t</Option>
             <Option>hardpoint</Option>
@@ -1326,7 +1326,7 @@
             <Option>turn_on</Option>
           </Options>
         </Block>
-        <Block name="start_cam_particles" multiple="true">
+        <Block name="start_cam_particles" multiple="true" identifier="effect">
           <Options>
             <Option>effect</Option>
             <Option>at_t</Option>
@@ -1334,7 +1334,7 @@
             <Option>ori_offset</Option>
           </Options>
         </Block>
-        <Block name="start_effect" multiple="true">
+        <Block name="start_effect" multiple="true" identifier="effect">
           <Options>
             <Option>effect</Option>
             <Option>particles</Option>
@@ -1387,7 +1387,7 @@
             <Option>max_rgb</Option>
           </Options>
         </Block>
-        <Block name="layer" multiple="true">
+        <Block name="layer" multiple="true" identifier="texture">
           <Options>
             <Option>texture</Option>
             <Option>color</Option>
@@ -2109,7 +2109,7 @@
         <Path>missions\news.ini</Path>
       </Paths>
       <Blocks>
-        <Block name="NewsItem" multiple="true">
+        <Block name="NewsItem" multiple="true" identifier="rank">
           <Options>
             <Option>rank</Option>
             <Option>autoselect</Option>

@@ -573,17 +573,42 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
+        public Rect3D GetAllBounds()
+        {
+            Rect3D bounds = Rect3D.Empty;
+            for (int i = GetContentStartId(); i < Viewport.Children.Count; ++i)
+            {
+                Rect3D contentBounds = Visual3DHelper.FindBounds(Viewport.Children[i], Transform3D.Identity);
+                bounds.Union(contentBounds);
+            }
+
+            return bounds;
+        }
+
         void Viewport_MouseDown(object sender, MouseButtonEventArgs e)
         {
             // workaround to focus viewport for key events
             Viewport.Focus();
+
+            bool isDoubleClick = e.ClickCount > 1;
             
             bool isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
             bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
             bool isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
 
+            // reset camera
+            if (isDoubleClick &&
+                (e.ChangedButton == MouseButton.Middle ||
+                (e.ChangedButton == MouseButton.Right && isShiftDown)))
+            {
+                Viewport.CameraController.ResetCamera();
+                CameraHelper.ZoomExtents(Viewport.Camera, Viewport.Viewport, GetAllBounds(), 0);
+
+                return;
+            }
+
             bool isSelect = e.ChangedButton == MouseButton.Left && !isAltDown;
-            bool isLookAt = e.ChangedButton == MouseButton.Right && e.ClickCount == 2;
+            bool isLookAt = e.ChangedButton == MouseButton.Right && isDoubleClick;
 
             if (isSelect || isLookAt)
             {

@@ -252,23 +252,13 @@ namespace HelixEngine
                 return;
             }
 
-            var isDoubleClick = e.ClickCount == 2;
+            if (e.ClickCount > 1)
+            {
+                return;
+            }
+
             var isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
             var isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-
-            // reset camera
-            if (isDoubleClick &&
-                (e.ChangedButton == MouseButton.Middle ||
-                (e.ChangedButton == MouseButton.Right && isShiftDown)))
-            {
-                ResetCamera();
-                return;
-            }
-
-            if (isDoubleClick)
-            {
-                return;
-            }
 
             isZooming = e.ChangedButton == MouseButton.Right && isAltDown;
             isPanning = !isZooming &&
@@ -374,7 +364,6 @@ namespace HelixEngine
         public void ResetCamera()
         {
             CameraHelper.Reset(Camera);
-            CameraHelper.ZoomExtents(Camera, Viewport, 0);
             lastPoint3D = new Point3D();
         }
 

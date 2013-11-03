@@ -74,11 +74,6 @@ namespace FreelancerModStudio
                 }
             }
 
-            if (dockPanel1.DocumentsCount == 0)
-            {
-                SetDocumentMenus(null);
-            }
-
             SettingsChanged();
         }
 
@@ -795,11 +790,7 @@ namespace FreelancerModStudio
             //if (solutionExplorerForm != null)
             //    solutionExplorerForm.RefreshSettings();
 
-            IDocumentForm document = dockPanel1.ActiveDocument as IDocumentForm;
-            if (document != null)
-            {
-                SetDocumentMenus(document);
-            }
+            SetDocumentMenus(GetDocument());
         }
 
         int FileOpened(string file)
@@ -856,7 +847,7 @@ namespace FreelancerModStudio
 
         void mnuSave_Click(object sender, EventArgs e)
         {
-            IDocumentForm document = dockPanel1.ActiveDocument as IDocumentForm;
+            IDocumentForm document = GetDocument();
             if (document != null)
             {
                 try
@@ -872,16 +863,16 @@ namespace FreelancerModStudio
 
         void mnuSaveAs_Click(object sender, EventArgs e)
         {
-            frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
-            if (tableEditor != null)
+            IDocumentForm document = GetDocument();
+            if (document != null)
             {
                 try
                 {
-                    tableEditor.SaveAs();
+                    document.SaveAs();
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, tableEditor.GetTitle()), ex);
+                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, document.GetTitle()), ex);
                 }
             }
         }

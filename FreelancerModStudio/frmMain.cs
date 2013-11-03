@@ -263,6 +263,16 @@ namespace FreelancerModStudio
             }
         }
 
+        void DefaultEditor_DocumentChanged(IDocumentForm document)
+        {
+            SetDocumentMenus(document);
+
+            if (dockPanel1.ActiveContent == document)
+            {
+                SetContentMenus(document);
+            }
+        }
+
         void Properties_OptionsChanged(PropertyBlock[] blocks)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
@@ -522,7 +532,7 @@ namespace FreelancerModStudio
             tableEditor.DataChanged += DefaultEditor_DataChanged;
             tableEditor.SelectionChanged += DefaultEditor_SelectionChanged;
             tableEditor.DataVisibilityChanged += DefaultEditor_DataVisibilityChanged;
-            tableEditor.DocumentChanged += SetDocumentMenus;
+            tableEditor.DocumentChanged += DefaultEditor_DocumentChanged;
             tableEditor.FormClosed += DefaultEditor_FormClosed;
             tableEditor.Show(dockPanel1, DockState.Document);
 
@@ -689,7 +699,6 @@ namespace FreelancerModStudio
 
                 // update property window after changing active document
                 _propertiesForm.ShowData(tableEditor.GetSelectedBlocks(), tableEditor.Data.TemplateIndex);
-                SetDocumentMenus(tableEditor);
             }
             else
             {
@@ -700,6 +709,9 @@ namespace FreelancerModStudio
                     CloseSystemEditor();
                 }
             }
+
+            SetDocumentMenus(tableEditor);
+            SetContentMenus(tableEditor);
         }
 
         void ShowSystemEditor(frmTableEditor tableEditor)
@@ -1065,39 +1077,11 @@ namespace FreelancerModStudio
             _systemEditor = null;
         }
 
-        void dockPanel1_ContentAdded(object sender, DockContentEventArgs e)
-        {
-            frmTableEditor tableEditor = e.Content as frmTableEditor;
-            if (tableEditor != null)
-            {
-                SetDocumentMenus(tableEditor);
-            }
-        }
-
         void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
         {
             if (e.Content is frmSystemEditor)
             {
                 CloseSystemEditor();
-            }
-            else if (e.Content is frmTableEditor)
-            {
-                foreach (IDockContent document in dockPanel1.Documents)
-                {
-                    //there is at least one editor left in documents pane
-                    if (document is frmTableEditor)
-                    {
-                        return;
-                    }
-                }
-
-                //no editors found
-                SetDocumentMenus(null);
-
-                if (_systemEditor != null)
-                {
-                    _systemEditor.Clear(false, false);
-                }
             }
         }
 
@@ -1178,15 +1162,11 @@ namespace FreelancerModStudio
             SetMenuVisible(mnuManipulationScale, isVisible, isEnabled);
             SetMenuVisible(mnuManipulationSeperator, isVisible);
 
-            isVisible = isDocument && document.CanDisplay3DViewer();
-            SetMenuVisible(mnuShowModels, isVisible);
-            SetMenuVisible(mnuShowModelsSeperator, isVisible);
-
             isVisible = isDocument && document.CanChangeVisibility(false);
             isEnabled = isVisible && document.CanChangeVisibility(true);
             SetMenuVisible(mnuChangeVisibility, isVisible, isEnabled);
-
-            SetContentMenus(document);
+            SetMenuVisible(mnuShowModels, isVisible);
+            SetMenuVisible(mnuShowModelsSeperator, isVisible);
         }
 
         void SetContentMenus(IContentForm content)

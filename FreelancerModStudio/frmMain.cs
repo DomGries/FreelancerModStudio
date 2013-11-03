@@ -51,9 +51,7 @@ namespace FreelancerModStudio
                     dockPanel1.LoadFromXml(layoutFile, GetContentFromPersistString);
                     layoutLoaded = true;
                 }
-                    // ReSharper disable EmptyGeneralCatchClause
                 catch
-                    // ReSharper restore EmptyGeneralCatchClause
                 {
                 }
             }
@@ -120,7 +118,14 @@ namespace FreelancerModStudio
                     return null;
                 }
 
-                return DisplayFile(parsedStrings[1], Convert.ToInt32(parsedStrings[2]));
+                try
+                {
+                    return DisplayFile(parsedStrings[1], Convert.ToInt32(parsedStrings[2]));
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
 

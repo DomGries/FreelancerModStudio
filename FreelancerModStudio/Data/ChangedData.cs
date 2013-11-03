@@ -5,6 +5,7 @@ namespace FreelancerModStudio.Data
     public class ChangedData
     {
         public List<TableBlock> NewBlocks { get; set; }
+        public List<TableBlock> NewAdditionalBlocks { get; set; }
         public List<TableBlock> OldBlocks { get; set; }
         public ChangedType Type { get; set; }
 
@@ -16,20 +17,36 @@ namespace FreelancerModStudio.Data
                     return new ChangedData
                         {
                             Type = ChangedType.Delete,
-                            NewBlocks = NewBlocks
+                            NewBlocks = NewBlocks,
                         };
                 case ChangedType.Delete:
                     return new ChangedData
                         {
                             Type = ChangedType.Add,
-                            NewBlocks = NewBlocks
+                            NewBlocks = NewBlocks,
+                        };
+                case ChangedType.AddAndEdit:
+                    return new ChangedData
+                        {
+                            Type = ChangedType.DeleteAndEdit,
+                            NewBlocks = NewBlocks,
+                            OldBlocks = NewAdditionalBlocks,
+                            NewAdditionalBlocks = OldBlocks,
+                        };
+                case ChangedType.DeleteAndEdit:
+                    return new ChangedData
+                        {
+                            Type = ChangedType.AddAndEdit,
+                            NewBlocks = NewBlocks,
+                            OldBlocks = NewAdditionalBlocks,
+                            NewAdditionalBlocks = OldBlocks,
                         };
                 default:
                     return new ChangedData
                         {
                             Type = Type,
                             NewBlocks = OldBlocks,
-                            OldBlocks = NewBlocks
+                            OldBlocks = NewBlocks,
                         };
             }
         }
@@ -40,6 +57,8 @@ namespace FreelancerModStudio.Data
         Add,
         Edit,
         Move,
-        Delete
+        Delete,
+        AddAndEdit,
+        DeleteAndEdit,
     }
 }

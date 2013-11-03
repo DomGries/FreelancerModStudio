@@ -397,7 +397,6 @@ namespace FreelancerModStudio
 
                         return block.Visibility;
                     };
-
             }
             else
             {
@@ -515,76 +514,21 @@ namespace FreelancerModStudio
             return false;
         }
 
-        void AddBlocks(List<TableBlock> blocks, int undoBlock, bool undo)
+        void BlocksAdded(List<TableBlock> blocks)
         {
             List<TableBlock> selectedData = new List<TableBlock>();
             foreach (TableBlock block in blocks)
             {
-                Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[block.Block.TemplateIndex];
-                TableBlock tableBlock = block;
-
-                //set block to be modified except in undo mode
-                if (!undo)
+                if (block.Index >= Data.Blocks.Count)
                 {
-                    tableBlock.Modified = TableModified.ChangedAdded;
+                    Data.Blocks.Add(block);
+                }
+                else
+                {
+                    Data.Blocks.Insert(block.Index, block);
                 }
 
-                //set archetype of block and make visible if possible
-                if (tableBlock.Archetype == null)
-                {
-                    SetBlockType(tableBlock);
-                    tableBlock.SetVisibleIfPossible();
-                }
-
-                bool existSingle = false;
-
-                //check if block already exists if it is a single block
-                if (!templateBlock.Multiple)
-                {
-                    for (int j = 0; j < Data.Blocks.Count; ++j)
-                    {
-                        //block already exists
-                        if (Data.Blocks[j].Block.TemplateIndex == block.Block.TemplateIndex)
-                        {
-                            tableBlock.Index = Data.Blocks[j].Index;
-                            tableBlock.Id = Data.Blocks[j].Id;
-
-                            //overwrite data if we add blocks which are single then they are overwritten which means they have to be changed to edit in the undo history
-                            _undoManager.CurrentData[undoBlock] = new ChangedData
-                                {
-                                    Type = ChangedType.Edit,
-                                    OldBlocks = new List<TableBlock>
-                                        {
-                                            Data.Blocks[j]
-                                        },
-                                    NewBlocks = new List<TableBlock>
-                                        {
-                                            tableBlock
-                                        },
-                                };
-
-                            //overwrite block
-                            Data.Blocks[j] = tableBlock;
-                            existSingle = true;
-
-                            break;
-                        }
-                    }
-                }
-
-                if (!existSingle)
-                {
-                    if (block.Index >= Data.Blocks.Count)
-                    {
-                        Data.Blocks.Add(block);
-                    }
-                    else
-                    {
-                        Data.Blocks.Insert(block.Index, block);
-                    }
-                }
-
-                selectedData.Add(tableBlock);
+                selectedData.Add(block);
             }
 
             Data.RefreshIndices(blocks[0].Index);
@@ -594,7 +538,7 @@ namespace FreelancerModStudio
             EnsureSelectionVisible();
         }
 
-        void AddNewBlock(string blockName, int templateIndex)
+        void AddBlock(string blockName, int templateIndex)
         {
             Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[templateIndex];
 
@@ -613,13 +557,9 @@ namespace FreelancerModStudio
             }
 
             //add actual block
-            _undoManager.Execute(new ChangedData
+            AddBlocks(new List<TableBlock>
                 {
-                    NewBlocks = new List<TableBlock>
-                        {
-                            new TableBlock(GetNewBlockId(), Data.MaxId++, editorBlock, Data.TemplateIndex)
-                        },
-                    Type = ChangedType.Add
+                    new TableBlock(GetNewBlockId(), Data.MaxId++, editorBlock, Data.TemplateIndex)
                 });
         }
 
@@ -639,7 +579,7 @@ namespace FreelancerModStudio
             return blocks;
         }
 
-        public void SetBlocks(PropertyBlock[] blocks)
+        public void ChangeBlocks(PropertyBlock[] blocks)
         {
             List<TableBlock> newBlocks = new List<TableBlock>();
             List<TableBlock> oldBlocks = new List<TableBlock>();
@@ -728,10 +668,10 @@ namespace FreelancerModStudio
                 newBlock.SetModifiedChanged();
             }
 
-            SetBlocks(newBlocks, oldBlocks);
+            ChangeBlocks(newBlocks, oldBlocks);
         }
 
-        public void SetBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
+        public void ChangeBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
         {
             _undoManager.Execute(new ChangedData
                 {
@@ -741,7 +681,7 @@ namespace FreelancerModStudio
                 });
         }
 
-        void ChangeBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
+        void BlocksChanged(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
         {
             for (int i = 0; i < oldBlocks.Count; ++i)
             {
@@ -757,7 +697,7 @@ namespace FreelancerModStudio
             EnsureSelectionVisible();
         }
 
-        void MoveBlocks(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
+        void BlocksMoved(List<TableBlock> newBlocks, List<TableBlock> oldBlocks)
         {
             //remove all moved blocks first because otherwise inserted index would be wrong
             List<TableBlock> blocks = new List<TableBlock>();
@@ -782,7 +722,7 @@ namespace FreelancerModStudio
             EnsureSelectionVisible();
         }
 
-        void DeleteBlocks(List<TableBlock> blocks)
+        void BlocksDeleted(List<TableBlock> blocks)
         {
             IList selectedObjects = objectListView1.SelectedObjects;
 
@@ -859,7 +799,7 @@ namespace FreelancerModStudio
         void mnuAddItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-            AddNewBlock(menuItem.Text, (int)menuItem.Tag);
+            AddBlock(menuItem.Text, (int)menuItem.Tag);
         }
 
         void mnuDelete_Click(object sender, EventArgs e)
@@ -867,17 +807,17 @@ namespace FreelancerModStudio
             DeleteSelectedBlocks();
         }
 
-        private void mnuCut_Click(object sender, EventArgs e)
+        void mnuCut_Click(object sender, EventArgs e)
         {
             Cut();
         }
 
-        private void mnuCopy_Click(object sender, EventArgs e)
+        void mnuCopy_Click(object sender, EventArgs e)
         {
             Copy();
         }
 
-        private void mnuPaste_Click(object sender, EventArgs e)
+        void mnuPaste_Click(object sender, EventArgs e)
         {
             Paste();
         }
@@ -999,17 +939,85 @@ namespace FreelancerModStudio
                     blocks.Add(new TableBlock(id + i, Data.MaxId++, editorData.Blocks[i], Data.TemplateIndex));
                 }
 
-                _undoManager.Execute(new ChangedData
-                    {
-                        NewBlocks = blocks,
-                        Type = ChangedType.Add
-                    });
+                AddBlocks(blocks);
             }
         }
 
-        public bool UseDocument()
+        void AddBlocks(List<TableBlock> blocks)
         {
-            return false;
+            List<TableBlock> newAdditionalBlocks = new List<TableBlock>();
+            List<TableBlock> oldBlocks = new List<TableBlock>();
+
+            for (int i = 0; i < blocks.Count; ++i)
+            {
+                TableBlock block = blocks[i];
+
+                //set block to be modified
+                block.Modified = TableModified.ChangedAdded;
+
+                //set archetype of block and make visible if possible
+                if (block.Archetype == null)
+                {
+                    SetBlockType(block);
+                    block.SetVisibleIfPossible();
+                }
+
+                //check if block which can only exist once already exists
+                Template.Block templateBlock = Helper.Template.Data.Files[Data.TemplateIndex].Blocks.Values[block.Block.TemplateIndex];
+                if (!templateBlock.Multiple)
+                {
+                    for (int j = 0; j < Data.Blocks.Count; ++j)
+                    {
+                        TableBlock existingBlock = Data.Blocks[j];
+
+                        //block already exists
+                        if (existingBlock.Block.TemplateIndex == block.Block.TemplateIndex)
+                        {
+                            block.Index = existingBlock.Index;
+                            block.Id = existingBlock.Id;
+
+                            //overwrite block if it can only exist once
+                            newAdditionalBlocks.Add(block);
+                            oldBlocks.Add(existingBlock);
+
+                            //remove overwritten block from new ones
+                            blocks.RemoveAt(i);
+                            --i;
+                        }
+                    }
+                }
+            }
+
+            if (newAdditionalBlocks.Count == 0)
+            {
+                _undoManager.Execute(new ChangedData
+                    {
+                        Type = ChangedType.Add,
+                        NewBlocks = blocks,
+                    });
+            }
+            else
+            {
+                if (blocks.Count == 0)
+                {
+                    _undoManager.Execute(new ChangedData
+                        {
+                            Type = ChangedType.Edit,
+                            NewBlocks = newAdditionalBlocks,
+                            OldBlocks = oldBlocks,
+                        });
+                }
+                else
+                {
+                    _undoManager.Execute(new ChangedData
+                        {
+                            Type = ChangedType.AddAndEdit,
+                            NewBlocks = blocks,
+                            NewAdditionalBlocks = newAdditionalBlocks,
+                            OldBlocks = oldBlocks,
+                        });
+                }
+            }
         }
 
         public bool CanUndo()
@@ -1047,33 +1055,38 @@ namespace FreelancerModStudio
             return ViewerType == ViewerType.System;
         }
 
-        void ExecuteDataChanged(ChangedData data, int undoBlock, bool undo)
+        void ExecuteDataChanged(ChangedData data, bool undo)
         {
             switch (data.Type)
             {
                 case ChangedType.Add:
-                    AddBlocks(data.NewBlocks, undoBlock, undo);
-                    break;
-                case ChangedType.Delete:
-                    DeleteBlocks(data.NewBlocks);
+                    BlocksAdded(data.NewBlocks);
                     break;
                 case ChangedType.Edit:
-                    ChangeBlocks(data.NewBlocks, data.OldBlocks);
+                    BlocksChanged(data.NewBlocks, data.OldBlocks);
                     break;
                 case ChangedType.Move:
-                    MoveBlocks(data.NewBlocks, data.OldBlocks);
+                    BlocksMoved(data.NewBlocks, data.OldBlocks);
+                    break;
+                case ChangedType.Delete:
+                    BlocksDeleted(data.NewBlocks);
+                    break;
+                case ChangedType.AddAndEdit:
+                    BlocksAdded(data.NewBlocks);
+                    BlocksChanged(data.NewAdditionalBlocks, data.OldBlocks);
+                    break;
+                case ChangedType.DeleteAndEdit:
+                    BlocksDeleted(data.NewBlocks);
+                    BlocksChanged(data.NewAdditionalBlocks, data.OldBlocks);
                     break;
             }
 
             OnDataChanged(data);
         }
 
-        void UndoManager_DataChanged(List<ChangedData> data, bool undo)
+        void UndoManager_DataChanged(ChangedData data, bool undo)
         {
-            for (int i = 0; i < data.Count; ++i)
-            {
-                ExecuteDataChanged(undo ? data[i].GetUndoData() : data[i], i, undo);
-            }
+            ExecuteDataChanged(undo ? data.GetUndoData() : data, undo);
 
             SetFile(File);
             //OnDocumentChanged(this); is already called in SetFile
@@ -1212,11 +1225,11 @@ namespace FreelancerModStudio
                     blocks.Add(block);
                 }
 
-                StartMoveBlocks(blocks, e.DropTargetIndex);
+                MoveBlocks(blocks, e.DropTargetIndex);
             }
         }
 
-        void StartMoveBlocks(List<TableBlock> blocks, int targetIndex)
+        void MoveBlocks(List<TableBlock> blocks, int targetIndex)
         {
             List<TableBlock> oldBlocks = new List<TableBlock>();
             List<TableBlock> newBlocks = new List<TableBlock>();

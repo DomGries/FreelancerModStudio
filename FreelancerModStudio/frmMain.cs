@@ -191,17 +191,25 @@ namespace FreelancerModStudio
         {
             if (_systemEditor != null)
             {
-                if (data.Type == ChangedType.Add)
+                switch (data.Type)
                 {
-                    _systemEditor.Add(data.NewBlocks);
-                }
-                else if (data.Type == ChangedType.Delete)
-                {
-                    _systemEditor.Delete(data.NewBlocks);
-                }
-                else if (data.Type == ChangedType.Edit)
-                {
-                    _systemEditor.SetValues(data.NewBlocks);
+                    case ChangedType.Add:
+                        _systemEditor.Add(data.NewBlocks);
+                        break;
+                    case ChangedType.Delete:
+                        _systemEditor.Delete(data.NewBlocks);
+                        break;
+                    case ChangedType.Edit:
+                        _systemEditor.SetValues(data.NewBlocks);
+                        break;
+                    case ChangedType.AddAndEdit:
+                        _systemEditor.Add(data.NewBlocks);
+                        _systemEditor.SetValues(data.NewAdditionalBlocks);
+                        break;
+                    case ChangedType.DeleteAndEdit:
+                        _systemEditor.Delete(data.NewBlocks);
+                        _systemEditor.SetValues(data.NewAdditionalBlocks);
+                        break;
                 }
             }
         }
@@ -255,7 +263,7 @@ namespace FreelancerModStudio
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
             {
-                tableEditor.SetBlocks(blocks);
+                tableEditor.ChangeBlocks(blocks);
             }
         }
 
@@ -1255,7 +1263,7 @@ namespace FreelancerModStudio
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
             {
-                tableEditor.SetBlocks(new List<TableBlock> { newBlock }, new List<TableBlock> { oldBlock });
+                tableEditor.ChangeBlocks(new List<TableBlock> { newBlock }, new List<TableBlock> { oldBlock });
             }
         }
 

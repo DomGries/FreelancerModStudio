@@ -379,11 +379,12 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        public ContentBase GetSelection(Point position, bool farthest, bool checkManipulators)
+        public ContentBase GetSelection(Point position, bool farthest, bool checkManipulators, out Point3D point)
         {
             PointHitTestParameters hitParams = new PointHitTestParameters(position);
 
             ContentBase visual = null;
+            Point3D hitPoint = new Point3D();
             double distance = 0.0;
             int selectionPriority = -1;
 
@@ -465,6 +466,7 @@ namespace FreelancerModStudio.SystemPresenter
                                  (farthest ? newDistance > distance : newDistance < distance)))
                             {
                                 visual = newHit;
+                                hitPoint = p;
                                 distance = newDistance;
                                 selectionPriority = newSelectionPriority;
                             }
@@ -475,6 +477,7 @@ namespace FreelancerModStudio.SystemPresenter
                 },
                 hitParams);
 
+            point = hitPoint;
             return visual;
         }
 
@@ -540,13 +543,13 @@ namespace FreelancerModStudio.SystemPresenter
                     }
                     break;
                 case Key.F:
-                    if (!isKeyUp)
+                    if (!isKeyUp && !isAlt && !isCtrl)
                     {
                         if (isShift)
                         {
                             LookAtSelected();
                         }
-                        else if (!isModifier)
+                        else
                         {
                             FocusSelected();
                         }
@@ -612,13 +615,14 @@ namespace FreelancerModStudio.SystemPresenter
 
             if (isSelect || isLookAt)
             {
-                ContentBase visual = GetSelection(e.GetPosition(Viewport.Viewport), isShiftDown, !isLookAt);
+                Point3D point;
+                ContentBase visual = GetSelection(e.GetPosition(Viewport.Viewport), isShiftDown, !isLookAt, out point);
                 if (visual != null)
                 {
                     if (isLookAt)
                     {
                         // change the 'lookat' point
-                        LookAt(visual);
+                        LookAt(point);
                     }
                     else
                     {

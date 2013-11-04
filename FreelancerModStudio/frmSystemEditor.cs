@@ -337,6 +337,11 @@ namespace FreelancerModStudio
             _presenter.FocusSelected();
         }
 
+        public void LookAtSelected()
+        {
+            _presenter.LookAtSelected();
+        }
+
         public void TrackSelected()
         {
             _presenter.TrackSelected();

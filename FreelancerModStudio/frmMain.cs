@@ -1049,6 +1049,14 @@ namespace FreelancerModStudio
             }
         }
 
+        void mnuLookAtSelected_Click(object sender, EventArgs e)
+        {
+            if (_systemEditor != null)
+            {
+                _systemEditor.LookAtSelected();
+            }
+        }
+
         void mnuTrackSelected_Click(object sender, EventArgs e)
         {
             if (_systemEditor != null)
@@ -1148,6 +1156,7 @@ namespace FreelancerModStudio
             isVisible = isDocument && document.CanFocusSelected(false);
             isEnabled = isVisible && document.CanFocusSelected(true);
             SetMenuVisible(mnuFocusSelected, isVisible, isEnabled);
+            SetMenuVisible(mnuLookAtSelected, isVisible, isEnabled);
             SetMenuVisible(mnuFocusSelectedSeperator, isVisible);
 
             isVisible = isDocument && document.CanTrackSelected(false);

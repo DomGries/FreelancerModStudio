@@ -128,13 +128,13 @@
     <value>&amp;Datei...</value>
   </data>
   <data name="newToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="newToolStripMenuItem.Text" xml:space="preserve">
     <value>&amp;Neu</value>
   </data>
   <data name="toolStripMenuItem6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 6</value>
+    <value>205, 6</value>
   </data>
   <data name="mnuOpenMod.Size" type="System.Drawing.Size, System.Drawing">
     <value>151, 22</value>
@@ -149,46 +149,46 @@
     <value>148, 6</value>
   </data>
   <data name="mnuOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuOpen.Text" xml:space="preserve">
     <value>&amp;Öffnen</value>
   </data>
   <data name="mnuCloseSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 6</value>
+    <value>205, 6</value>
   </data>
   <data name="mnuClose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuClose.Text" xml:space="preserve">
     <value>&amp;Schließen</value>
   </data>
   <data name="mnuCloseMod.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuCloseMod.Text" xml:space="preserve">
     <value>Mod &amp;schließen</value>
   </data>
   <data name="mnuSaveSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 6</value>
+    <value>205, 6</value>
   </data>
   <data name="mnuSave.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuSaveAs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuSaveAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuSaveAll.Text" xml:space="preserve">
     <value>Alle &amp;speichern</value>
   </data>
   <data name="toolStripMenuItem8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 6</value>
+    <value>205, 6</value>
   </data>
   <data name="mnuExit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>208, 22</value>
   </data>
   <data name="mnuExit.Text" xml:space="preserve">
     <value>B&amp;eenden</value>
@@ -374,28 +374,28 @@
     <value>&amp;Extras</value>
   </data>
   <data name="mnuNewWindow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>263, 22</value>
   </data>
   <data name="mnuNewWindow.Text" xml:space="preserve">
     <value>&amp;Neues Fenster</value>
   </data>
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 6</value>
+    <value>260, 6</value>
   </data>
   <data name="mnuCloseAllDocuments.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>263, 22</value>
   </data>
   <data name="mnuCloseAllDocuments.Text" xml:space="preserve">
     <value>&amp;Alle Dokumente schließen</value>
   </data>
   <data name="mnuResetLayout.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 22</value>
+    <value>263, 22</value>
   </data>
   <data name="mnuResetLayout.Text" xml:space="preserve">
     <value>&amp;Fensterlayout zurücksetzen</value>
   </data>
   <data name="mnuWindowsSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 6</value>
+    <value>260, 6</value>
   </data>
   <data name="mnuWindows.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 20</value>

@@ -991,7 +991,7 @@
             this.mnuOpenContainingFolder.AccessibleName = null;
             resources.ApplyResources(this.mnuOpenContainingFolder, "mnuOpenContainingFolder");
             this.mnuOpenContainingFolder.BackgroundImage = null;
-            this.mnuOpenContainingFolder.Name = "mnuOpenContainingDirectory";
+            this.mnuOpenContainingFolder.Name = "mnuOpenContainingFolder";
             this.mnuOpenContainingFolder.ShortcutKeyDisplayString = null;
             this.mnuOpenContainingFolder.Click += new System.EventHandler(this.mnuOpenContainingFolder_Click);
             // 

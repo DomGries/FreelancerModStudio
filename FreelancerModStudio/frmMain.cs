@@ -166,22 +166,15 @@ namespace FreelancerModStudio
 
         bool CloseOtherDocuments()
         {
-            int index = 0;
-            while (index < dockPanel1.ActiveDocumentPane.Contents.Count)
+            foreach (Form child in MdiChildren)
             {
-                IDockContent dockContent = dockPanel1.ActiveDocumentPane.Contents[index];
-
-                if (dockContent != dockPanel1.ActiveDocumentPane.ActiveContent)
+                if (child != dockPanel1.ActiveDocument)
                 {
-                    dockContent.DockHandler.Close();
-                    if (!dockContent.DockHandler.Form.IsDisposed)
+                    child.Close();
+                    if (!child.IsDisposed)
                     {
                         return false;
                     }
-                }
-                else
-                {
-                    ++index;
                 }
             }
 
@@ -528,6 +521,7 @@ namespace FreelancerModStudio
         {
             frmTableEditor tableEditor = new frmTableEditor(templateIndex, file);
             tableEditor.ShowData();
+            tableEditor.TabPageContextMenuStrip = contextMenuStrip1;
 
             tableEditor.DataChanged += DefaultEditor_DataChanged;
             tableEditor.SelectionChanged += DefaultEditor_SelectionChanged;
@@ -1078,6 +1072,42 @@ namespace FreelancerModStudio
         {
         }
 
+        void mnuCloseOther_Click(object sender, EventArgs e)
+        {
+            CloseOtherDocuments();
+        }
+
+        void mnuCopyFullPath_Click(object sender, EventArgs e)
+        {
+            IDocumentForm document = GetDocument();
+            if (document != null)
+            {
+                string file = document.File;
+                if (!string.IsNullOrEmpty(file))
+                {
+                    System.Windows.Forms.Clipboard.SetText(file, TextDataFormat.Text);
+                }
+            }
+        }
+
+        void mnuOpenContainingFolder_Click(object sender, EventArgs e)
+        {
+            IDocumentForm document = GetDocument();
+            if (document != null)
+            {
+                string file = document.File;
+                if (!string.IsNullOrEmpty(file))
+                {
+                    string directory = Path.GetDirectoryName(file);
+                    if (directory != null && Directory.Exists(directory))
+                    {
+                        //open the folder in explorer
+                        Process.Start(directory);
+                    }
+                }
+            }
+        }
+
         void CloseSystemEditor()
         {
             //dispose system editor
@@ -1270,6 +1300,17 @@ namespace FreelancerModStudio
             }
 
             return -1;
+        }
+
+        void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            IDocumentForm document = GetDocument();
+            if (document != null)
+            {
+                bool enabled = !string.IsNullOrEmpty(document.File);
+                mnuOpenContainingFolder.Enabled = enabled;
+                mnuCopyFullPath.Enabled = enabled;
+            }
         }
     }
 }

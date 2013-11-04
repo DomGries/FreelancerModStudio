@@ -32,12 +32,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTableEditor));
             this.objectListView1 = new BrightIdeasSoftware.FastObjectListView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuCut = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuPaste = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuAdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuDelete = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -76,6 +76,24 @@
             resources.ApplyResources(this.contextMenuStrip1, "contextMenuStrip1");
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
+            // mnuAdd
+            // 
+            this.mnuAdd.Image = global::FreelancerModStudio.Properties.Resources.Add;
+            this.mnuAdd.Name = "mnuAdd";
+            resources.ApplyResources(this.mnuAdd, "mnuAdd");
+            // 
+            // mnuDelete
+            // 
+            resources.ApplyResources(this.mnuDelete, "mnuDelete");
+            this.mnuDelete.Image = global::FreelancerModStudio.Properties.Resources.Delete;
+            this.mnuDelete.Name = "mnuDelete";
+            this.mnuDelete.Click += new System.EventHandler(this.mnuDelete_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
+            // 
             // mnuCut
             // 
             resources.ApplyResources(this.mnuCut, "mnuCut");
@@ -96,24 +114,6 @@
             this.mnuPaste.Image = global::FreelancerModStudio.Properties.Resources.Paste;
             this.mnuPaste.Name = "mnuPaste";
             this.mnuPaste.Click += new System.EventHandler(this.mnuPaste_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
-            // 
-            // mnuAdd
-            // 
-            this.mnuAdd.Image = global::FreelancerModStudio.Properties.Resources.Add;
-            this.mnuAdd.Name = "mnuAdd";
-            resources.ApplyResources(this.mnuAdd, "mnuAdd");
-            // 
-            // mnuDelete
-            // 
-            resources.ApplyResources(this.mnuDelete, "mnuDelete");
-            this.mnuDelete.Image = global::FreelancerModStudio.Properties.Resources.Delete;
-            this.mnuDelete.Name = "mnuDelete";
-            this.mnuDelete.Click += new System.EventHandler(this.mnuDelete_Click);
             // 
             // frmTableEditor
             // 

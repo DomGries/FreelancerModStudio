@@ -30,6 +30,7 @@ namespace FreelancerModStudio
         ToolStripDropDown MultipleAddDropDown();
 
         string GetTitle();
+        string File { get; }
         string DataPath { get; }
 
         void Save();

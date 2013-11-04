@@ -20,7 +20,7 @@ namespace FreelancerModStudio
     public partial class frmTableEditor : DockContent, IDocumentForm
     {
         public TableData Data;
-        public string File;
+        public string File { get; private set; }
         public string DataPath { get; private set; }
 
         readonly bool _isBINI;

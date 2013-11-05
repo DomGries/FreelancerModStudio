@@ -735,6 +735,24 @@ namespace FreelancerModStudio
                         break;
                 }
 
+                // set manipulation mode as it was reset if the editor was closed
+                if (mnuManipulationTranslate.Checked)
+                {
+                    _systemEditor.ManipulationMode = SystemPresenter.ManipulationMode.Translate;
+                }
+                else if (mnuManipulationRotate.Checked)
+                {
+                    _systemEditor.ManipulationMode = SystemPresenter.ManipulationMode.Rotate;
+                }
+                else if (mnuManipulationScale.Checked)
+                {
+                    _systemEditor.ManipulationMode = SystemPresenter.ManipulationMode.Scale;
+                }
+                else
+                {
+                    _systemEditor.ManipulationMode = SystemPresenter.ManipulationMode.None;
+                }
+
                 //select initially
                 List<TableBlock> blocks = tableEditor.GetSelectedBlocks();
                 if (blocks != null)

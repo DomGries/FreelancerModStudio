@@ -387,6 +387,21 @@ namespace FreelancerModStudio.SystemPresenter
                         return new Vector3D(tempScale1, tempScale2, tempScale1) * SIZE_FACTOR;
                     }
                     break;
+                case ContentType.ZoneRing:
+                    if (values.Length > 2)
+                    {
+                        double outerRadius = Parser.ParseDouble(values[0], 1);
+                        double innerRadius = Parser.ParseDouble(values[1], 1);
+                        double length = Parser.ParseDouble(values[2], 1);
+
+                        if (innerRadius > outerRadius)
+                        {
+                            return new Vector3D(innerRadius, length, innerRadius) * SIZE_FACTOR;
+                        }
+
+                        return new Vector3D(outerRadius, length, outerRadius) * SIZE_FACTOR;
+                    }
+                    break;
                 default:
                     if (values.Length > 2)
                     {

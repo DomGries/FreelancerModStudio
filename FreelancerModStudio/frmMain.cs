@@ -473,7 +473,7 @@ namespace FreelancerModStudio
             }
             catch
             {
-                if (MessageBox.Show(String.Format(Strings.FileErrorOpenRecent, file), Helper.Assembly.Name, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show(string.Format(Strings.FileErrorOpenRecent, file), Helper.Assembly.Name, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     RemoveFromRecentFiles(file);
                 }
@@ -500,7 +500,7 @@ namespace FreelancerModStudio
             }
             catch (Exception ex)
             {
-                Helper.Exceptions.Show(String.Format(Strings.FileErrorOpen, file), ex);
+                Helper.Exceptions.Show(string.Format(Strings.FileErrorOpen, file), ex);
             }
         }
 
@@ -556,7 +556,7 @@ namespace FreelancerModStudio
                 return false;
             }
 
-            DialogResult dialogResult = MessageBox.Show(String.Format(Strings.FileCloseSave, mod.Data.About.Name), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            DialogResult dialogResult = MessageBox.Show(string.Format(Strings.FileCloseSave, mod.Data.About.Name), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (dialogResult == DialogResult.Cancel)
             {
                 return true;
@@ -611,7 +611,7 @@ namespace FreelancerModStudio
             {
                 for (int index = 1;; ++index)
                 {
-                    string modName = String.Format(Strings.ModNewName, index);
+                    string modName = string.Format(Strings.ModNewName, index);
                     if (!Directory.Exists(Path.Combine(Helper.Settings.Data.Data.Forms.NewMod.ModSaveLocation, modName)))
                     {
                         frmNewMod.txtName.Text = modName;
@@ -621,7 +621,7 @@ namespace FreelancerModStudio
             }
             else
             {
-                frmNewMod.txtName.Text = String.Format(Strings.ModNewName, 1);
+                frmNewMod.txtName.Text = string.Format(Strings.ModNewName, 1);
             }
 
             //show window
@@ -893,7 +893,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, document.GetTitle()), ex);
+                    Helper.Exceptions.Show(string.Format(Strings.FileErrorSave, document.GetTitle()), ex);
                 }
             }
         }
@@ -909,7 +909,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(String.Format(Strings.FileErrorSave, document.GetTitle()), ex);
+                    Helper.Exceptions.Show(string.Format(Strings.FileErrorSave, document.GetTitle()), ex);
                 }
             }
         }
@@ -1186,8 +1186,8 @@ namespace FreelancerModStudio
             if (isVisible)
             {
                 string title = document.GetTitle();
-                mnuSave.Text = String.Format(Strings.FileEditorSave, title);
-                mnuSaveAs.Text = String.Format(Strings.FileEditorSaveAs, title);
+                mnuSave.Text = string.Format(Strings.FileEditorSave, title);
+                mnuSaveAs.Text = string.Format(Strings.FileEditorSaveAs, title);
             }
 
             mnuUndo.Enabled = isDocument && document.CanUndo();
@@ -1286,7 +1286,7 @@ namespace FreelancerModStudio
                 }
                 catch (Exception ex)
                 {
-                    Helper.Exceptions.Show(String.Format(Strings.FileErrorOpen, file), ex);
+                    Helper.Exceptions.Show(string.Format(Strings.FileErrorOpen, file), ex);
                 }
             }
         }

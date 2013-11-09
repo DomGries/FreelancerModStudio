@@ -75,33 +75,30 @@ namespace FreelancerModStudio.Data
                     Helper.String.StringBuilder.Length = 0;
                     foreach (EditorINIOption option in Block.Options)
                     {
-                        string append = null;
-                        if (option.Values.Count > 1)
-                        {
-                            append = option.Name + " = [" + option.Values.Count.ToString(CultureInfo.InvariantCulture) + "]";
-                        }
-                        else if (option.Values.Count == 1)
-                        {
-                            append = option.Name + " = " + option.Values[0];
-                        }
-
-                        if (append != null)
+                        if (option.Values.Count >= 1)
                         {
                             if (Helper.String.StringBuilder.Length > 0)
                             {
-                                Helper.String.StringBuilder.Append(Environment.NewLine + append);
+                                Helper.String.StringBuilder.Append(Environment.NewLine);
+                            }
+
+                            Helper.String.StringBuilder.Append(option.Name);
+
+                            if (option.Values.Count == 1)
+                            {
+                                Helper.String.StringBuilder.Append(" = ");
+                                Helper.String.StringBuilder.Append(option.Values[0]);
                             }
                             else
                             {
-                                Helper.String.StringBuilder.Append(append);
+                                Helper.String.StringBuilder.Append(" = [");
+                                Helper.String.StringBuilder.Append(option.Values.Count.ToString(CultureInfo.InvariantCulture));
+                                Helper.String.StringBuilder.Append("]");
                             }
                         }
                     }
 
-                    if (Helper.String.StringBuilder.Length > 0)
-                    {
-                        return Helper.String.StringBuilder.ToString();
-                    }
+                    return Helper.String.StringBuilder.ToString();
                 }
                 return null;
             }

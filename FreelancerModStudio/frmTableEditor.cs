@@ -502,7 +502,7 @@ namespace FreelancerModStudio
         {
             if (_undoManager.IsModified())
             {
-                DialogResult dialogResult = MessageBox.Show(String.Format(Strings.FileCloseSave, GetTitle()), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult dialogResult = MessageBox.Show(string.Format(Strings.FileCloseSave, GetTitle()), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Cancel)
                 {
                     return true;

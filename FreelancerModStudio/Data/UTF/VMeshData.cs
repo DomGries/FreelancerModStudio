@@ -83,7 +83,7 @@ namespace FreelancerModStudio.Data.UTF
                 case D3DFVF.XYZ | D3DFVF.NORMAL  | D3DFVF.DIFFUSE | D3DFVF.TEX2:
                     break;
                 default:
-                    throw new Exception(String.Format("FVF 0x{0:X} not supported.", FlexibleVertexFormat));
+                    throw new Exception(string.Format("FVF 0x{0:X} not supported.", FlexibleVertexFormat));
             }*/
 
             // read the mesh headers

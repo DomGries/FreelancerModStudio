@@ -57,7 +57,7 @@ namespace FreelancerModStudio.AutoUpdate
                     pgbDownload.Style = ProgressBarStyle.Marquee;
 
                     lblHeader.Text = Strings.UpdatesCheckingHeader;
-                    lblDescription.Text = String.Format(Strings.UpdatesCheckingDescription, Helper.Assembly.Name);
+                    lblDescription.Text = string.Format(Strings.UpdatesCheckingDescription, Helper.Assembly.Name);
 
                     btnAbort.Text = Strings.UpdatesAbortButton;
 
@@ -72,7 +72,7 @@ namespace FreelancerModStudio.AutoUpdate
                     btnAbort.Visible = true;
 
                     lblHeader.Text = Strings.UpdatesAviableHeader;
-                    lblDescription.Text = String.Format(Strings.UpdatesAviableDescription, Helper.Assembly.Name);
+                    lblDescription.Text = string.Format(Strings.UpdatesAviableDescription, Helper.Assembly.Name);
 
                     btnNext.Text = Strings.UpdatesDownloadButton;
                     btnAbort.Text = Strings.UpdatesAbortButton;
@@ -88,7 +88,7 @@ namespace FreelancerModStudio.AutoUpdate
                     btnAbort.Visible = true;
 
                     lblHeader.Text = Strings.UpdatesNotAviableHeader;
-                    lblDescription.Text = String.Format(Strings.UpdatesNotAviableDescription, Helper.Assembly.Name);
+                    lblDescription.Text = string.Format(Strings.UpdatesNotAviableDescription, Helper.Assembly.Name);
 
                     btnAbort.Text = Strings.UpdatesFinishButton;
 
@@ -105,7 +105,7 @@ namespace FreelancerModStudio.AutoUpdate
                     pgbDownload.Style = ProgressBarStyle.Blocks;
 
                     lblHeader.Text = Strings.UpdatesDownloadingHeader;
-                    lblDescription.Text = String.Format(Strings.UpdatesDownloadingDescription, Helper.Assembly.Name);
+                    lblDescription.Text = string.Format(Strings.UpdatesDownloadingDescription, Helper.Assembly.Name);
 
                     btnNext.Text = Strings.UpdatesHideButton;
                     btnAbort.Text = Strings.UpdatesAbortButton;
@@ -121,7 +121,7 @@ namespace FreelancerModStudio.AutoUpdate
                     btnAbort.Visible = true;
 
                     lblHeader.Text = Strings.UpdatesDownloadedHeader;
-                    lblDescription.Text = String.Format(Strings.UpdatesDownloadedDescription, Helper.Assembly.Name);
+                    lblDescription.Text = string.Format(Strings.UpdatesDownloadedDescription, Helper.Assembly.Name);
 
                     btnNext.Text = Strings.UpdatesInstallButton;
                     btnAbort.Text = Strings.UpdatesLaterButton;
@@ -141,9 +141,9 @@ namespace FreelancerModStudio.AutoUpdate
                     pgbDownload.Value = percent;
 
                     // 1MB = 1048576 (1024 * 1024) bytes
-                    lblDownloaded.Text = String.Format(Strings.UpdatesDownloadSpeed, ((double)bytes/1048576).ToString("N1"), ((double)bytesTotal/1048576).ToString("N1"));
+                    lblDownloaded.Text = string.Format(Strings.UpdatesDownloadSpeed, ((double)bytes/1048576).ToString("N1"), ((double)bytesTotal/1048576).ToString("N1"));
 
-                    Text = String.Format(Strings.UpdatesFormDownloadText, percent);
+                    Text = string.Format(Strings.UpdatesFormDownloadText, percent);
                 });
         }
 

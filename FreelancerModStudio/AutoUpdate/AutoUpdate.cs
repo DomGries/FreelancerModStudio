@@ -171,7 +171,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     if (!SilentCheck)
                     {
-                        Helper.Exceptions.Show(String.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error);
+                        Helper.Exceptions.Show(string.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error);
                     }
                 }
             }
@@ -208,7 +208,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     if (!SilentCheck)
                     {
-                        Helper.Exceptions.Show(String.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error);
+                        Helper.Exceptions.Show(string.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error);
                     }
                 }
             }

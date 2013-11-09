@@ -10,9 +10,9 @@ namespace FreelancerModStudio
         {
             InitializeComponent();
 
-            Text = String.Format(Strings.AboutText, Helper.Assembly.Name);
+            Text = string.Format(Strings.AboutText, Helper.Assembly.Name);
             lblProductName.Text = Helper.Assembly.Name;
-            lblVersion.Text = String.Format(Strings.AboutVersion, Helper.Assembly.Version);
+            lblVersion.Text = string.Format(Strings.AboutVersion, Helper.Assembly.Version);
             lblCopyright.Text = Helper.Assembly.Copyright;
             lblCompanyName.Text = Helper.Assembly.Company;
         }

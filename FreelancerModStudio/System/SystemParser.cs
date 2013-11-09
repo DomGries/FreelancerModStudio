@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Media.Media3D;
 using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.Data.INI;
 using FreelancerModStudio.SystemPresenter.Content;
 
 namespace FreelancerModStudio.SystemPresenter

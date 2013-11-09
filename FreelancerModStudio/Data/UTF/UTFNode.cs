@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FreelancerModStudio.Data.IO
+namespace FreelancerModStudio.Data.UTF
 {
     public class UTFNode
     {

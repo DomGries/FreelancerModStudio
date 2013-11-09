@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.Data.INI;
 using FreelancerModStudio.Properties;
 using FreelancerModStudio.SystemPresenter.Content;
 

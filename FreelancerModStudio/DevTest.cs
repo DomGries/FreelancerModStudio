@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FreelancerModStudio.Data;
+using FreelancerModStudio.Data.INI;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.SystemPresenter;
 
@@ -1519,7 +1520,7 @@ namespace FreelancerModStudio
 
         static void ResaveFile(string sourceFile, string targetFile)
         {
-            int templateIndex = FileManager.GetTemplateIndex(sourceFile);
+            int templateIndex = Helper.Template.Data.GetIndex(sourceFile);
             if (templateIndex == -1)
             {
                 return;

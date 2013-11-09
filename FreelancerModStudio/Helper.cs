@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using FreelancerModStudio.AutoUpdate;
@@ -166,6 +167,22 @@ namespace FreelancerModStudio
                 //    get { return data.Data.CostumTypes; }
                 //    set { data.Data.CostumTypes = value; }
                 //}
+
+                public static int GetIndex(string file)
+                {
+                    for (int i = 0; i < Files.Count; ++i)
+                    {
+                        foreach (string path in Files[i].Paths)
+                        {
+                            string pattern = ".*" + path.Replace("\\", "\\\\").Replace("*", "[^\\\\]*");
+                            if (Regex.Match(file, pattern, RegexOptions.IgnoreCase).Success)
+                            {
+                                return i;
+                            }
+                        }
+                    }
+                    return -1;
+                }
 
                 public static string GetDataPath(string filePath, int fileTemplate)
                 {

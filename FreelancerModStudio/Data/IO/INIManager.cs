@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using FreelancerModStudio.Data.INI;
 
 namespace FreelancerModStudio.Data.IO
 {
@@ -169,51 +170,5 @@ namespace FreelancerModStudio.Data.IO
                 }
             }
         }
-    }
-
-    public class INIBlock
-    {
-        public string Name { get; set; }
-        public INIOptions Options { get; set; }
-    }
-
-    public class INIOptions : Dictionary<string, List<INIOption>>
-    {
-        public INIOptions()
-            : base(StringComparer.OrdinalIgnoreCase)
-        {
-        }
-
-        public new void Add(string key, List<INIOption> values)
-        {
-            if (ContainsKey(key))
-            {
-                //add value to existing option
-                foreach (INIOption option in values)
-                {
-                    this[key].Add(option);
-                }
-            }
-            else
-            {
-                //add new option
-                base.Add(key, values);
-            }
-        }
-
-        public void Add(string key, INIOption value)
-        {
-            Add(key, new List<INIOption>
-                {
-                    value
-                });
-        }
-    }
-
-    public class INIOption
-    {
-        public string Value;
-        public string Parent; //used to save nested options in correct order
-        public int Index; //used to load nested options in correct order
     }
 }

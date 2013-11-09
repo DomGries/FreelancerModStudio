@@ -84,6 +84,7 @@
     <Compile Include="AutoUpdate\StatusType.cs" />
     <Compile Include="AutoUpdate\UpdateInformation.cs" />
     <Compile Include="AutoUpdate\UpdateInformationParser.cs" />
+    <Compile Include="Data\ChangedType.cs" />
     <Compile Include="Data\Clipboard.cs" />
     <Compile Include="Clone.cs" />
     <Compile Include="ContentInterface.cs" />
@@ -97,7 +98,16 @@
     <Compile Include="Data\ArchetypeManager.cs" />
     <Compile Include="Data\ByteLen.cs" />
     <Compile Include="Data\CrcTool.cs" />
-    <Compile Include="Data\IO\UTFNode.cs" />
+    <Compile Include="Data\INI\INIOption.cs" />
+    <Compile Include="Data\INI\INIBlock.cs" />
+    <Compile Include="Data\INI\INIOptions.cs" />
+    <Compile Include="Data\INI\EditorINIBlock.cs" />
+    <Compile Include="Data\INI\EditorINIEntry.cs" />
+    <Compile Include="Data\INI\EditorINIOption.cs" />
+    <Compile Include="Data\INI\EditorINIData.cs" />
+    <Compile Include="Data\IO\FileEncoding.cs" />
+    <Compile Include="Data\ITableRow.cs" />
+    <Compile Include="Data\UTF\UTFNode.cs" />
     <Compile Include="Data\Parser.cs" />
     <Compile Include="Data\Table.cs" />
     <Compile Include="Data\TableBlock.cs" />

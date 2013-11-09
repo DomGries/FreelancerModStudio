@@ -7,7 +7,7 @@ using System.Drawing.Design;
 using System.Globalization;
 using System.Text;
 using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.Data.INI;
 
 namespace FreelancerModStudio.Controls
 {

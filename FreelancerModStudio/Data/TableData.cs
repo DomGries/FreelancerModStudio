@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using FreelancerModStudio.Data.IO;
+using FreelancerModStudio.Data.INI;
 
 namespace FreelancerModStudio.Data
 {

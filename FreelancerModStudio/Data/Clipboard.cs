@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace FreelancerModStudio
+namespace FreelancerModStudio.Data
 {
     public static class Clipboard
     {

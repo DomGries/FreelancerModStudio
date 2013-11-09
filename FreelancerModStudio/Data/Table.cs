@@ -4,13 +4,8 @@ using System.Collections.Generic;
 
 namespace FreelancerModStudio.Data
 {
-    public interface ITableRow<T>
-    {
-        T Id { get; }
-    }
-
     [Serializable]
-    public class Table<TKey, TValue> : IEnumerable<TValue>
+    public class Table<TKey, TValue> : IEnumerable<TValue> where TValue : class
     {
         readonly SortedList<TKey, TValue> _dictionary;
 

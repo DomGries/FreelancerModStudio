@@ -9,11 +9,13 @@ using System.Windows.Forms;
 using BrightIdeasSoftware;
 using FreelancerModStudio.Controls;
 using FreelancerModStudio.Data;
+using FreelancerModStudio.Data.INI;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.Properties;
 using FreelancerModStudio.SystemPresenter;
 using FreelancerModStudio.SystemPresenter.Content;
 using WeifenLuo.WinFormsUI.Docking;
+using Clipboard = FreelancerModStudio.Data.Clipboard;
 
 namespace FreelancerModStudio
 {

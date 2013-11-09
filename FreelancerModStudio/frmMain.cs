@@ -486,7 +486,7 @@ namespace FreelancerModStudio
             int documentIndex = FileOpened(file);
             if (documentIndex == -1)
             {
-                templateIndex = FileManager.GetTemplateIndex(file);
+                templateIndex = Helper.Template.Data.GetIndex(file);
                 if (templateIndex == -1)
                 {
                     //let the user choose the ini file type

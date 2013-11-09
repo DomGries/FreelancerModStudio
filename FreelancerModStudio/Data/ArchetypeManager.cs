@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using FreelancerModStudio.Data.INI;
 using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.SystemPresenter;
 

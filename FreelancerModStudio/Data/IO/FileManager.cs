@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
+using FreelancerModStudio.Data.INI;
 
 namespace FreelancerModStudio.Data.IO
 {
@@ -220,24 +220,6 @@ namespace FreelancerModStudio.Data.IO
 
         public void Write(EditorINIData data)
         {
-            //sort blocks first
-            //for (int i = 0; i < Helper.Template.Data.Files[data.TemplateIndex].Blocks.Count; ++i)
-            //{
-            //    Template.Block templateBlock = Helper.Template.Data.Files[data.TemplateIndex].Blocks.Values[i];
-
-            //    for (int j = i; j < data.Blocks.Count; ++j)
-            //    {
-            //        if (data.Blocks[j].Name.Equals(templateBlock.Name, StringComparison.OrdinalIgnoreCase))
-            //        {
-            //            //swap blocks
-            //            EditorINIBlock temporaryBlock = data.Blocks[i];
-            //            data.Blocks[i] = data.Blocks[j];
-            //            data.Blocks[j] = temporaryBlock;
-            //            break;
-            //        }
-            //    }
-            //}
-
             //save data
             List<INIBlock> newData = new List<INIBlock>();
             foreach (EditorINIBlock block in data.Blocks)
@@ -307,22 +289,6 @@ namespace FreelancerModStudio.Data.IO
                 };
             iniManager.Write(newData);
             //}
-        }
-
-        public static int GetTemplateIndex(string file)
-        {
-            for (int i = 0; i < Helper.Template.Data.Files.Count; ++i)
-            {
-                foreach (string path in Helper.Template.Data.Files[i].Paths)
-                {
-                    string pattern = ".*" + path.Replace("\\", "\\\\").Replace("*", "[^\\\\]*");
-                    if (Regex.Match(file, pattern, RegexOptions.IgnoreCase).Success)
-                    {
-                        return i;
-                    }
-                }
-            }
-            return -1;
         }
 
         /*object ConvertToTemplate(Template.OptionType type, string value)
@@ -425,79 +391,4 @@ namespace FreelancerModStudio.Data.IO
         Point,
         RGB
     }*/
-
-    public enum FileEncoding
-    {
-        Automatic,
-        BINI,
-        INI
-    }
-
-    [Serializable]
-    public class EditorINIData
-    {
-        public List<EditorINIBlock> Blocks = new List<EditorINIBlock>();
-        public int TemplateIndex;
-
-        public EditorINIData(int templateIndex)
-        {
-            TemplateIndex = templateIndex;
-        }
-    }
-
-    [Serializable]
-    public class EditorINIBlock
-    {
-        public string Name;
-        public List<EditorINIOption> Options = new List<EditorINIOption>();
-        public int TemplateIndex;
-        public int MainOptionIndex = -1;
-
-        public EditorINIBlock(string name, int templateIndex)
-        {
-            Name = name;
-            TemplateIndex = templateIndex;
-        }
-    }
-
-    [Serializable]
-    public class EditorINIOption
-    {
-        public string Name;
-        public int TemplateIndex = -1;
-
-        public string ChildName;
-        public int ChildTemplateIndex = -1;
-
-        public List<EditorINIEntry> Values = new List<EditorINIEntry>();
-
-        public EditorINIOption(string name, int templateIndex)
-        {
-            Name = name;
-            TemplateIndex = templateIndex;
-        }
-    }
-
-    [Serializable]
-    public class EditorINIEntry
-    {
-        public object Value;
-        public List<object> SubOptions;
-
-        public EditorINIEntry(object value)
-        {
-            Value = value;
-        }
-
-        public EditorINIEntry(object value, List<object> subOptions)
-        {
-            Value = value;
-            SubOptions = subOptions;
-        }
-
-        public override string ToString()
-        {
-            return Value.ToString();
-        }
-    }
 }

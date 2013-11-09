@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using FreelancerModStudio.Data.INI;
 
 namespace FreelancerModStudio.Data.IO
 {
@@ -74,18 +75,23 @@ namespace FreelancerModStudio.Data.IO
                             int valueType = reader.ReadByte();
 
                             string entryValue;
-                            if (valueType == 1)
+                            switch (valueType)
                             {
-                                entryValue = reader.ReadInt32().ToString("D", CultureInfo.InvariantCulture);
-                            }
-                            else if (valueType == 2)
-                            {
-                                entryValue = reader.ReadSingle().ToString("0.000000", CultureInfo.InvariantCulture);
-                            }
-                            else // string
-                            {
-                                int valueNameOffset = reader.ReadInt32();
-                                entryValue = stringBlock.Substring(valueNameOffset, stringBlock.IndexOf('\0', valueNameOffset) - valueNameOffset);
+                                case 1:
+                                    // read int
+                                    entryValue = reader.ReadInt32().ToString("D", CultureInfo.InvariantCulture);
+                                    break;
+                                case 2:
+                                    // read float
+                                    entryValue = reader.ReadSingle().ToString("0.000000", CultureInfo.InvariantCulture);
+                                    break;
+                                default:
+                                    {
+                                        // read string
+                                        int valueNameOffset = reader.ReadInt32();
+                                        entryValue = stringBlock.Substring(valueNameOffset, stringBlock.IndexOf('\0', valueNameOffset) - valueNameOffset);
+                                    }
+                                    break;
                             }
                             options.Add(entryValue);
                         }

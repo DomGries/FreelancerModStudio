@@ -94,15 +94,6 @@
     <Compile Include="Visual3Ds\Meshes\SphereMesh.cs" />
     <Compile Include="Visual3Ds\Meshes\SurfaceMesh.cs" />
     <Compile Include="Visual3Ds\Meshes\TorusMesh.cs" />
-    <Compile Include="Visual3Ds\Paths\BezierSegment3D.cs" />
-    <Compile Include="Visual3Ds\Paths\LineSegment3D.cs" />
-    <Compile Include="Visual3Ds\Paths\PathFigure3D.cs" />
-    <Compile Include="Visual3Ds\Paths\PathFigure3DCollection.cs" />
-    <Compile Include="Visual3Ds\Paths\PathGeometry3D.cs" />
-    <Compile Include="Visual3Ds\Paths\PathSegment3D.cs" />
-    <Compile Include="Visual3Ds\Paths\PathSegment3DCollection.cs" />
-    <Compile Include="Visual3Ds\Paths\PolyBezierSegment3D.cs" />
-    <Compile Include="Visual3Ds\Paths\PolyLineSegment3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\BoundingBoxWireFrameVisual3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\FixedLineVisual3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\LineVisual3D.cs" />

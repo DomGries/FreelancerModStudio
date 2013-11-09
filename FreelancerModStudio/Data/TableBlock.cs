@@ -86,8 +86,12 @@ namespace FreelancerModStudio.Data
 
                             if (option.Values.Count == 1)
                             {
-                                Helper.String.StringBuilder.Append(" = ");
-                                Helper.String.StringBuilder.Append(option.Values[0]);
+                                string value = option.Values[0].ToString();
+                                if (value != "=")
+                                {
+                                    Helper.String.StringBuilder.Append(" = ");
+                                    Helper.String.StringBuilder.Append(value);
+                                }
                             }
                             else
                             {

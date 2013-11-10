@@ -4,5 +4,6 @@ namespace FreelancerModStudio.Data.INI
     {
         public string Name { get; set; }
         public INIOptions Options { get; set; }
+        public string Comments { get; set; }
     }
 }

@@ -8,9 +8,12 @@ namespace FreelancerModStudio.Data.IO
     public class FileManager
     {
         public string File { get; set; }
+
         public bool IsBINI { get; set; }
+
         public bool WriteSpaces { get; set; }
         public bool WriteEmptyLine { get; set; }
+        public bool ReadWriteComments { get; set; }
 
         public FileManager(string file, bool isBINI)
         {
@@ -83,7 +86,10 @@ namespace FreelancerModStudio.Data.IO
                 //get template block based on ini block name
                 if (templateFile.Blocks.TryGetValue(iniBlock.Name, out templateBlock, out templateBlockIndex))
                 {
-                    EditorINIBlock editorBlock = new EditorINIBlock(templateBlock.Name, templateBlockIndex);
+                    EditorINIBlock editorBlock = new EditorINIBlock(templateBlock.Name, templateBlockIndex)
+                        {
+                            Comments = iniBlock.Comments
+                        };
 
                     //loop each template option
                     for (int j = 0; j < templateBlock.Options.Count; ++j)
@@ -214,7 +220,10 @@ namespace FreelancerModStudio.Data.IO
         List<INIBlock> ReadINI()
         {
             IsBINI = false;
-            INIManager iniManager = new INIManager(File);
+            INIManager iniManager = new INIManager(File)
+                {
+                    ReadWriteComments = ReadWriteComments,
+                };
             return iniManager.Read();
         }
 
@@ -270,7 +279,8 @@ namespace FreelancerModStudio.Data.IO
                 newData.Add(new INIBlock
                     {
                         Name = block.Name,
-                        Options = newBlock
+                        Options = newBlock,
+                        Comments = block.Comments,
                     });
             }
 
@@ -285,7 +295,8 @@ namespace FreelancerModStudio.Data.IO
             INIManager iniManager = new INIManager(File)
                 {
                     WriteEmptyLine = WriteEmptyLine,
-                    WriteSpaces = WriteSpaces
+                    WriteSpaces = WriteSpaces,
+                    ReadWriteComments = ReadWriteComments,
                 };
             iniManager.Write(newData);
             //}

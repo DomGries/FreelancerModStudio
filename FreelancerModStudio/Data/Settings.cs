@@ -87,6 +87,10 @@ namespace FreelancerModStudio.Data
             [DisplayName("Empty line between sections")]
             public bool FormattingEmptyLine { get; set; }
 
+            [Category("INI Formatting")]
+            [DisplayName("Comments")]
+            public bool FormattingComments { get; set; }
+
             [Browsable(false)]
             public string EditorModifiedAddedColorXML
             {
@@ -156,6 +160,7 @@ namespace FreelancerModStudio.Data
 
                 FormattingSpaces = true;
                 FormattingEmptyLine = true;
+                FormattingComments = true;
 
                 AutoUpdate = new AutoUpdate();
             }

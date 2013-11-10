@@ -38,6 +38,9 @@ namespace FreelancerModStudio.Controls
             {
                 List.Add(new PropertyOption(option.Values, templateBlock.Options[option.TemplateIndex], option.ChildTemplateIndex != -1));
             }
+
+            // show comments
+            List.Add(new PropertyOption("comments", block.Comments));
         }
     }
 
@@ -55,6 +58,18 @@ namespace FreelancerModStudio.Controls
 
         [Browsable(false)]
         public Attribute[] Attributes;
+
+        public PropertyOption(string name, string value)
+        {
+            // comments
+            Name = name;
+            Value = value ?? string.Empty;
+
+            Attributes = new Attribute[]
+                {
+                    new EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor))
+                };
+        }
 
         public PropertyOption(List<EditorINIEntry> options, Template.Option templateOption, bool children)
         {

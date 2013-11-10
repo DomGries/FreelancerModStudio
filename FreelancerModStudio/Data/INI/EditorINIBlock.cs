@@ -10,6 +10,7 @@ namespace FreelancerModStudio.Data.INI
         public List<EditorINIOption> Options = new List<EditorINIOption>();
         public int TemplateIndex;
         public int MainOptionIndex = -1;
+        public string Comments;
 
         public EditorINIBlock(string name, int templateIndex)
         {

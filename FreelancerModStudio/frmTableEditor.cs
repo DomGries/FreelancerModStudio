@@ -89,7 +89,10 @@ namespace FreelancerModStudio
 
             if (file != null)
             {
-                FileManager fileManager = new FileManager(file);
+                FileManager fileManager = new FileManager(file)
+                    {
+                        ReadWriteComments = true, // always read comments
+                    };
                 EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, templateIndex);
 
                 Data = new TableData(iniContent);
@@ -441,7 +444,8 @@ namespace FreelancerModStudio
             FileManager fileManager = new FileManager(file, _isBINI)
                 {
                     WriteSpaces = Helper.Settings.Data.Data.General.FormattingSpaces,
-                    WriteEmptyLine = Helper.Settings.Data.Data.General.FormattingEmptyLine
+                    WriteEmptyLine = Helper.Settings.Data.Data.General.FormattingEmptyLine,
+                    ReadWriteComments = Helper.Settings.Data.Data.General.FormattingComments,
                 };
             fileManager.Write(Data.GetEditorData());
 
@@ -581,12 +585,12 @@ namespace FreelancerModStudio
             return blocks;
         }
 
-        public void ChangeBlocks(PropertyBlock[] blocks)
+        public void ChangeBlocks(PropertyBlock[] propertyBlocks)
         {
             List<TableBlock> newBlocks = new List<TableBlock>();
             List<TableBlock> oldBlocks = new List<TableBlock>();
 
-            for (int i = 0; i < blocks.Length; ++i)
+            for (int i = 0; i < propertyBlocks.Length; ++i)
             {
                 TableBlock oldBlock = (TableBlock)objectListView1.SelectedObjects[i];
                 TableBlock newBlock = ObjectClone.Clone(oldBlock);
@@ -594,16 +598,24 @@ namespace FreelancerModStudio
                 oldBlocks.Add(oldBlock);
                 newBlocks.Add(newBlock);
 
-                for (int j = 0; j < blocks[i].Count; ++j)
+                PropertyBlock propertyBlock = propertyBlocks[i];
+
+                // set comments (last property option)
+                string comments = (string)propertyBlock[propertyBlock.Count - 1].Value;
+                newBlock.Block.Comments = comments;
+
+                // set options
+                for (int j = 0; j < propertyBlock.Count - 1; ++j)
                 {
                     List<EditorINIEntry> options = newBlock.Block.Options[j].Values;
 
-                    if (blocks[i][j].Value is PropertySubOptions)
+                    PropertySubOptions propertyOptions = propertyBlock[j].Value as PropertySubOptions;
+                    if (propertyOptions != null)
                     {
                         options.Clear();
 
                         //loop all sub values in the sub value collection
-                        foreach (PropertyOption value in (PropertySubOptions)blocks[i][j].Value)
+                        foreach (PropertyOption value in propertyOptions)
                         {
                             string text = ((string)value.Value).Trim();
                             if (text.Length != 0)
@@ -628,7 +640,7 @@ namespace FreelancerModStudio
                     }
                     else
                     {
-                        string text = ((string)blocks[i][j].Value).Trim();
+                        string text = ((string)propertyBlock[j].Value).Trim();
                         if (text.Length != 0)
                         {
                             if (options.Count > 0)

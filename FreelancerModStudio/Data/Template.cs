@@ -98,8 +98,8 @@ namespace FreelancerModStudio.Data
             [XmlAttribute("category")]
             public string Category;
 
-            [XmlAttribute("comment")]
-            public string Comment;
+            [XmlAttribute("description")]
+            public string Description;
 
             [XmlText]
             public string Name;
@@ -115,7 +115,7 @@ namespace FreelancerModStudio.Data
             [XmlAttribute("id")]
             public string ID;
 
-            public List<Comment> Comments;
+            public List<Description> Comments;
 
             public List<Category> Categories;
         }
@@ -129,7 +129,7 @@ namespace FreelancerModStudio.Data
             public string Value;
         }
 
-        public class Comment
+        public class Description
         {
             [XmlAttribute("file")]
             public string File;

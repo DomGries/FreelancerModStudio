@@ -54,7 +54,7 @@ namespace FreelancerModStudio.Controls
         public string Category;
 
         [Browsable(false)]
-        public string Comment;
+        public string Description;
 
         [Browsable(false)]
         public Attribute[] Attributes;
@@ -76,7 +76,7 @@ namespace FreelancerModStudio.Controls
             Name = templateOption.Name;
 
             Category = templateOption.Category;
-            Comment = templateOption.Comment;
+            Description = templateOption.Description;
 
             if (templateOption.Multiple)
             {
@@ -275,7 +275,7 @@ namespace FreelancerModStudio.Controls
         {
             get
             {
-                return PropertyOption.Comment;
+                return PropertyOption.Description;
             }
         }
 

@@ -684,23 +684,36 @@ namespace HelixEngine
             }
         }
 
-        void Fly(double delta)
+        void Fly(double deltaTime)
         {
-            Vector3D direction = Camera.LookDirection;
-            direction.Normalize();
+            // calculate offset delta
+            flyIncrement += deltaTime;
+            double offsetDelta = flyIncrement;
+
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+            {
+                offsetDelta *= 5;
+            }
+
+            // calculate directions
+            Vector3D forward = Camera.LookDirection;
+            forward.Normalize();
+
             Vector3D up = Camera.UpDirection;
             up.Normalize();
-            Vector3D right = Vector3D.CrossProduct(direction, up);
 
+            Vector3D right = Vector3D.CrossProduct(forward, up);
+
+            // calculate normalized offset
             Vector3D offset = new Vector3D();
 
             if ((flyMode & CameraFlyMode.Forward) != CameraFlyMode.None)
             {
-                offset += direction;
+                offset += forward;
             }
             if ((flyMode & CameraFlyMode.Backward) != CameraFlyMode.None)
             {
-                offset -= direction;
+                offset -= forward;
             }
 
             if ((flyMode & CameraFlyMode.Left) != CameraFlyMode.None)
@@ -721,17 +734,18 @@ namespace HelixEngine
                 offset -= up;
             }
 
-            Camera.Position += offset * delta;
+            // offset camera
+            Camera.Position += offset * offsetDelta;
         }
 
         void OnCompositionTargetRendering(object sender, EventArgs e)
         {
-            var ticks = ((RenderingEventArgs)e).RenderingTime.Ticks;
-            double time = 100e-9 * (ticks - this.lastTick);
+            long ticks = ((RenderingEventArgs)e).RenderingTime.Ticks;
+            double deltaTime = 100e-9 * (ticks - this.lastTick);
 
             if (this.lastTick != 0)
             {
-                this.OnTimeStep(time);
+                this.OnTimeStep(deltaTime);
             }
 
             this.lastTick = ticks;
@@ -740,13 +754,12 @@ namespace HelixEngine
         /// <summary>
         /// The on time step.
         /// </summary>
-        /// <param name="time">
-        /// The time.
+        /// <param name="deltaTime">
+        /// The delta time.
         /// </param>
-        private void OnTimeStep(double time)
+        private void OnTimeStep(double deltaTime)
         {
-            flyIncrement += time;
-            Fly(flyIncrement);
+            Fly(deltaTime);
         }
     }
 }

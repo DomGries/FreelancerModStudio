@@ -498,53 +498,36 @@ namespace FreelancerModStudio.SystemPresenter
                 return;
             }
 
-            bool isAlt = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
-            bool isShift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-            bool isCtrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-            bool isModifier = isAlt || isShift || isCtrl;
+            if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && !isKeyUp)
+            {
+                return;
+            }
 
             // catch key short-cuts on the viewport(though arrow keys still do not work due to docking panel)
             switch (e.Key)
             {
                 case Key.W:
-                    if (isKeyUp || !isModifier)
-                    {
-                        Walk(CameraFlyMode.Forward, isKeyUp);
-                    }
+                    Walk(CameraFlyMode.Forward, isKeyUp);
                     break;
                 case Key.A:
-                    if (isKeyUp || !isModifier)
-                    {
-                        Walk(CameraFlyMode.Left, isKeyUp);
-                    }
+                    Walk(CameraFlyMode.Left, isKeyUp);
                     break;
                 case Key.S:
-                    if (isKeyUp || !isModifier)
-                    {
-                        Walk(CameraFlyMode.Backward, isKeyUp);
-                    }
+                    Walk(CameraFlyMode.Backward, isKeyUp);
                     break;
                 case Key.D:
-                    if (isKeyUp || !isModifier)
-                    {
-                        Walk(CameraFlyMode.Right, isKeyUp);
-                    }
+                    Walk(CameraFlyMode.Right, isKeyUp);
                     break;
                 case Key.Space:
-                    if (isKeyUp || !isModifier)
-                    {
-                        Walk(CameraFlyMode.Up, isKeyUp);
-                    }
+                    Walk(CameraFlyMode.Up, isKeyUp);
                     break;
                 case Key.E:
-                    if (isKeyUp || !isModifier)
-                    {
-                        Walk(CameraFlyMode.Down, isKeyUp);
-                    }
+                    Walk(CameraFlyMode.Down, isKeyUp);
                     break;
                 case Key.F:
-                    if (!isKeyUp && !isAlt && !isCtrl)
+                    if (!isKeyUp)
                     {
+                        bool isShift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
                         if (isShift)
                         {
                             LookAtSelected();
@@ -556,7 +539,7 @@ namespace FreelancerModStudio.SystemPresenter
                     }
                     break;
                 case Key.T:
-                    if (!isKeyUp && !isModifier)
+                    if (!isKeyUp)
                     {
                         TrackSelected();
                     }
@@ -594,7 +577,7 @@ namespace FreelancerModStudio.SystemPresenter
             Viewport.Focus();
 
             bool isDoubleClick = e.ClickCount > 1;
-            
+
             bool isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
             bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
             bool isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);

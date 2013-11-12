@@ -498,7 +498,11 @@ namespace FreelancerModStudio.SystemPresenter
                 return;
             }
 
-            if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && !isKeyUp)
+            if ((Keyboard.IsKeyDown(Key.LeftCtrl) ||
+                 Keyboard.IsKeyDown(Key.RightCtrl) ||
+                 Keyboard.IsKeyDown(Key.LeftAlt) ||
+                 Keyboard.IsKeyDown(Key.RightAlt))
+                && !isKeyUp)
             {
                 return;
             }
@@ -507,27 +511,29 @@ namespace FreelancerModStudio.SystemPresenter
             switch (e.Key)
             {
                 case Key.W:
-                    Walk(CameraFlyMode.Forward, isKeyUp);
+                    Fly(CameraFlyMode.Forward, isKeyUp);
                     break;
                 case Key.A:
-                    Walk(CameraFlyMode.Left, isKeyUp);
+                    Fly(CameraFlyMode.Left, isKeyUp);
                     break;
                 case Key.S:
-                    Walk(CameraFlyMode.Backward, isKeyUp);
+                    Fly(CameraFlyMode.Backward, isKeyUp);
                     break;
                 case Key.D:
-                    Walk(CameraFlyMode.Right, isKeyUp);
+                    Fly(CameraFlyMode.Right, isKeyUp);
                     break;
                 case Key.Space:
-                    Walk(CameraFlyMode.Up, isKeyUp);
+                    Fly(CameraFlyMode.Up, isKeyUp);
                     break;
                 case Key.E:
-                    Walk(CameraFlyMode.Down, isKeyUp);
+                    Fly(CameraFlyMode.Down, isKeyUp);
                     break;
                 case Key.F:
                     if (!isKeyUp)
                     {
-                        bool isShift = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+                        bool isShift = Keyboard.IsKeyDown(Key.LeftShift) ||
+                            Keyboard.IsKeyDown(Key.RightShift);
+
                         if (isShift)
                         {
                             LookAtSelected();
@@ -547,7 +553,7 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void Walk(CameraFlyMode mode, bool stop)
+        void Fly(CameraFlyMode mode, bool stop)
         {
             if (stop)
             {

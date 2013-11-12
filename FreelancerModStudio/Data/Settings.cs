@@ -11,6 +11,8 @@ namespace FreelancerModStudio.Data
 {
     public class Settings
     {
+        const int CURRENT_VERSION = 1;
+
         public SettingsData Data = new SettingsData();
 
         public void Load(Stream stream)
@@ -43,6 +45,9 @@ namespace FreelancerModStudio.Data
         [DisplayName("General")]
         public class General
         {
+            [Browsable(false)]
+            public int Version { get; set; }
+
             [Category("General")]
             [DisplayName("Display recent files")]
             public ushort RecentFilesCount { get; set; }
@@ -147,6 +152,7 @@ namespace FreelancerModStudio.Data
 
             public General()
             {
+                // set default values
                 RecentFilesCount = 4;
                 Language = LanguageType.English;
 
@@ -162,7 +168,28 @@ namespace FreelancerModStudio.Data
                 FormattingEmptyLine = true;
                 FormattingComments = true;
 
-                AutoUpdate = new AutoUpdate();
+                AutoUpdate = new AutoUpdate
+                    {
+                        Enabled = true,
+                        Proxy = new Proxy(),
+                    };
+                SetDefaultAutoUpdate();
+            }
+
+            public void CheckVersion()
+            {
+                if (Version < CURRENT_VERSION)
+                {
+                    SetDefaultAutoUpdate();
+                    Version = CURRENT_VERSION;
+                }
+            }
+
+            void SetDefaultAutoUpdate()
+            {
+                AutoUpdate.CheckInterval = 28;
+                AutoUpdate.SilentDownload = false;
+                AutoUpdate.UpdateFile = @"http://freelancermodstudio.googlecode.com/svn/trunk/updates.txt";
             }
         }
 
@@ -187,15 +214,6 @@ namespace FreelancerModStudio.Data
 
             public Update Update = new Update();
             public Proxy Proxy { get; set; }
-
-            public AutoUpdate()
-            {
-                Enabled = true;
-                CheckInterval = 28;
-                SilentDownload = false;
-                UpdateFile = @"http://freelancermodstudio.googlecode.com/files/updates.txt";
-                Proxy = new Proxy();
-            }
         }
 
         public class Update
@@ -219,11 +237,6 @@ namespace FreelancerModStudio.Data
             public string UserName { get; set; }
 
             public string Password { get; set; }
-
-            public Proxy()
-            {
-                Enabled = false;
-            }
         }
 
         public class Forms

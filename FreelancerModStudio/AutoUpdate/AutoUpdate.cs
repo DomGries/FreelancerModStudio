@@ -127,14 +127,8 @@ namespace FreelancerModStudio.AutoUpdate
                 SetPage(Status);
             }
 
-            string destFileName = Path.GetFileName(_updateInfo.FileUri.AbsolutePath);
-            if (destFileName == null)
-            {
-                destFileName = "Update.exe";
-            }
-
-            string destPath = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.UpdateDownloadPath);
-            string destFile = Path.Combine(destPath, destFileName);
+            string destPath = GetUpdateDirectory();
+            string destFile = Path.Combine(destPath, GetUpdateFileName());
 
             //create update directory if not existing
             if (!Directory.Exists(destPath))
@@ -194,7 +188,7 @@ namespace FreelancerModStudio.AutoUpdate
                     //download update completed
                     Status = StatusType.DownloadFinished;
 
-                    Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName = Path.GetFileName(_updateInfo.FileUri.AbsolutePath);
+                    Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName = GetUpdateFileName();
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = false;
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Downloaded = true;
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.SilentInstall = _updateInfo.Silent;
@@ -252,6 +246,16 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
+        string GetUpdateFileName()
+        {
+            return Path.GetFileName(_updateInfo.FileUri.AbsolutePath) ?? "Update.exe";
+        }
+
+        static string GetUpdateDirectory()
+        {
+            return Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.UpdateDownloadPath);
+        }
+
         public void SetProxy(string proxy)
         {
             _webClient.Proxy = string.IsNullOrEmpty(proxy) ? null : new WebProxy(proxy);
@@ -274,7 +278,7 @@ namespace FreelancerModStudio.AutoUpdate
                 return false;
             }
 
-            string file = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Path.Combine(Resources.UpdateDownloadPath, Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName));
+            string file = Path.Combine(GetUpdateDirectory(), Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName);
 
             //start file (setup) and exit app
             if (File.Exists(file))
@@ -310,24 +314,18 @@ namespace FreelancerModStudio.AutoUpdate
 
         public static void RemoveUpdate()
         {
-            if (Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName == null)
-            {
-                return;
-            }
-
-            string file = Path.Combine(Application.StartupPath, Path.Combine(Resources.UpdateDownloadPath, Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName));
-
             //don't throw an exception if update file or the directory can't be removed
             try
             {
-                if (File.Exists(file))
+                string directory = GetUpdateDirectory();
+                if (directory != null && Directory.Exists(directory))
                 {
-                    File.Delete(file);
-                }
+                    string file = Path.Combine(directory, Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName);
+                    if (File.Exists(file))
+                    {
+                        File.Delete(file);
+                    }
 
-                string directory = Path.GetDirectoryName(file);
-                if (directory != null)
-                {
                     Directory.Delete(directory);
                 }
             }

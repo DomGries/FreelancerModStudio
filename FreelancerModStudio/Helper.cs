@@ -290,6 +290,8 @@ namespace FreelancerModStudio
                         Exceptions.Show(string.Format(Strings.SettingsLoadException, Resources.SettingsPath), ex);
                     }
                 }
+
+                Data.Data.General.CheckVersion();
             }
 
             public static string ShortLanguage

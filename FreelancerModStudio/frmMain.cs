@@ -40,6 +40,16 @@ namespace FreelancerModStudio
 
         void frmMain_Load(object sender, EventArgs e)
         {
+            //open files
+            string[] arguments = Environment.GetCommandLineArgs();
+            for (int i = 1; i < arguments.Length; ++i)
+            {
+                if (File.Exists(arguments[i]))
+                {
+                    OpenFile(arguments[i]);
+                }
+            }
+
             //load layout
             bool layoutLoaded = false;
             string layoutFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.LayoutPath);
@@ -60,16 +70,6 @@ namespace FreelancerModStudio
             {
                 //this.solutionExplorerForm.Show(dockPanel1);
                 _propertiesForm.Show(dockPanel1);
-            }
-
-            //open files
-            string[] arguments = Environment.GetCommandLineArgs();
-            for (int i = 1; i < arguments.Length; ++i)
-            {
-                if (File.Exists(arguments[i]))
-                {
-                    OpenFile(arguments[i]);
-                }
             }
 
             SettingsChanged();
@@ -103,6 +103,13 @@ namespace FreelancerModStudio
             //    return solutionExplorerForm;
             else if (persistString == typeof(frmSystemEditor).ToString())
             {
+                // do not open system editor if not a single document could be loaded
+                // usually we handle this over active document changed events, but this will not be fired if no document was loaded
+                if (MdiChildren.Length == 0)
+                {
+                    return null;
+                }
+
                 return _systemEditor;
             }
             else

@@ -1099,13 +1099,13 @@ namespace FreelancerModStudio.SystemPresenter
                     return 1;
                 case ContentType.ZonePath:
                 case ContentType.ZonePathTrade:
+                case ContentType.ZoneRing: // move back to 3 axis if we support ring mesh
                 case ContentType.System:
                     return 2;
                 case ContentType.ZoneEllipsoid:
                 case ContentType.ZoneEllipsoidExclusion:
                 case ContentType.ZoneCylinder:
                 case ContentType.ZoneCylinderExclusion:
-                case ContentType.ZoneRing:
                 case ContentType.ZoneBox:
                 case ContentType.ZoneBoxExclusion:
                 case ContentType.ZonePathTradeLane:

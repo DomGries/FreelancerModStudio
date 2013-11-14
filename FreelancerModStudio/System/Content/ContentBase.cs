@@ -45,7 +45,7 @@ namespace FreelancerModStudio.SystemPresenter.Content
             return matrix;
         }
 
-        Matrix3D GetMatrix()
+        protected virtual Matrix3D GetMatrix()
         {
             Matrix3D matrix = new Matrix3D();
 

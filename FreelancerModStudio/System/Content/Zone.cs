@@ -57,5 +57,34 @@ namespace FreelancerModStudio.SystemPresenter.Content
         {
             return true;
         }
+
+        protected override Matrix3D GetMatrix()
+        {
+            // special scale for zone rings
+            if (Block.ObjectType == ContentType.ZoneRing)
+            {
+                Vector3D newScale = Scale;
+
+                // use bigger radius of either outer radius (X) or inner radius (Z) of ring
+                if (newScale.X > newScale.Z)
+                {
+                    newScale.Z = newScale.X;
+                }
+                else
+                {
+                    newScale.X = newScale.Z;
+                }
+
+                Matrix3D matrix = new Matrix3D();
+
+                matrix.Scale(newScale);
+                matrix *= RotationMatrix(Rotation);
+                matrix.Translate(Position);
+
+                return matrix;
+            }
+
+            return base.GetMatrix();
+        }
     }
 }

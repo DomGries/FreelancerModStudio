@@ -232,7 +232,7 @@ namespace FreelancerModStudio.SystemPresenter
             block.ObjectType = ContentType.None;
         }
 
-        public static bool SetBlock(ContentBase content, TableBlock block)
+        static bool SetBlock(ContentBase content, TableBlock block, bool animate)
         {
             // update the model if the object type or the archetype was changed
             bool modelChanged =
@@ -243,14 +243,17 @@ namespace FreelancerModStudio.SystemPresenter
             // set reference to block (this one is different than the one passed in the argument because a new copy was create in the undomanager)
             content.Block = block;
 
+            // update transform after block was set
+            content.UpdateTransform(animate);
+
             return modelChanged;
         }
 
         public static bool SetModelPreviewValues(ContentBase content, TableBlock block)
         {
             content.Scale = new Vector3D(MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE);
-            content.UpdateTransform(false);
-            return SetBlock(content, block);
+
+            return SetBlock(content, block, false);
         }
 
         public static bool SetValues(ContentBase content, TableBlock block, bool animate)
@@ -329,8 +332,7 @@ namespace FreelancerModStudio.SystemPresenter
                     break;
             }
 
-            content.UpdateTransform(animate);
-            return SetBlock(content, block);
+            return SetBlock(content, block, animate);
         }
 
         public static Vector3D ParseVector(string vector)
@@ -385,21 +387,6 @@ namespace FreelancerModStudio.SystemPresenter
                         double tempScale1 = Parser.ParseDouble(values[0], 1);
                         double tempScale2 = Parser.ParseDouble(values[1], 1);
                         return new Vector3D(tempScale1, tempScale2, tempScale1) * SIZE_FACTOR;
-                    }
-                    break;
-                case ContentType.ZoneRing:
-                    if (values.Length > 2)
-                    {
-                        double outerRadius = Parser.ParseDouble(values[0], 1);
-                        double innerRadius = Parser.ParseDouble(values[1], 1);
-                        double length = Parser.ParseDouble(values[2], 1);
-
-                        if (innerRadius > outerRadius)
-                        {
-                            return new Vector3D(innerRadius, length, innerRadius) * SIZE_FACTOR;
-                        }
-
-                        return new Vector3D(outerRadius, length, outerRadius) * SIZE_FACTOR;
                     }
                     break;
                 default:

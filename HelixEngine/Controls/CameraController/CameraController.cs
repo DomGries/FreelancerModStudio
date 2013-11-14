@@ -741,7 +741,7 @@ namespace HelixEngine
             long ticks = ((RenderingEventArgs)e).RenderingTime.Ticks;
             double deltaTime = 100e-9 * (ticks - this.lastTick);
 
-            if (this.lastTick != 0)
+            if (this.lastTick != 0 && deltaTime != 0)
             {
                 this.OnTimeStep(deltaTime);
             }

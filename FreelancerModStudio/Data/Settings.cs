@@ -12,6 +12,8 @@ namespace FreelancerModStudio.Data
     public class Settings
     {
         const int CURRENT_VERSION = 1;
+        //const string FREELANCER_REGISTRY_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Freelancer\\1.0";
+        //const string FREELANCER_REGISTRY_VALUE = "AppPath";
 
         public SettingsData Data = new SettingsData();
 
@@ -55,6 +57,10 @@ namespace FreelancerModStudio.Data
             [Category("General")]
             [DisplayName("Language")]
             public LanguageType Language { get; set; }
+
+            [Category("General")]
+            [DisplayName("Default Freelancer DATA folder")]
+            public string DefaultDataDirectory { get; set; }
 
             [Category("Properties")]
             [DisplayName("Sort type")]
@@ -181,6 +187,8 @@ namespace FreelancerModStudio.Data
                 if (Version < CURRENT_VERSION)
                 {
                     SetDefaultAutoUpdate();
+                    //DefaultDataDirectory = Registry.GetValue(FREELANCER_REGISTRY_KEY, FREELANCER_REGISTRY_VALUE, null) as string;
+
                     Version = CURRENT_VERSION;
                 }
             }

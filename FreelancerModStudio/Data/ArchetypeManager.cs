@@ -37,7 +37,11 @@ namespace FreelancerModStudio.Data
 
         public static string GetRelativeArchetype(string file, int fileTemplate)
         {
-            string dataPath = Helper.Template.Data.GetDataPath(file, fileTemplate);
+            return GetRelativeArchetype(Helper.Template.Data.GetDataPath(file, fileTemplate));
+        }
+
+        public static string GetRelativeArchetype(string dataPath)
+        {
             if (dataPath != null)
             {
                 string archetypePath = Path.Combine(dataPath, Path.Combine("Solar", "SolarArch.ini"));

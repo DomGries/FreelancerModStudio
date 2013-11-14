@@ -8,7 +8,6 @@ using System.IO;
 using System.Windows.Forms;
 using FreelancerModStudio.Controls;
 using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.IO;
 using FreelancerModStudio.Properties;
 using WeifenLuo.WinFormsUI.Docking;
 

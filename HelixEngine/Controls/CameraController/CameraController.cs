@@ -247,11 +247,6 @@ namespace HelixEngine
             if (Viewport == null)
                 throw new NullReferenceException("Viewport");
 
-            if (_flyDirection != CameraDirection.None)
-            {
-                return;
-            }
-
             if (e.ClickCount > 1)
             {
                 return;
@@ -653,11 +648,6 @@ namespace HelixEngine
 
         public void StartFly(CameraDirection direction)
         {
-            if (isZooming || isPanning || isRotating || isAltRotating)
-            {
-                return;
-            }
-
             CameraDirection oldDirection = _flyDirection;
 
             _flyDirection |= direction;
@@ -686,17 +676,20 @@ namespace HelixEngine
 
         void Fly(double deltaTime)
         {
-            // calculate offset delta
-            flyIncrement += deltaTime;
-            double offsetDelta = flyIncrement;
+            const double speedFactor = 40;
+            const double shiftSpeedFactor = 5;
+
+            // calculate offset independent of time
+            flyIncrement += speedFactor * deltaTime;
+            double offset = flyIncrement * deltaTime;
 
             if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
             {
-                offsetDelta *= 5;
+                offset *= shiftSpeedFactor;
             }
 
             // offset camera
-            Camera.Position += GetDirection(_flyDirection) * offsetDelta;
+            Camera.Position += GetDirection(_flyDirection) * offset;
         }
 
         public Vector3D GetDirection(CameraDirection direction)

@@ -291,7 +291,9 @@ namespace FreelancerModStudio
                     }
                 }
 
+                // check for valid data
                 Data.Data.General.CheckVersion();
+                Data.Data.General.CheckValidData();
             }
 
             public static string ShortLanguage

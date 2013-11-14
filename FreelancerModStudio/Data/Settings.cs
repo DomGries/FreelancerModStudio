@@ -193,6 +193,17 @@ namespace FreelancerModStudio.Data
                 }
             }
 
+            public void CheckValidData()
+            {
+                if (DefaultDataDirectory != null)
+                {
+                    if (!Directory.Exists(DefaultDataDirectory))
+                    {
+                        DefaultDataDirectory = null;
+                    }
+                }
+            }
+
             void SetDefaultAutoUpdate()
             {
                 AutoUpdate.CheckInterval = 28;

@@ -773,6 +773,9 @@ namespace FreelancerModStudio
             frmOptions optionsForm = new frmOptions();
             optionsForm.ShowDialog();
 
+            // check for valid data
+            Helper.Settings.Data.Data.General.CheckValidData();
+
             SettingsChanged();
         }
 

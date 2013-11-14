@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.Imaging;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ViewCubeVisual3D.cs" company="Helix 3D Toolkit">
+//   http://helixtoolkit.codeplex.com, license: MIT
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace HelixEngine
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Media.Media3D;
+
     /// <summary>
     /// A visual element that shows a view cube.
     /// </summary>
@@ -115,7 +118,7 @@ namespace HelixEngine
         /// Identifies the <see cref="Viewport"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ViewportProperty = DependencyProperty.Register(
-            "Viewport", typeof(Viewport3D), typeof(ViewCubeVisual3D), new PropertyMetadata(null, ViewportChanged));
+            "Viewport", typeof(Viewport3D), typeof(ViewCubeVisual3D), new PropertyMetadata(null));
 
         /// <summary>
         /// The normal vectors.
@@ -136,9 +139,9 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the back text.
+        ///   Gets or sets the back brush.
         /// </summary>
-        /// <value>The back text.</value>
+        /// <value>The back brush.</value>
         public Brush BackBrush
         {
             get
@@ -151,7 +154,6 @@ namespace HelixEngine
                 this.SetValue(BackBrushProperty, value);
             }
         }
-
 
         /// <summary>
         ///   Gets or sets the back text.
@@ -171,9 +173,9 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the bottom text.
+        ///   Gets or sets the bottom brush.
         /// </summary>
-        /// <value>The bottom text.</value>
+        /// <value>The bottom brush.</value>
         public Brush BottomBrush
         {
             get
@@ -186,7 +188,6 @@ namespace HelixEngine
                 this.SetValue(BottomBrushProperty, value);
             }
         }
-
 
         /// <summary>
         ///   Gets or sets the bottom text.
@@ -223,9 +224,9 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the front text.
+        ///   Gets or sets the front brush.
         /// </summary>
-        /// <value>The front text.</value>
+        /// <value>The front brush.</value>
         public Brush FrontBrush
         {
             get
@@ -238,7 +239,6 @@ namespace HelixEngine
                 this.SetValue(FrontBrushProperty, value);
             }
         }
-
 
         /// <summary>
         ///   Gets or sets the front text.
@@ -258,9 +258,9 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the left text.
+        ///   Gets or sets the left brush.
         /// </summary>
-        /// <value>The left text.</value>
+        /// <value>The left brush.</value>
         public Brush LeftBrush
         {
             get
@@ -309,9 +309,9 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the right text.
+        ///   Gets or sets the right brush.
         /// </summary>
-        /// <value>The right text.</value>
+        /// <value>The right brush.</value>
         public Brush RightBrush
         {
             get
@@ -360,9 +360,9 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the top text.
+        ///   Gets or sets the top brush.
         /// </summary>
-        /// <value>The top text.</value>
+        /// <value>The top brush.</value>
         public Brush TopBrush
         {
             get
@@ -394,7 +394,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the viewport.
+        ///   Gets or sets the viewport that is being controlled by the view cube.
         /// </summary>
         /// <value>The viewport.</value>
         public Viewport3D Viewport
@@ -411,24 +411,10 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// The viewport changed.
+        /// The VisualModel property changed.
         /// </summary>
         /// <param name="d">
-        /// The d.
-        /// </param>
-        /// <param name="e">
-        /// The event arguments.
-        /// </param>
-        private static void ViewportChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((ViewCubeVisual3D)d).OnViewportChanged();
-        }
-
-        /// <summary>
-        /// The visual model changed.
-        /// </summary>
-        /// <param name="d">
-        /// The d.
+        /// The sender.
         /// </param>
         /// <param name="e">
         /// The event arguments.
@@ -439,16 +425,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// The on viewport changed.
-        /// </summary>
-        private void OnViewportChanged()
-        {
-            // if (Camera == null && Viewport != null)
-            // Camera = Viewport.Camera as PerspectiveCamera;
-        }
-
-        /// <summary>
-        /// The update visuals.
+        /// Updates the visuals.
         /// </summary>
         private void UpdateVisuals()
         {
@@ -464,7 +441,7 @@ namespace HelixEngine
             var topColor = TopBrush;
             var bottomColor = BottomBrush;
 
-            if (up.Z != 1)
+            if (up.Z < 1)
             {
                 right = new Vector3D(0, 0, 1);
 
@@ -476,16 +453,16 @@ namespace HelixEngine
 
             var front = Vector3D.CrossProduct(right, up);
 
-            this.AddFace(front, up, frontColor, this.FrontText);
-            this.AddFace(-front, up, backColor, this.BackText);
-            this.AddFace(right, up, rightColor, this.RightText);
-            this.AddFace(-right, up, leftColor, this.LeftText);
-            this.AddFace(up, right, topColor, this.TopText);
-            this.AddFace(-up, -right, bottomColor, this.BottomText);
+            this.AddCubeFace(front, up, frontColor, this.FrontText);
+            this.AddCubeFace(-front, up, backColor, this.BackText);
+            this.AddCubeFace(right, up, rightColor, this.RightText);
+            this.AddCubeFace(-right, up, leftColor, this.LeftText);
+            this.AddCubeFace(up, right, topColor, this.TopText);
+            this.AddCubeFace(-up, -right, bottomColor, this.BottomText);
 
             var circle = new PieSliceVisual3D();
             circle.BeginEdit();
-            circle.Center = (this.ModelUpDirection * (-this.Size * 0.5)).ToPoint3D();
+            circle.Center = (this.ModelUpDirection * (-this.Size / 2)).ToPoint3D();
             circle.Normal = this.ModelUpDirection;
             circle.UpVector = this.ModelUpDirection.Equals(new Vector3D(0, 0, 1))
                                   ? new Vector3D(0, 1, 0)
@@ -499,38 +476,40 @@ namespace HelixEngine
             this.Children.Add(circle);
         }
 
-
         /// <summary>
-        /// Adds a face.
+        /// Adds a cube face.
         /// </summary>
         /// <param name="normal">
         /// The normal.
         /// </param>
         /// <param name="up">
-        /// The up.
+        /// The up vector.
         /// </param>
         /// <param name="b">
-        /// The b.
+        /// The brush.
         /// </param>
         /// <param name="text">
         /// The text.
         /// </param>
-        private void AddFace(Vector3D normal, Vector3D up, Brush b, string text)
+        private void AddCubeFace(Vector3D normal, Vector3D up, Brush b, string text)
         {
-            var grid = new Grid { Width = 20, Height = 20, Background = b };
-            grid.Children.Add(
-                new TextBlock
-                    {
-                        Text = text,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        FontSize = 15,
-                        Foreground = Brushes.White
-                    });
-            grid.Arrange(new Rect(new Point(0, 0), new Size(20, 20)));
+            const int faceWidth = 20;
+            const int faceHeight = 20;
 
-            var bmp = new RenderTargetBitmap((int)grid.Width, (int)grid.Height, 96, 96, PixelFormats.Default);
-            bmp.Render(grid);
+            var face = new TextBlock
+                {
+                    Width = faceWidth,
+                    Height = faceHeight,
+                    Text = text,
+                    TextAlignment = TextAlignment.Center,
+                    FontSize = 15,
+                    Foreground = Brushes.White,
+                    Background = b,
+                };
+            face.Arrange(new Rect(new Point(0, 0), new Size(faceWidth, faceHeight)));
+
+            var bmp = new RenderTargetBitmap(faceWidth, faceHeight, 96, 96, PixelFormats.Default);
+            bmp.Render(face);
 
             var material = MaterialHelper.CreateMaterial(new ImageBrush(bmp));
 
@@ -538,8 +517,7 @@ namespace HelixEngine
 
             var builder = new MeshBuilder(false, true);
             builder.AddCubeFace(this.Center, normal, up, a, a, a);
-            var geometry = builder.ToMesh(false);
-            geometry.Freeze();
+            var geometry = builder.ToMesh(true);
 
             var model = new GeometryModel3D { Geometry = geometry, Material = material };
             var element = new ModelUIElement3D { Model = model };
@@ -552,7 +530,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Called when mouse left button is clicked on a face.
+        /// Handles left clicks on the view cube.
         /// </summary>
         /// <param name="sender">
         /// The sender.
@@ -565,33 +543,33 @@ namespace HelixEngine
             var faceNormal = this.faceNormals[sender];
             var faceUp = this.faceUpVectors[sender];
 
-            var camera = this.Viewport.Camera as PerspectiveCamera;
-            if (camera == null)
-            {
-                return;
-            }
+            var lookDirection = -faceNormal;
+            var upDirection = faceUp;
+            lookDirection.Normalize();
+            upDirection.Normalize();
 
-            var target = camera.Position + camera.LookDirection;
-            double dist = camera.LookDirection.Length;
-
-            var lookdir = -faceNormal;
-            lookdir.Normalize();
-            lookdir = lookdir * dist;
-            var updir = faceUp;
-
+            // Double-click reverses the look direction
             if (e.ClickCount == 2)
             {
-                lookdir *= -1;
-                if (updir != this.ModelUpDirection)
+                lookDirection *= -1;
+                if (upDirection != this.ModelUpDirection)
                 {
-                    updir *= -1;
+                    upDirection *= -1;
                 }
             }
 
-            var pos = target - lookdir;
-            updir.Normalize();
-
-            CameraHelper.AnimateTo(camera, pos, lookdir, updir, 500);
+            if (this.Viewport != null)
+            {
+                var camera = this.Viewport.Camera as PerspectiveCamera;
+                if (camera != null)
+                {
+                    var target = camera.Position + camera.LookDirection;
+                    double distance = camera.LookDirection.Length;
+                    lookDirection *= distance;
+                    var newPosition = target - lookDirection;
+                    CameraHelper.AnimateTo(camera, newPosition, lookDirection, upDirection, 500);
+                }
+            }
 
             e.Handled = true;
         }

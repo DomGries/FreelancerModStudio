@@ -1,17 +1,28 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media.Media3D;
-using System.Windows.Media;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MeshBuilder.cs" company="Helix 3D Toolkit">
+//   http://helixtoolkit.codeplex.com, license: MIT
+// </copyright>
+// <summary>
+//   Builds MeshGeometry3D objects.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace HelixEngine
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading;
+    using System.Windows;
+    using System.Windows.Media;
+    using System.Windows.Media.Media3D;
+
     /// <summary>
     /// Builds MeshGeometry3D objects.
     /// </summary>
     /// <remarks>
-    /// Performance tips for MeshGeometry3D (http://msdn.microsoft.com/en-us/library/bb613553.aspx)
+    /// Performance tips for MeshGeometry3D (See <a href="http://msdn.microsoft.com/en-us/library/bb613553.aspx">MSDN</a>)
     ///   <para>
     /// High impact:
     ///     Mesh animation—changing the individual vertices of a mesh on a per-frame basis—is not always efficient in 
@@ -29,7 +40,7 @@ namespace HelixEngine
     /// <para>
     /// Low impact:
     ///     To minimize the construction time of large collections in Windows Presentation Foundation (WPF), 
-    ///     such as a MeshGeometry3D’s Positions, Normals, TextureCoordinates, and TriangleIndices, pre-size 
+    /// such as a MeshGeometry3D’s Positions, Normal vectors, TextureCoordinates, and TriangleIndices, pre-size
     ///     the collections before value population. If possible, pass the collections’ constructors prepopulated 
     ///     data structures such as arrays or Lists.
     ///   </para>
@@ -37,7 +48,28 @@ namespace HelixEngine
     public class MeshBuilder
     {
         /// <summary>
-        ///   The normals.
+        /// 'All curves should have the same number of points' exception message.
+        /// </summary>
+        private const string AllCurvesShouldHaveTheSameNumberOfPoints =
+            "All curves should have the same number of points";
+
+        /// <summary>
+        /// 'Wrong number of normal vectors' exception message.
+        /// </summary>
+        private const string WrongNumberOfNormals = "Wrong number of normal vectors.";
+
+        /// <summary>
+        /// 'Wrong number of texture coordinates' exception message.
+        /// </summary>
+        private const string WrongNumberOfTextureCoordinates = "Wrong number of texture coordinates.";
+
+        /// <summary>
+        ///   The circle cache.
+        /// </summary>
+        private static readonly Dictionary<int, IList<Point>> CircleCache = new Dictionary<int, IList<Point>>();
+
+        /// <summary>
+        /// The normal vectors.
         /// </summary>
         internal Vector3DCollection normals;
 
@@ -57,27 +89,6 @@ namespace HelixEngine
         internal Int32Collection triangleIndices;
 
         /// <summary>
-        /// 'All curves should have the same number of points' exception message.
-        /// </summary>
-        private const string AllCurvesShouldHaveTheSameNumberOfPoints =
-            "All curves should have the same number of points";
-
-        /// <summary>
-        /// 'Wrong number of normals' exception message.
-        /// </summary>
-        private const string WrongNumberOfNormals = "Wrong number of normals.";
-
-        /// <summary>
-        /// 'Wrong number of texture coordinates' exception message.
-        /// </summary>
-        private const string WrongNumberOfTextureCoordinates = "Wrong number of texture coordinates.";
-
-        /// <summary>
-        ///   The circle cache.
-        /// </summary>
-        private static readonly Dictionary<int, IList<Point>> CircleCache = new Dictionary<int, IList<Point>>();
-
-        /// <summary>
         ///   Initializes a new instance of the <see cref = "MeshBuilder" /> class.
         /// </summary>
         /// <remarks>
@@ -92,7 +103,7 @@ namespace HelixEngine
         /// Initializes a new instance of the <see cref="MeshBuilder"/> class.
         /// </summary>
         /// <param name="generateNormals">
-        /// Generate normals.
+        /// Generate normal vectors.
         /// </param>
         /// <param name="generateTextureCoordinates">
         /// Generate texture coordinates.
@@ -149,10 +160,10 @@ namespace HelixEngine
         /// The end point.
         /// </param>
         /// <param name="diameter">
-        /// The diameters of the tube.
+        /// The diameter of the arrow cylinder.
         /// </param>
         /// <param name="headLength">
-        /// Length of the head (in diameters units).
+        /// Length of the head (relative to diameter).
         /// </param>
         /// <param name="thetaDiv">
         /// The number of divisions around the arrow.
@@ -167,8 +178,8 @@ namespace HelixEngine
                 {
                     new Point(0, 0),
                     new Point(0, r),
-                    new Point(length - diameter * headLength, r),
-                    new Point(length - diameter * headLength, r * 2),
+                    new Point(length - (diameter * headLength), r),
+                    new Point(length - (diameter * headLength), r * 2),
                     new Point(length, 0)
                 };
 
@@ -182,13 +193,13 @@ namespace HelixEngine
         /// The center of the cube.
         /// </param>
         /// <param name="normal">
-        /// The normal.
+        /// The normal vector for the face.
         /// </param>
         /// <param name="up">
         /// The up vector for the face.
         /// </param>
         /// <param name="dist">
-        /// The dist from the center of the cube to the face.
+        /// The distance from the center of the cube to the face.
         /// </param>
         /// <param name="width">
         /// The width of the face.
@@ -237,31 +248,34 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Add the extruded geometry of the specified curve and direction.
+        /// Adds an extruded surface of the specified curve.
         /// </summary>
         /// <param name="points">
-        /// The points.
+        /// The 2D points describing the curve to extrude.
         /// </param>
-        /// <param name="xdirection">
-        /// The x axis direction.
+        /// <param name="xaxis">
+        /// The x-axis.
         /// </param>
         /// <param name="p0">
-        /// The p0.
+        /// The start origin of the extruded surface.
         /// </param>
         /// <param name="p1">
-        /// The p1.
+        /// The end origin of the extruded surface.
         /// </param>
-        public void AddExtrudedGeometry(IList<Point> points, Vector3D xdirection, Point3D p0, Point3D p1)
+        /// <remarks>
+        /// The y-axis is determined by the cross product between the specified x-axis and the p1-p0 vector.
+        /// </remarks>
+        public void AddExtrudedGeometry(IList<Point> points, Vector3D xaxis, Point3D p0, Point3D p1)
         {
-            var ydirection = Vector3D.CrossProduct(xdirection, p1 - p0);
+            var ydirection = Vector3D.CrossProduct(xaxis, p1 - p0);
             ydirection.Normalize();
-            xdirection.Normalize();
+            xaxis.Normalize();
 
             int index0 = this.positions.Count;
             int np = 2 * points.Count;
             foreach (var p in points)
             {
-                var v = xdirection * p.X + ydirection * p.Y;
+                var v = (xaxis * p.X) + (ydirection * p.Y);
                 this.positions.Add(p0 + v);
                 this.positions.Add(p1 + v);
                 v.Normalize();
@@ -279,7 +293,7 @@ namespace HelixEngine
 
                 int i1 = index0 + 1;
                 int i2 = (index0 + 2) % np;
-                int i3 = (index0 + 2) % np + 1;
+                int i3 = ((index0 + 2) % np) + 1;
 
                 this.triangleIndices.Add(i1);
                 this.triangleIndices.Add(i2);
@@ -292,7 +306,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Adds the lofted geometry.
+        /// Adds a lofted surface.
         /// </summary>
         /// <param name="positionsList">
         /// List of lofting sections.
@@ -303,12 +317,14 @@ namespace HelixEngine
         /// <param name="textureCoordinateList">
         /// The texture coordinate list.
         /// </param>
+        /// <remarks>
+        /// See http://en.wikipedia.org/wiki/Loft_(3D).
+        /// </remarks>
         public void AddLoftedGeometry(
             IList<IList<Point3D>> positionsList,
             IList<IList<Vector3D>> normalList,
             IList<IList<Point>> textureCoordinateList)
         {
-            //// http://en.wikipedia.org/wiki/Loft_(3D)
             int index0 = this.positions.Count;
             int n = -1;
             for (int i = 0; i < positionsList.Count; i++)
@@ -357,7 +373,7 @@ namespace HelixEngine
             {
                 for (int j = 0; j + 1 < n; j++)
                 {
-                    int i0 = index0 + i * n + j;
+                    int i0 = index0 + (i * n) + j;
                     int i1 = i0 + n;
                     int i2 = i1 + 1;
                     int i3 = i0 + 1;
@@ -373,7 +389,89 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Add a surface of revolution.
+        /// Adds a (possibly hollow) pipe.
+        /// </summary>
+        /// <param name="point1">
+        /// The start point.
+        /// </param>
+        /// <param name="point2">
+        /// The end point.
+        /// </param>
+        /// <param name="innerDiameter">
+        /// The inner diameter.
+        /// </param>
+        /// <param name="diameter">
+        /// The outer diameter.
+        /// </param>
+        /// <param name="thetaDiv">
+        /// The number of divisions around the pipe.
+        /// </param>
+        public void AddPipe(Point3D point1, Point3D point2, double innerDiameter, double diameter, int thetaDiv)
+        {
+            var dir = point2 - point1;
+
+            double height = dir.Length;
+            dir.Normalize();
+
+            var pc = new PointCollection
+                {
+                    new Point(0, innerDiameter / 2),
+                    new Point(0, diameter / 2),
+                    new Point(height, diameter / 2),
+                    new Point(height, innerDiameter / 2)
+                };
+
+            if (innerDiameter > 0)
+            {
+                // Add the inner surface
+                pc.Add(new Point(0, innerDiameter / 2));
+            }
+
+            this.AddRevolvedGeometry(pc, point1, dir, thetaDiv);
+        }
+
+        /// <summary>
+        /// Adds a pyramid.
+        /// </summary>
+        /// <param name="center">
+        /// The center.
+        /// </param>
+        /// <param name="sideLength">
+        /// Length of the sides of the pyramid.
+        /// </param>
+        /// <param name="height">
+        /// The height of the pyramid.
+        /// </param>
+        /// <remarks>
+        /// See http://en.wikipedia.org/wiki/Pyramid_(geometry).
+        /// </remarks>
+        public void AddPyramid(Point3D center, Vector3D normal, Vector3D up, double sideLength, double height)
+        {
+            var right = Vector3D.CrossProduct(normal, up);
+            var n = normal * sideLength / 2;
+            up *= height / 2;
+            right *= sideLength / 2;
+
+            var p1 = center - n - up - right;
+            var p2 = center - n - up + right;
+            var p3 = center + n - up + right;
+            var p4 = center + n - up - right;
+            var p5 = center + up;
+
+            this.AddTriangle(p1, p2, p5);
+            this.AddTriangle(p2, p3, p5);
+            this.AddTriangle(p3, p4, p5);
+            this.AddTriangle(p4, p1, p5);
+        }
+
+        public void AddOctahedron(Point3D center, Vector3D normal, Vector3D up, double sideLength, double height)
+        {
+            AddPyramid(center + up / 4, normal, up, sideLength, height / 2);
+            AddPyramid(center - up / 4, -normal, -up, sideLength, height / 2);
+        }
+
+        /// <summary>
+        /// Adds a surface of revolution.
         /// </summary>
         /// <param name="points">
         /// The points (x coordinates are radius, y coordinates are distance from the origin along the axis of revolution)
@@ -387,9 +485,11 @@ namespace HelixEngine
         /// <param name="thetaDiv">
         /// The number of divisions around the mesh.
         /// </param>
+        /// <remarks>
+        /// See http://en.wikipedia.org/wiki/Surface_of_revolution.
+        /// </remarks>
         public void AddRevolvedGeometry(IList<Point> points, Point3D origin, Vector3D direction, int thetaDiv)
         {
-            ////   http://en.wikipedia.org/wiki/Surface_of_revolution
             direction.Normalize();
 
             // Find two unit vectors orthogonal to the specified direction
@@ -409,22 +509,22 @@ namespace HelixEngine
 
             for (int i = 0; i < thetaDiv; i++)
             {
-                Vector3D w = v * circle[i].X + u * circle[i].Y;
+                var w = (v * circle[i].X) + (u * circle[i].Y);
 
                 for (int j = 0; j + 1 < n; j++)
                 {
                     // Add segment
-                    var q1 = origin + direction * points[j].X + w * points[j].Y;
-                    var q2 = origin + direction * points[j + 1].X + w * points[j + 1].Y;
+                    var q1 = origin + (direction * points[j].X) + (w * points[j].Y);
+                    var q2 = origin + (direction * points[j + 1].X) + (w * points[j + 1].Y);
 
-                    // todo:should not add segment if q1==q2 (corner point)
+                    // TODO: should not add segment if q1==q2 (corner point)
                     // const double eps = 1e-6;
                     // if (Point3D.Subtract(q1, q2).LengthSquared < eps)
                     // continue;
                     double tx = points[j + 1].X - points[j].X;
                     double ty = points[j + 1].Y - points[j].Y;
 
-                    var normal = -direction * ty + w * tx;
+                    var normal = (-direction * ty) + (w * tx);
                     normal.Normalize();
 
                     this.positions.Add(q1);
@@ -442,9 +542,9 @@ namespace HelixEngine
                         this.textureCoordinates.Add(new Point((double)i / (thetaDiv - 1), (double)(j + 1) / (n - 1)));
                     }
 
-                    int i0 = index0 + i * rowNodes + j * 2;
+                    int i0 = index0 + (i * rowNodes) + (j * 2);
                     int i1 = i0 + 1;
-                    int i2 = index0 + ((i + 1) * rowNodes + j * 2) % totalNodes;
+                    int i2 = index0 + ((((i + 1) * rowNodes) + (j * 2)) % totalNodes);
                     int i3 = i2 + 1;
 
                     this.triangleIndices.Add(i1);
@@ -459,13 +559,13 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Add a sphere.
+        /// Adds a sphere.
         /// </summary>
         /// <param name="center">
-        /// The center.
+        /// The center of the sphere.
         /// </param>
         /// <param name="radius">
-        /// The radius.
+        /// The radius of the sphere.
         /// </param>
         /// <param name="thetaDiv">
         /// The number of divisions around the sphere.
@@ -474,6 +574,32 @@ namespace HelixEngine
         /// The number of divisions from top to bottom of the sphere.
         /// </param>
         public void AddSphere(Point3D center, double radius, int thetaDiv, int phiDiv)
+        {
+            this.AddEllipsoid(center, radius, radius, radius, thetaDiv, phiDiv);
+        }
+
+        /// <summary>
+        /// Adds an ellipsoid.
+        /// </summary>
+        /// <param name="center">
+        /// The center of the ellipsoid.
+        /// </param>
+        /// <param name="radiusx">
+        /// The x radius of the ellipsoid.
+        /// </param>
+        /// <param name="radiusy">
+        /// The y radius of the ellipsoid.
+        /// </param>
+        /// <param name="radiusz">
+        /// The z radius of the ellipsoid.
+        /// </param>
+        /// <param name="thetaDiv">
+        /// The number of divisions around the ellipsoid.
+        /// </param>
+        /// <param name="phiDiv">
+        /// The number of divisions from top to bottom of the ellipsoid.
+        /// </param>
+        public void AddEllipsoid(Point3D center, double radiusx, double radiusy, double radiusz, int thetaDiv, int phiDiv)
         {
             int index0 = this.positions.Count;
             double dt = 2 * Math.PI / thetaDiv;
@@ -494,7 +620,7 @@ namespace HelixEngine
                     double y = Math.Sin(theta) * Math.Sin(phi);
                     double z = Math.Cos(phi);
 
-                    var p = new Point3D(center.X + radius * x, center.Y + radius * y, center.Z + radius * z);
+                    var p = new Point3D(center.X + (radiusx * x), center.Y + (radiusy * y), center.Z + (radiusz * z));
                     this.positions.Add(p);
 
                     if (this.normals != null)
@@ -518,13 +644,13 @@ namespace HelixEngine
         /// Adds a triangle.
         /// </summary>
         /// <param name="p0">
-        /// The p0.
+        /// The first point.
         /// </param>
         /// <param name="p1">
-        /// The p1.
+        /// The second point.
         /// </param>
         /// <param name="p2">
-        /// The p2.
+        /// The third point.
         /// </param>
         public void AddTriangle(Point3D p0, Point3D p1, Point3D p2)
         {
@@ -538,22 +664,22 @@ namespace HelixEngine
         /// Adds a triangle.
         /// </summary>
         /// <param name="p0">
-        /// The p0.
+        /// The first point.
         /// </param>
         /// <param name="p1">
-        /// The p1.
+        /// The second point.
         /// </param>
         /// <param name="p2">
-        /// The p2.
+        /// The third point.
         /// </param>
         /// <param name="uv0">
-        /// The uv0.
+        /// The first texture coordinate.
         /// </param>
         /// <param name="uv1">
-        /// The uv1.
+        /// The second texture coordinate.
         /// </param>
         /// <param name="uv2">
-        /// The uv2.
+        /// The third texture coordinate.
         /// </param>
         public void AddTriangle(Point3D p0, Point3D p1, Point3D p2, Point uv0, Point uv1, Point uv2)
         {
@@ -588,13 +714,13 @@ namespace HelixEngine
         /// Adds a triangle fan to the mesh
         /// </summary>
         /// <param name="fanPositions">
-        /// The triangle fan points.
+        /// The points of the triangle fan.
         /// </param>
         /// <param name="fanNormals">
-        /// The normals.
+        /// The normal vectors of the triangle fan.
         /// </param>
         /// <param name="fanTextureCoordinates">
-        /// The texture coordinates.
+        /// The texture coordinates of the triangle fan.
         /// </param>
         public void AddTriangleFan(
             IList<Point3D> fanPositions, IList<Vector3D> fanNormals, IList<Point> fanTextureCoordinates)
@@ -649,20 +775,22 @@ namespace HelixEngine
         /// Adds a triangle strip to the mesh.
         /// </summary>
         /// <param name="stripPositions">
-        /// The points.
+        /// The points of the triangle strip.
         /// </param>
         /// <param name="stripNormals">
-        /// The normals.
+        /// The normal vectors of the triangle strip.
         /// </param>
         /// <param name="stripTextureCoordinates">
-        /// The texture coordinates.
+        /// The texture coordinates of the triangle strip.
         /// </param>
+        /// <remarks>
+        /// See http://en.wikipedia.org/wiki/Triangle_strip.
+        /// </remarks>
         public void AddTriangleStrip(
             IList<Point3D> stripPositions,
             IList<Vector3D> stripNormals,
             IList<Point> stripTextureCoordinates)
         {
-            // http://en.wikipedia.org/wiki/Triangle_strip
             if (stripPositions == null)
             {
                 throw new ArgumentNullException("stripPositions");
@@ -688,7 +816,6 @@ namespace HelixEngine
                 throw new InvalidOperationException(WrongNumberOfTextureCoordinates);
             }
 
-            // http://en.wikipedia.org/wiki/Triangle_strip
             int index0 = this.positions.Count;
             for (int i = 0; i < stripPositions.Count; i++)
             {
@@ -732,6 +859,17 @@ namespace HelixEngine
         /// </returns>
         public MeshGeometry3D ToMesh(bool freeze)
         {
+            if (this.triangleIndices.Count == 0)
+            {
+                var emptyGeometry = new MeshGeometry3D();
+                if (freeze)
+                {
+                    emptyGeometry.Freeze();
+                }
+
+                return emptyGeometry;
+            }
+
             if (this.normals != null && this.positions.Count != this.normals.Count)
             {
                 throw new InvalidOperationException(WrongNumberOfNormals);
@@ -778,7 +916,7 @@ namespace HelixEngine
             {
                 for (int j = 0; j < columns - 1; j++)
                 {
-                    int ij = i * columns + j;
+                    int ij = (i * columns) + j;
                     if (!isSpherical || i > 0)
                     {
                         this.triangleIndices.Add(index0 + ij);

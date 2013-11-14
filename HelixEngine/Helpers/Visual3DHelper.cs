@@ -16,29 +16,30 @@ namespace HelixEngine
     using System.Windows.Media.Media3D;
 
     /// <summary>
-    /// Helper methods for <see cref="Visual3D"/> objects.
+    /// Provides extension methods for <see cref="Visual3D"/> objects.
     /// </summary>
     public static class Visual3DHelper
     {
         /// <summary>
-        /// The visual 3 d model property info.
+        /// The Visual3DModel property.
         /// </summary>
-        private static readonly PropertyInfo Visual3DModelPropertyInfo = typeof(Visual3D).GetProperty(
-            "Visual3DModel", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly PropertyInfo Visual3DModelPropertyInfo = typeof(Visual3D).GetProperty("Visual3DModel", BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
-        /// Finds a child of the specified type.
+        /// Finds the first child of the specified type.
         /// </summary>
         /// <typeparam name="T">
+        /// The type.
         /// </typeparam>
         /// <param name="parent">
         /// The parent.
         /// </param>
         /// <returns>
+        /// The first child of the specified type.
         /// </returns>
         public static T Find<T>(DependencyObject parent) where T : DependencyObject
         {
-            // todo: this should be improved
+            // todo: use queue/stack, not recursion
             foreach (DependencyObject d in LogicalTreeHelper.GetChildren(parent))
             {
                 var a = Find<T>(d);
@@ -51,10 +52,10 @@ namespace HelixEngine
             var model = parent as ModelVisual3D;
             if (model != null)
             {
-                var modelgroup = model.Content as Model3DGroup;
-                if (modelgroup != null)
+                var modelGroup = model.Content as Model3DGroup;
+                if (modelGroup != null)
                 {
-                    return modelgroup.Children.OfType<T>().FirstOrDefault();
+                    return modelGroup.Children.OfType<T>().FirstOrDefault();
                 }
             }
 
@@ -68,6 +69,7 @@ namespace HelixEngine
         /// The children.
         /// </param>
         /// <returns>
+        /// A <see cref="Rect3D"/>.
         /// </returns>
         public static Rect3D FindBounds(Visual3DCollection children)
         {
@@ -88,9 +90,10 @@ namespace HelixEngine
         /// The visual.
         /// </param>
         /// <param name="transform">
-        /// The transform of visual.
+        /// The transform of the visual.
         /// </param>
         /// <returns>
+        /// A <see cref="Rect3D"/>.
         /// </returns>
         public static Rect3D FindBounds(Visual3D visual, Transform3D transform)
         {
@@ -117,12 +120,13 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Gets the transform for the specified visual.
+        /// Gets the total transform for the specified visual.
         /// </summary>
         /// <param name="visual">
         /// The visual.
         /// </param>
         /// <returns>
+        /// A <see cref="Matrix3D"/>.
         /// </returns>
         public static Matrix3D GetTransform(Visual3D visual)
         {
@@ -153,7 +157,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Gets the Viewport3D from the specified visual.
+        /// Gets the parent <see cref="Viewport3D"/> from the specified visual.
         /// </summary>
         /// <param name="visual">
         /// The visual.
@@ -197,8 +201,8 @@ namespace HelixEngine
                 var viewport3DVisual = obj as Viewport3DVisual;
                 if (viewport3DVisual != null)
                 {
-                    var matxViewport = Viewport3DHelper.GetTotalTransform(viewport3DVisual);
-                    totalTransform.Append(matxViewport);
+                    var viewportTotalTransform = Viewport3DHelper.GetTotalTransform(viewport3DVisual);
+                    totalTransform.Append(viewportTotalTransform);
                     return totalTransform;
                 }
 
@@ -246,9 +250,10 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Traverses the Visual3D/Model3D tree. Run the specified action for each Model3D.
+        /// Traverses the Visual3D/Model3D tree and invokes the specified action on each Model3D of the specified type.
         /// </summary>
         /// <typeparam name="T">
+        /// The type filter.
         /// </typeparam>
         /// <param name="visuals">
         /// The visuals.
@@ -265,9 +270,10 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Traverses the Visual3D/Model3D tree. Run the specified action for each Model3D.
+        /// Traverses the Visual3D/Model3D tree and invokes the specified action on each Model3D of the specified type.
         /// </summary>
         /// <typeparam name="T">
+        /// The type filter.
         /// </typeparam>
         /// <param name="visual">
         /// The visual.
@@ -334,17 +340,18 @@ namespace HelixEngine
         /// <summary>
         /// Gets the children.
         /// </summary>
-        /// <param name="visual">
-        /// The visual.
+        /// <param name="parent">
+        /// The parent visual.
         /// </param>
         /// <returns>
+        /// A sequence of <see cref="Visual3D"/> objects.
         /// </returns>
-        private static IEnumerable<Visual3D> GetChildren(Visual3D visual)
+        private static IEnumerable<Visual3D> GetChildren(Visual3D parent)
         {
-            int n = VisualTreeHelper.GetChildrenCount(visual);
+            int n = VisualTreeHelper.GetChildrenCount(parent);
             for (int i = 0; i < n; i++)
             {
-                var child = VisualTreeHelper.GetChild(visual, i) as Visual3D;
+                var child = VisualTreeHelper.GetChild(parent, i) as Visual3D;
                 if (child == null)
                 {
                     continue;
@@ -361,6 +368,7 @@ namespace HelixEngine
         /// The visual.
         /// </param>
         /// <returns>
+        /// A <see cref="Model3D"/>.
         /// </returns>
         private static Model3D GetModel(Visual3D visual)
         {
@@ -379,9 +387,10 @@ namespace HelixEngine
         }
 
         /// <summary>
-        /// Traverses the specified visual.
+        /// Traverses the visual tree and invokes the specified action on each object of the specified type.
         /// </summary>
         /// <typeparam name="T">
+        /// The type filter.
         /// </typeparam>
         /// <param name="visual">
         /// The visual.

@@ -56,19 +56,25 @@ namespace HelixEngine
         /// </summary>
         protected override void UpdateGeometry()
         {
-            this.Mesh.Positions = null;
-            if (this.Points != null)
+            if (this.Points == null)
             {
-                int n = this.Points.Count;
-                if (n > 0)
-                {
-                    if (this.Mesh.TriangleIndices.Count != n * 3)
-                    {
-                        this.Mesh.TriangleIndices = this.Builder.CreateIndices(n);
-                    }
+                this.Mesh.Positions = null;
+                return;
+            }
 
-                    this.Mesh.Positions = this.Builder.CreatePositions(this.Points, this.Thickness, this.DepthOffset, 0, null);
+            int n = this.Points.Count;
+            if (n > 0)
+            {
+                if (this.Mesh.TriangleIndices.Count != n * 3)
+                {
+                    this.Mesh.TriangleIndices = this.Builder.CreateIndices(n);
                 }
+
+                this.Mesh.Positions = this.Builder.CreatePositions(this.Points, this.Thickness, this.DepthOffset, 0, null);
+            }
+            else
+            {
+                this.Mesh.Positions = null;
             }
         }
 
@@ -82,6 +88,5 @@ namespace HelixEngine
         {
             return this.Builder.UpdateTransforms();
         }
-
     }
 }

@@ -1,30 +1,33 @@
-﻿using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Media3D;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ArrowVisual3D.cs" company="Helix 3D Toolkit">
+//   http://helixtoolkit.codeplex.com, license: MIT
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace HelixEngine
 {
+    using System.Windows;
+    using System.Windows.Media.Media3D;
+
     /// <summary>
     /// A visual element that shows an arrow.
     /// </summary>
     public class ArrowVisual3D : MeshElement3D
     {
-        #region Constants and Fields
-
         /// <summary>
-        /// The diameter property.
+        /// Identifies the <see cref="Diameter"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DiameterProperty = DependencyProperty.Register(
             "Diameter", typeof(double), typeof(ArrowVisual3D), new UIPropertyMetadata(1.0, GeometryChanged));
 
         /// <summary>
-        /// The head length property.
+        /// Identifies the <see cref="HeadLength"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty HeadLengthProperty = DependencyProperty.Register(
             "HeadLength", typeof(double), typeof(ArrowVisual3D), new UIPropertyMetadata(3.0, GeometryChanged));
 
         /// <summary>
-        /// The point 1 property.
+        /// Identifies the <see cref="Point1"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty Point1Property = DependencyProperty.Register(
             "Point1",
@@ -33,7 +36,7 @@ namespace HelixEngine
             new UIPropertyMetadata(new Point3D(0, 0, 0), GeometryChanged));
 
         /// <summary>
-        /// The point 2 property.
+        /// Identifies the <see cref="Point2"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty Point2Property = DependencyProperty.Register(
             "Point2",
@@ -42,17 +45,13 @@ namespace HelixEngine
             new UIPropertyMetadata(new Point3D(0, 0, 10), GeometryChanged));
 
         /// <summary>
-        /// The theta div property.
+        /// Identifies the <see cref="ThetaDiv"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ThetaDivProperty = DependencyProperty.Register(
             "ThetaDiv", typeof(int), typeof(ArrowVisual3D), new UIPropertyMetadata(36, GeometryChanged));
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
-        ///   Gets or sets the diameter.
+        /// Gets or sets the diameter.
         /// </summary>
         /// <value>The diameter.</value>
         public double Diameter
@@ -69,7 +68,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the direction.
+        /// Gets or sets the direction.
         /// </summary>
         /// <value>The direction.</value>
         public Vector3D Direction
@@ -86,9 +85,9 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the length of the head.
+        /// Gets or sets the length of the head (relative to diameter of the arrow cylinder).
         /// </summary>
-        /// <value>The length of the head.</value>
+        /// <value>The length of the head relative to the diameter.</value>
         public double HeadLength
         {
             get
@@ -103,7 +102,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the origin.
+        /// Gets or sets the origin.
         /// </summary>
         /// <value>The origin.</value>
         public Point3D Origin
@@ -120,7 +119,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the start point of the arrow.
+        /// Gets or sets the start point of the arrow.
         /// </summary>
         /// <value>The start point.</value>
         public Point3D Point1
@@ -137,7 +136,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the end point of the arrow.
+        /// Gets or sets the end point of the arrow.
         /// </summary>
         /// <value>The end point.</value>
         public Point3D Point2
@@ -154,7 +153,7 @@ namespace HelixEngine
         }
 
         /// <summary>
-        ///   Gets or sets the number of divisions around the arrow.
+        /// Gets or sets the number of divisions around the arrow.
         /// </summary>
         /// <value>The number of divisions.</value>
         public int ThetaDiv
@@ -170,12 +169,8 @@ namespace HelixEngine
             }
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
-        /// Do the tesselation and return the <see cref="MeshGeometry3D"/>.
+        /// Do the tessellation and return the <see cref="MeshGeometry3D"/>.
         /// </summary>
         /// <returns>A triangular mesh geometry.</returns>
         protected override MeshGeometry3D Tessellate()
@@ -189,7 +184,5 @@ namespace HelixEngine
             builder.AddArrow(this.Point1, this.Point2, this.Diameter, this.HeadLength, this.ThetaDiv);
             return builder.ToMesh(false);
         }
-
-        #endregion
     }
 }

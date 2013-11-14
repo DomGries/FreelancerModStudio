@@ -1,7 +1,13 @@
-﻿using System.Windows.Media.Media3D;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Transform3DHelper.cs" company="Helix 3D Toolkit">
+//   http://helixtoolkit.codeplex.com, license: MIT
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace HelixEngine
 {
+    using System.Windows.Media.Media3D;
+
     /// <summary>
     /// Helper methods for Transform3D.
     /// </summary>

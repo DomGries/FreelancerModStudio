@@ -69,7 +69,7 @@
     <Compile Include="Helpers\BrushHelper.cs" />
     <Compile Include="Helpers\CameraHelper.cs" />
     <Compile Include="Helpers\MaterialHelper.cs" />
-    <Compile Include="Helpers\MeshGeometryHelper.cs" />
+    <Compile Include="Helpers\MeshBuilder.cs" />
     <Compile Include="Helpers\ScreenSpace\CohenSutherlandClipping.cs" />
     <Compile Include="Helpers\ScreenSpace\LineGeometryBuilder.cs" />
     <Compile Include="Helpers\ScreenSpace\ScreenGeometryBuilder.cs" />
@@ -78,15 +78,12 @@
     <Compile Include="Helpers\Visual3DHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Visual3Ds\Composite\ViewCubeVisual3D.cs" />
-    <Compile Include="Visual3Ds\Meshes\ArrowVisual3D.cs" />
     <Compile Include="Visual3Ds\Meshes\BoxMesh.cs" />
     <Compile Include="Visual3Ds\Meshes\CylinderMesh.cs" />
     <Compile Include="Visual3Ds\Meshes\CylindricalMeshBase.cs" />
     <Compile Include="Visual3Ds\Meshes\FlatSurfaceMeshBase.cs" />
     <Compile Include="Visual3Ds\Meshes\HollowCylinderMesh.cs" />
-    <Compile Include="Visual3Ds\Meshes\MeshElement3D.cs" />
     <Compile Include="Visual3Ds\Meshes\MeshGeneratorBase.cs" />
-    <Compile Include="Visual3Ds\Meshes\PieSliceVisual3D.cs" />
     <Compile Include="Visual3Ds\Meshes\Polyhedra\CubeMesh.cs" />
     <Compile Include="Visual3Ds\Meshes\Polyhedra\OctahedronMesh.cs" />
     <Compile Include="Visual3Ds\Meshes\Polyhedra\PolyhedronMeshBase.cs" />
@@ -94,6 +91,8 @@
     <Compile Include="Visual3Ds\Meshes\SphereMesh.cs" />
     <Compile Include="Visual3Ds\Meshes\SurfaceMesh.cs" />
     <Compile Include="Visual3Ds\Meshes\TorusMesh.cs" />
+    <Compile Include="Visual3Ds\MeshVisuals\MeshElement3D.cs" />
+    <Compile Include="Visual3Ds\MeshVisuals\PieSliceVisual3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\BoundingBoxWireFrameVisual3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\FixedLineVisual3D.cs" />
     <Compile Include="Visual3Ds\ScreenSpaceVisuals\LineVisual3D.cs" />

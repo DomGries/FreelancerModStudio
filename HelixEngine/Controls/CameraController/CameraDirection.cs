@@ -3,7 +3,7 @@ using System;
 namespace HelixEngine
 {
     [Flags]
-    public enum CameraFlyMode
+    public enum CameraDirection
     {
         None = 0,
         Forward = 0x1,

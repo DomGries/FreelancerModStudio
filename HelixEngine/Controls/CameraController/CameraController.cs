@@ -85,7 +85,7 @@ namespace HelixEngine
         private bool isAltRotating;
         private bool isZooming;
 
-        private CameraFlyMode flyMode;
+        private CameraDirection _flyDirection;
         private long lastTick;
         private double flyIncrement;
 
@@ -247,7 +247,7 @@ namespace HelixEngine
             if (Viewport == null)
                 throw new NullReferenceException("Viewport");
 
-            if (flyMode != CameraFlyMode.None)
+            if (_flyDirection != CameraDirection.None)
             {
                 return;
             }
@@ -257,17 +257,17 @@ namespace HelixEngine
                 return;
             }
 
-            var isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
-            var isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+            var isAlt = (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
+            var isShift = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
 
-            isZooming = e.ChangedButton == MouseButton.Right && isAltDown;
+            isZooming = e.ChangedButton == MouseButton.Right && isAlt;
             isPanning = !isZooming &&
                         (e.ChangedButton == MouseButton.Middle ||
-                         (e.ChangedButton == MouseButton.Right && isShiftDown));
+                         (e.ChangedButton == MouseButton.Right && isShift));
             isRotating = !isZooming && !isPanning &&
                 e.ChangedButton == MouseButton.Right;
             isAltRotating = !isZooming && !isPanning && !isRotating &&
-                e.ChangedButton == MouseButton.Left && isAltDown;
+                e.ChangedButton == MouseButton.Left && isAlt;
 
             if (isZooming || isPanning || isRotating || isAltRotating)
             {
@@ -651,19 +651,19 @@ namespace HelixEngine
             // Viewport.InvalidateVisual();
         }
 
-        public void StartFly(CameraFlyMode mode)
+        public void StartFly(CameraDirection direction)
         {
             if (isZooming || isPanning || isRotating || isAltRotating)
             {
                 return;
             }
 
-            CameraFlyMode oldMode = flyMode;
+            CameraDirection oldDirection = _flyDirection;
 
-            flyMode |= mode;
+            _flyDirection |= direction;
 
-            if (oldMode == CameraFlyMode.None &&
-                flyMode != CameraFlyMode.None)
+            if (oldDirection == CameraDirection.None &&
+                _flyDirection != CameraDirection.None)
             {
                 this.lastTick = 0;
                 this.flyIncrement = 0;
@@ -671,14 +671,14 @@ namespace HelixEngine
             }
         }
 
-        public void StopFly(CameraFlyMode mode)
+        public void StopFly(CameraDirection direction)
         {
-            CameraFlyMode oldMode = flyMode;
+            CameraDirection oldDirection = _flyDirection;
 
-            flyMode &= ~mode;
+            _flyDirection &= ~direction;
 
-            if (oldMode != CameraFlyMode.None &&
-                flyMode == CameraFlyMode.None)
+            if (oldDirection != CameraDirection.None &&
+                _flyDirection == CameraDirection.None)
             {
                 CompositionTarget.Rendering -= OnCompositionTargetRendering;
             }
@@ -690,11 +690,17 @@ namespace HelixEngine
             flyIncrement += deltaTime;
             double offsetDelta = flyIncrement;
 
-            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
             {
                 offsetDelta *= 5;
             }
 
+            // offset camera
+            Camera.Position += GetDirection(_flyDirection) * offsetDelta;
+        }
+
+        public Vector3D GetDirection(CameraDirection direction)
+        {
             // calculate directions
             Vector3D forward = Camera.LookDirection;
             forward.Normalize();
@@ -707,35 +713,34 @@ namespace HelixEngine
             // calculate normalized offset
             Vector3D offset = new Vector3D();
 
-            if ((flyMode & CameraFlyMode.Forward) != CameraFlyMode.None)
+            if ((direction & CameraDirection.Forward) == CameraDirection.Forward)
             {
                 offset += forward;
             }
-            if ((flyMode & CameraFlyMode.Backward) != CameraFlyMode.None)
+            if ((direction & CameraDirection.Backward) == CameraDirection.Backward)
             {
                 offset -= forward;
             }
 
-            if ((flyMode & CameraFlyMode.Left) != CameraFlyMode.None)
+            if ((direction & CameraDirection.Left) == CameraDirection.Left)
             {
                 offset -= right;
             }
-            if ((flyMode & CameraFlyMode.Right) != CameraFlyMode.None)
+            if ((direction & CameraDirection.Right) == CameraDirection.Right)
             {
                 offset += right;
             }
 
-            if ((flyMode & CameraFlyMode.Up) != CameraFlyMode.None)
+            if ((direction & CameraDirection.Up) == CameraDirection.Up)
             {
                 offset += up;
             }
-            if ((flyMode & CameraFlyMode.Down) != CameraFlyMode.None)
+            if ((direction & CameraDirection.Down) == CameraDirection.Down)
             {
                 offset -= up;
             }
 
-            // offset camera
-            Camera.Position += offset * offsetDelta;
+            return offset;
         }
 
         void OnCompositionTargetRendering(object sender, EventArgs e)

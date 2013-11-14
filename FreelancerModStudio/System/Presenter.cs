@@ -493,47 +493,81 @@ namespace FreelancerModStudio.SystemPresenter
 
         void ViewportKeyEvent(System.Windows.Input.KeyEventArgs e, bool isKeyUp)
         {
-            if (e.IsRepeat)
-            {
-                return;
-            }
-
-            if ((Keyboard.IsKeyDown(Key.LeftCtrl) ||
-                 Keyboard.IsKeyDown(Key.RightCtrl) ||
-                 Keyboard.IsKeyDown(Key.LeftAlt) ||
-                 Keyboard.IsKeyDown(Key.RightAlt))
-                && !isKeyUp)
-            {
-                return;
-            }
+            bool isCtrl = (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+            bool isAlt = (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
+            bool isShift = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
+            bool isCaps = Keyboard.IsKeyToggled(Key.CapsLock);
 
             // catch key short-cuts on the viewport(though arrow keys still do not work due to docking panel)
             switch (e.Key)
             {
                 case Key.W:
-                    Fly(CameraFlyMode.Forward, isKeyUp);
+                    if (isCaps)
+                    {
+                        if (isKeyUp || (!isAlt && !isCtrl))
+                        {
+                            StartOffsetManipulation(CameraDirection.Up, isKeyUp, isShift);
+                        }
+                    }
+                    else if (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt))
+                    {
+                        Fly(CameraDirection.Forward, isKeyUp);
+                    }
                     break;
                 case Key.A:
-                    Fly(CameraFlyMode.Left, isKeyUp);
+                    if (isCaps)
+                    {
+                        if (isKeyUp || (!isAlt && !isCtrl))
+                        {
+                            StartOffsetManipulation(CameraDirection.Left, isKeyUp, isShift);
+                        }
+                    }
+                    else if (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt))
+                    {
+                        Fly(CameraDirection.Left, isKeyUp);
+                    }
                     break;
                 case Key.S:
-                    Fly(CameraFlyMode.Backward, isKeyUp);
+                    if (isCaps)
+                    {
+                        if (isKeyUp || (!isAlt && !isCtrl))
+                        {
+                            StartOffsetManipulation(CameraDirection.Down, isKeyUp, isShift);
+                        }
+                    }
+                    else if (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt))
+                    {
+                        Fly(CameraDirection.Backward, isKeyUp);
+                    }
                     break;
                 case Key.D:
-                    Fly(CameraFlyMode.Right, isKeyUp);
+                    if (isCaps)
+                    {
+                        if (isKeyUp || (!isAlt && !isCtrl))
+                        {
+                            StartOffsetManipulation(CameraDirection.Right, isKeyUp, isShift);
+                        }
+                    }
+                    else if (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt))
+                    {
+                        Fly(CameraDirection.Right, isKeyUp);
+                    }
                     break;
                 case Key.Space:
-                    Fly(CameraFlyMode.Up, isKeyUp);
+                    if (!isCaps && (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt)))
+                    {
+                        Fly(CameraDirection.Up, isKeyUp);
+                    }
                     break;
                 case Key.E:
-                    Fly(CameraFlyMode.Down, isKeyUp);
+                    if (!isCaps && (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt)))
+                    {
+                        Fly(CameraDirection.Down, isKeyUp);
+                    }
                     break;
                 case Key.F:
-                    if (!isKeyUp)
+                    if (!isKeyUp && !e.IsRepeat && !isCtrl && !isAlt)
                     {
-                        bool isShift = Keyboard.IsKeyDown(Key.LeftShift) ||
-                            Keyboard.IsKeyDown(Key.RightShift);
-
                         if (isShift)
                         {
                             LookAtSelected();
@@ -545,7 +579,7 @@ namespace FreelancerModStudio.SystemPresenter
                     }
                     break;
                 case Key.T:
-                    if (!isKeyUp)
+                    if (!isKeyUp && !e.IsRepeat && !isCtrl && !isAlt)
                     {
                         TrackSelected();
                     }
@@ -553,15 +587,36 @@ namespace FreelancerModStudio.SystemPresenter
             }
         }
 
-        void Fly(CameraFlyMode mode, bool stop)
+        void StartOffsetManipulation(CameraDirection direction, bool complete, bool small)
         {
-            if (stop)
+            if (complete)
             {
-                Viewport.CameraController.StopFly(mode);
+                // update data globally
+                UpdateSelectedBlock();
             }
             else
             {
-                Viewport.CameraController.StartFly(mode);
+                Vector3D offset = Viewport.CameraController.GetDirection(direction) * (small ? 1 : 25) * SystemParser.SIZE_FACTOR;
+
+                ManipulateOffset(offset);
+
+                // update transform
+                _selectedContent.UpdateTransform(false);
+
+                // update selection box and tracked line
+                SelectedContent = _selectedContent;
+            }
+        }
+
+        void Fly(CameraDirection direction, bool stop)
+        {
+            if (stop)
+            {
+                Viewport.CameraController.StopFly(direction);
+            }
+            else
+            {
+                Viewport.CameraController.StartFly(direction);
             }
         }
 
@@ -584,14 +639,14 @@ namespace FreelancerModStudio.SystemPresenter
 
             bool isDoubleClick = e.ClickCount > 1;
 
-            bool isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-            bool isCtrlDown = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-            bool isAltDown = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
+            bool isCtrl = (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+            bool isAlt = (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
+            bool isShift = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
 
             // reset camera
             if (isDoubleClick &&
                 (e.ChangedButton == MouseButton.Middle ||
-                (e.ChangedButton == MouseButton.Right && isShiftDown)))
+                (e.ChangedButton == MouseButton.Right && isShift)))
             {
                 Viewport.CameraController.ResetCamera();
                 CameraHelper.ZoomExtents(Viewport.Camera, Viewport.Viewport, GetAllBounds(), 0);
@@ -599,13 +654,13 @@ namespace FreelancerModStudio.SystemPresenter
                 return;
             }
 
-            bool isSelect = e.ChangedButton == MouseButton.Left && !isAltDown;
+            bool isSelect = e.ChangedButton == MouseButton.Left && !isAlt;
             bool isLookAt = e.ChangedButton == MouseButton.Right && isDoubleClick;
 
             if (isSelect || isLookAt)
             {
                 Point3D point;
-                ContentBase visual = GetSelection(e.GetPosition(Viewport.Viewport), isShiftDown, !isLookAt, out point);
+                ContentBase visual = GetSelection(e.GetPosition(Viewport.Viewport), isShift, !isLookAt, out point);
                 if (visual != null)
                 {
                     if (isLookAt)
@@ -615,7 +670,7 @@ namespace FreelancerModStudio.SystemPresenter
                     }
                     else
                     {
-                        Select(visual, isCtrlDown);
+                        Select(visual, isCtrl);
                     }
                 }
             }
@@ -653,18 +708,23 @@ namespace FreelancerModStudio.SystemPresenter
             else
             {
                 // update data globally
-                TableBlock oldBlock = _selectedContent.Block;
-                TableBlock newBlock = ObjectClone.Clone(oldBlock);
-                newBlock.SetModifiedChanged();
-
-                _selectedContent.Block = newBlock;
-                SystemParser.WriteBlock(_selectedContent);
-                OnDataManipulated(newBlock, oldBlock);
+                UpdateSelectedBlock();
             }
 
             // stop manipulating
             _manipulating = false;
             Viewport.Viewport.ReleaseMouseCapture();
+        }
+
+        void UpdateSelectedBlock()
+        {
+            TableBlock oldBlock = _selectedContent.Block;
+            TableBlock newBlock = ObjectClone.Clone(oldBlock);
+            newBlock.SetModifiedChanged();
+
+            _selectedContent.Block = newBlock;
+            SystemParser.WriteBlock(_selectedContent);
+            OnDataManipulated(newBlock, oldBlock);
         }
 
         Point3D? GetMousePoint(Point mousePosition)
@@ -689,8 +749,7 @@ namespace FreelancerModStudio.SystemPresenter
                 double length = delta3D.Length;
                 if (length > 0)
                 {
-                    delta3D /= length;
-                    delta3D *= 2;
+                    delta3D *= 2 / length;
                 }
             }
             else if (_manipulationMode == ManipulationMode.Scale)
@@ -730,15 +789,21 @@ namespace FreelancerModStudio.SystemPresenter
             switch (_manipulationMode)
             {
                 case ManipulationMode.Translate:
+                    // relative transation
                     ManipulateTranslate(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
                     break;
                 case ManipulationMode.Rotate:
+                    // relative rotation
                     ManipulateRotate(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
                     break;
                 case ManipulationMode.Scale:
+                    // relative scale
                     ManipulateScale(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
                     break;
             }
+
+            // update transform
+            _selectedContent.UpdateTransform(false);
 
             // update selection box and tracked line
             SelectedContent = _selectedContent;
@@ -753,9 +818,12 @@ namespace FreelancerModStudio.SystemPresenter
 
             // update position
             _selectedContent.Position = new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
+        }
 
-            // update transform
-            _selectedContent.UpdateTransform(false);
+        void ManipulateOffset(Vector3D offset)
+        {
+            // update position
+            _selectedContent.Position += offset;
         }
 
         void ManipulateRotate(Vector3D delta)
@@ -766,9 +834,6 @@ namespace FreelancerModStudio.SystemPresenter
 
             // update rotation
             _selectedContent.Rotation = ContentBase.GetRotation(matrix);
-
-            // update transform
-            _selectedContent.UpdateTransform(false);
         }
 
         void ManipulateScale(Vector3D delta)
@@ -784,11 +849,7 @@ namespace FreelancerModStudio.SystemPresenter
                 _selectedContent.Scale.Z < minScale)
             {
                 _selectedContent.Scale -= delta;
-                return;
             }
-
-            // update transform
-            _selectedContent.UpdateTransform(false);
         }
 
         void StartManipulation(ManipulationAxis axis, ScreenSpaceVisual3D line, Point mousePosition)

@@ -10,7 +10,7 @@ namespace FreelancerModStudio.SystemPresenter
 {
     public static class SystemParser
     {
-        public const double SIZE_FACTOR = 0.005;
+        public const double SYSTEM_SCALE = 0.005;
         public const double MODEL_PREVIEW_SCALE = 1000;
         public const double UNIVERSE_SCALE = 1;
         public const double UNIVERSE_SYSTEM_SCALE = 0.2 * UNIVERSE_SCALE;
@@ -322,7 +322,7 @@ namespace FreelancerModStudio.SystemPresenter
                     {
                         if (block.Archetype.Radius != 0.0)
                         {
-                            content.Scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) * SIZE_FACTOR;
+                            content.Scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) * SYSTEM_SCALE;
                         }
                     }
                     break;
@@ -349,7 +349,7 @@ namespace FreelancerModStudio.SystemPresenter
 
         public static Vector3D ParsePosition(string vector)
         {
-            return ParseVector(vector) * SIZE_FACTOR;
+            return ParseVector(vector) * SYSTEM_SCALE;
         }
 
         public static Vector3D ParseRotation(string vector, bool isCylinder)
@@ -377,7 +377,7 @@ namespace FreelancerModStudio.SystemPresenter
                     if (values.Length > 0)
                     {
                         double tempScale = Parser.ParseDouble(values[0], 1);
-                        return new Vector3D(tempScale, tempScale, tempScale) * SIZE_FACTOR;
+                        return new Vector3D(tempScale, tempScale, tempScale) * SYSTEM_SCALE;
                     }
                     break;
                 case ContentType.ZonePath:
@@ -386,13 +386,13 @@ namespace FreelancerModStudio.SystemPresenter
                     {
                         double tempScale1 = Parser.ParseDouble(values[0], 1);
                         double tempScale2 = Parser.ParseDouble(values[1], 1);
-                        return new Vector3D(tempScale1, tempScale2, tempScale1) * SIZE_FACTOR;
+                        return new Vector3D(tempScale1, tempScale2, tempScale1) * SYSTEM_SCALE;
                     }
                     break;
                 default:
                     if (values.Length > 2)
                     {
-                        return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) * SIZE_FACTOR;
+                        return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) * SYSTEM_SCALE;
                     }
                     break;
             }
@@ -552,7 +552,7 @@ namespace FreelancerModStudio.SystemPresenter
                 return WriteUniverseVector(value);
             }
 
-            return WriteVector(value / SIZE_FACTOR);
+            return WriteVector(value / SYSTEM_SCALE);
         }
 
         public static string WriteRotation(Vector3D value, bool isCylinder)
@@ -575,20 +575,20 @@ namespace FreelancerModStudio.SystemPresenter
                 case ContentType.ZoneSphere:
                 case ContentType.ZoneSphereExclusion:
                 case ContentType.ZoneVignette:
-                    WriteDouble(Math.Round(value.X / SIZE_FACTOR));
+                    WriteDouble(Math.Round(value.X / SYSTEM_SCALE));
                     break;
                 case ContentType.ZonePath:
                 case ContentType.ZonePathTrade:
-                    WriteDouble(Math.Round(value.X / SIZE_FACTOR));
+                    WriteDouble(Math.Round(value.X / SYSTEM_SCALE));
                     Helper.String.StringBuilder.Append(", ");
-                    WriteDouble(Math.Round(value.Y / SIZE_FACTOR));
+                    WriteDouble(Math.Round(value.Y / SYSTEM_SCALE));
                     break;
                 default:
-                    WriteDouble(Math.Round(value.X / SIZE_FACTOR));
+                    WriteDouble(Math.Round(value.X / SYSTEM_SCALE));
                     Helper.String.StringBuilder.Append(", ");
-                    WriteDouble(Math.Round(value.Z / SIZE_FACTOR));
+                    WriteDouble(Math.Round(value.Z / SYSTEM_SCALE));
                     Helper.String.StringBuilder.Append(", ");
-                    WriteDouble(Math.Round(value.Y / SIZE_FACTOR));
+                    WriteDouble(Math.Round(value.Y / SYSTEM_SCALE));
                     break;
             }
 

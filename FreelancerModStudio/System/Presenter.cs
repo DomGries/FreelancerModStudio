@@ -589,6 +589,11 @@ namespace FreelancerModStudio.SystemPresenter
 
         void StartOffsetManipulation(CameraDirection direction, bool complete, bool small)
         {
+            if (ViewerType != ViewerType.System && ViewerType != ViewerType.Universe)
+            {
+                return;
+            }
+
             if (complete)
             {
                 // update data globally
@@ -596,7 +601,16 @@ namespace FreelancerModStudio.SystemPresenter
             }
             else
             {
-                Vector3D offset = Viewport.CameraController.GetDirection(direction) * (small ? 1 : 25) * SystemParser.SIZE_FACTOR;
+                Vector3D offset = Viewport.CameraController.GetDirection(direction);
+
+                if (ViewerType == ViewerType.Universe)
+                {
+                    offset *= (small ? 0.1 : 1) * SystemParser.UNIVERSE_SCALE;
+                }
+                else
+                {
+                    offset *= (small ? 1 : 25) * SystemParser.SYSTEM_SCALE;
+                }
 
                 ManipulateOffset(offset);
 
@@ -842,7 +856,7 @@ namespace FreelancerModStudio.SystemPresenter
             _selectedContent.Scale += delta;
 
             // prevent negative scaling
-            const double minScale = 10 * SystemParser.SIZE_FACTOR;
+            const double minScale = 10 * SystemParser.SYSTEM_SCALE;
 
             if (_selectedContent.Scale.X < minScale ||
                 _selectedContent.Scale.Y < minScale ||
@@ -1565,8 +1579,8 @@ namespace FreelancerModStudio.SystemPresenter
             Helper.String.StringBuilder.AppendLine();
             Helper.String.StringBuilder.AppendLine(_trackedContent.Block.Name);
 
-            Vector3D a = _selectedContent.Position / SystemParser.SIZE_FACTOR;
-            Vector3D b = _trackedContent.Position / SystemParser.SIZE_FACTOR;
+            Vector3D a = _selectedContent.Position / SystemParser.SYSTEM_SCALE;
+            Vector3D b = _trackedContent.Position / SystemParser.SYSTEM_SCALE;
             Vector3D delta = b - a;
 
             Helper.String.StringBuilder.Append(Strings.SystemPresenterTrackedDistance);

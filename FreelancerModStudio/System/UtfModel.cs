@@ -29,7 +29,7 @@ namespace FreelancerModStudio.SystemPresenter
         static Matrix3D GetConversionMatrix()
         {
             Matrix3D newMatrix = new Matrix3D(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-            newMatrix.Scale(new Vector3D(SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR, SystemParser.SIZE_FACTOR));
+            newMatrix.Scale(new Vector3D(SystemParser.SYSTEM_SCALE, SystemParser.SYSTEM_SCALE, SystemParser.SYSTEM_SCALE));
             return newMatrix;
         }
 

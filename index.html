@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Freelancer Mod Studio by stfx</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Freelancer Mod Studio</h1>
+      <h2 class="project-tagline">Full-blown modding IDE with a powerful 3D system editor for the game Freelancer.</h2>
+      <a href="https://github.com/stfx/freelancermodstudio" class="btn">View on GitHub</a>
+      <a href="https://github.com/stfx/freelancermodstudio/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/stfx/freelancermodstudio/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p>Freelancer Mod Studio is a well-polished and powerful IDE for experienced as well as beginning modders. You can easily create and edit your mods by using the <strong>visual ini/bini-editor</strong> with <strong>unlimited undo/redo</strong>, <strong>powerful copy/cut/paste</strong>, <strong>multi-editing</strong> and <strong>3D model view</strong> support. The implemented <strong>3D system editor</strong> shows <strong>real Freelancer models</strong> and supports <strong>position/rotation/scale manipulation</strong> inside the editor. It is currently the best tool around to build the universe of your dreams.</p>
+
+<hr>
+
+<p><img src="http://img27.imageshack.us/img27/2803/c3op.jpg" alt="">
+<img src="http://s9.postimage.org/tnzcel78v/showcase2.png" alt="">
+<img src="http://img547.imageshack.us/img547/3218/iawc.jpg" alt="">
+<img src="http://img607.imageshack.us/img607/269/li01models.png" alt="">
+<img src="http://img204.imageshack.us/img204/8100/li01full.png" alt="">
+<img src="http://img844.imageshack.us/img844/5976/li01universe.jpg" alt="">
+<img src="http://img33.imageshack.us/img33/3493/unbenannt1nd.jpg" alt="">
+<img src="http://img132.imageshack.us/img132/5527/teq7.jpg" alt=""></p>
+
+<hr>
+
+<h3>
+<a id="is-it-finished" class="anchor" href="#is-it-finished" aria-hidden="true"><span class="octicon octicon-link"></span></a>Is it finished?</h3>
+
+<p>Yes, the last version is considered to be the final one. Unfortunately there was not enough time due to the lack of any additional contributors to develop an all-in-one modding solution. However the existing functionality has been polished very well and mostly even exceeds that of the original vision.</p>
+
+<h3>
+<a id="where-can-i-ask-questions-suggest-features-and-report-issues" class="anchor" href="#where-can-i-ask-questions-suggest-features-and-report-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Where can I ask questions, suggest features and report issues?</h3>
+
+<p>Please post in the <a href="http://the-starport.net/freelancer/forum/viewtopic.php?topic_id=2174">official forum</a>.</p>
+
+<h3>
+<a id="any-known-issues" class="anchor" href="#any-known-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Any known issues?</h3>
+
+<ul>
+<li>Saving files with ini-entries which require custom order within the same ini-section are not yet supported. This includes the following files:
+
+<ul>
+<li>Mission Encounters (missions\encounters\*.ini)</li>
+<li>Missions (missions\<em>\m\</em>.ini)</li>
+<li>Solar Asteroids (solar\asteroids\*.ini)</li>
+<li>Solar Nebulae (solar\nebula\*.ini)</li>
+</ul>
+</li>
+<li>All ini sections (blocks) or entries (options) with invalid names will be ignored and therefore are not written on save. See the shipped <a href="http://github.com/stfx/freelancermodstudio/blob/master/FreelancerModStudio/Template.xml">Template.xml file</a> for a complete list. However you can easily edit this file which is located in the same directory as the .exe to change the behavior. This will also allow you to edit and work with them just like the normal ones.</li>
+</ul>
+
+<h3>
+<a id="what-are-the-mousekey-bindings-for-the-3d-editor" class="anchor" href="#what-are-the-mousekey-bindings-for-the-3d-editor" aria-hidden="true"><span class="octicon octicon-link"></span></a>What are the mouse/key bindings for the 3D editor?</h3>
+
+<table>
+<thead>
+<tr>
+<th><em>Action</em></th>
+<th><em>Binding</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Select nearest object</td>
+<td>Click left mouse button</td>
+</tr>
+<tr>
+<td>Select farthest object</td>
+<td>Click left mouse button + SHIFT</td>
+</tr>
+<tr>
+<td>Toggle object selection</td>
+<td>Hold CTRL while selecting nearest/farthest object</td>
+</tr>
+<tr>
+<td>Rotate camera</td>
+<td>Hold right mouse button</td>
+</tr>
+<tr>
+<td>Rotate camera (around point)</td>
+<td>Hold left mouse button + ALT</td>
+</tr>
+<tr>
+<td>Zoom camera (smooth)</td>
+<td>Hold right mouse button + ALT</td>
+</tr>
+<tr>
+<td>Zoom camera (fast)</td>
+<td>Scroll mouse-wheel</td>
+</tr>
+<tr>
+<td>Pan camera</td>
+<td>Hold right mouse button + SHIFT</td>
+</tr>
+<tr>
+<td></td>
+<td>Hold middle mouse button</td>
+</tr>
+<tr>
+<td>Look-at click point</td>
+<td>Double-click right mouse button</td>
+</tr>
+<tr>
+<td>Reset camera</td>
+<td>Double-click right mouse button + SHIFT</td>
+</tr>
+<tr>
+<td></td>
+<td>Double-click middle mouse button</td>
+</tr>
+<tr>
+<td>Move camera forward</td>
+<td>W (faster: + SHIFT)</td>
+</tr>
+<tr>
+<td>Move camera backward</td>
+<td>S (faster: + SHIFT)</td>
+</tr>
+<tr>
+<td>Move camera left</td>
+<td>A (faster: + SHIFT)</td>
+</tr>
+<tr>
+<td>Move camera right</td>
+<td>D (faster: + SHIFT)</td>
+</tr>
+<tr>
+<td>Move camera up</td>
+<td>SPACE (faster: + SHIFT)</td>
+</tr>
+<tr>
+<td>Move camera down</td>
+<td>E (faster: + SHIFT)</td>
+</tr>
+<tr>
+<td>Move object up</td>
+<td>CAPSLOCK + W (single unit: + SHIFT)</td>
+</tr>
+<tr>
+<td>Move object down</td>
+<td>CAPSLOCK + S (single unit: + SHIFT)</td>
+</tr>
+<tr>
+<td>Move object left</td>
+<td>CAPSLOCK + A (single unit: + SHIFT)</td>
+</tr>
+<tr>
+<td>Move object right</td>
+<td>CAPSLOCK + D (single unit: + SHIFT)</td>
+</tr>
+<tr>
+<td>Focus selected object</td>
+<td>F</td>
+</tr>
+<tr>
+<td>Look-at selected object</td>
+<td>SHIFT + F</td>
+</tr>
+<tr>
+<td>Track selected object</td>
+<td>T</td>
+</tr>
+</tbody>
+</table>
+
+<p>Those key bindings can be used after clicking with the mouse into the 3D editor window. They work additionally to the global shortcuts seen under the main menu.</p>
+
+<h3>
+<a id="why-are-the-models-not-showing-up-in-the-3d-editor-for-me" class="anchor" href="#why-are-the-models-not-showing-up-in-the-3d-editor-for-me" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why are the models not showing up in the 3D editor for me?</h3>
+
+<p>This is where Freelancer Mod Studio thinks the model files are located:</p>
+
+<p>First Freelancer Mod Studio tries to find the solararch.ini file relative to your opened system/universe file, meaning if the system file is located at "C:\Freelancer\DATA\UNIVERSE\Li01\Li01.ini" it would think the solararch file is located at "C:\Freelancer\DATA\SOLAR\solararch.ini" (case insensitive). If it can't find it it will look for the file relative to the default Freelancer DATA path specified in the application settings. If Freelancer Mod Studio still can't find it it asks you for its location.</p>
+
+<p>Now after the solararch file was found it remembers the DATA path where the solararch file is located ("C:\Freelancer\DATA"). As all model paths are being defined relative to the DATA path it then combines the DATA path with the specific model path. For example jumpgate in solararch.ini has DA_archetype = "solar\dockable\jump_gateL.cmp" so it is being loaded from "C:\Freelancer\DATA\SOLAR\DOCKABLE\jump_gateL.cmp"</p>
+
+<p>Also remember to enable model mode via <em>View -&gt; Show models</em>.</p>
+
+<h3>
+<a id="how-can-i-edit-positionrotationscale-of-objects" class="anchor" href="#how-can-i-edit-positionrotationscale-of-objects" aria-hidden="true"><span class="octicon octicon-link"></span></a>How can I edit position/rotation/scale of objects?</h3>
+
+<p>Either use the property window to set absolute values of all selected objects or use the position/rotation/scale manipulation handles via <em>View -&gt; Position handles</em>, <em>View -&gt; Rotation handles</em> or <em>View -&gt; Scale handles</em>. You can use the object move keys to fine tune positions down to a single unit (see key bindings above in the FAQ).</p>
+
+<h3>
+<a id="how-does-object-tracking-work" class="anchor" href="#how-does-object-tracking-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>How does object tracking work?</h3>
+
+<p>Object tracking shows info of your selected and tracked object like distance and angle between both. This can be incredibly helpful to correctly position and rotate many system objects like trade lanes, docking rings, docking fixtures, buoys and jump gates. To track the currently selected object use <em>View -&gt; Track selected</em> or its keyboard shortcut. To no longer track the selected object use <em>View -&gt; Track selected</em> again.</p>
+
+<h3>
+<a id="do-you-have-some-secret-workflow-tricks" class="anchor" href="#do-you-have-some-secret-workflow-tricks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Do you have some secret workflow tricks?</h3>
+
+<p>Sure, here are some things which you might not know to improve your workflow:</p>
+
+<ul>
+<li>Hide by object type
+
+<ol>
+<li>Sort by type by clicking on the <em>Type</em> column in the ini-editor</li>
+<li>Select all objects of the same type which are now below each other</li>
+<li><em>View -&gt; Change visibility</em></li>
+</ol>
+</li>
+<li>Automatically fit column size
+
+<ol>
+<li>Double click on row separator right of the column in the ini-editor</li>
+</ol>
+</li>
+<li>Rotate object towards another object
+
+<ol>
+<li>Select object A</li>
+<li><em>View -&gt; Track selected</em></li>
+<li>Select object B</li>
+<li>Set rotation of object B so that it points towards object A by comparing the angles info of the tracked object (top-left in 3D editor window)</li>
+</ol>
+</li>
+<li>Set object distance from another object
+
+<ol>
+<li>Rotate object B towards object A (see trick above)</li>
+<li><em>View -&gt; Position handles</em></li>
+<li>Move object B away/towards object A using manipulator which points towards object A (should be the blue axis-z one) until distance info of tracked object has your preferred value</li>
+<li>Set rotation of object B back to original values</li>
+</ol>
+</li>
+<li>Select small zone through large zone
+
+<ul>
+<li>If the edge of the small zone is in front of the edge of the large zone you can select the nearest object (see mouse bindings above in the FAQ)</li>
+<li>If it is the other way round you can select the farthest object (see mouse bindings above in the FAQ)</li>
+<li>If there are additional zones in your way you can also select them and hide them using <em>View -&gt; Change visibility</em> before attempting to select</li>
+</ul>
+</li>
+<li>Reorder section order
+
+<ul>
+<li>Option A:
+
+<ol>
+<li>Make sure that objects in the ini-editor are sorted by ID by clicking on the <em>#</em> column</li>
+<li>Drag selected objects in the ini-editor into another place</li>
+</ol>
+</li>
+<li>Option B:
+
+<ol>
+<li>Cut selected objects to the clipboard: <em>Edit -&gt; Cut</em>
+</li>
+<li>Select object which should be just on top of where you want to move them to</li>
+<li>Paste selected objects from the clipboard: <em>Edit -&gt; Paste</em>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>Create pre-filled objects from templates
+
+<ol>
+<li>Create a new system file which contains the pre-filled objects</li>
+<li>Select the objects you need</li>
+<li><em>Edit -&gt; Copy</em></li>
+<li>Switch to your current system</li>
+<li><em>Edit -&gt; Paste</em></li>
+</ol>
+</li>
+<li>Open system from universe file
+
+<ol>
+<li>Select a system</li>
+<li>Click on selected system</li>
+<li>Click on the menu with the name of the system file which just appeared</li>
+</ol>
+</li>
+<li>Pan camera along axis
+
+<ol>
+<li>Click on any faces of the orientation cube in the bottom right corner of the 3D editor to orientate the camera</li>
+<li>Pan camera (see mouse bindings above in the FAQ)</li>
+</ol>
+</li>
+<li>Offset object position along axis
+
+<ol>
+<li>Click on any faces of the orientation cube in the bottom right corner of the 3D editor to orientate the camera</li>
+<li>Move object (see key bindings above in the FAQ)</li>
+</ol>
+</li>
+<li>Flip camera orientation
+
+<ol>
+<li>Double click on any faces of the orientation cube in the bottom right corner of the 3D editor</li>
+</ol>
+</li>
+<li>Change walk-around/fly camera movement speed
+
+<ol>
+<li>The longer you hold the movement keys the faster you get (see key bindings above in the FAQ)</li>
+</ol>
+</li>
+<li>Quickly add new objects
+
+<ul>
+<li>You can use the ALT menu shortcuts. Those are the underlined letters that you see when you click a menu while holding ALT. They depend on the current application language.</li>
+<li>For English language:
+
+<ol>
+<li>Hold ALT</li>
+<li>Press E (for <em>Edit</em>) followed by A (for <em>Add</em>)</li>
+<li>Press the first letter of the object you want to add</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>Remove an entry out of a list of entries of the selected objects
+
+<ol>
+<li>Clear the value of the entry in the property grid</li>
+<li>Press RETURN</li>
+</ol>
+</li>
+<li>Open file with drag&amp;drop
+
+<ol>
+<li>Drag&amp;drop the file from your OS into the title bar or the main menu</li>
+</ol>
+</li>
+<li>Reload current file
+
+<ol>
+<li><em>File -&gt; Close</em></li>
+<li><em>File -&gt; Open -&gt; Most recent file</em></li>
+</ol>
+</li>
+<li>Find out full path of a file
+
+<ul>
+<li>See tooltip of document tab by moving the mouse over it</li>
+</ul>
+</li>
+<li>Copy full path of a file to clipboard
+
+<ol>
+<li>Right click document tab of a file</li>
+<li>Select <em>Copy full path</em>
+</li>
+</ol>
+</li>
+<li>Open containing folder of a file
+
+<ol>
+<li>Right click document tab of a file</li>
+<li>Select <em>Open containing folder</em>
+</li>
+</ol>
+</li>
+<li>Close all files
+
+<ol>
+<li><em>Window -&gt; Close All Documents</em></li>
+</ol>
+</li>
+<li>Close all files but one
+
+<ol>
+<li>Right click document tab of a file</li>
+<li>Select <em>Close other</em>
+</li>
+</ol>
+</li>
+</ul>
+
+<h3>
+<a id="i-love-this-tool-can-i-contribute-to-make-it-better" class="anchor" href="#i-love-this-tool-can-i-contribute-to-make-it-better" aria-hidden="true"><span class="octicon octicon-link"></span></a>I love this tool. Can I contribute to make it better?</h3>
+
+<p>I will gladly accept any kind of help or like to hear your appreciation of the hard work :)</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/stfx/freelancermodstudio">Freelancer Mod Studio</a> is maintained by <a href="https://github.com/stfx">stfx</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+

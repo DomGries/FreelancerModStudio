@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using FreelancerModStudio.Data.INI;
 using FreelancerModStudio.Properties;
-using FreelancerModStudio.SystemPresenter.Content;
+using FreelancerModStudio.SystemDesigner.Content;
 
 namespace FreelancerModStudio.Data
 {

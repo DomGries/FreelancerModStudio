@@ -1,5 +1,5 @@
 using System;
-using FreelancerModStudio.SystemPresenter.Content;
+using FreelancerModStudio.SystemDesigner.Content;
 
 namespace FreelancerModStudio.Data
 {

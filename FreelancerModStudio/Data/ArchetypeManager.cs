@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FreelancerModStudio.Data.INI;
 using FreelancerModStudio.Data.IO;
-using FreelancerModStudio.SystemPresenter;
+using FreelancerModStudio.SystemDesigner;
 
 namespace FreelancerModStudio.Data
 {

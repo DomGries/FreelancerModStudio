@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreelancerModStudio", "FreelancerModStudio\FreelancerModStudio.csproj", "{8FFDB3D5-4135-435B-A446-F2D8D088AA44}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BB650B0C-AB45-44B0-900E-6187EC208C95} = {BB650B0C-AB45-44B0-900E-6187EC208C95}
@@ -31,5 +33,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {08F15264-94C5-4AC8-A9F1-C79A2AD46DCF}
 	EndGlobalSection
 EndGlobal

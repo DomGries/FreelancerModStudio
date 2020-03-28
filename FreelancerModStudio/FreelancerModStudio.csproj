@@ -46,6 +46,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,6 +56,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ObjectListView, Version=2.2.1.24649, Culture=neutral, processorArchitecture=MSIL">
@@ -131,10 +133,10 @@
     <Compile Include="DevTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="frmAbout.cs">
+    <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmAbout.Designer.cs">
+    <Compile Include="Forms\frmAbout.Designer.cs">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </Compile>
     <Compile Include="AutoUpdate\frmAutoUpdate.cs">
@@ -143,40 +145,40 @@
     <Compile Include="AutoUpdate\frmAutoUpdate.Designer.cs">
       <DependentUpon>frmAutoUpdate.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSystemEditor.cs">
+    <Compile Include="Forms\frmSystemEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSystemEditor.Designer.cs">
+    <Compile Include="Forms\frmSystemEditor.Designer.cs">
       <DependentUpon>frmSystemEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmTableEditor.cs">
+    <Compile Include="Forms\frmTableEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmTableEditor.Designer.cs">
+    <Compile Include="Forms\frmTableEditor.Designer.cs">
       <DependentUpon>frmTableEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmFileType.cs">
+    <Compile Include="Forms\frmFileType.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmFileType.Designer.cs">
+    <Compile Include="Forms\frmFileType.Designer.cs">
       <DependentUpon>frmFileType.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMain.cs">
+    <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.Designer.cs">
+    <Compile Include="Forms\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmOptions.cs">
+    <Compile Include="Forms\frmOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmOptions.Designer.cs">
+    <Compile Include="Forms\frmOptions.Designer.cs">
       <DependentUpon>frmOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmProperties.cs">
+    <Compile Include="Forms\frmProperties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmProperties.Designer.cs">
+    <Compile Include="Forms\frmProperties.Designer.cs">
       <DependentUpon>frmProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
@@ -188,11 +190,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="frmMain.de.resx">
+    <EmbeddedResource Include="Forms\frmMain.de.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMain.resx">
+    <EmbeddedResource Include="Forms\frmMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -220,32 +222,32 @@
     <Compile Include="Data\Template.cs">
     </Compile>
     <Compile Include="Data\ChangedData.cs" />
-    <Compile Include="System\Animator.cs" />
-    <Compile Include="System\Content\Connection.cs" />
-    <Compile Include="System\Content\ConnectionType.cs" />
-    <Compile Include="System\Content\ContentBase.cs" />
-    <Compile Include="System\Content\ContentType.cs" />
-    <Compile Include="System\Content\System.cs" />
-    <Compile Include="System\Content\SystemObject.cs" />
-    <Compile Include="System\Content\Zone.cs" />
-    <Compile Include="System\DefaultLightsVisual3D.cs" />
-    <Compile Include="System\Content\LightSource.cs" />
-    <Compile Include="System\ManipulationAxis.cs" />
-    <Compile Include="System\ManipulationMode.cs" />
-    <Compile Include="System\Matrix3DAnimation.cs" />
-    <Compile Include="System\SharedObjects.cs" />
-    <Compile Include="System\Analyzer.cs" />
-    <Compile Include="System\Presenter.cs" />
-    <Compile Include="System\SystemParser.cs" />
-    <Compile Include="System\UtfModel.cs" />
-    <Compile Include="System\ViewerType.cs" />
+    <Compile Include="SystemDesigner\Animator.cs" />
+    <Compile Include="SystemDesigner\Content\Connection.cs" />
+    <Compile Include="SystemDesigner\Content\ConnectionType.cs" />
+    <Compile Include="SystemDesigner\Content\ContentBase.cs" />
+    <Compile Include="SystemDesigner\Content\ContentType.cs" />
+    <Compile Include="SystemDesigner\Content\System.cs" />
+    <Compile Include="SystemDesigner\Content\SystemObject.cs" />
+    <Compile Include="SystemDesigner\Content\Zone.cs" />
+    <Compile Include="SystemDesigner\DefaultLightsVisual3D.cs" />
+    <Compile Include="SystemDesigner\Content\LightSource.cs" />
+    <Compile Include="SystemDesigner\ManipulationAxis.cs" />
+    <Compile Include="SystemDesigner\ManipulationMode.cs" />
+    <Compile Include="SystemDesigner\Matrix3DAnimation.cs" />
+    <Compile Include="SystemDesigner\SharedObjects.cs" />
+    <Compile Include="SystemDesigner\Analyzer.cs" />
+    <Compile Include="SystemDesigner\Presenter.cs" />
+    <Compile Include="SystemDesigner\SystemParser.cs" />
+    <Compile Include="SystemDesigner\UtfModel.cs" />
+    <Compile Include="SystemDesigner\ViewerType.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\LogoIcon.ico" />
     <Content Include="Template.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="frmAbout.resx">
+    <EmbeddedResource Include="Forms\frmAbout.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmAbout.cs</DependentUpon>
     </EmbeddedResource>
@@ -253,29 +255,29 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmAutoUpdate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSystemEditor.resx">
+    <EmbeddedResource Include="Forms\frmSystemEditor.resx">
       <DependentUpon>frmSystemEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmTableEditor.de.resx">
+    <EmbeddedResource Include="Forms\frmTableEditor.de.resx">
       <DependentUpon>frmTableEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmTableEditor.resx">
+    <EmbeddedResource Include="Forms\frmTableEditor.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmTableEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmFileType.de.resx">
+    <EmbeddedResource Include="Forms\frmFileType.de.resx">
       <DependentUpon>frmFileType.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmFileType.resx">
+    <EmbeddedResource Include="Forms\frmFileType.resx">
       <DependentUpon>frmFileType.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmOptions.de.resx">
+    <EmbeddedResource Include="Forms\frmOptions.de.resx">
       <DependentUpon>frmOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmOptions.resx">
+    <EmbeddedResource Include="Forms\frmOptions.resx">
       <DependentUpon>frmOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmProperties.resx">
+    <EmbeddedResource Include="Forms\frmProperties.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmProperties.cs</DependentUpon>
     </EmbeddedResource>
@@ -320,6 +322,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="GenSerializationAssembly" DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
     <SGen BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(SGenToolPath)">

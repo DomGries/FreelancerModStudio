@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace FreelancerModStudio
@@ -8,29 +9,29 @@ namespace FreelancerModStudio
         [STAThread]
         static void Main()
         {
-            //DevTest.CreateTemplate(@""); return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-/*#if !DEBUG
-            // catch real errors globally
-            try
-            {
-#endif*/
-            // initialize program
+            AppDomain.CurrentDomain.UnhandledException += UnhandledException;
             Helper.Program.Start();
-/*#if !DEBUG
-            }
-            catch (Exception ex)
+        }
+
+        static void UnhandledException(object sender, UnhandledExceptionEventArgs ex)
+        {
+            if (!Debugger.IsAttached)
             {
                 string text = "A critical error occured!" + Environment.NewLine + Environment.NewLine + "Do you want to post an issue report?";
-                string details = Helper.Exceptions.Get(ex) + Environment.NewLine + ex.StackTrace;
+                string details = Helper.Exceptions.Get((Exception)ex.ExceptionObject) + Environment.NewLine + ex.ExceptionObject;
                 if (MessageBox.Show(text + Environment.NewLine + Environment.NewLine + details, Helper.Assembly.Name, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
                 {
-                    System.Diagnostics.Process.Start("http://code.google.com/p/freelancermodstudio/issues");
+                    Process.Start("https://github.com/AftermathFreelancer/FLModStudio/issues");
                 }
+                Environment.Exit(1);
             }
-#endif*/
+
+            else
+            {
+                Debugger.Break();
+            }
         }
     }
 }

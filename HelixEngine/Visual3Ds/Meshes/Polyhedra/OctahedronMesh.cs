@@ -10,10 +10,11 @@ namespace HelixEngine.Meshes
 {
     public class OctahedronMesh : PolyhedronMeshBase
     {
-        const double h = 0.5;
-        const double r = 0.35;
+        private const double h = 0.5;
 
-        static readonly Point3D[,] faces = new Point3D[8, 3]
+        private const double r = 0.35;
+
+        private static readonly Point3D[,] faces = new Point3D[8, 3]
         {
             // front upper right
             { new Point3D(0, r, 0), new Point3D(0, 0, h), new Point3D(r, 0, 0) },

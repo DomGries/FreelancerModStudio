@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.INI;
-using FreelancerModStudio.Data.IO;
-using FreelancerModStudio.SystemDesigner.Content;
-
-namespace FreelancerModStudio.SystemDesigner
+﻿namespace FreelancerModStudio.SystemDesigner
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.Data.INI;
+    using FreelancerModStudio.Data.IO;
+    using FreelancerModStudio.SystemDesigner.Content;
+
     public class Analyzer
     {
         public Dictionary<int, UniverseConnection> Connections { get; set; }
@@ -44,7 +45,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void AddConnections(int id, Table<int, ConnectionPart> connections)
+        private void AddConnections(int id, Table<int, ConnectionPart> connections)
         {
             foreach (ConnectionPart connectionPart in connections)
             {
@@ -76,7 +77,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        Table<int, ConnectionPart> GetConnections(int id, string file)
+        private Table<int, ConnectionPart> GetConnections(int id, string file)
         {
             if (!File.Exists(file))
             {
@@ -167,7 +168,7 @@ namespace FreelancerModStudio.SystemDesigner
             return connections;
         }
 
-        static string BeforeSeperator(string value, string seperator)
+        private static string BeforeSeperator(string value, string seperator)
         {
             int index = value.IndexOf(seperator, StringComparison.Ordinal);
             if (index != -1)
@@ -178,7 +179,7 @@ namespace FreelancerModStudio.SystemDesigner
             return value;
         }
 
-        int GetConnectionId(string blockName)
+        private int GetConnectionId(string blockName)
         {
             foreach (TableBlock block in Universe)
             {

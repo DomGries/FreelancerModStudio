@@ -1,8 +1,8 @@
-﻿using System.Windows.Media;
-using System.Windows.Media.Media3D;
-
-namespace FreelancerModStudio.SystemDesigner
+﻿namespace FreelancerModStudio.SystemDesigner
 {
+    using System.Windows.Media;
+    using System.Windows.Media.Media3D;
+
     public class SystemLightsVisual3D : ModelVisual3D
     {
         public SystemLightsVisual3D()

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Media3D;
-
-namespace FreelancerModStudio.SystemDesigner
+﻿namespace FreelancerModStudio.SystemDesigner
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Media.Animation;
+    using System.Windows.Media.Media3D;
+
     public class Matrix3DAnimation : AnimationTimeline
     {
         public override Type TargetPropertyType
@@ -22,13 +22,14 @@ namespace FreelancerModStudio.SystemDesigner
 
         public Matrix3D? From
         {
-            set
-            {
-                SetValue(FromProperty, value);
-            }
             get
             {
                 return (Matrix3D)GetValue(FromProperty);
+            }
+
+            set
+            {
+                this.SetValue(FromProperty, value);
             }
         }
 
@@ -38,13 +39,14 @@ namespace FreelancerModStudio.SystemDesigner
 
         public Matrix3D? To
         {
-            set
-            {
-                SetValue(ToProperty, value);
-            }
             get
             {
                 return (Matrix3D)GetValue(ToProperty);
+            }
+
+            set
+            {
+                this.SetValue(ToProperty, value);
             }
         }
 

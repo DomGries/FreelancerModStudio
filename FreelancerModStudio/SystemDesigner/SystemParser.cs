@@ -232,7 +232,7 @@ namespace FreelancerModStudio.SystemDesigner
             block.ObjectType = ContentType.None;
         }
 
-        static bool SetBlock(ContentBase content, TableBlock block, bool animate)
+        private static bool SetBlock(ContentBase content, TableBlock block, bool animate)
         {
             // update the model if the object type or the archetype was changed
             bool modelChanged =
@@ -447,7 +447,7 @@ namespace FreelancerModStudio.SystemDesigner
             return ContentType.None;
         }
 
-        static bool IsCylinder(ContentType type)
+        private static bool IsCylinder(ContentType type)
         {
             switch (type)
             {
@@ -595,17 +595,17 @@ namespace FreelancerModStudio.SystemDesigner
             return Helper.String.StringBuilder.ToString();
         }
 
-        static void WriteDouble(double value)
+        private static void WriteDouble(double value)
         {
             Helper.String.StringBuilder.Append(value.ToString(CultureInfo.InvariantCulture));
         }
 
-        static bool IsZeroRounded(Vector3D value)
+        private static bool IsZeroRounded(Vector3D value)
         {
             return IsZeroRounded(value.X) && IsZeroRounded(value.Y) && IsZeroRounded(value.Z);
         }
 
-        static bool IsZeroRounded(double value)
+        private static bool IsZeroRounded(double value)
         {
             return value > -0.5 && value < 0.5;
         }

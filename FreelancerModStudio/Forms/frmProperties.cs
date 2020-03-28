@@ -14,7 +14,7 @@ namespace FreelancerModStudio
 
         public OptionsChangedType OptionsChanged;
 
-        void OnOptionsChanged(PropertyBlock[] blocks)
+        private void OnOptionsChanged(PropertyBlock[] blocks)
         {
             if (OptionsChanged != null)
             {
@@ -67,12 +67,12 @@ namespace FreelancerModStudio
             propertyGrid.SelectedGridItem.Select();
         }
 
-        void descriptionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void descriptionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             propertyGrid.HelpVisible = descriptionToolStripMenuItem.Checked;
         }
 
-        void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             if (e.ChangedItem.Value != e.OldValue)
             {

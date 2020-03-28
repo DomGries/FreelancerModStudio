@@ -67,7 +67,7 @@ namespace FreelancerModStudio.Data.IO
             return GetEditorData(iniData, templateFileIndex);
         }
 
-        static EditorINIData GetEditorData(List<INIBlock> iniData, int templateFileIndex)
+        private static EditorINIData GetEditorData(List<INIBlock> iniData, int templateFileIndex)
         {
 #if DEBUG
             Stopwatch st = new Stopwatch();
@@ -217,7 +217,7 @@ namespace FreelancerModStudio.Data.IO
             return editorData;
         }
 
-        List<INIBlock> ReadINI()
+        private List<INIBlock> ReadINI()
         {
             IsBINI = false;
             INIManager iniManager = new INIManager(File)

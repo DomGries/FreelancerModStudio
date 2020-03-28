@@ -8,11 +8,13 @@ namespace FreelancerModStudio.Data
 
         public DataChangedType DataChanged;
 
-        readonly List<T> _changes = new List<T>();
-        int _current;
-        int _savedIndex;
+        private readonly List<T> _changes = new List<T>();
 
-        void OnDataChanged(T o, bool undo)
+        private int _current;
+
+        private int _savedIndex;
+
+        private void OnDataChanged(T o, bool undo)
         {
             if (DataChanged != null)
             {

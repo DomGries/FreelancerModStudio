@@ -1,9 +1,9 @@
-﻿using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-
-namespace FreelancerModStudio
+﻿namespace FreelancerModStudio
 {
+    using System.IO;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
+
     public static class ObjectClone
     {
         public static T Clone<T>(T o)

@@ -12,7 +12,7 @@ namespace FreelancerModStudio.Controls
             InitializeComponent();
         }
 
-        void InitializeComponent()
+        private void InitializeComponent()
         {
             Name = "SeperatorLine";
             Size = new Size(100, 2);

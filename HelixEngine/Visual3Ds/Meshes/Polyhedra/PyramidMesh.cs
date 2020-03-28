@@ -5,9 +5,9 @@ namespace HelixEngine.Meshes
 {
     public class PyramidMesh : PolyhedronMeshBase
     {
-        const double r = 0.5;
+        private const double r = 0.5;
 
-        static readonly Point3D[,] faces = new Point3D[6, 3]
+        private static readonly Point3D[,] faces = new Point3D[6, 3]
         {
             // back
             { new Point3D(r, -r, -r), new Point3D(r, -r, r), new Point3D(-r, -r, -r) },

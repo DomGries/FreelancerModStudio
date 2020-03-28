@@ -24,16 +24,16 @@ namespace FreelancerModStudio.SystemDesigner
 
     public static class UtfModel
     {
-        static readonly Matrix3D ConversionMatrix = GetConversionMatrix();
+        private static readonly Matrix3D ConversionMatrix = GetConversionMatrix();
 
-        static Matrix3D GetConversionMatrix()
+        private static Matrix3D GetConversionMatrix()
         {
             Matrix3D newMatrix = new Matrix3D(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
             newMatrix.Scale(new Vector3D(SystemParser.SYSTEM_SCALE, SystemParser.SYSTEM_SCALE, SystemParser.SYSTEM_SCALE));
             return newMatrix;
         }
 
-        static Matrix3D GetTransform(List<CmpPart> parts, string partName)
+        private static Matrix3D GetTransform(List<CmpPart> parts, string partName)
         {
             Matrix3D matrix = Matrix3D.Identity;
             foreach (CmpPart part in parts)
@@ -46,7 +46,7 @@ namespace FreelancerModStudio.SystemDesigner
             return matrix;
         }
 
-        static Model3DGroup GetCmpModelGroup(List<MeshGroup> meshGroups)
+        private static Model3DGroup GetCmpModelGroup(List<MeshGroup> meshGroups)
         {
             Model3DGroup modelGroup = new Model3DGroup();
             foreach (MeshGroup meshGroup in meshGroups)
@@ -70,7 +70,7 @@ namespace FreelancerModStudio.SystemDesigner
             return modelGroup;
         }
 
-        static GeometryModel3D GetCmpModel(MeshGroup meshGroup, int meshIndex)
+        private static GeometryModel3D GetCmpModel(MeshGroup meshGroup, int meshIndex)
         {
             VMeshData.TMeshHeader mesh = meshGroup.Mesh.Meshes[meshIndex];
             Point3DCollection positions = new Point3DCollection();
@@ -125,7 +125,7 @@ namespace FreelancerModStudio.SystemDesigner
             return gm;
         }
 
-        static VMeshRef ParseMeshPartNode(UTFNode meshPartNode)
+        private static VMeshRef ParseMeshPartNode(UTFNode meshPartNode)
         {
             if (meshPartNode.Nodes.Count > 0)
             {
@@ -134,7 +134,7 @@ namespace FreelancerModStudio.SystemDesigner
             return null;
         }
 
-        static VMeshRef ParseMultiLevelNode(UTFNode node)
+        private static VMeshRef ParseMultiLevelNode(UTFNode node)
         {
             foreach (UTFNode levelNode in node.Nodes)
             {

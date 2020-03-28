@@ -7,7 +7,7 @@ namespace FreelancerModStudio.Data
         /// <summary>
         /// CRC32 table for Freelancer
         /// </summary>
-        static readonly uint[] CrcTable =
+        private static readonly uint[] CrcTable =
             {
                 0x00000000, 0x09073096, 0x120E612C, 0x1B0951BA,
                 0xFF6DC419, 0xF66AF48F, 0xED63A535, 0xE46495A3,

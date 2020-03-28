@@ -17,10 +17,11 @@ namespace FreelancerModStudio.AutoUpdate
         public bool SilentDownload { get; set; }
         public bool SilentCheck { get; set; }
 
-        UpdateInformation _updateInfo;
-        IAutoUpdateUI _ui;
+        private UpdateInformation _updateInfo;
 
-        readonly WebClient _webClient = new WebClient();
+        private IAutoUpdateUI _ui;
+
+        private readonly WebClient _webClient = new WebClient();
 
         public AutoUpdate()
         {
@@ -57,7 +58,7 @@ namespace FreelancerModStudio.AutoUpdate
             new Thread(() => SetPage(Status)).Start();
         }
 
-        void UpdateAvailable(bool value)
+        private void UpdateAvailable(bool value)
         {
             if (value)
             {
@@ -81,7 +82,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        void SetPage(StatusType value)
+        private void SetPage(StatusType value)
         {
             if (_ui == null)
             {
@@ -96,7 +97,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        bool IsNewer(string fileContent)
+        private bool IsNewer(string fileContent)
         {
             try
             {
@@ -117,7 +118,7 @@ namespace FreelancerModStudio.AutoUpdate
             return false;
         }
 
-        void DownloadUpdate()
+        private void DownloadUpdate()
         {
             Status = StatusType.Downloading;
 
@@ -144,7 +145,7 @@ namespace FreelancerModStudio.AutoUpdate
             _webClient.DownloadFileAsync(_updateInfo.FileUri, destFile);
         }
 
-        void Download_CheckFile_Completed(object sender, DownloadStringCompletedEventArgs e)
+        private void Download_CheckFile_Completed(object sender, DownloadStringCompletedEventArgs e)
         {
             //delete event handlers
             _webClient.DownloadStringCompleted -= Download_CheckFile_Completed;
@@ -175,7 +176,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        void Download_Update_Completed(object sender, AsyncCompletedEventArgs e)
+        private void Download_Update_Completed(object sender, AsyncCompletedEventArgs e)
         {
             //delete event handlers
             _webClient.DownloadProgressChanged -= Download_Update_ProgressChanged;
@@ -212,7 +213,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             if (_ui != null)
             {
@@ -220,12 +221,12 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        void Abort()
+        private void Abort()
         {
             _webClient.CancelAsync();
         }
 
-        void UI_ActionRequired(ActionType action)
+        private void UI_ActionRequired(ActionType action)
         {
             switch (action)
             {
@@ -246,12 +247,12 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        string GetUpdateFileName()
+        private string GetUpdateFileName()
         {
             return Path.GetFileName(_updateInfo.FileUri.AbsolutePath) ?? "Update.exe";
         }
 
-        static string GetUpdateDirectory()
+        private static string GetUpdateDirectory()
         {
             return Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.UpdateDownloadPath);
         }

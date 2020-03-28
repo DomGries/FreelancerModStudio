@@ -1,13 +1,14 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Media3D;
-
-namespace FreelancerModStudio.SystemDesigner
+﻿namespace FreelancerModStudio.SystemDesigner
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Media.Animation;
+    using System.Windows.Media.Media3D;
+
     public class ContentAnimation
     {
         public Matrix3D OldMatrix { get; set; }
+
         public Matrix3D NewMatrix { get; set; }
     }
 
@@ -29,7 +30,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        static MatrixTransform3D AnimateMatrix(Matrix3D oldMatrix, Matrix3D newMatrix)
+        private static MatrixTransform3D AnimateMatrix(Matrix3D oldMatrix, Matrix3D newMatrix)
         {
             Matrix3DAnimation animationMatrix = new Matrix3DAnimation(oldMatrix, newMatrix, AnimationDuration)
                 {

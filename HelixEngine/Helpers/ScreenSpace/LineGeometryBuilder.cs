@@ -145,7 +145,7 @@ namespace HelixEngine
             return positions;
         }
 
-        Point3D Widen(Point4D point, double deltaX, double deltaY, double depthOffset)
+        private Point3D Widen(Point4D point, double deltaX, double deltaY, double depthOffset)
         {
             point.X += deltaX * point.W;
             point.Y += deltaY * point.W;

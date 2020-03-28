@@ -9,7 +9,7 @@ namespace FreelancerModStudio.Data
 {
     public class ArchetypeManager
     {
-        Dictionary<string, ArchetypeInfo> _archetypes;
+        private Dictionary<string, ArchetypeInfo> _archetypes;
 
         public ArchetypeManager(string file, int templateIndex)
         {
@@ -54,7 +54,7 @@ namespace FreelancerModStudio.Data
             return null;
         }
 
-        void CreateContentTable(List<EditorINIBlock> blocks)
+        private void CreateContentTable(List<EditorINIBlock> blocks)
         {
             _archetypes = new Dictionary<string, ArchetypeInfo>(StringComparer.OrdinalIgnoreCase);
 

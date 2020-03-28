@@ -7,7 +7,7 @@ namespace FreelancerModStudio.Data
     [Serializable]
     public class Table<TKey, TValue> : IEnumerable<TValue> where TValue : class
     {
-        readonly SortedList<TKey, TValue> _dictionary;
+        private readonly SortedList<TKey, TValue> _dictionary;
 
         public Table()
         {

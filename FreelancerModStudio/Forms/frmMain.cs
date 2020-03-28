@@ -19,10 +19,11 @@ namespace FreelancerModStudio
         //Mod mod;
         //bool modChanged;
 
-        frmProperties _propertiesForm;
+        private frmProperties _propertiesForm;
         //frmSolutionExplorer solutionExplorerForm = null;
-        frmSystemEditor _systemEditor;
-        readonly UICultureChanger _uiCultureChanger = new UICultureChanger();
+        private frmSystemEditor _systemEditor;
+
+        private readonly UICultureChanger _uiCultureChanger = new UICultureChanger();
 
         public frmMain()
         {
@@ -38,7 +39,7 @@ namespace FreelancerModStudio
             Helper.Update.AutoUpdate.RestartingApplication += AutoUpdate_RestartingApplication;
         }
 
-        void frmMain_Load(object sender, EventArgs e)
+        private void frmMain_Load(object sender, EventArgs e)
         {
             //open files
             string[] arguments = Environment.GetCommandLineArgs();
@@ -75,7 +76,7 @@ namespace FreelancerModStudio
             SettingsChanged();
         }
 
-        void InitContentWindows()
+        private void InitContentWindows()
         {
             _propertiesForm = new frmProperties();
             //solutionExplorerForm = new frmSolutionExplorer();
@@ -85,7 +86,7 @@ namespace FreelancerModStudio
             InitSystemEditor();
         }
 
-        void InitSystemEditor()
+        private void InitSystemEditor()
         {
             _systemEditor = new frmSystemEditor();
             _systemEditor.SelectionChanged += systemEditor_SelectionChanged;
@@ -93,7 +94,7 @@ namespace FreelancerModStudio
             _systemEditor.DataManipulated += systemEditor_DataManipulated;
         }
 
-        IDockContent GetContentFromPersistString(string persistString)
+        private IDockContent GetContentFromPersistString(string persistString)
         {
             if (persistString == typeof(frmProperties).ToString())
             {
@@ -136,28 +137,28 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuAbout_Click(object sender, EventArgs e)
+        private void mnuAbout_Click(object sender, EventArgs e)
         {
             frmAbout frmAbout = new frmAbout();
             frmAbout.ShowDialog();
         }
 
-        void mnuVisitForum_Click(object sender, EventArgs e)
+        private void mnuVisitForum_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/AftermathFreelancer/FLModStudio");
         }
 
-        void mnuReportIssue_Click(object sender, EventArgs e)
+        private void mnuReportIssue_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/AftermathFreelancer/FLModStudio/issues");
         }
 
-        void mnuCloseAllDocuments_Click(object sender, EventArgs e)
+        private void mnuCloseAllDocuments_Click(object sender, EventArgs e)
         {
             CloseAllDocuments();
         }
 
-        bool CloseAllDocuments()
+        private bool CloseAllDocuments()
         {
             foreach (Form child in MdiChildren)
             {
@@ -171,7 +172,7 @@ namespace FreelancerModStudio
             return true;
         }
 
-        bool CloseOtherDocuments()
+        private bool CloseOtherDocuments()
         {
             foreach (Form child in MdiChildren)
             {
@@ -188,11 +189,11 @@ namespace FreelancerModStudio
             return true;
         }
 
-        void mnuNewWindow_Click(object sender, EventArgs e)
+        private void mnuNewWindow_Click(object sender, EventArgs e)
         {
         }
 
-        void DefaultEditor_DataChanged(ChangedData data)
+        private void DefaultEditor_DataChanged(ChangedData data)
         {
             if (_systemEditor != null)
             {
@@ -219,7 +220,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void DefaultEditor_SelectionChanged(List<TableBlock> data, int templateIndex)
+        private void DefaultEditor_SelectionChanged(List<TableBlock> data, int templateIndex)
         {
             if (data != null)
             {
@@ -241,7 +242,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void DefaultEditor_DataVisibilityChanged(TableBlock block)
+        private void DefaultEditor_DataVisibilityChanged(TableBlock block)
         {
             if (_systemEditor != null)
             {
@@ -249,7 +250,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void DefaultEditor_FormClosed(object sender, FormClosedEventArgs e)
+        private void DefaultEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (e.CloseReason != CloseReason.UserClosing)
             {
@@ -263,7 +264,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void DefaultEditor_DocumentChanged(IDocumentForm document)
+        private void DefaultEditor_DocumentChanged(IDocumentForm document)
         {
             SetDocumentMenus(document);
 
@@ -273,7 +274,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void Properties_OptionsChanged(PropertyBlock[] blocks)
+        private void Properties_OptionsChanged(PropertyBlock[] blocks)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
@@ -282,12 +283,12 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuFullScreen_Click(object sender, EventArgs e)
+        private void mnuFullScreen_Click(object sender, EventArgs e)
         {
             FullScreen(!Helper.Settings.Data.Data.Forms.Main.FullScreen);
         }
 
-        void SetSettings()
+        private void SetSettings()
         {
             // save layout (don't throw an error if it fails)
             string layoutFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.LayoutPath);
@@ -321,7 +322,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void GetSettings()
+        private void GetSettings()
         {
             if (Helper.Settings.Data.Data.Forms.Main.Size != new Size(0, 0))
             {
@@ -351,7 +352,7 @@ namespace FreelancerModStudio
             DisplayRecentFiles();
         }
 
-        void FullScreen(bool value)
+        private void FullScreen(bool value)
         {
             Helper.Settings.Data.Data.Forms.Main.FullScreen = value;
             mnuFullScreen.Checked = value;
@@ -387,7 +388,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void RemoveFromRecentFiles(string file)
+        private void RemoveFromRecentFiles(string file)
         {
             for (int i = 0; i < Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count; ++i)
             {
@@ -400,7 +401,7 @@ namespace FreelancerModStudio
             DisplayRecentFiles();
         }
 
-        void AddToRecentFiles(string file, int templateIndex)
+        private void AddToRecentFiles(string file, int templateIndex)
         {
             //remove double files
             for (int i = 0; i < Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count; ++i)
@@ -428,7 +429,7 @@ namespace FreelancerModStudio
             DisplayRecentFiles();
         }
 
-        void DisplayRecentFiles()
+        private void DisplayRecentFiles()
         {
             int firstItemIndex = mnuOpen.DropDownItems.IndexOf(mnuRecentFilesSeperator) + 1;
 
@@ -466,13 +467,13 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuLoadRecentFile_Click(object sender, EventArgs e)
+        private void mnuLoadRecentFile_Click(object sender, EventArgs e)
         {
             Settings.RecentFile recentFile = (Settings.RecentFile)((ToolStripMenuItem)sender).Tag;
             OpenRecentFile(recentFile.File, recentFile.TemplateIndex);
         }
 
-        void OpenRecentFile(string file, int templateIndex)
+        private void OpenRecentFile(string file, int templateIndex)
         {
             try
             {
@@ -487,7 +488,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void OpenFile(string file)
+        private void OpenFile(string file)
         {
             int templateIndex = -1;
             int documentIndex = FileOpened(file);
@@ -511,7 +512,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void OpenFile(string file, int templateIndex)
+        private void OpenFile(string file, int templateIndex)
         {
             int documentIndex = FileOpened(file);
             if (documentIndex != -1)
@@ -524,7 +525,7 @@ namespace FreelancerModStudio
             }
         }
 
-        frmTableEditor DisplayFile(string file, int templateIndex)
+        private frmTableEditor DisplayFile(string file, int templateIndex)
         {
             frmTableEditor tableEditor = new frmTableEditor(templateIndex, file);
             tableEditor.ShowData();
@@ -540,7 +541,7 @@ namespace FreelancerModStudio
             return tableEditor;
         }
 
-        void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.Cancel)
             {
@@ -656,17 +657,17 @@ namespace FreelancerModStudio
             Helper.Settings.Data.Data.Forms.NewMod.Size = frmNewMod.Size;
         }*/
 
-        void mnuExit_Click(object sender, EventArgs e)
+        private void mnuExit_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        void mnuCheckUpdate_Click(object sender, EventArgs e)
+        private void mnuCheckUpdate_Click(object sender, EventArgs e)
         {
             Helper.Update.Check(false, false);
         }
 
-        void AutoUpdate_RestartingApplication(object sender, CancelEventArgs e)
+        private void AutoUpdate_RestartingApplication(object sender, CancelEventArgs e)
         {
             //close all MdiChildren and check if user canceled one
             if (CloseAllDocuments())
@@ -679,11 +680,11 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuOpenMod_Click(object sender, EventArgs e)
+        private void mnuOpenMod_Click(object sender, EventArgs e)
         {
         }
 
-        void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
+        private void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
         {
             //show properties of document if active document changed
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
@@ -715,7 +716,7 @@ namespace FreelancerModStudio
             SetContentMenus(tableEditor);
         }
 
-        void ShowSystemEditor(frmTableEditor tableEditor)
+        private void ShowSystemEditor(frmTableEditor tableEditor)
         {
             if (_systemEditor != null)
             {
@@ -769,7 +770,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuOptions_Click(object sender, EventArgs e)
+        private void mnuOptions_Click(object sender, EventArgs e)
         {
             frmOptions optionsForm = new frmOptions();
             optionsForm.ShowDialog();
@@ -780,7 +781,7 @@ namespace FreelancerModStudio
             SettingsChanged();
         }
 
-        void mnuOpenFile_Click(object sender, EventArgs e)
+        private void mnuOpenFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileOpener = new OpenFileDialog
                 {
@@ -795,7 +796,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuSaveAll_Click(object sender, EventArgs e)
+        private void mnuSaveAll_Click(object sender, EventArgs e)
         {
             foreach (IDockContent document in dockPanel1.Documents)
             {
@@ -807,7 +808,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void SettingsChanged()
+        private void SettingsChanged()
         {
             _uiCultureChanger.ApplyCulture(new CultureInfo(Helper.Settings.ShortLanguage));
             _uiCultureChanger.ApplyCultureToForm(this);
@@ -840,7 +841,7 @@ namespace FreelancerModStudio
             SetDocumentMenus(GetDocument());
         }
 
-        int FileOpened(string file)
+        private int FileOpened(string file)
         {
             int i = 0;
             foreach (IDockContent document in dockPanel1.Documents)
@@ -858,12 +859,12 @@ namespace FreelancerModStudio
             return -1;
         }
 
-        void frmMain_DragEnter(object sender, DragEventArgs e)
+        private void frmMain_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
-        void frmMain_DragDrop(object sender, DragEventArgs e)
+        private void frmMain_DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string file in files)
@@ -872,17 +873,17 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuSolutionExplorer_Click(object sender, EventArgs e)
+        private void mnuSolutionExplorer_Click(object sender, EventArgs e)
         {
             //solutionExplorerForm.Show(dockPanel1);
         }
 
-        void mnuProperties_Click(object sender, EventArgs e)
+        private void mnuProperties_Click(object sender, EventArgs e)
         {
             _propertiesForm.Show(dockPanel1, DockState.DockRight);
         }
 
-        void mnuNewFile_Click(object sender, EventArgs e)
+        private void mnuNewFile_Click(object sender, EventArgs e)
         {
             //let the user choose the ini file type
             int templateIndex = GetTemplateIndexDialog(null);
@@ -892,7 +893,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuSave_Click(object sender, EventArgs e)
+        private void mnuSave_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -908,7 +909,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuSaveAs_Click(object sender, EventArgs e)
+        private void mnuSaveAs_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -924,12 +925,12 @@ namespace FreelancerModStudio
             }
         }
 
-        IDocumentForm GetDocument()
+        private IDocumentForm GetDocument()
         {
             return dockPanel1.ActiveDocument as IDocumentForm;
         }
 
-        void mnuCut_Click(object sender, EventArgs e)
+        private void mnuCut_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -938,7 +939,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuCopy_Click(object sender, EventArgs e)
+        private void mnuCopy_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -947,7 +948,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuPaste_Click(object sender, EventArgs e)
+        private void mnuPaste_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -956,7 +957,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuUndo_Click(object sender, EventArgs e)
+        private void mnuUndo_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -965,7 +966,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuRedo_Click(object sender, EventArgs e)
+        private void mnuRedo_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -974,7 +975,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuClose_Click(object sender, EventArgs e)
+        private void mnuClose_Click(object sender, EventArgs e)
         {
             if (dockPanel1.ActiveDocument != null)
             {
@@ -982,7 +983,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuDelete_Click(object sender, EventArgs e)
+        private void mnuDelete_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -991,7 +992,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuSelectAll_Click(object sender, EventArgs e)
+        private void mnuSelectAll_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -1000,7 +1001,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuShowModels_Click(object sender, EventArgs e)
+        private void mnuShowModels_Click(object sender, EventArgs e)
         {
             bool isModelMode = !mnuShowModels.Checked;
             mnuShowModels.Checked = isModelMode;
@@ -1011,7 +1012,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuManipulationNone_Click(object sender, EventArgs e)
+        private void mnuManipulationNone_Click(object sender, EventArgs e)
         {
             mnuManipulationNone.Checked = true;
             mnuManipulationTranslate.Checked = false;
@@ -1024,7 +1025,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuManipulationTranslate_Click(object sender, EventArgs e)
+        private void mnuManipulationTranslate_Click(object sender, EventArgs e)
         {
             mnuManipulationNone.Checked = false;
             mnuManipulationTranslate.Checked = true;
@@ -1037,7 +1038,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuManipulationRotate_Click(object sender, EventArgs e)
+        private void mnuManipulationRotate_Click(object sender, EventArgs e)
         {
             mnuManipulationNone.Checked = false;
             mnuManipulationTranslate.Checked = false;
@@ -1050,7 +1051,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuManipulationScale_Click(object sender, EventArgs e)
+        private void mnuManipulationScale_Click(object sender, EventArgs e)
         {
             mnuManipulationNone.Checked = false;
             mnuManipulationTranslate.Checked = false;
@@ -1063,7 +1064,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuFocusSelected_Click(object sender, EventArgs e)
+        private void mnuFocusSelected_Click(object sender, EventArgs e)
         {
             if (_systemEditor != null)
             {
@@ -1071,7 +1072,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuLookAtSelected_Click(object sender, EventArgs e)
+        private void mnuLookAtSelected_Click(object sender, EventArgs e)
         {
             if (_systemEditor != null)
             {
@@ -1079,7 +1080,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuTrackSelected_Click(object sender, EventArgs e)
+        private void mnuTrackSelected_Click(object sender, EventArgs e)
         {
             if (_systemEditor != null)
             {
@@ -1087,7 +1088,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuChangeVisibility_Click(object sender, EventArgs e)
+        private void mnuChangeVisibility_Click(object sender, EventArgs e)
         {
             IDocumentForm content = GetDocument();
             if (content != null)
@@ -1096,16 +1097,16 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuGoTo_Click(object sender, EventArgs e)
+        private void mnuGoTo_Click(object sender, EventArgs e)
         {
         }
 
-        void mnuCloseOther_Click(object sender, EventArgs e)
+        private void mnuCloseOther_Click(object sender, EventArgs e)
         {
             CloseOtherDocuments();
         }
 
-        void mnuCopyFullPath_Click(object sender, EventArgs e)
+        private void mnuCopyFullPath_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -1118,7 +1119,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void mnuOpenContainingFolder_Click(object sender, EventArgs e)
+        private void mnuOpenContainingFolder_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)
@@ -1136,14 +1137,14 @@ namespace FreelancerModStudio
             }
         }
 
-        void CloseSystemEditor()
+        private void CloseSystemEditor()
         {
             //dispose system editor
             _systemEditor.Dispose();
             _systemEditor = null;
         }
 
-        void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
+        private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
         {
             if (e.Content is frmSystemEditor)
             {
@@ -1151,24 +1152,24 @@ namespace FreelancerModStudio
             }
         }
 
-        void SetMenuVisible(ToolStripMenuItem menuItem, bool value)
+        private void SetMenuVisible(ToolStripMenuItem menuItem, bool value)
         {
             menuItem.Enabled = value;
             menuItem.Visible = value;
         }
 
-        void SetMenuVisible(ToolStripMenuItem menuItem, bool value, bool enabled)
+        private void SetMenuVisible(ToolStripMenuItem menuItem, bool value, bool enabled)
         {
             menuItem.Enabled = enabled;
             menuItem.Visible = value;
         }
 
-        void SetMenuVisible(ToolStripSeparator menuItem, bool value)
+        private void SetMenuVisible(ToolStripSeparator menuItem, bool value)
         {
             menuItem.Visible = value;
         }
 
-        void SetDocumentMenus(IDocumentForm document)
+        private void SetDocumentMenus(IDocumentForm document)
         {
             bool isDocument = document != null;
             bool isVisible;
@@ -1236,12 +1237,12 @@ namespace FreelancerModStudio
             SetMenuVisible(mnuShowModelsSeperator, isVisible);
         }
 
-        void SetContentMenus(IContentForm content)
+        private void SetContentMenus(IContentForm content)
         {
             mnuDelete.Enabled = content != null && content.CanDelete();
         }
 
-        void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
+        private void dockPanel1_ActiveContentChanged(object sender, EventArgs e)
         {
             IContentForm content = dockPanel1.ActiveContent as IContentForm;
             if (content == null)
@@ -1252,7 +1253,7 @@ namespace FreelancerModStudio
             SetContentMenus(content);
         }
 
-        void mnu3dEditor_Click(object sender, EventArgs e)
+        private void mnu3dEditor_Click(object sender, EventArgs e)
         {
             if (_systemEditor == null)
             {
@@ -1271,7 +1272,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void systemEditor_FileOpen(string path)
+        private void systemEditor_FileOpen(string path)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
@@ -1301,7 +1302,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void systemEditor_SelectionChanged(TableBlock block, bool toggle)
+        private void systemEditor_SelectionChanged(TableBlock block, bool toggle)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
@@ -1310,7 +1311,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void systemEditor_DataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        private void systemEditor_DataManipulated(TableBlock newBlock, TableBlock oldBlock)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
@@ -1319,7 +1320,7 @@ namespace FreelancerModStudio
             }
         }
 
-        static int GetTemplateIndexDialog(string file)
+        private static int GetTemplateIndexDialog(string file)
         {
             frmFileType fileTypeForm = new frmFileType(file);
             if (fileTypeForm.ShowDialog() == DialogResult.OK && fileTypeForm.FileTypeIndex >= 0)
@@ -1330,7 +1331,7 @@ namespace FreelancerModStudio
             return -1;
         }
 
-        void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             IDocumentForm document = GetDocument();
             if (document != null)

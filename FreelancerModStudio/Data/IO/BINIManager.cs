@@ -11,8 +11,9 @@ namespace FreelancerModStudio.Data.IO
         public string File { get; set; }
         public List<INIBlock> Data { get; set; }
 
-        const string FILE_TYPE = "BINI";
-        const int FILE_VERSION = 0x1;
+        private const string FILE_TYPE = "BINI";
+
+        private const int FILE_VERSION = 0x1;
 
         public BINIManager(string file)
         {

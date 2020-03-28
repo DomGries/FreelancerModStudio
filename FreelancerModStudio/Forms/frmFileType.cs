@@ -45,7 +45,7 @@ namespace FreelancerModStudio
             }
         }
 
-        void frmFileType_FormClosed(object sender, FormClosedEventArgs e)
+        private void frmFileType_FormClosed(object sender, FormClosedEventArgs e)
         {
             FileTypeIndex = ((FileTypeItem)fileTypeComboBox.SelectedItem).Index;
             Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType = fileTypeComboBox.SelectedIndex;

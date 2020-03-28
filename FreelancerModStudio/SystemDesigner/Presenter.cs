@@ -22,29 +22,39 @@ namespace FreelancerModStudio.SystemDesigner
         public bool IsModelMode;
         public string DataPath;
 
-        int _secondLayerId;
-        readonly Dictionary<string, Model3D> _modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
+        private int _secondLayerId;
 
-        Visual3D _lighting;
-        BoundingBoxWireFrameVisual3D _selectionBox;
-        LineVisual3D _trackedLine;
-        ContentBase _selectedContent;
-        ContentBase _trackedContent;
+        private readonly Dictionary<string, Model3D> _modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
 
-        FixedLineVisual3D _manipulatorX;
-        FixedLineVisual3D _manipulatorY;
-        FixedLineVisual3D _manipulatorZ;
+        private Visual3D _lighting;
 
-        bool _manipulating;
-        ManipulationMode _manipulationMode;
-        ManipulationAxis _manipulationAxis;
-        Point3D? _manipulationLastPosition;
+        private BoundingBoxWireFrameVisual3D _selectionBox;
+
+        private LineVisual3D _trackedLine;
+
+        private ContentBase _selectedContent;
+
+        private ContentBase _trackedContent;
+
+        private FixedLineVisual3D _manipulatorX;
+
+        private FixedLineVisual3D _manipulatorY;
+
+        private FixedLineVisual3D _manipulatorZ;
+
+        private bool _manipulating;
+
+        private ManipulationMode _manipulationMode;
+
+        private ManipulationAxis _manipulationAxis;
+
+        private Point3D? _manipulationLastPosition;
 
         public delegate void SelectionChangedType(TableBlock block, bool toggle);
 
         public SelectionChangedType SelectionChanged;
 
-        void OnSelectionChanged(TableBlock block, bool toggle)
+        private void OnSelectionChanged(TableBlock block, bool toggle)
         {
             if (SelectionChanged != null)
             {
@@ -56,7 +66,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         public FileOpenType FileOpen;
 
-        void OnFileOpen(string file)
+        private void OnFileOpen(string file)
         {
             if (FileOpen != null)
             {
@@ -68,7 +78,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         public DataManipulatedType DataManipulated;
 
-        void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
         {
             if (DataManipulated != null)
             {
@@ -260,7 +270,7 @@ namespace FreelancerModStudio.SystemDesigner
             Viewport.ZoomExtents(point, distance * 0.5 * zoomFactor, animate ? Animator.AnimationDuration.TimeSpan.TotalMilliseconds : 0);
         }
 
-        void AddContent(ContentBase content)
+        private void AddContent(ContentBase content)
         {
             // load model if it was not loaded yet
             if (content.Content == null)
@@ -301,7 +311,7 @@ namespace FreelancerModStudio.SystemDesigner
             Animator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
-        void AddBlock(TableBlock block)
+        private void AddBlock(TableBlock block)
         {
             ContentBase content = CreateContent(block);
             if (content != null)
@@ -310,7 +320,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void AddModel(ContentBase content)
+        private void AddModel(ContentBase content)
         {
             if (content.IsEmissive())
             {
@@ -338,7 +348,7 @@ namespace FreelancerModStudio.SystemDesigner
             RemoveModel(content);
         }
 
-        void RemoveModel(ContentBase content)
+        private void RemoveModel(ContentBase content)
         {
             Viewport.Children.Remove(content);
 
@@ -352,7 +362,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        static int GetSelectionPriority(ContentBase content)
+        private static int GetSelectionPriority(ContentBase content)
         {
             switch (content.Block.ObjectType)
             {
@@ -481,17 +491,17 @@ namespace FreelancerModStudio.SystemDesigner
             return visual;
         }
 
-        void Viewport_KeyDown(object sender, global::System.Windows.Input.KeyEventArgs e)
+        private void Viewport_KeyDown(object sender, global::System.Windows.Input.KeyEventArgs e)
         {
             ViewportKeyEvent(e, false);
         }
 
-        void Viewport_KeyUp(object sender, global::System.Windows.Input.KeyEventArgs e)
+        private void Viewport_KeyUp(object sender, global::System.Windows.Input.KeyEventArgs e)
         {
             ViewportKeyEvent(e, true);
         }
 
-        void ViewportKeyEvent(global::System.Windows.Input.KeyEventArgs e, bool isKeyUp)
+        private void ViewportKeyEvent(global::System.Windows.Input.KeyEventArgs e, bool isKeyUp)
         {
             bool isCtrl = (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
             bool isAlt = (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
@@ -587,7 +597,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void StartOffsetManipulation(CameraDirection direction, bool complete, bool small)
+        private void StartOffsetManipulation(CameraDirection direction, bool complete, bool small)
         {
             if (ViewerType != ViewerType.System && ViewerType != ViewerType.Universe)
             {
@@ -622,7 +632,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void Fly(CameraDirection direction, bool stop)
+        private void Fly(CameraDirection direction, bool stop)
         {
             if (stop)
             {
@@ -646,7 +656,7 @@ namespace FreelancerModStudio.SystemDesigner
             return bounds;
         }
 
-        void Viewport_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Viewport_MouseDown(object sender, MouseButtonEventArgs e)
         {
             // workaround to focus viewport for key events
             Viewport.Focus();
@@ -690,12 +700,12 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void Viewport_MouseUp(object sender, MouseButtonEventArgs e)
+        private void Viewport_MouseUp(object sender, MouseButtonEventArgs e)
         {
             StopManipulating(false);
         }
 
-        void StopManipulating(bool cancelled)
+        private void StopManipulating(bool cancelled)
         {
             if (!_manipulating)
             {
@@ -730,7 +740,7 @@ namespace FreelancerModStudio.SystemDesigner
             Viewport.Viewport.ReleaseMouseCapture();
         }
 
-        void UpdateSelectedBlock()
+        private void UpdateSelectedBlock()
         {
             TableBlock oldBlock = _selectedContent.Block;
             TableBlock newBlock = ObjectClone.Clone(oldBlock);
@@ -741,12 +751,12 @@ namespace FreelancerModStudio.SystemDesigner
             OnDataManipulated(newBlock, oldBlock);
         }
 
-        Point3D? GetMousePoint(Point mousePosition)
+        private Point3D? GetMousePoint(Point mousePosition)
         {
             return Viewport.CameraController.UnProject(mousePosition, _selectedContent.GetPositionPoint(), Viewport.CameraController.Camera.LookDirection);
         }
 
-        Vector3D GetMouseDelta(Point mousePosition)
+        private Vector3D GetMouseDelta(Point mousePosition)
         {
             // get mouse delta
             Point3D? thisPoint3D = GetMousePoint(mousePosition);
@@ -793,7 +803,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void Viewport_MouseMove(object sender, global::System.Windows.Input.MouseEventArgs e)
+        private void Viewport_MouseMove(object sender, global::System.Windows.Input.MouseEventArgs e)
         {
             if (!_manipulating)
             {
@@ -823,7 +833,7 @@ namespace FreelancerModStudio.SystemDesigner
             SelectedContent = _selectedContent;
         }
 
-        void ManipulateTranslate(Vector3D delta)
+        private void ManipulateTranslate(Vector3D delta)
         {
             // calculate using matrix
             Matrix3D matrix = ContentBase.RotationMatrix(_selectedContent.Rotation);
@@ -834,13 +844,13 @@ namespace FreelancerModStudio.SystemDesigner
             _selectedContent.Position = new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
         }
 
-        void ManipulateOffset(Vector3D offset)
+        private void ManipulateOffset(Vector3D offset)
         {
             // update position
             _selectedContent.Position += offset;
         }
 
-        void ManipulateRotate(Vector3D delta)
+        private void ManipulateRotate(Vector3D delta)
         {
             // calculate using matrix
             Matrix3D matrix = ContentBase.RotationMatrix(_selectedContent.Rotation);
@@ -850,7 +860,7 @@ namespace FreelancerModStudio.SystemDesigner
             _selectedContent.Rotation = ContentBase.GetRotation(matrix);
         }
 
-        void ManipulateScale(Vector3D delta)
+        private void ManipulateScale(Vector3D delta)
         {
             // update position
             _selectedContent.Scale += delta;
@@ -866,7 +876,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void StartManipulation(ManipulationAxis axis, ScreenSpaceVisual3D line, Point mousePosition)
+        private void StartManipulation(ManipulationAxis axis, ScreenSpaceVisual3D line, Point mousePosition)
         {
             _manipulating = true;
             _manipulationAxis = axis;
@@ -877,7 +887,7 @@ namespace FreelancerModStudio.SystemDesigner
             Viewport.Viewport.CaptureMouse();
         }
 
-        void Select(ContentBase content, bool toggle)
+        private void Select(ContentBase content, bool toggle)
         {
             if (!toggle && _selectedContent == content)
             {
@@ -894,7 +904,7 @@ namespace FreelancerModStudio.SystemDesigner
             OnSelectionChanged(content.Block, toggle);
         }
 
-        void DisplayContextMenu(string path)
+        private void DisplayContextMenu(string path)
         {
             ContextMenu menu = new ContextMenu();
             MenuItem item = new MenuItem
@@ -908,12 +918,12 @@ namespace FreelancerModStudio.SystemDesigner
             menu.IsOpen = true;
         }
 
-        void item_Click(object sender, RoutedEventArgs e)
+        private void item_Click(object sender, RoutedEventArgs e)
         {
             OnFileOpen((string)((MenuItem)sender).Tag);
         }
 
-        void SetSelectionBox()
+        private void SetSelectionBox()
         {
             if (_selectedContent == null)
             {
@@ -945,7 +955,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void SetTrackedLine(bool update)
+        private void SetTrackedLine(bool update)
         {
             if (_selectedContent == null)
             {
@@ -1103,7 +1113,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        static int GetAxisCount(ContentType type)
+        private static int GetAxisCount(ContentType type)
         {
             switch (type)
             {
@@ -1129,7 +1139,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        Rect3D GetBounds(ContentBase content)
+        private Rect3D GetBounds(ContentBase content)
         {
             if (IsModelMode && content.Block.IsRealModel())
             {
@@ -1224,7 +1234,7 @@ namespace FreelancerModStudio.SystemDesigner
             DisplayUniverseConnections(analyzer.Connections);
         }
 
-        void DisplayUniverseConnections(Dictionary<int, UniverseConnection> connections)
+        private void DisplayUniverseConnections(Dictionary<int, UniverseConnection> connections)
         {
             Viewport.Dispatcher.Invoke((MethodInvoker)(delegate
                 {
@@ -1235,7 +1245,7 @@ namespace FreelancerModStudio.SystemDesigner
                 }));
         }
 
-        void DeleteConnections(Content.System system)
+        private void DeleteConnections(Content.System system)
         {
             foreach (Connection connection in system.Connections)
             {
@@ -1243,7 +1253,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void UpdateConnections(Content.System system)
+        private void UpdateConnections(Content.System system)
         {
             foreach (Connection connection in system.Connections)
             {
@@ -1251,7 +1261,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        Connection GetConnection(UniverseConnection connection)
+        private Connection GetConnection(UniverseConnection connection)
         {
             Connection line = new Connection();
             SetConnection(line, connection);
@@ -1260,7 +1270,7 @@ namespace FreelancerModStudio.SystemDesigner
             return line;
         }
 
-        void SetConnection(Connection line, UniverseConnection connection)
+        private void SetConnection(Connection line, UniverseConnection connection)
         {
             int count = 2;
 
@@ -1288,7 +1298,7 @@ namespace FreelancerModStudio.SystemDesigner
             SetConnection(line);
         }
 
-        static void SetConnection(Connection line)
+        private static void SetConnection(Connection line)
         {
             Vector3D fromPosition = line.From.Position;
             Vector3D toPosition = line.To.Position;
@@ -1329,7 +1339,7 @@ namespace FreelancerModStudio.SystemDesigner
             line.UpdateTransform(false);
         }
 
-        static ConnectionType GetConnectionType(bool jumpgate, bool jumphole)
+        private static ConnectionType GetConnectionType(bool jumpgate, bool jumphole)
         {
             if (jumpgate && jumphole)
             {
@@ -1347,7 +1357,7 @@ namespace FreelancerModStudio.SystemDesigner
             return ConnectionType.None;
         }
 
-        static double Difference(double x, double y)
+        private static double Difference(double x, double y)
         {
             if (x > y)
             {
@@ -1374,7 +1384,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void SetValues(ContentBase content, TableBlock block)
+        private void SetValues(ContentBase content, TableBlock block)
         {
             bool modelChanged;
             if (ViewerType == ViewerType.SolarArchetype || ViewerType == ViewerType.ModelPreview)
@@ -1407,7 +1417,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        Model3D LoadModel(string modelPath)
+        private Model3D LoadModel(string modelPath)
         {
             string extension = Path.GetExtension(modelPath);
 
@@ -1439,7 +1449,7 @@ namespace FreelancerModStudio.SystemDesigner
             return null;
         }
 
-        void LoadModel(ContentBase content)
+        private void LoadModel(ContentBase content)
         {
             if (IsModelMode && content.Block.IsRealModel())
             {
@@ -1476,7 +1486,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        ContentBase CreateContent(TableBlock block)
+        private ContentBase CreateContent(TableBlock block)
         {
             ContentBase content = CreateContent(block.ObjectType);
             if (content == null)
@@ -1518,7 +1528,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void AddOrReplace(Visual3D visual, Visual3D value)
+        private void AddOrReplace(Visual3D visual, Visual3D value)
         {
             int index = Viewport.Children.IndexOf(visual);
             if (index != -1)
@@ -1540,7 +1550,7 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        void AddOrReplace(ScreenSpaceVisual3D visual, ScreenSpaceVisual3D value)
+        private void AddOrReplace(ScreenSpaceVisual3D visual, ScreenSpaceVisual3D value)
         {
             if (visual != null && value == null)
             {
@@ -1574,7 +1584,7 @@ namespace FreelancerModStudio.SystemDesigner
             Viewport.Title = Helper.String.StringBuilder.ToString();
         }
 
-        void AddTrackInfo()
+        private void AddTrackInfo()
         {
             Helper.String.StringBuilder.AppendLine();
             Helper.String.StringBuilder.AppendLine(_trackedContent.Block.Name);

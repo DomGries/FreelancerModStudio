@@ -38,7 +38,7 @@ namespace FreelancerModStudio.SystemDesigner.Content
             UpdateTransform(GetMatrix(), animate);
         }
 
-        static Matrix3D CreateRotationMatrix(Quaternion value)
+        private static Matrix3D CreateRotationMatrix(Quaternion value)
         {
             Matrix3D matrix = Matrix3D.Identity;
             matrix.Rotate(value);

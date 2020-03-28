@@ -10,9 +10,9 @@ namespace HelixEngine.Meshes
 {
     public class CubeMesh : PolyhedronMeshBase
     {
-        static double l = 0.5;
+        private static double l = 0.5;
 
-        static readonly Point3D[,] faces = new Point3D[6, 5]
+        private static readonly Point3D[,] faces = new Point3D[6, 5]
         {
             // front
             { new Point3D(0, 0, l), 

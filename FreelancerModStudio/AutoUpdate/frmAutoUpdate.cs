@@ -6,7 +6,7 @@ namespace FreelancerModStudio.AutoUpdate
 {
     public partial class frmAutoUpdate : Form, IAutoUpdateUI
     {
-        StatusType _currentPage;
+        private StatusType _currentPage;
 
         public frmAutoUpdate()
         {
@@ -14,11 +14,11 @@ namespace FreelancerModStudio.AutoUpdate
             Icon = Resources.LogoIcon;
         }
 
-        delegate void SetStatusInvoker(StatusType status);
+        private delegate void SetStatusInvoker(StatusType status);
 
         public event ActionRequired ActionRequired;
 
-        void OnAction(ActionType action)
+        private void OnAction(ActionType action)
         {
             if (ActionRequired != null)
             {
@@ -147,12 +147,12 @@ namespace FreelancerModStudio.AutoUpdate
                 });
         }
 
-        void btnAbort_Click(object sender, EventArgs e)
+        private void btnAbort_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        void btnNext_Click(object sender, EventArgs e)
+        private void btnNext_Click(object sender, EventArgs e)
         {
             switch (_currentPage)
             {
@@ -170,7 +170,7 @@ namespace FreelancerModStudio.AutoUpdate
             }
         }
 
-        void frmAutoUpdate_FormClosed(object sender, FormClosedEventArgs e)
+        private void frmAutoUpdate_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (_currentPage == StatusType.Checking ||
                 _currentPage == StatusType.Downloading)

@@ -11,10 +11,13 @@ namespace HelixEngine.Meshes
     public abstract class FlatSurfaceMeshBase : MeshGeneratorBase
     {
         // Precreated arrayes used in the TriangleSubdivide method.
-        Point3D[] verticesBase = new Point3D[3];
-        Vector3D[] normalsBase = new Vector3D[3];
-        int[] indicesBase = new int[3];
-        Point[] texturesBase = new Point[3];
+        private Point3D[] verticesBase = new Point3D[3];
+
+        private Vector3D[] normalsBase = new Vector3D[3];
+
+        private int[] indicesBase = new int[3];
+
+        private Point[] texturesBase = new Point[3];
 
         /// <summary>
         /// 
@@ -35,7 +38,7 @@ namespace HelixEngine.Meshes
             get { return (int)GetValue(SlicesProperty); }
         }
 
-        static bool ValidateSlices(object obj)
+        private static bool ValidateSlices(object obj)
         {
             return (int)obj > 0;
         }
@@ -117,7 +120,7 @@ namespace HelixEngine.Meshes
             }
         }
 
-        Point3D Point3DWeight(Point3D one, Point3D two, double wt2)
+        private Point3D Point3DWeight(Point3D one, Point3D two, double wt2)
         {
             double wt1 = 1 - wt2;
             return new Point3D(wt1 * one.X + wt2 * two.X,
@@ -125,7 +128,7 @@ namespace HelixEngine.Meshes
                                wt1 * one.Z + wt2 * two.Z);
         }
 
-        Vector3D Vector3DWeight(Vector3D one, Vector3D two, double wt2)
+        private Vector3D Vector3DWeight(Vector3D one, Vector3D two, double wt2)
         {
             double wt1 = 1 - wt2;
             return new Vector3D(wt1 * one.X + wt2 * two.X,
@@ -133,7 +136,7 @@ namespace HelixEngine.Meshes
                                 wt1 * one.Z + wt2 * two.Z);
         }
 
-        Point PointWeight(Point one, Point two, double wt2)
+        private Point PointWeight(Point one, Point two, double wt2)
         {
             double wt1 = 1 - wt2;
             return new Point(wt1 * one.X + wt2 * two.X,

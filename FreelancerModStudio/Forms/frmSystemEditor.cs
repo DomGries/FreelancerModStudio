@@ -16,12 +16,13 @@ namespace FreelancerModStudio
 {
     public partial class frmSystemEditor : DockContent
     {
-        Presenter _presenter;
-        Thread _universeLoadingThread;
+        private Presenter _presenter;
+
+        private Thread _universeLoadingThread;
 
         public Presenter.SelectionChangedType SelectionChanged;
 
-        void OnSelectionChanged(TableBlock block, bool toggle)
+        private void OnSelectionChanged(TableBlock block, bool toggle)
         {
             if (SelectionChanged != null)
             {
@@ -31,7 +32,7 @@ namespace FreelancerModStudio
 
         public Presenter.FileOpenType FileOpen;
 
-        void OnFileOpen(string file)
+        private void OnFileOpen(string file)
         {
             if (FileOpen != null)
             {
@@ -41,7 +42,7 @@ namespace FreelancerModStudio
 
         public Presenter.DataManipulatedType DataManipulated;
 
-        void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
         {
             if (DataManipulated != null)
             {
@@ -60,7 +61,7 @@ namespace FreelancerModStudio
             _presenter.SetTitle();
         }
 
-        void InitializeView()
+        private void InitializeView()
         {
 #if DEBUG
             Stopwatch st = new Stopwatch();
@@ -97,17 +98,17 @@ namespace FreelancerModStudio
             _presenter.DataManipulated += systemPresenter_DataManipulated;
         }
 
-        void systemPresenter_SelectionChanged(TableBlock block, bool toggle)
+        private void systemPresenter_SelectionChanged(TableBlock block, bool toggle)
         {
             OnSelectionChanged(block, toggle);
         }
 
-        void systemPresenter_FileOpen(string file)
+        private void systemPresenter_FileOpen(string file)
         {
             OnFileOpen(file);
         }
 
-        void systemPresenter_DataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        private void systemPresenter_DataManipulated(TableBlock newBlock, TableBlock oldBlock)
         {
             OnDataManipulated(newBlock, oldBlock);
         }

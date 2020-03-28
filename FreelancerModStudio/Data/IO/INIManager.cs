@@ -8,11 +8,15 @@ namespace FreelancerModStudio.Data.IO
 {
     public class INIManager
     {
-        const char TOKEN_COMMENT = ';';
-        const char TOKEN_BLOCK_START = '[';
-        const char TOKEN_BLOCK_END = ']';
-        const char TOKEN_MAPPING_VALUE = '=';
-        const string MAPPING_VALUE_WRITE_FORMAT = " = ";
+        private const char TOKEN_COMMENT = ';';
+
+        private const char TOKEN_BLOCK_START = '[';
+
+        private const char TOKEN_BLOCK_END = ']';
+
+        private const char TOKEN_MAPPING_VALUE = '=';
+
+        private const string MAPPING_VALUE_WRITE_FORMAT = " = ";
 
         public string File { get; set; }
 
@@ -177,7 +181,7 @@ namespace FreelancerModStudio.Data.IO
             return data;
         }
 
-        static void AddComment(INIBlock block, string value)
+        private static void AddComment(INIBlock block, string value)
         {
             if (value == null)
             {
@@ -191,7 +195,7 @@ namespace FreelancerModStudio.Data.IO
             block.Comments += value;
         }
 
-        static INIBlock CreateBlock(string name, INIOptions options, string comments)
+        private static INIBlock CreateBlock(string name, INIOptions options, string comments)
         {
             return new INIBlock
                 {

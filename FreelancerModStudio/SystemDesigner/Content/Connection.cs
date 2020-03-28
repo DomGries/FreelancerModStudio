@@ -29,7 +29,7 @@ namespace FreelancerModStudio.SystemDesigner.Content
             return SharedGeometries.GetGeometry(SharedMeshes.Surface, material);
         }
 
-        static Color GetColor(ConnectionType type)
+        private static Color GetColor(ConnectionType type)
         {
             switch (type)
             {

@@ -674,7 +674,7 @@ namespace HelixEngine
             }
         }
 
-        void Fly(double deltaTime)
+        private void Fly(double deltaTime)
         {
             const double speedFactor = 40;
             const double shiftSpeedFactor = 5;
@@ -736,7 +736,7 @@ namespace HelixEngine
             return offset;
         }
 
-        void OnCompositionTargetRendering(object sender, EventArgs e)
+        private void OnCompositionTargetRendering(object sender, EventArgs e)
         {
             long ticks = ((RenderingEventArgs)e).RenderingTime.Ticks;
             double deltaTime = 100e-9 * (ticks - this.lastTick);

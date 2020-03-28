@@ -23,7 +23,7 @@ namespace WeifenLuo.WinFormsUI.Docking
                     DragForm.Show(false);
                 }
 
-                DragForm m_dragForm;
+                private DragForm m_dragForm;
                 private DragForm DragForm
                 {
                     get { return m_dragForm; }

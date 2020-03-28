@@ -35,7 +35,7 @@ namespace HelixEngine.Meshes
             get { return (string)GetValue(NameProperty); }
         }
 
-        static DependencyPropertyKey GeometryKey =
+        private static DependencyPropertyKey GeometryKey =
             DependencyProperty.RegisterReadOnly("Geometry",
                 typeof(MeshGeometry3D),
                 typeof(MeshGeneratorBase),

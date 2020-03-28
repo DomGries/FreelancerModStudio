@@ -49,7 +49,7 @@ namespace FreelancerModStudio.SystemDesigner
                 Width = 2
             });
 
-        static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
+        private static MeshGeometry3D GetMesh(MeshGeneratorBase mesh)
         {
             MeshGeometry3D geometry = mesh.Geometry;
             geometry.Freeze();

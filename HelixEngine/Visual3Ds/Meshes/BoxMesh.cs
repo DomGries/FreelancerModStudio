@@ -166,7 +166,7 @@ namespace HelixEngine.Meshes
         }
 
         // Validation callback for Slices, Stacks, Layers.
-        static bool ValidateDivisions(object obj)
+        private static bool ValidateDivisions(object obj)
         {
             return (int)obj > 0;
         }

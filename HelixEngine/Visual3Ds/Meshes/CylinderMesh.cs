@@ -41,7 +41,7 @@ namespace HelixEngine.Meshes
                 ValidateEndStacks);
 
         // Validation callback for EndStacks.
-        static bool ValidateEndStacks(object obj)
+        private static bool ValidateEndStacks(object obj)
         {
             return (int)obj > 0;
         }
@@ -77,7 +77,7 @@ namespace HelixEngine.Meshes
                 ValidateFold);
 
         // Validation callback for Fold.
-        static bool ValidateFold(object obj)
+        private static bool ValidateFold(object obj)
         {
             return (double)obj < 0.5;
         }

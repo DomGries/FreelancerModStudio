@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Forms;
-
-namespace FreelancerModStudio
+﻿namespace FreelancerModStudio
 {
+    using System;
+    using System.Diagnostics;
+    using System.Windows.Forms;
+
     internal static class Program
     {
         [STAThread]

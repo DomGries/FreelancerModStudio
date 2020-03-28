@@ -8,8 +8,9 @@ namespace FreelancerModStudio.Data.IO
     {
         public string File { get; set; }
 
-        const string FILE_TYPE = "UTF ";
-        const int FILE_VERSION = 0x101;
+        private const string FILE_TYPE = "UTF ";
+
+        private const int FILE_VERSION = 0x101;
 
         public UTFManager(string file)
         {
@@ -60,7 +61,7 @@ namespace FreelancerModStudio.Data.IO
             }
         }
 
-        static void ParseNode(BinaryReader reader, string stringBlock, int nodeBlockStart, int nodeStart, int dataBlockOffset, UTFNode parent)
+        private static void ParseNode(BinaryReader reader, string stringBlock, int nodeBlockStart, int nodeStart, int dataBlockOffset, UTFNode parent)
         {
             int offset = nodeBlockStart + nodeStart;
             reader.BaseStream.Position = offset;

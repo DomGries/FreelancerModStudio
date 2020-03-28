@@ -1,38 +1,39 @@
 ﻿#if DEBUG
-using FreelancerModStudio.SystemDesigner;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.INI;
-using FreelancerModStudio.Data.IO;
-
 namespace FreelancerModStudio
 {
-    //this class is for developers testing purposes only 
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.Data.INI;
+    using FreelancerModStudio.Data.IO;
+    using FreelancerModStudio.SystemDesigner;
+
+    // this class is for developers testing purposes only 
     internal class DevTest
     {
-        //create template for freelancer\data path (inis)
+        // create template for freelancer\data path (inis)
         public class INIDataTemplate
         {
             public string Path;
             public List<INIBlock> Blocks = new List<INIBlock>();
         }
 
-        static readonly List<INIDataTemplate> DataList = new List<INIDataTemplate>();
+        private static readonly List<INIDataTemplate> DataList = new List<INIDataTemplate>();
 
         public static void CreateTemplate(string path)
         {
             CreateTemplate(path, path.Length + 1);
 
             Template template = new Template();
-            foreach (INIDataTemplate iniDataTemplate in DataList) //each file
+            foreach (INIDataTemplate iniDataTemplate in DataList) // each file
             {
                 Table<string, Template.Block> templateBlocks = new Table<string, Template.Block>(StringComparer.OrdinalIgnoreCase);
-                foreach (INIBlock block in iniDataTemplate.Blocks) //each block
+                foreach (INIBlock block in iniDataTemplate.Blocks) // each block
                 {
                     Template.Options templateOptions = new Template.Options();
-                    foreach (KeyValuePair<string, List<INIOption>> option in block.Options) //each option
+                    foreach (KeyValuePair<string, List<INIOption>> option in block.Options) // each option
                     {
                         templateOptions.Add(new Template.Option
                             {
@@ -44,13 +45,13 @@ namespace FreelancerModStudio
                     int blockIndex = templateBlocks.IndexOf(block.Name);
                     if (blockIndex != -1)
                     {
-                        //integration options
+                        // integration options
                         foreach (Template.Option option in templateOptions)
                         {
                             int optionIndex = templateBlocks.Values[blockIndex].Options.IndexOf(option.Name);
                             if (optionIndex != -1)
                             {
-                                //change to multiple options
+                                // change to multiple options
                                 if (option.Multiple)
                                 {
                                     templateBlocks.Values[blockIndex].Options[optionIndex].Multiple = true;
@@ -58,12 +59,12 @@ namespace FreelancerModStudio
                             }
                             else
                             {
-                                //add missing option
+                                // add missing option
                                 templateBlocks.Values[blockIndex].Options.Add(option);
                             }
                         }
 
-                        //change to multiple blocks
+                        // change to multiple blocks
                         templateBlocks.Values[blockIndex].Multiple = true;
 
                         if (templateBlocks.Values[blockIndex].Options.IndexOf("nickname") != -1)
@@ -71,12 +72,12 @@ namespace FreelancerModStudio
                             templateBlocks.Values[blockIndex].Identifier = "nickname";
                         }
 
-                        //sort options after integration
-                        //templateBlocks.Values[blockIndex].Options.Sort();
+                        // sort options after integration
+                        // templateBlocks.Values[blockIndex].Options.Sort();
                     }
                     else
                     {
-                        //add new block
+                        // add new block
                         templateBlocks.Add(new Template.Block
                             {
                                 Name = block.Name,
@@ -100,7 +101,7 @@ namespace FreelancerModStudio
             template.Save("newTemplate.xml");
         }
 
-        static void CreateTemplate(string path, int dataPathIndex)
+        private static void CreateTemplate(string path, int dataPathIndex)
         {
             foreach (string file in Directory.GetFiles(path, "*.ini"))
             {
@@ -115,7 +116,7 @@ namespace FreelancerModStudio
 
         #region "File Groups"
 
-        static readonly string[][] FileGroups = {
+        private static readonly string[][] FileGroups = {
             // fuses
             new[]
                 {
@@ -1401,7 +1402,7 @@ namespace FreelancerModStudio
 
         #region "Excluded Files"
 
-        static readonly string[] ExcludedFiles = {
+        private static readonly string[] ExcludedFiles = {
             "concave.ini",
             "fx\\fuse_li_battleship.ini",
             "interface\\hud\\hudtarget.ini",
@@ -1414,7 +1415,7 @@ namespace FreelancerModStudio
 
         #endregion
 
-        static int GetTemplateFileGroup(string filePath)
+        private static int GetTemplateFileGroup(string filePath)
         {
             for (int i = 0; i < FileGroups.Length; ++i)
             {
@@ -1429,7 +1430,7 @@ namespace FreelancerModStudio
             return -1;
         }
 
-        static void CreateTemplateFromFile(string file, int dataPathIndex)
+        private static void CreateTemplateFromFile(string file, int dataPathIndex)
         {
             string filePath = file.Substring(dataPathIndex).ToLowerInvariant();
             if (Array.IndexOf(ExcludedFiles, filePath) != -1)
@@ -1518,7 +1519,7 @@ namespace FreelancerModStudio
             }
         }
 
-        static void ResaveFile(string sourceFile, string targetFile)
+        private static void ResaveFile(string sourceFile, string targetFile)
         {
             int templateIndex = Helper.Template.Data.GetIndex(sourceFile);
             if (templateIndex == -1)

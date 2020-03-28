@@ -1,7 +1,7 @@
-﻿using System.Windows.Forms;
-
-namespace FreelancerModStudio
+﻿namespace FreelancerModStudio
 {
+    using System.Windows.Forms;
+
     public interface IContentForm
     {
         bool CanDelete();

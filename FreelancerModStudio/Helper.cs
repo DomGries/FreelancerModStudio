@@ -1,19 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Forms;
-using FreelancerModStudio.AutoUpdate;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.Properties;
-
 namespace FreelancerModStudio
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.IO;
+    using System.Reflection;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading;
+    using System.Windows.Forms;
+
+    using FreelancerModStudio.AutoUpdate;
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.Properties;
+
     internal static class Helper
     {
         internal struct Program
@@ -117,7 +118,7 @@ namespace FreelancerModStudio
 
         internal struct Template
         {
-            static FreelancerModStudio.Data.Template _data;
+            private static FreelancerModStudio.Data.Template _data;
 
             public static void Load()
             {

@@ -91,7 +91,7 @@ namespace HelixEngine.Meshes
                 ValidateSlices);
 
         // Validation callback for Slices.
-        static bool ValidateSlices(object obj)
+        private static bool ValidateSlices(object obj)
         {
             return (int)obj > 2;
         }
@@ -126,7 +126,7 @@ namespace HelixEngine.Meshes
                 ValidateStacks);
 
         // Validation callback for Stacks.
-        static bool ValidateStacks(object obj)
+        private static bool ValidateStacks(object obj)
         {
             return (int)obj > 2;
         }

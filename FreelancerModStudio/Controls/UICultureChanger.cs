@@ -19,7 +19,7 @@ namespace FreelancerModStudio.Controls
         /// <summary>
         /// Encapsulates all information needed to apply localized resources to a form or field.
         /// </summary>
-        class ChangeInfo
+        private class ChangeInfo
         {
             #region instance fields
 
@@ -37,7 +37,7 @@ namespace FreelancerModStudio.Controls
             /// <summary>
             /// Stores the name of the form or field.
             /// </summary>
-            readonly string _name;
+            private readonly string _name;
 
             /// <summary>
             /// Gets the instance of the form or field.
@@ -53,7 +53,7 @@ namespace FreelancerModStudio.Controls
             /// <summary>
             /// Stores the instance of the form or field.
             /// </summary>
-            readonly object _value;
+            private readonly object _value;
 
             /// <summary>
             /// Gets the <see cref="Type"/> object of the form or field.
@@ -69,7 +69,7 @@ namespace FreelancerModStudio.Controls
             /// <summary>
             /// Stores the <see cref="Type"/> object of the form or field.
             /// </summary>
-            readonly Type _type;
+            private readonly Type _type;
 
             #endregion
 

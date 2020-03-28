@@ -878,7 +878,7 @@ namespace WeifenLuo.WinFormsUI.Docking
             DummyControl.Invalidate();
         }
 
-        void DummyControl_Paint(object sender, PaintEventArgs e)
+        private void DummyControl_Paint(object sender, PaintEventArgs e)
         {
             DummyControl.Paint -= m_dummyControlPaintEventHandler;
             UpdateWindowRegion();

@@ -56,10 +56,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         private void OnSelectionChanged(TableBlock block, bool toggle)
         {
-            if (SelectionChanged != null)
-            {
-                SelectionChanged(block, toggle);
-            }
+            this.SelectionChanged?.Invoke(block, toggle);
         }
 
         public delegate void FileOpenType(string file);
@@ -68,10 +65,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         private void OnFileOpen(string file)
         {
-            if (FileOpen != null)
-            {
-                FileOpen(file);
-            }
+            this.FileOpen?.Invoke(file);
         }
 
         public delegate void DataManipulatedType(TableBlock newBlock, TableBlock oldBlock);
@@ -80,10 +74,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
         {
-            if (DataManipulated != null)
-            {
-                DataManipulated(newBlock, oldBlock);
-            }
+            this.DataManipulated?.Invoke(newBlock, oldBlock);
         }
 
         public Visual3D Lighting
@@ -1559,9 +1550,9 @@ namespace FreelancerModStudio.SystemDesigner
 
             AddOrReplace(visual, (Visual3D)value);
 
-            if (visual == null && value != null)
+            if (visual == null)
             {
-                value.StartRendering();
+                value?.StartRendering();
             }
         }
 

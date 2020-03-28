@@ -8,7 +8,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace FreelancerModStudio
 {
-    public partial class frmProperties : DockContent, IContentForm
+    public partial class PropertiesForm : DockContent, IContentForm
     {
         public delegate void OptionsChangedType(PropertyBlock[] blocks);
 
@@ -16,13 +16,10 @@ namespace FreelancerModStudio
 
         private void OnOptionsChanged(PropertyBlock[] blocks)
         {
-            if (OptionsChanged != null)
-            {
-                OptionsChanged(blocks);
-            }
+            this.OptionsChanged?.Invoke(blocks);
         }
 
-        public frmProperties()
+        public PropertiesForm()
         {
             InitializeComponent();
             Icon = Resources.Properties;

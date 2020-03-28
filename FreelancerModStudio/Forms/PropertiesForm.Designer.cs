@@ -84,7 +84,7 @@
             this.descriptionToolStripMenuItem.Visible = false;
             this.descriptionToolStripMenuItem.Click += new System.EventHandler(this.descriptionToolStripMenuItem_Click);
             // 
-            // PropertiesForm
+            // frmProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -96,7 +96,7 @@
                         | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.HideOnClose = true;
-            this.Name = "PropertiesForm";
+            this.Name = "frmProperties";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockRight;
             this.TabText = "Properties";
             this.Text = "Properties";

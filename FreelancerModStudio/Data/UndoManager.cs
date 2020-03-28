@@ -16,10 +16,7 @@ namespace FreelancerModStudio.Data
 
         private void OnDataChanged(T o, bool undo)
         {
-            if (DataChanged != null)
-            {
-                DataChanged(o, undo);
-            }
+            this.DataChanged?.Invoke(o, undo);
         }
 
         public T CurrentData

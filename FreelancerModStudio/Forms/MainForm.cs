@@ -1,47 +1,49 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Windows.Forms;
-using FreelancerModStudio.Controls;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.Properties;
-using FreelancerModStudio.SystemDesigner;
-using WeifenLuo.WinFormsUI.Docking;
-
 namespace FreelancerModStudio
 {
-    public partial class frmMain : Form
-    {
-        //Mod mod;
-        //bool modChanged;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.Globalization;
+    using System.IO;
+    using System.Windows.Forms;
 
-        private frmProperties _propertiesForm;
-        //frmSolutionExplorer solutionExplorerForm = null;
-        private frmSystemEditor _systemEditor;
+    using FreelancerModStudio.Controls;
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.Properties;
+    using FreelancerModStudio.SystemDesigner;
+
+    using WeifenLuo.WinFormsUI.Docking;
+
+    public partial class MainForm : Form
+    {
+        // Mod mod;
+        // bool modChanged;
+
+        private PropertiesForm propertiesFormForm;
+        // frmSolutionExplorer solutionExplorerForm = null;
+        private SystemEditorForm systemEditorForm;
 
         private readonly UICultureChanger _uiCultureChanger = new UICultureChanger();
 
-        public frmMain()
+        public MainForm()
         {
             InitializeComponent();
             Icon = Resources.LogoIcon;
 
             GetSettings();
 
-            //initialize content windows after language was set
+            // initialize content windows after language was set
             InitContentWindows();
 
-            //register event to restart app if update was downloaded and button 'Install' pressed
+            // register event to restart app if update was downloaded and button 'Install' pressed
             Helper.Update.AutoUpdate.RestartingApplication += AutoUpdate_RestartingApplication;
         }
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            //open files
+            // open files
             string[] arguments = Environment.GetCommandLineArgs();
             for (int i = 1; i < arguments.Length; ++i)
             {
@@ -51,7 +53,7 @@ namespace FreelancerModStudio
                 }
             }
 
-            //load layout
+            // load layout
             bool layoutLoaded = false;
             string layoutFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.LayoutPath);
             if (File.Exists(layoutFile))
@@ -69,8 +71,8 @@ namespace FreelancerModStudio
 
             if (!layoutLoaded)
             {
-                //this.solutionExplorerForm.Show(dockPanel1);
-                _propertiesForm.Show(dockPanel1);
+                // this.solutionExplorerForm.Show(dockPanel1);
+                this.propertiesFormForm.Show(dockPanel1);
             }
 
             SettingsChanged();
@@ -78,31 +80,31 @@ namespace FreelancerModStudio
 
         private void InitContentWindows()
         {
-            _propertiesForm = new frmProperties();
-            //solutionExplorerForm = new frmSolutionExplorer();
+            this.propertiesFormForm = new PropertiesForm();
+            // solutionExplorerForm = new frmSolutionExplorer();
 
-            _propertiesForm.OptionsChanged += Properties_OptionsChanged;
+            this.propertiesFormForm.OptionsChanged += Properties_OptionsChanged;
 
             InitSystemEditor();
         }
 
         private void InitSystemEditor()
         {
-            _systemEditor = new frmSystemEditor();
-            _systemEditor.SelectionChanged += systemEditor_SelectionChanged;
-            _systemEditor.FileOpen += systemEditor_FileOpen;
-            _systemEditor.DataManipulated += systemEditor_DataManipulated;
+            this.systemEditorForm = new SystemEditorForm();
+            this.systemEditorForm.SelectionChanged += systemEditor_SelectionChanged;
+            this.systemEditorForm.FileOpen += systemEditor_FileOpen;
+            this.systemEditorForm.DataManipulated += systemEditor_DataManipulated;
         }
 
         private IDockContent GetContentFromPersistString(string persistString)
         {
-            if (persistString == typeof(frmProperties).ToString())
+            if (persistString == typeof(PropertiesForm).ToString())
             {
-                return _propertiesForm;
+                return this.propertiesFormForm;
             }
-            //else if (persistString == typeof(frmSolutionExplorer).ToString())
-            //    return solutionExplorerForm;
-            else if (persistString == typeof(frmSystemEditor).ToString())
+            // else if (persistString == typeof(frmSolutionExplorer).ToString())
+            // return solutionExplorerForm;
+            else if (persistString == typeof(SystemEditorForm).ToString())
             {
                 // do not open system editor if not a single document could be loaded
                 // usually we handle this over active document changed events, but this will not be fired if no document was loaded
@@ -111,7 +113,7 @@ namespace FreelancerModStudio
                     return null;
                 }
 
-                return _systemEditor;
+                return this.systemEditorForm;
             }
             else
             {
@@ -195,26 +197,26 @@ namespace FreelancerModStudio
 
         private void DefaultEditor_DataChanged(ChangedData data)
         {
-            if (_systemEditor != null)
+            if (this.systemEditorForm != null)
             {
                 switch (data.Type)
                 {
                     case ChangedType.Add:
-                        _systemEditor.Add(data.NewBlocks);
+                        this.systemEditorForm.Add(data.NewBlocks);
                         break;
                     case ChangedType.Delete:
-                        _systemEditor.Delete(data.NewBlocks);
+                        this.systemEditorForm.Delete(data.NewBlocks);
                         break;
                     case ChangedType.Edit:
-                        _systemEditor.SetValues(data.NewBlocks);
+                        this.systemEditorForm.SetValues(data.NewBlocks);
                         break;
                     case ChangedType.AddAndEdit:
-                        _systemEditor.Add(data.NewBlocks);
-                        _systemEditor.SetValues(data.NewAdditionalBlocks);
+                        this.systemEditorForm.Add(data.NewBlocks);
+                        this.systemEditorForm.SetValues(data.NewAdditionalBlocks);
                         break;
                     case ChangedType.DeleteAndEdit:
-                        _systemEditor.Delete(data.NewBlocks);
-                        _systemEditor.SetValues(data.NewAdditionalBlocks);
+                        this.systemEditorForm.Delete(data.NewBlocks);
+                        this.systemEditorForm.SetValues(data.NewAdditionalBlocks);
                         break;
                 }
             }
@@ -224,30 +226,21 @@ namespace FreelancerModStudio
         {
             if (data != null)
             {
-                _propertiesForm.ShowData(data, templateIndex);
+                this.propertiesFormForm.ShowData(data, templateIndex);
 
-                if (_systemEditor != null)
-                {
-                    _systemEditor.Select(data[0]);
-                }
+                this.systemEditorForm?.Select(data[0]);
             }
             else
             {
-                _propertiesForm.ClearData();
+                this.propertiesFormForm.ClearData();
 
-                if (_systemEditor != null)
-                {
-                    _systemEditor.Deselect();
-                }
+                this.systemEditorForm?.Deselect();
             }
         }
 
         private void DefaultEditor_DataVisibilityChanged(TableBlock block)
         {
-            if (_systemEditor != null)
-            {
-                _systemEditor.SetVisibility(block);
-            }
+            this.systemEditorForm?.SetVisibility(block);
         }
 
         private void DefaultEditor_FormClosed(object sender, FormClosedEventArgs e)
@@ -277,10 +270,7 @@ namespace FreelancerModStudio
         private void Properties_OptionsChanged(PropertyBlock[] blocks)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
-            if (tableEditor != null)
-            {
-                tableEditor.ChangeBlocks(blocks);
-            }
+            tableEditor?.ChangeBlocks(blocks);
         }
 
         private void mnuFullScreen_Click(object sender, EventArgs e)
@@ -359,7 +349,7 @@ namespace FreelancerModStudio
 
             if (Helper.Settings.Data.Data.Forms.Main.FullScreen)
             {
-                //show fullscreen
+                // show fullscreen
                 ToolStripMenuItem fullScreenMenuItem = new ToolStripMenuItem(mnuFullScreen.Text, mnuFullScreen.Image, mnuFullScreen_Click)
                     {
                         Checked = true
@@ -377,7 +367,7 @@ namespace FreelancerModStudio
             }
             else
             {
-                //exit fullscreen
+                // exit fullscreen
                 MainMenuStrip.Items.RemoveAt(MainMenuStrip.Items.Count - 1);
 
                 WindowState = Helper.Settings.Data.Data.Forms.Main.Maximized ? FormWindowState.Maximized : FormWindowState.Normal;
@@ -403,7 +393,7 @@ namespace FreelancerModStudio
 
         private void AddToRecentFiles(string file, int templateIndex)
         {
-            //remove double files
+            // remove double files
             for (int i = 0; i < Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count; ++i)
             {
                 if (Helper.Settings.Data.Data.Forms.Main.RecentFiles[i].File.Equals(file, StringComparison.OrdinalIgnoreCase))
@@ -413,14 +403,14 @@ namespace FreelancerModStudio
                 }
             }
 
-            //insert new recentfile at first place
+            // insert new recentfile at first place
             Helper.Settings.Data.Data.Forms.Main.RecentFiles.Insert(0, new Settings.RecentFile
                 {
                     File = file,
                     TemplateIndex = templateIndex
                 });
 
-            //remove last recentfile to keep ajusted amount of recentfiles
+            // remove last recentfile to keep ajusted amount of recentfiles
             if (Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count > Helper.Settings.Data.Data.General.RecentFilesCount)
             {
                 Helper.Settings.Data.Data.Forms.Main.RecentFiles.RemoveAt(Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count - 1);
@@ -433,7 +423,7 @@ namespace FreelancerModStudio
         {
             int firstItemIndex = mnuOpen.DropDownItems.IndexOf(mnuRecentFilesSeperator) + 1;
 
-            //remove all recent menuitems
+            // remove all recent menuitems
             for (int i = firstItemIndex; i < mnuOpen.DropDownItems.Count; ++i)
             {
                 mnuOpen.DropDownItems.RemoveAt(mnuOpen.DropDownItems.Count - 1);
@@ -442,7 +432,7 @@ namespace FreelancerModStudio
 
             if (Helper.Settings.Data.Data.General.RecentFilesCount > 0 && Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count > 0)
             {
-                //add recent menuitems
+                // add recent menuitems
                 for (int i = 0; i < Helper.Settings.Data.Data.Forms.Main.RecentFiles.Count; ++i)
                 {
                     if (i < Helper.Settings.Data.Data.General.RecentFilesCount)
@@ -497,7 +487,7 @@ namespace FreelancerModStudio
                 templateIndex = Helper.Template.Data.GetIndex(file);
                 if (templateIndex == -1)
                 {
-                    //let the user choose the ini file type
+                    // let the user choose the ini file type
                     templateIndex = GetTemplateIndexDialog(file);
                 }
             }
@@ -669,7 +659,7 @@ namespace FreelancerModStudio
 
         private void AutoUpdate_RestartingApplication(object sender, CancelEventArgs e)
         {
-            //close all MdiChildren and check if user canceled one
+            // close all MdiChildren and check if user canceled one
             if (CloseAllDocuments())
             {
                 BeginInvoke((MethodInvoker)Close);
@@ -686,11 +676,11 @@ namespace FreelancerModStudio
 
         private void dockPanel1_ActiveDocumentChanged(object sender, EventArgs e)
         {
-            //show properties of document if active document changed
+            // show properties of document if active document changed
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
             if (tableEditor != null)
             {
-                if (_systemEditor != null && (!tableEditor.CanDisplay3DViewer() || _systemEditor.IsHidden))
+                if (this.systemEditorForm != null && (!tableEditor.CanDisplay3DViewer() || this.systemEditorForm.IsHidden))
                 {
                     CloseSystemEditor();
                 }
@@ -700,13 +690,13 @@ namespace FreelancerModStudio
                 }
 
                 // update property window after changing active document
-                _propertiesForm.ShowData(tableEditor.GetSelectedBlocks(), tableEditor.Data.TemplateIndex);
+                this.propertiesFormForm.ShowData(tableEditor.GetSelectedBlocks(), tableEditor.Data.TemplateIndex);
             }
             else
             {
-                _propertiesForm.ClearData();
+                this.propertiesFormForm.ClearData();
 
-                if (_systemEditor != null)
+                if (this.systemEditorForm != null)
                 {
                     CloseSystemEditor();
                 }
@@ -718,62 +708,62 @@ namespace FreelancerModStudio
 
         private void ShowSystemEditor(frmTableEditor tableEditor)
         {
-            if (_systemEditor != null)
+            if (this.systemEditorForm != null)
             {
-                _systemEditor.ShowViewer(tableEditor.ViewerType);
+                this.systemEditorForm.ShowViewer(tableEditor.ViewerType);
 
                 // set data path before showing the models
-                _systemEditor.DataPath = tableEditor.DataPath;
+                this.systemEditorForm.DataPath = tableEditor.DataPath;
 
                 switch (tableEditor.ViewerType)
                 {
                     case ViewerType.System:
                         // set model mode as it was reset if the editor was closed
-                        _systemEditor.IsModelMode = mnuShowModels.Checked;
-                        _systemEditor.ShowData(tableEditor.Data);
+                        this.systemEditorForm.IsModelMode = mnuShowModels.Checked;
+                        this.systemEditorForm.ShowData(tableEditor.Data);
                         break;
                     case ViewerType.Universe:
-                        _systemEditor.IsModelMode = false;
-                        _systemEditor.ShowData(tableEditor.Data);
-                        _systemEditor.ShowUniverseConnections(tableEditor.File, tableEditor.Data.Blocks, tableEditor.Archetype);
+                        this.systemEditorForm.IsModelMode = false;
+                        this.systemEditorForm.ShowData(tableEditor.Data);
+                        this.systemEditorForm.ShowUniverseConnections(tableEditor.File, tableEditor.Data.Blocks, tableEditor.Archetype);
                         break;
                     case ViewerType.SolarArchetype:
                     case ViewerType.ModelPreview:
-                        _systemEditor.IsModelMode = true;
+                        this.systemEditorForm.IsModelMode = true;
                         break;
                 }
 
                 // set manipulation mode as it was reset if the editor was closed
                 if (mnuManipulationTranslate.Checked)
                 {
-                    _systemEditor.ManipulationMode = ManipulationMode.Translate;
+                    this.systemEditorForm.ManipulationMode = ManipulationMode.Translate;
                 }
                 else if (mnuManipulationRotate.Checked)
                 {
-                    _systemEditor.ManipulationMode = ManipulationMode.Rotate;
+                    this.systemEditorForm.ManipulationMode = ManipulationMode.Rotate;
                 }
                 else if (mnuManipulationScale.Checked)
                 {
-                    _systemEditor.ManipulationMode = ManipulationMode.Scale;
+                    this.systemEditorForm.ManipulationMode = ManipulationMode.Scale;
                 }
                 else
                 {
-                    _systemEditor.ManipulationMode = ManipulationMode.None;
+                    this.systemEditorForm.ManipulationMode = ManipulationMode.None;
                 }
 
-                //select initially
+                // select initially
                 List<TableBlock> blocks = tableEditor.GetSelectedBlocks();
                 if (blocks != null)
                 {
-                    _systemEditor.Select(blocks[0]);
+                    this.systemEditorForm.Select(blocks[0]);
                 }
             }
         }
 
         private void mnuOptions_Click(object sender, EventArgs e)
         {
-            frmOptions optionsForm = new frmOptions();
-            optionsForm.ShowDialog();
+            OptionsForm optionsFormForm = new OptionsForm();
+            optionsFormForm.ShowDialog();
 
             // check for valid data
             Helper.Settings.Data.Data.General.CheckValidData();
@@ -801,10 +791,7 @@ namespace FreelancerModStudio
             foreach (IDockContent document in dockPanel1.Documents)
             {
                 frmTableEditor tableEditor = document as frmTableEditor;
-                if (tableEditor != null)
-                {
-                    tableEditor.Save();
-                }
+                tableEditor?.Save();
             }
         }
 
@@ -820,23 +807,17 @@ namespace FreelancerModStudio
                 {
                     _uiCultureChanger.ApplyCultureToForm(tableEditor);
 
-                    //refresh settings after language change
+                    // refresh settings after language change
                     tableEditor.RefreshSettings();
                 }
             }
 
-            if (_propertiesForm != null)
-            {
-                _propertiesForm.RefreshSettings();
-            }
+            this.propertiesFormForm?.RefreshSettings();
 
-            if (_systemEditor != null)
-            {
-                _systemEditor.RefreshSettings();
-            }
+            this.systemEditorForm?.RefreshSettings();
 
-            //if (solutionExplorerForm != null)
-            //    solutionExplorerForm.RefreshSettings();
+            // if (solutionExplorerForm != null)
+            // solutionExplorerForm.RefreshSettings();
 
             SetDocumentMenus(GetDocument());
         }
@@ -875,17 +856,17 @@ namespace FreelancerModStudio
 
         private void mnuSolutionExplorer_Click(object sender, EventArgs e)
         {
-            //solutionExplorerForm.Show(dockPanel1);
+            // solutionExplorerForm.Show(dockPanel1);
         }
 
         private void mnuProperties_Click(object sender, EventArgs e)
         {
-            _propertiesForm.Show(dockPanel1, DockState.DockRight);
+            this.propertiesFormForm.Show(dockPanel1, DockState.DockRight);
         }
 
         private void mnuNewFile_Click(object sender, EventArgs e)
         {
-            //let the user choose the ini file type
+            // let the user choose the ini file type
             int templateIndex = GetTemplateIndexDialog(null);
             if (templateIndex != -1)
             {
@@ -933,72 +914,48 @@ namespace FreelancerModStudio
         private void mnuCut_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
-            if (document != null)
-            {
-                document.Cut();
-            }
+            document?.Cut();
         }
 
         private void mnuCopy_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
-            if (document != null)
-            {
-                document.Copy();
-            }
+            document?.Copy();
         }
 
         private void mnuPaste_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
-            if (document != null)
-            {
-                document.Paste();
-            }
+            document?.Paste();
         }
 
         private void mnuUndo_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
-            if (document != null)
-            {
-                document.Undo();
-            }
+            document?.Undo();
         }
 
         private void mnuRedo_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
-            if (document != null)
-            {
-                document.Redo();
-            }
+            document?.Redo();
         }
 
         private void mnuClose_Click(object sender, EventArgs e)
         {
-            if (dockPanel1.ActiveDocument != null)
-            {
-                dockPanel1.ActiveDocument.DockHandler.Close();
-            }
+            this.dockPanel1.ActiveDocument?.DockHandler.Close();
         }
 
         private void mnuDelete_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
-            if (document != null)
-            {
-                document.Delete();
-            }
+            document?.Delete();
         }
 
         private void mnuSelectAll_Click(object sender, EventArgs e)
         {
             IDocumentForm document = GetDocument();
-            if (document != null)
-            {
-                document.SelectAll();
-            }
+            document?.SelectAll();
         }
 
         private void mnuShowModels_Click(object sender, EventArgs e)
@@ -1006,9 +963,9 @@ namespace FreelancerModStudio
             bool isModelMode = !mnuShowModels.Checked;
             mnuShowModels.Checked = isModelMode;
 
-            if (_systemEditor != null)
+            if (this.systemEditorForm != null)
             {
-                _systemEditor.IsModelMode = isModelMode;
+                this.systemEditorForm.IsModelMode = isModelMode;
             }
         }
 
@@ -1019,9 +976,9 @@ namespace FreelancerModStudio
             mnuManipulationRotate.Checked = false;
             mnuManipulationScale.Checked = false;
 
-            if (_systemEditor != null)
+            if (this.systemEditorForm != null)
             {
-                _systemEditor.ManipulationMode = ManipulationMode.None;
+                this.systemEditorForm.ManipulationMode = ManipulationMode.None;
             }
         }
 
@@ -1032,9 +989,9 @@ namespace FreelancerModStudio
             mnuManipulationRotate.Checked = false;
             mnuManipulationScale.Checked = false;
 
-            if (_systemEditor != null)
+            if (this.systemEditorForm != null)
             {
-                _systemEditor.ManipulationMode = ManipulationMode.Translate;
+                this.systemEditorForm.ManipulationMode = ManipulationMode.Translate;
             }
         }
 
@@ -1045,9 +1002,9 @@ namespace FreelancerModStudio
             mnuManipulationRotate.Checked = true;
             mnuManipulationScale.Checked = false;
 
-            if (_systemEditor != null)
+            if (this.systemEditorForm != null)
             {
-                _systemEditor.ManipulationMode = ManipulationMode.Rotate;
+                this.systemEditorForm.ManipulationMode = ManipulationMode.Rotate;
             }
         }
 
@@ -1058,43 +1015,31 @@ namespace FreelancerModStudio
             mnuManipulationRotate.Checked = false;
             mnuManipulationScale.Checked = true;
 
-            if (_systemEditor != null)
+            if (this.systemEditorForm != null)
             {
-                _systemEditor.ManipulationMode = ManipulationMode.Scale;
+                this.systemEditorForm.ManipulationMode = ManipulationMode.Scale;
             }
         }
 
         private void mnuFocusSelected_Click(object sender, EventArgs e)
         {
-            if (_systemEditor != null)
-            {
-                _systemEditor.FocusSelected();
-            }
+            this.systemEditorForm?.FocusSelected();
         }
 
         private void mnuLookAtSelected_Click(object sender, EventArgs e)
         {
-            if (_systemEditor != null)
-            {
-                _systemEditor.LookAtSelected();
-            }
+            this.systemEditorForm?.LookAtSelected();
         }
 
         private void mnuTrackSelected_Click(object sender, EventArgs e)
         {
-            if (_systemEditor != null)
-            {
-                _systemEditor.TrackSelected();
-            }
+            this.systemEditorForm?.TrackSelected();
         }
 
         private void mnuChangeVisibility_Click(object sender, EventArgs e)
         {
             IDocumentForm content = GetDocument();
-            if (content != null)
-            {
-                content.ChangeVisibility();
-            }
+            content?.ChangeVisibility();
         }
 
         private void mnuGoTo_Click(object sender, EventArgs e)
@@ -1130,7 +1075,7 @@ namespace FreelancerModStudio
                     string directory = Path.GetDirectoryName(file);
                     if (directory != null && Directory.Exists(directory))
                     {
-                        //open the folder in explorer
+                        // open the folder in explorer
                         Process.Start(directory);
                     }
                 }
@@ -1139,14 +1084,14 @@ namespace FreelancerModStudio
 
         private void CloseSystemEditor()
         {
-            //dispose system editor
-            _systemEditor.Dispose();
-            _systemEditor = null;
+            // dispose system editor
+            this.systemEditorForm.Dispose();
+            this.systemEditorForm = null;
         }
 
         private void dockPanel1_ContentRemoved(object sender, DockContentEventArgs e)
         {
-            if (e.Content is frmSystemEditor)
+            if (e.Content is SystemEditorForm)
             {
                 CloseSystemEditor();
             }
@@ -1175,9 +1120,9 @@ namespace FreelancerModStudio
             bool isVisible;
             bool isEnabled;
 
-            if (isDocument && _systemEditor != null)
+            if (isDocument && this.systemEditorForm != null)
             {
-                _systemEditor.DataPath = document.DataPath;
+                this.systemEditorForm.DataPath = document.DataPath;
             }
 
             SetMenuVisible(mnuSave, isDocument);
@@ -1255,14 +1200,14 @@ namespace FreelancerModStudio
 
         private void mnu3dEditor_Click(object sender, EventArgs e)
         {
-            if (_systemEditor == null)
+            if (this.systemEditorForm == null)
             {
                 InitSystemEditor();
             }
 
             // system editor is never null as it was initialized above if that was the case
             // ReSharper disable PossibleNullReferenceException
-            _systemEditor.Show(dockPanel1);
+            this.systemEditorForm.Show(dockPanel1);
             // ReSharper restore PossibleNullReferenceException
 
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
@@ -1305,19 +1250,13 @@ namespace FreelancerModStudio
         private void systemEditor_SelectionChanged(TableBlock block, bool toggle)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
-            if (tableEditor != null)
-            {
-                tableEditor.Select(block, toggle);
-            }
+            tableEditor?.Select(block, toggle);
         }
 
         private void systemEditor_DataManipulated(TableBlock newBlock, TableBlock oldBlock)
         {
             frmTableEditor tableEditor = dockPanel1.ActiveDocument as frmTableEditor;
-            if (tableEditor != null)
-            {
-                tableEditor.ChangeBlocks(new List<TableBlock> { newBlock }, new List<TableBlock> { oldBlock });
-            }
+            tableEditor?.ChangeBlocks(new List<TableBlock> { newBlock }, new List<TableBlock> { oldBlock });
         }
 
         private static int GetTemplateIndexDialog(string file)

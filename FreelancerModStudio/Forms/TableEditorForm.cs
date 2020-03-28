@@ -50,34 +50,22 @@ namespace FreelancerModStudio
 
         private void OnDataChanged(ChangedData data)
         {
-            if (DataChanged != null)
-            {
-                DataChanged(data);
-            }
+            this.DataChanged?.Invoke(data);
         }
 
         private void OnSelectionChanged(List<TableBlock> data, int templateIndex)
         {
-            if (SelectionChanged != null)
-            {
-                SelectionChanged(data, templateIndex);
-            }
+            this.SelectionChanged?.Invoke(data, templateIndex);
         }
 
         private void OnDataVisibilityChanged(TableBlock block)
         {
-            if (DataVisibilityChanged != null)
-            {
-                DataVisibilityChanged(block);
-            }
+            this.DataVisibilityChanged?.Invoke(block);
         }
 
         private void OnDocumentChanged(IDocumentForm document)
         {
-            if (DocumentChanged != null)
-            {
-                DocumentChanged(document);
-            }
+            this.DocumentChanged?.Invoke(document);
         }
 
         public frmTableEditor(int templateIndex, string file)

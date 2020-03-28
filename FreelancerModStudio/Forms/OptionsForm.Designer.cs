@@ -1,6 +1,6 @@
 ﻿namespace FreelancerModStudio
 {
-    partial class frmSystemEditor
+    partial class OptionsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,26 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
+            this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.SuspendLayout();
             // 
-            // frmSystemEditor
+            // propertyGrid
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this.propertyGrid, "propertyGrid");
+            this.propertyGrid.Name = "propertyGrid";
+            this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
+            this.propertyGrid.ToolbarVisible = false;
+            // 
+            // frmOptions
+            // 
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 266);
-            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft)
-                        | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight)
-                        | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop)
-                        | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "frmSystemEditor";
-            this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.DockLeft;
-            this.Text = "3D Editor";
+            this.Controls.Add(this.propertyGrid);
+            this.Name = "frmOptions";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
+        private System.Windows.Forms.PropertyGrid propertyGrid;
     }
 }

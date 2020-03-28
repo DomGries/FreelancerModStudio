@@ -215,10 +215,7 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            if (_ui != null)
-            {
-                _ui.SetProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
-            }
+            this._ui?.SetProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
         }
 
         private void Abort()

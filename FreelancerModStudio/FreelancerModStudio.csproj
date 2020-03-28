@@ -92,7 +92,7 @@
     <Compile Include="AutoUpdate\UpdateInformationParser.cs" />
     <Compile Include="Data\ChangedType.cs" />
     <Compile Include="Data\Clipboard.cs" />
-    <Compile Include="Clone.cs" />
+    <Compile Include="ObjectClone.cs" />
     <Compile Include="ContentInterface.cs" />
     <Compile Include="Controls\PropertyGridExtension.cs" />
     <Compile Include="Controls\SeperatorLine.cs">
@@ -133,11 +133,11 @@
     <Compile Include="DevTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Forms\frmAbout.cs">
+    <Compile Include="Forms\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmAbout.Designer.cs">
-      <DependentUpon>frmAbout.cs</DependentUpon>
+    <Compile Include="Forms\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AutoUpdate\frmAutoUpdate.cs">
       <SubType>Form</SubType>
@@ -145,41 +145,41 @@
     <Compile Include="AutoUpdate\frmAutoUpdate.Designer.cs">
       <DependentUpon>frmAutoUpdate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmSystemEditor.cs">
+    <Compile Include="Forms\SystemEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmSystemEditor.Designer.cs">
-      <DependentUpon>frmSystemEditor.cs</DependentUpon>
+    <Compile Include="Forms\SystemEditorForm.Designer.cs">
+      <DependentUpon>SystemEditorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmTableEditor.cs">
+    <Compile Include="Forms\TableEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmTableEditor.Designer.cs">
-      <DependentUpon>frmTableEditor.cs</DependentUpon>
+    <Compile Include="Forms\TableEditorForm.Designer.cs">
+      <DependentUpon>TableEditorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmFileType.cs">
+    <Compile Include="Forms\FileTypeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmFileType.Designer.cs">
-      <DependentUpon>frmFileType.cs</DependentUpon>
+    <Compile Include="Forms\FileTypeForm.Designer.cs">
+      <DependentUpon>FileTypeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmMain.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmMain.Designer.cs">
-      <DependentUpon>frmMain.cs</DependentUpon>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmOptions.cs">
+    <Compile Include="Forms\OptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmOptions.Designer.cs">
-      <DependentUpon>frmOptions.cs</DependentUpon>
+    <Compile Include="Forms\OptionsForm.Designer.cs">
+      <DependentUpon>OptionsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmProperties.cs">
+    <Compile Include="Forms\PropertiesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\frmProperties.Designer.cs">
-      <DependentUpon>frmProperties.cs</DependentUpon>
+    <Compile Include="Forms\PropertiesForm.Designer.cs">
+      <DependentUpon>PropertiesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="Data\IO\BINIManager.cs" />
@@ -190,13 +190,13 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\frmMain.de.resx">
+    <EmbeddedResource Include="Forms\MainForm.de.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmMain.cs</DependentUpon>
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmMain.resx">
+    <EmbeddedResource Include="Forms\MainForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmMain.cs</DependentUpon>
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -247,39 +247,39 @@
     <Content Include="Template.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Forms\frmAbout.resx">
+    <EmbeddedResource Include="Forms\AboutForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmAbout.cs</DependentUpon>
+      <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AutoUpdate\frmAutoUpdate.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmAutoUpdate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmSystemEditor.resx">
-      <DependentUpon>frmSystemEditor.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\SystemEditorForm.resx">
+      <DependentUpon>SystemEditorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmTableEditor.de.resx">
-      <DependentUpon>frmTableEditor.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\TableEditorForm.de.resx">
+      <DependentUpon>TableEditorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmTableEditor.resx">
+    <EmbeddedResource Include="Forms\TableEditorForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmTableEditor.cs</DependentUpon>
+      <DependentUpon>TableEditorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmFileType.de.resx">
-      <DependentUpon>frmFileType.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FileTypeForm.de.resx">
+      <DependentUpon>FileTypeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmFileType.resx">
-      <DependentUpon>frmFileType.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FileTypeForm.resx">
+      <DependentUpon>FileTypeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmOptions.de.resx">
-      <DependentUpon>frmOptions.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\OptionsForm.de.resx">
+      <DependentUpon>OptionsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmOptions.resx">
-      <DependentUpon>frmOptions.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\OptionsForm.resx">
+      <DependentUpon>OptionsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmProperties.resx">
+    <EmbeddedResource Include="Forms\PropertiesForm.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>frmProperties.cs</DependentUpon>
+      <DependentUpon>PropertiesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings.de.resx">
       <SubType>Designer</SubType>
@@ -320,6 +320,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup />

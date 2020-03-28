@@ -63,7 +63,7 @@ namespace FreelancerModStudio
                 }
 
                 //start main form
-                Application.Run(new frmMain());
+                Application.Run(new MainForm());
 
                 //save settings
                 Settings.Save();

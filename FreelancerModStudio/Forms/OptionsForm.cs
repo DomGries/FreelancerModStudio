@@ -1,10 +1,10 @@
-﻿using System.Windows.Forms;
-
-namespace FreelancerModStudio
+﻿namespace FreelancerModStudio
 {
-    public partial class frmOptions : Form
+    using System.Windows.Forms;
+
+    public partial class OptionsForm : Form
     {
-        public frmOptions()
+        public OptionsForm()
         {
             InitializeComponent();
             propertyGrid.SelectedObject = Helper.Settings.Data.Data.General;

@@ -20,10 +20,7 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void OnAction(ActionType action)
         {
-            if (ActionRequired != null)
-            {
-                ActionRequired(action);
-            }
+            this.ActionRequired?.Invoke(action);
         }
 
         public void ShowUI()

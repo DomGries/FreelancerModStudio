@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using System.Windows.Forms;
-using System.Windows.Forms.Integration;
-using System.Windows.Media;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.SystemDesigner;
-using FreelancerModStudio.SystemDesigner.Content;
-using HelixEngine;
-using WeifenLuo.WinFormsUI.Docking;
-
-namespace FreelancerModStudio
+﻿namespace FreelancerModStudio
 {
-    public partial class frmSystemEditor : DockContent
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Threading;
+    using System.Windows.Forms;
+    using System.Windows.Forms.Integration;
+    using System.Windows.Media;
+
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.SystemDesigner;
+    using FreelancerModStudio.SystemDesigner.Content;
+
+    using HelixEngine;
+
+    using WeifenLuo.WinFormsUI.Docking;
+
+    public partial class SystemEditorForm : DockContent
     {
         private Presenter _presenter;
 
@@ -24,33 +27,24 @@ namespace FreelancerModStudio
 
         private void OnSelectionChanged(TableBlock block, bool toggle)
         {
-            if (SelectionChanged != null)
-            {
-                SelectionChanged(block, toggle);
-            }
+            this.SelectionChanged?.Invoke(block, toggle);
         }
 
         public Presenter.FileOpenType FileOpen;
 
         private void OnFileOpen(string file)
         {
-            if (FileOpen != null)
-            {
-                FileOpen(file);
-            }
+            this.FileOpen?.Invoke(file);
         }
 
         public Presenter.DataManipulatedType DataManipulated;
 
         private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
         {
-            if (DataManipulated != null)
-            {
-                DataManipulated(newBlock, oldBlock);
-            }
+            this.DataManipulated?.Invoke(newBlock, oldBlock);
         }
 
-        public frmSystemEditor()
+        public SystemEditorForm()
         {
             InitializeComponent();
             InitializeView();

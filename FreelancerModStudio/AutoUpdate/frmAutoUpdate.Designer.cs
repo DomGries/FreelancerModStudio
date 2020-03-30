@@ -1,13 +1,18 @@
-﻿using FreelancerModStudio.Controls;
+﻿
 
 namespace FreelancerModStudio.AutoUpdate
 {
-	partial class frmAutoUpdate
+    using System.ComponentModel;
+    using System.Windows.Forms;
+    
+    using FreelancerModStudio.Controls;
+
+    partial class FrmAutoUpdate
 	{
 		/// <summary>
 		/// Erforderliche Designervariable.
 		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+		private IContainer components = null;
 
 		/// <summary>
 		/// Verwendete Ressourcen bereinigen.
@@ -19,6 +24,7 @@ namespace FreelancerModStudio.AutoUpdate
 			{
 				components.Dispose();
 			}
+
 			base.Dispose(disposing);
 		}
 
@@ -29,8 +35,9 @@ namespace FreelancerModStudio.AutoUpdate
 		/// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
 		/// </summary>
 		private void InitializeComponent()
-		{
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAutoUpdate));
+        {
+            ComponentResourceManager resources =
+                new System.ComponentModel.ComponentResourceManager(typeof(FrmAutoUpdate));
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblHeader = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -48,85 +55,72 @@ namespace FreelancerModStudio.AutoUpdate
             this.panel3.SuspendLayout();
             this.pnlDownload.SuspendLayout();
             this.SuspendLayout();
-            // 
+
             // panel1
-            // 
             this.panel1.BackColor = System.Drawing.SystemColors.Window;
             this.panel1.Controls.Add(this.lblHeader);
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
-            // 
+
             // lblHeader
-            // 
             resources.ApplyResources(this.lblHeader, "lblHeader");
             this.lblHeader.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.lblHeader.Name = "lblHeader";
-            // 
+
             // panel2
-            // 
             this.panel2.Controls.Add(this.btnNext);
             this.panel2.Controls.Add(this.btnAbort);
             resources.ApplyResources(this.panel2, "panel2");
             this.panel2.Name = "panel2";
-            // 
+
             // btnNext
-            // 
             resources.ApplyResources(this.btnNext, "btnNext");
             this.btnNext.Name = "btnNext";
             this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
-            // 
+            this.btnNext.Click += new System.EventHandler(this.BtnNextClick);
+
             // btnAbort
-            // 
             resources.ApplyResources(this.btnAbort, "btnAbort");
             this.btnAbort.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnAbort.Name = "btnAbort";
             this.btnAbort.UseVisualStyleBackColor = true;
-            this.btnAbort.Click += new System.EventHandler(this.btnAbort_Click);
-            // 
+            this.btnAbort.Click += new System.EventHandler(this.BtnAbortClick);
+
             // panel3
-            // 
             this.panel3.Controls.Add(this.lblDescription);
             this.panel3.Controls.Add(this.pnlDownload);
             resources.ApplyResources(this.panel3, "panel3");
             this.panel3.Name = "panel3";
-            // 
+
             // lblDescription
-            // 
             resources.ApplyResources(this.lblDescription, "lblDescription");
             this.lblDescription.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.lblDescription.Name = "lblDescription";
-            // 
+
             // pnlDownload
-            // 
             this.pnlDownload.Controls.Add(this.pgbDownload);
             this.pnlDownload.Controls.Add(this.lblDownloaded);
             resources.ApplyResources(this.pnlDownload, "pnlDownload");
             this.pnlDownload.Name = "pnlDownload";
-            // 
+
             // pgbDownload
-            // 
             resources.ApplyResources(this.pgbDownload, "pgbDownload");
             this.pgbDownload.Name = "pgbDownload";
-            // 
+
             // lblDownloaded
-            // 
             this.lblDownloaded.FlatStyle = System.Windows.Forms.FlatStyle.System;
             resources.ApplyResources(this.lblDownloaded, "lblDownloaded");
             this.lblDownloaded.Name = "lblDownloaded";
-            // 
+
             // seperatorLine1
-            // 
             resources.ApplyResources(this.seperatorLine1, "seperatorLine1");
             this.seperatorLine1.Name = "seperatorLine1";
-            // 
+
             // seperatorLine2
-            // 
             resources.ApplyResources(this.seperatorLine2, "seperatorLine2");
             this.seperatorLine2.Name = "seperatorLine2";
-            // 
+
             // frmAutoUpdate
-            // 
             this.AcceptButton = this.btnNext;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -138,29 +132,28 @@ namespace FreelancerModStudio.AutoUpdate
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "frmAutoUpdate";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmAutoUpdate_FormClosed);
+            this.Name = "FrmAutoUpdate";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmAutoUpdateFormClosed);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.pnlDownload.ResumeLayout(false);
             this.ResumeLayout(false);
+        }
 
-		}
+        #endregion
 
-		#endregion
-
-		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.Panel panel2;
-		private System.Windows.Forms.Panel panel3;
+		private Panel panel1;
+		private Panel panel2;
+		private Panel panel3;
 		private SeperatorLine seperatorLine1;
 		private SeperatorLine seperatorLine2;
-		private System.Windows.Forms.Button btnAbort;
-		private System.Windows.Forms.Button btnNext;
-		private System.Windows.Forms.ProgressBar pgbDownload;
-		private System.Windows.Forms.Label lblHeader;
-		private System.Windows.Forms.Label lblDescription;
-		private System.Windows.Forms.Panel pnlDownload;
-        private System.Windows.Forms.Label lblDownloaded;
+		private Button btnAbort;
+		private Button btnNext;
+		private ProgressBar pgbDownload;
+		private Label lblHeader;
+		private Label lblDescription;
+		private Panel pnlDownload;
+        private Label lblDownloaded;
 	}
 }

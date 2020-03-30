@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Drawing.Design;
-using System.Globalization;
-using System.Text;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.INI;
-
-namespace FreelancerModStudio.Controls
+﻿namespace FreelancerModStudio.Controls
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.ComponentModel.Design;
+    using System.Drawing.Design;
+    using System.Globalization;
+    using System.Text;
+
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.Data.INI;
+
     public class PropertyOptionCollectionConverter : ExpandableObjectConverter
     {
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
@@ -32,15 +33,15 @@ namespace FreelancerModStudio.Controls
 
     public class PropertyBlock : PropertyOptionCollection
     {
-        public PropertyBlock(EditorINIBlock block, Template.Block templateBlock)
+        public PropertyBlock(EditorIniBlock block, Template.Block templateBlock)
         {
-            foreach (EditorINIOption option in block.Options)
+            foreach (EditorIniOption option in block.Options)
             {
-                List.Add(new PropertyOption(option.Values, templateBlock.Options[option.TemplateIndex], option.ChildTemplateIndex != -1));
+                this.List.Add(new PropertyOption(option.Values, templateBlock.Options[option.TemplateIndex], option.ChildTemplateIndex != -1));
             }
 
             // show comments
-            List.Add(new PropertyOption("comments", block.Comments));
+            this.List.Add(new PropertyOption("comments", block.Comments));
         }
     }
 
@@ -62,45 +63,45 @@ namespace FreelancerModStudio.Controls
         public PropertyOption(string name, string value)
         {
             // comments
-            Name = name;
-            Value = value ?? string.Empty;
+            this.Name = name;
+            this.Value = value ?? string.Empty;
 
-            Attributes = new Attribute[]
+            this.Attributes = new Attribute[]
                 {
                     new EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor))
                 };
         }
 
-        public PropertyOption(List<EditorINIEntry> options, Template.Option templateOption, bool children)
+        public PropertyOption(List<EditorIniEntry> options, Template.Option templateOption, bool children)
         {
-            Name = templateOption.Name;
+            this.Name = templateOption.Name;
 
-            Category = templateOption.Category;
-            Description = templateOption.Description;
+            this.Category = templateOption.Category;
+            this.Description = templateOption.Description;
 
             if (templateOption.Multiple)
             {
-                Attributes = new Attribute[]
+                this.Attributes = new Attribute[]
                     {
                         new EditorAttribute(typeof(UITypeEditor), typeof(UITypeEditor)),
                         new TypeConverterAttribute(typeof(PropertyOptionCollectionConverter))
                     };
 
-                Value = new PropertySubOptions(templateOption.Name, options, children);
+                this.Value = new PropertySubOptions(templateOption.Name, options, children);
             }
             else
             {
-                Value = options.Count > 0 ? options[0].Value : string.Empty;
+                this.Value = options.Count > 0 ? options[0].Value : string.Empty;
             }
         }
 
         public PropertyOption(string name, object option, List<object> subOptions, bool children)
         {
-            Name = name;
+            this.Name = name;
 
             if (children)
             {
-                Attributes = new Attribute[]
+                this.Attributes = new Attribute[]
                     {
                         new EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor))
                     };
@@ -119,27 +120,28 @@ namespace FreelancerModStudio.Controls
                         valueCollection.Append(subValue.ToString());
                     }
                 }
-                Value = valueCollection.ToString();
+
+                this.Value = valueCollection.ToString();
             }
             else
             {
-                Value = option;
+                this.Value = option;
             }
         }
     }
 
     public class PropertySubOptions : PropertyOptionCollection
     {
-        public PropertySubOptions(string optionName, List<EditorINIEntry> options, bool children)
+        public PropertySubOptions(string optionName, List<EditorIniEntry> options, bool children)
         {
             int index = 0;
-            foreach (EditorINIEntry entry in options)
+            foreach (EditorIniEntry entry in options)
             {
-                List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(CultureInfo.InvariantCulture), entry.Value, entry.SubOptions, children));
+                this.List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(CultureInfo.InvariantCulture), entry.Value, entry.SubOptions, children));
                 ++index;
             }
 
-            List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(CultureInfo.InvariantCulture), string.Empty, null, children));
+            this.List.Add(new PropertyOption(optionName + " " + (index + 1).ToString(CultureInfo.InvariantCulture), string.Empty, null, children));
         }
     }
 
@@ -147,19 +149,19 @@ namespace FreelancerModStudio.Controls
     {
         public void Add(PropertyOption value)
         {
-            List.Add(value);
+            this.List.Add(value);
         }
 
         public void Remove(PropertyOption value)
         {
-            List.Remove(value);
+            this.List.Remove(value);
         }
 
         public PropertyOption this[int index]
         {
             get
             {
-                return (PropertyOption)List[index];
+                return (PropertyOption)this.List[index];
             }
         }
 
@@ -168,12 +170,12 @@ namespace FreelancerModStudio.Controls
             return TypeDescriptor.GetAttributes(this, true);
         }
 
-        public String GetClassName()
+        public string GetClassName()
         {
             return TypeDescriptor.GetClassName(this, true);
         }
 
-        public String GetComponentName()
+        public string GetComponentName()
         {
             return TypeDescriptor.GetComponentName(this, true);
         }
@@ -215,9 +217,9 @@ namespace FreelancerModStudio.Controls
 
         public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
-            PropertyDescriptor[] properties = new PropertyDescriptor[List.Count];
+            PropertyDescriptor[] properties = new PropertyDescriptor[this.List.Count];
 
-            for (int i = 0; i < List.Count; ++i)
+            for (int i = 0; i < this.List.Count; ++i)
             {
                 PropertyOption propertyValue = this[i];
                 properties[i] = new PropertyOptionDescriptor(propertyValue, propertyValue.Attributes);
@@ -239,7 +241,7 @@ namespace FreelancerModStudio.Controls
         public PropertyOptionDescriptor(PropertyOption propertyValue, Attribute[] attributes)
             : base(propertyValue.Name, attributes)
         {
-            PropertyOption = propertyValue;
+            this.PropertyOption = propertyValue;
         }
 
         public override bool CanResetValue(object component)
@@ -259,7 +261,7 @@ namespace FreelancerModStudio.Controls
         {
             get
             {
-                return PropertyOption.Name;
+                return this.PropertyOption.Name;
             }
         }
 
@@ -267,7 +269,7 @@ namespace FreelancerModStudio.Controls
         {
             get
             {
-                return PropertyOption.Category;
+                return this.PropertyOption.Category;
             }
         }
 
@@ -275,13 +277,13 @@ namespace FreelancerModStudio.Controls
         {
             get
             {
-                return PropertyOption.Description;
+                return this.PropertyOption.Description;
             }
         }
 
         public override object GetValue(object component)
         {
-            return PropertyOption.Value;
+            return this.PropertyOption.Value;
         }
 
         public override bool IsReadOnly
@@ -296,9 +298,9 @@ namespace FreelancerModStudio.Controls
         {
             get
             {
-                if (PropertyOption.Value != null)
+                if (this.PropertyOption.Value != null)
                 {
-                    return PropertyOption.Value.GetType();
+                    return this.PropertyOption.Value.GetType();
                 }
 
                 return typeof(object);
@@ -316,7 +318,7 @@ namespace FreelancerModStudio.Controls
 
         public override void SetValue(object component, object value)
         {
-            PropertyOption.Value = value;
+            this.PropertyOption.Value = value;
         }
     }
 }

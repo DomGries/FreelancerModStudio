@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Media;
-using System.Windows.Media.Media3D;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.IO;
-using FreelancerModStudio.Data.UTF;
-
-namespace FreelancerModStudio.SystemDesigner
+﻿namespace FreelancerModStudio.SystemDesigner
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Windows.Media;
+    using System.Windows.Media.Media3D;
+
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.Data.IO;
+    using FreelancerModStudio.Data.UTF;
+
     public class MeshGroup
     {
         public VMeshRef MeshReference;
@@ -29,7 +30,7 @@ namespace FreelancerModStudio.SystemDesigner
         private static Matrix3D GetConversionMatrix()
         {
             Matrix3D newMatrix = new Matrix3D(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-            newMatrix.Scale(new Vector3D(SystemParser.SYSTEM_SCALE, SystemParser.SYSTEM_SCALE, SystemParser.SYSTEM_SCALE));
+            newMatrix.Scale(new Vector3D(SystemParser.SystemScale, SystemParser.SystemScale, SystemParser.SystemScale));
             return newMatrix;
         }
 
@@ -43,6 +44,7 @@ namespace FreelancerModStudio.SystemDesigner
                     return matrix*part.Matrix*GetTransform(parts, part.ParentName);
                 }
             }
+
             return matrix;
         }
 
@@ -72,12 +74,12 @@ namespace FreelancerModStudio.SystemDesigner
 
         private static GeometryModel3D GetCmpModel(MeshGroup meshGroup, int meshIndex)
         {
-            VMeshData.TMeshHeader mesh = meshGroup.Mesh.Meshes[meshIndex];
+            VMeshData.MeshHeader mesh = meshGroup.Mesh.Meshes[meshIndex];
             Point3DCollection positions = new Point3DCollection();
             Int32Collection indices = new Int32Collection();
             Vector3DCollection normals = new Vector3DCollection();
-            //PointCollection texture = new PointCollection();
 
+            // PointCollection texture = new PointCollection();
             int vertexCount = meshGroup.MeshReference.VertexStart + mesh.EndVertex + 1;
             if (meshGroup.Mesh.Vertices.Length < vertexCount)
             {
@@ -88,20 +90,21 @@ namespace FreelancerModStudio.SystemDesigner
             {
                 positions.Add(meshGroup.Mesh.Vertices[i].Position);
                 normals.Add(meshGroup.Mesh.Vertices[i].Normal);
-                //texture.Add(new Point
-                //{
-                //    X = vMesh.Vertices[i].S,
-                //    Y = vMesh.Vertices[i].T
-                //});
+
+                // texture.Add(new Point
+                // {
+                // X = vMesh.Vertices[i].S,
+                // Y = vMesh.Vertices[i].T
+                // });
             }
 
-            int triangleCount = (mesh.TriangleStart + mesh.NumRefVertices)/3;
+            int triangleCount = (mesh.TriangleStart + mesh.NumRefVertices) / 3;
             if (meshGroup.Mesh.Triangles.Length < triangleCount)
             {
                 return null;
             }
 
-            for (int i = mesh.TriangleStart/3; i < triangleCount; ++i)
+            for (int i = mesh.TriangleStart / 3; i < triangleCount; ++i)
             {
                 indices.Add(meshGroup.Mesh.Triangles[i].Vertex1);
                 indices.Add(meshGroup.Mesh.Triangles[i].Vertex2);
@@ -109,47 +112,50 @@ namespace FreelancerModStudio.SystemDesigner
             }
 
             GeometryModel3D gm = new GeometryModel3D
-                {
-                    Geometry = new MeshGeometry3D
-                        {
-                            Positions = positions,
-                            TriangleIndices = indices,
-                            Normals = normals,
-                            //TextureCoordinates = texture
-                        },
-                    Material = SharedMaterials.CmpModel,
-                    Transform = new MatrixTransform3D(meshGroup.Transform * ConversionMatrix)
-                };
+                                     {
+                                         Geometry = new MeshGeometry3D
+                                                        {
+                                                            Positions = positions,
+                                                            TriangleIndices = indices,
+                                                            Normals = normals,
+
+                                                            // TextureCoordinates = texture
+                                                        },
+                                         Material = SharedMaterials.CmpModel,
+                                         Transform = new MatrixTransform3D(meshGroup.Transform * ConversionMatrix)
+                                     };
 
             gm.Freeze();
             return gm;
         }
 
-        private static VMeshRef ParseMeshPartNode(UTFNode meshPartNode)
+        private static VMeshRef ParseMeshPartNode(UtfNode meshPartNode)
         {
             if (meshPartNode.Nodes.Count > 0)
             {
                 return new VMeshRef(meshPartNode.Nodes[0].Data);
             }
+
             return null;
         }
 
-        private static VMeshRef ParseMultiLevelNode(UTFNode node)
+        private static VMeshRef ParseMultiLevelNode(UtfNode node)
         {
-            foreach (UTFNode levelNode in node.Nodes)
+            foreach (UtfNode levelNode in node.Nodes)
             {
                 if (levelNode.Name.Equals("level0", StringComparison.OrdinalIgnoreCase) && levelNode.Nodes.Count > 0)
                 {
                     return ParseMeshPartNode(levelNode.Nodes[0]);
                 }
             }
+
             return null;
         }
 
         public static Model3D LoadModel(string file)
         {
-            UTFManager utfManager = new UTFManager(file);
-            UTFNode root = utfManager.Read();
+            UtfManager utfManager = new UtfManager(file);
+            UtfNode root = utfManager.Read();
             if (root == null || root.Nodes.Count == 0)
             {
                 return null;
@@ -166,26 +172,27 @@ namespace FreelancerModStudio.SystemDesigner
                     { "\\", "Model" }
                 };
 
-            foreach (UTFNode node in root.Nodes)
+            foreach (UtfNode node in root.Nodes)
             {
                 switch (node.Name.ToLowerInvariant())
                 {
                     case "vmeshlibrary":
                         meshes = new Dictionary<uint, VMeshData>(node.Nodes.Count);
-                        foreach (UTFNode vmsNode in node.Nodes)
+                        foreach (UtfNode vmsNode in node.Nodes)
                         {
                             if (vmsNode.Nodes.Count > 0)
                             {
                                 meshes.Add(CrcTool.FlModelCrc(vmsNode.Name), new VMeshData(vmsNode.Nodes[0].Data));
                             }
                         }
+
                         break;
                     case "cmpnd":
-                        foreach (UTFNode cmpndNode in node.Nodes)
+                        foreach (UtfNode cmpndNode in node.Nodes)
                         {
                             if (cmpndNode.Name.Equals("cons", StringComparison.OrdinalIgnoreCase))
                             {
-                                foreach (UTFNode constructNode in cmpndNode.Nodes)
+                                foreach (UtfNode constructNode in cmpndNode.Nodes)
                                 {
                                     switch (constructNode.Name.ToLowerInvariant())
                                     {
@@ -209,9 +216,9 @@ namespace FreelancerModStudio.SystemDesigner
                             {
                                 string objectName = null;
                                 string fileName = null;
-                                //int index = -1;
 
-                                foreach (UTFNode partNode in cmpndNode.Nodes)
+                                // int index = -1;
+                                foreach (UtfNode partNode in cmpndNode.Nodes)
                                 {
                                     switch (partNode.Name.ToLowerInvariant())
                                     {
@@ -221,17 +228,20 @@ namespace FreelancerModStudio.SystemDesigner
                                         case "file name":
                                             fileName = Encoding.ASCII.GetString(partNode.Data).TrimEnd('\0');
                                             break;
-                                            //case "index":
-                                            //    index = BitConverter.ToInt32(partNode.Data, 0);
-                                            //    break;
+
+                                        // case "index":
+                                        // index = BitConverter.ToInt32(partNode.Data, 0);
+                                        // break;
                                     }
                                 }
+
                                 if (objectName != null && fileName != null)
                                 {
                                     mapFileToObj[fileName] = objectName;
                                 }
                             }
                         }
+
                         break;
                     case "multilevel":
                         // multi LoD 3db model (\MultiLevel\Level0\VMeshPart\VMeshRef => \)
@@ -240,6 +250,7 @@ namespace FreelancerModStudio.SystemDesigner
                         {
                             meshReferenceNodes.Add(new MeshReferenceMatch { FileName = "\\", MeshReference = meshReference2 });
                         }
+
                         break;
                     case "vmeshpart":
                         // single LoD 3db model (\VMeshPart\VMeshRef => \)
@@ -248,11 +259,12 @@ namespace FreelancerModStudio.SystemDesigner
                         {
                             meshReferenceNodes.Add(new MeshReferenceMatch { FileName = "\\", MeshReference = meshReference3 });
                         }
+
                         break;
                     default:
                         if (node.Name.EndsWith(".3db", StringComparison.OrdinalIgnoreCase))
                         {
-                            foreach (UTFNode subNode in node.Nodes)
+                            foreach (UtfNode subNode in node.Nodes)
                             {
                                 if (subNode.Name.Equals("multilevel", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -262,8 +274,10 @@ namespace FreelancerModStudio.SystemDesigner
                                     {
                                         meshReferenceNodes.Add(new MeshReferenceMatch { FileName = node.Name, MeshReference = meshReference });
                                     }
+
                                     break;
                                 }
+
                                 if (subNode.Name.Equals("vmeshpart", StringComparison.OrdinalIgnoreCase))
                                 {
                                     // single LoD cmp model (\PARTNAME.3db\VMeshPart\VMeshRef => PARTNAME.3db)
@@ -272,10 +286,12 @@ namespace FreelancerModStudio.SystemDesigner
                                     {
                                         meshReferenceNodes.Add(new MeshReferenceMatch { FileName = node.Name, MeshReference = meshReference });
                                     }
+
                                     break;
                                 }
                             }
                         }
+
                         break;
                 }
             }

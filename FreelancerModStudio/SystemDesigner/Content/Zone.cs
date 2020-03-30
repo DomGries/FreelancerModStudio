@@ -1,12 +1,12 @@
-using System.Windows.Media.Media3D;
-
 namespace FreelancerModStudio.SystemDesigner.Content
 {
+    using global::System.Windows.Media.Media3D;
+
     public class Zone : ContentBase
     {
         protected override Model3D GetShapeModel()
         {
-            switch (Block.ObjectType)
+            switch (this.Block.ObjectType)
             {
                 default:
                     return SharedGeometries.ZoneSphereOrEllipsoid;
@@ -37,7 +37,7 @@ namespace FreelancerModStudio.SystemDesigner.Content
 
         public override Rect3D GetShapeBounds()
         {
-            switch (Block.ObjectType)
+            switch (this.Block.ObjectType)
             {
                 case ContentType.ZoneBox:
                 case ContentType.ZoneBoxExclusion:
@@ -61,9 +61,9 @@ namespace FreelancerModStudio.SystemDesigner.Content
         protected override Matrix3D GetMatrix()
         {
             // special scale for zone rings
-            if (Block.ObjectType == ContentType.ZoneRing)
+            if (this.Block.ObjectType == ContentType.ZoneRing)
             {
-                Vector3D newScale = Scale;
+                Vector3D newScale = this.Scale;
 
                 // use bigger radius of either outer radius (X) or inner radius (Z) of ring
                 if (newScale.X > newScale.Z)
@@ -78,8 +78,8 @@ namespace FreelancerModStudio.SystemDesigner.Content
                 Matrix3D matrix = new Matrix3D();
 
                 matrix.Scale(newScale);
-                matrix *= RotationMatrix(Rotation);
-                matrix.Translate(Position);
+                matrix *= RotationMatrix(this.Rotation);
+                matrix.Translate(this.Position);
 
                 return matrix;
             }

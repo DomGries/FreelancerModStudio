@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Windows.Media.Media3D;
-
-namespace FreelancerModStudio.Data.UTF
+﻿namespace FreelancerModStudio.Data.UTF
 {
+    using System.Collections.Generic;
+    using System.Windows.Media.Media3D;
+
     internal static class FixConstruct
     {
         public static void Parse(List<CmpPart> constructs, byte[] data)

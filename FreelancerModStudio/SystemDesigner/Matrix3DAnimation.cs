@@ -24,7 +24,7 @@
         {
             get
             {
-                return (Matrix3D)GetValue(FromProperty);
+                return (Matrix3D)this.GetValue(FromProperty);
             }
 
             set
@@ -41,7 +41,7 @@
         {
             get
             {
-                return (Matrix3D)GetValue(ToProperty);
+                return (Matrix3D)this.GetValue(ToProperty);
             }
 
             set
@@ -60,30 +60,30 @@
 
         public Matrix3DAnimation(Matrix3D toValue, Duration duration)
         {
-            To = toValue;
-            Duration = duration;
+            this.To = toValue;
+            this.Duration = duration;
         }
 
         public Matrix3DAnimation(Matrix3D toValue, Duration duration, FillBehavior fillBehavior)
         {
-            To = toValue;
-            Duration = duration;
-            FillBehavior = fillBehavior;
+            this.To = toValue;
+            this.Duration = duration;
+            this.FillBehavior = fillBehavior;
         }
 
         public Matrix3DAnimation(Matrix3D fromValue, Matrix3D toValue, Duration duration)
         {
-            From = fromValue;
-            To = toValue;
-            Duration = duration;
+            this.From = fromValue;
+            this.To = toValue;
+            this.Duration = duration;
         }
 
         public Matrix3DAnimation(Matrix3D fromValue, Matrix3D toValue, Duration duration, FillBehavior fillBehavior)
         {
-            From = fromValue;
-            To = toValue;
-            Duration = duration;
-            FillBehavior = fillBehavior;
+            this.From = fromValue;
+            this.To = toValue;
+            this.Duration = duration;
+            this.FillBehavior = fillBehavior;
         }
 
         public override object GetCurrentValue(object defaultOriginValue, object defaultDestinationValue, AnimationClock animationClock)
@@ -95,8 +95,8 @@
 
             double normalizedTime = animationClock.CurrentProgress.Value;
 
-            Matrix3D from = From ?? (Matrix3D)defaultOriginValue;
-            Matrix3D to = To ?? (Matrix3D)defaultDestinationValue;
+            Matrix3D from = this.From ?? (Matrix3D)defaultOriginValue;
+            Matrix3D to = this.To ?? (Matrix3D)defaultDestinationValue;
 
             Matrix3D newMatrix = new Matrix3D(
                 ((to.M11 - from.M11)*normalizedTime) + from.M11,

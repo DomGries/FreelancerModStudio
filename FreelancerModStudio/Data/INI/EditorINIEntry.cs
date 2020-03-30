@@ -1,28 +1,28 @@
-using System;
-using System.Collections.Generic;
-
 namespace FreelancerModStudio.Data.INI
 {
+    using System;
+    using System.Collections.Generic;
+
     [Serializable]
-    public class EditorINIEntry
+    public class EditorIniEntry
     {
         public object Value;
         public List<object> SubOptions;
 
-        public EditorINIEntry(object value)
+        public EditorIniEntry(object value)
         {
-            Value = value;
+            this.Value = value;
         }
 
-        public EditorINIEntry(object value, List<object> subOptions)
+        public EditorIniEntry(object value, List<object> subOptions)
         {
-            Value = value;
-            SubOptions = subOptions;
+            this.Value = value;
+            this.SubOptions = subOptions;
         }
 
         public override string ToString()
         {
-            return Value.ToString();
+            return this.Value.ToString();
         }
     }
 }

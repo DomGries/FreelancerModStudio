@@ -2,9 +2,9 @@
 {
     public delegate void ActionRequired(ActionType value);
 
-    internal interface IAutoUpdateUI
+    internal interface IAutoUpdateUi
     {
-        void ShowUI();
+        void ShowUi();
         void SetPage(StatusType page, bool async);
         void SetProgress(long value, long total, int percent);
         event ActionRequired ActionRequired;

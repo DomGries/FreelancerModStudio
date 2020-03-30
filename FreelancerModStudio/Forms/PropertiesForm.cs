@@ -1,13 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using FreelancerModStudio.Controls;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.Properties;
-using WeifenLuo.WinFormsUI.Docking;
-
 namespace FreelancerModStudio
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+
+    using FreelancerModStudio.Controls;
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.Properties;
+
+    using WeifenLuo.WinFormsUI.Docking;
+
     public partial class PropertiesForm : DockContent, IContentForm
     {
         public delegate void OptionsChangedType(PropertyBlock[] blocks);
@@ -21,25 +23,25 @@ namespace FreelancerModStudio
 
         public PropertiesForm()
         {
-            InitializeComponent();
-            Icon = Resources.Properties;
+            this.InitializeComponent();
+            this.Icon = Resources.Properties;
 
-            RefreshSettings();
+            this.RefreshSettings();
         }
 
         public void RefreshSettings()
         {
-            TabText = Strings.PropertiesText;
+            this.TabText = Strings.PropertiesText;
 
-            propertyGrid.PropertySort = Helper.Settings.Data.Data.General.PropertiesSortType;
-            propertyGrid.HelpVisible = Helper.Settings.Data.Data.General.PropertiesShowHelp;
+            this.propertyGrid.PropertySort = Helper.Settings.Data.Data.General.PropertiesSortType;
+            this.propertyGrid.HelpVisible = Helper.Settings.Data.Data.General.PropertiesShowHelp;
         }
 
         public void ClearData()
         {
-            if (propertyGrid.SelectedObject != null)
+            if (this.propertyGrid.SelectedObject != null)
             {
-                propertyGrid.SelectedObject = null;
+                this.propertyGrid.SelectedObject = null;
             }
         }
 
@@ -47,7 +49,7 @@ namespace FreelancerModStudio
         {
             if (blocks == null)
             {
-                propertyGrid.SelectedObjects = null;
+                this.propertyGrid.SelectedObjects = null;
                 return;
             }
 
@@ -57,23 +59,23 @@ namespace FreelancerModStudio
                 propertyBlocks[i] = new PropertyBlock(blocks[i].Block, Helper.Template.Data.Files[templateIndex].Blocks.Values[blocks[i].Block.TemplateIndex]);
             }
 
-            propertyGrid.SelectedObjects = propertyBlocks;
-            propertyGrid.ExpandAllGridItems();
+            this.propertyGrid.SelectedObjects = propertyBlocks;
+            this.propertyGrid.ExpandAllGridItems();
 
-            //ensure visibility of selected grid item
-            propertyGrid.SelectedGridItem.Select();
+            // ensure visibility of selected grid item
+            this.propertyGrid.SelectedGridItem.Select();
         }
 
-        private void descriptionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DescriptionToolStripMenuItemClick(object sender, EventArgs e)
         {
-            propertyGrid.HelpVisible = descriptionToolStripMenuItem.Checked;
+            this.propertyGrid.HelpVisible = this.descriptionToolStripMenuItem.Checked;
         }
 
-        private void propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        private void PropertyGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             if (e.ChangedItem.Value != e.OldValue)
             {
-                OnOptionsChanged((PropertyBlock[])propertyGrid.SelectedObjects);
+                this.OnOptionsChanged((PropertyBlock[])this.propertyGrid.SelectedObjects);
             }
         }
 

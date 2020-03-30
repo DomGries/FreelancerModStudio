@@ -1,46 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-
 namespace FreelancerModStudio.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Drawing;
+    using System.Globalization;
+    using System.IO;
+    using System.Windows.Forms;
+    using System.Xml.Serialization;
+
     public class Settings
     {
         private const int CURRENT_VERSION = 1;
-        //const string FREELANCER_REGISTRY_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Freelancer\\1.0";
-        //const string FREELANCER_REGISTRY_VALUE = "AppPath";
 
+        // const string FREELANCER_REGISTRY_KEY = "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Microsoft Games\\Freelancer\\1.0";
+        // const string FREELANCER_REGISTRY_VALUE = "AppPath";
         public SettingsData Data = new SettingsData();
 
         public void Load(Stream stream)
         {
-            Data = (SettingsData)Serializer.Load(stream, typeof(SettingsData));
+            this.Data = (SettingsData)Serializer.Load(stream, typeof(SettingsData));
         }
 
         public void Load(string path)
         {
-            Data = (SettingsData)Serializer.Load(path, typeof(SettingsData));
+            this.Data = (SettingsData)Serializer.Load(path, typeof(SettingsData));
         }
 
         public void Save(Stream stream)
         {
-            Serializer.Save(stream, Data, typeof(SettingsData));
+            Serializer.Save(stream, this.Data, typeof(SettingsData));
         }
 
         public void Save(string path)
         {
-            Serializer.Save(path, Data, typeof(SettingsData));
+            Serializer.Save(path, this.Data, typeof(SettingsData));
         }
 
         [XmlRoot("FreelancerModStudio-Settings-1.0")]
         public class SettingsData
         {
             public General General = new General();
+
             public Forms Forms = new Forms();
         }
 
@@ -102,55 +103,63 @@ namespace FreelancerModStudio.Data
             [DisplayName("Comments")]
             public bool FormattingComments { get; set; }
 
+            [Category("INI Formatting")]
+            [DisplayName("Automatically round floating point values")]
+            public bool RoundFloatingPoints { get; set; }
+
             [Browsable(false)]
-            public string EditorModifiedAddedColorXML
+            public string EditorModifiedAddedColorXml
             {
                 get
                 {
-                    return ColorTranslator.ToHtml(EditorModifiedAddedColor);
+                    return ColorTranslator.ToHtml(this.EditorModifiedAddedColor);
                 }
+
                 set
                 {
-                    EditorModifiedAddedColor = ColorTranslator.FromHtml(value);
+                    this.EditorModifiedAddedColor = ColorTranslator.FromHtml(value);
                 }
             }
 
             [Browsable(false)]
-            public string EditorModifiedColorXML
+            public string EditorModifiedColorXml
             {
                 get
                 {
-                    return ColorTranslator.ToHtml(EditorModifiedColor);
+                    return ColorTranslator.ToHtml(this.EditorModifiedColor);
                 }
+
                 set
                 {
-                    EditorModifiedColor = ColorTranslator.FromHtml(value);
+                    this.EditorModifiedColor = ColorTranslator.FromHtml(value);
                 }
             }
 
             [Browsable(false)]
-            public string EditorModifiedSavedColorXML
+            public string EditorModifiedSavedColorXml
             {
                 get
                 {
-                    return ColorTranslator.ToHtml(EditorModifiedSavedColor);
+                    return ColorTranslator.ToHtml(this.EditorModifiedSavedColor);
                 }
+
                 set
                 {
-                    EditorModifiedSavedColor = ColorTranslator.FromHtml(value);
+                    this.EditorModifiedSavedColor = ColorTranslator.FromHtml(value);
                 }
             }
 
             [Browsable(false)]
-            public string EditorHiddenColorXML
+            public string EditorHiddenColorXml
             {
                 get
                 {
-                    return ColorTranslator.ToHtml(EditorHiddenColor);
+                    return ColorTranslator.ToHtml(this.EditorHiddenColor);
                 }
+
                 set
                 {
-                    EditorHiddenColor = ColorTranslator.FromHtml(value);
+                    this.EditorHiddenColor = ColorTranslator.FromHtml(value);
                 }
             }
 
@@ -159,56 +168,52 @@ namespace FreelancerModStudio.Data
             public General()
             {
                 // set default values
-                RecentFilesCount = 4;
-                Language = LanguageType.English;
+                this.RecentFilesCount = 4;
+                this.Language = LanguageType.English;
 
-                PropertiesSortType = PropertySort.NoSort;
-                PropertiesShowHelp = false;
+                this.PropertiesSortType = PropertySort.NoSort;
+                this.PropertiesShowHelp = false;
 
-                EditorModifiedAddedColor = Color.FromArgb(255, 255, 164);
-                EditorModifiedColor = Color.FromArgb(255, 227, 164);
-                EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
-                EditorHiddenColor = Color.FromArgb(128, 128, 128);
+                this.EditorModifiedAddedColor = Color.FromArgb(255, 255, 164);
+                this.EditorModifiedColor = Color.FromArgb(255, 227, 164);
+                this.EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
+                this.EditorHiddenColor = Color.FromArgb(128, 128, 128);
 
-                FormattingSpaces = true;
-                FormattingEmptyLine = true;
-                FormattingComments = true;
+                this.FormattingSpaces = true;
+                this.FormattingEmptyLine = true;
+                this.FormattingComments = true;
 
-                AutoUpdate = new AutoUpdate
-                    {
-                        Enabled = true,
-                        Proxy = new Proxy(),
-                    };
-                SetDefaultAutoUpdate();
+                this.AutoUpdate = new AutoUpdate { Enabled = true, Proxy = new Proxy(), };
+                this.SetDefaultAutoUpdate();
             }
 
             public void CheckVersion()
             {
-                if (Version < CURRENT_VERSION)
+                if (this.Version < CURRENT_VERSION)
                 {
-                    SetDefaultAutoUpdate();
-                    //DefaultDataDirectory = Registry.GetValue(FREELANCER_REGISTRY_KEY, FREELANCER_REGISTRY_VALUE, null) as string;
+                    this.SetDefaultAutoUpdate();
 
-                    Version = CURRENT_VERSION;
+                    // DefaultDataDirectory = Registry.GetValue(FREELANCER_REGISTRY_KEY, FREELANCER_REGISTRY_VALUE, null) as string;
+                    this.Version = CURRENT_VERSION;
                 }
             }
 
             public void CheckValidData()
             {
-                if (DefaultDataDirectory != null)
+                if (this.DefaultDataDirectory != null)
                 {
-                    if (!Directory.Exists(DefaultDataDirectory))
+                    if (!Directory.Exists(this.DefaultDataDirectory))
                     {
-                        DefaultDataDirectory = null;
+                        this.DefaultDataDirectory = null;
                     }
                 }
             }
 
             private void SetDefaultAutoUpdate()
             {
-                AutoUpdate.CheckInterval = 28;
-                AutoUpdate.SilentDownload = false;
-                AutoUpdate.UpdateFile = @"http://freelancermodstudio.googlecode.com/svn/trunk/updates.txt";
+                this.AutoUpdate.CheckInterval = 28;
+                this.AutoUpdate.SilentDownload = false;
+                this.AutoUpdate.UpdateFile = @"http://freelancermodstudio.googlecode.com/svn/trunk/updates.txt";
             }
         }
 
@@ -232,14 +237,18 @@ namespace FreelancerModStudio.Data
             public DateTime LastCheck;
 
             public Update Update = new Update();
+
             public Proxy Proxy { get; set; }
         }
 
         public class Update
         {
             public string FileName;
+
             public bool Downloaded;
+
             public bool Installed;
+
             public bool SilentInstall;
         }
 
@@ -261,7 +270,8 @@ namespace FreelancerModStudio.Data
         public class Forms
         {
             public Main Main = new Main();
-            //public NewMod NewMod = new NewMod();
+
+            // public NewMod NewMod = new NewMod();
             public ChooseFileType ChooseFileType = new ChooseFileType();
         }
 
@@ -271,9 +281,11 @@ namespace FreelancerModStudio.Data
             public List<RecentFile> RecentFiles = new List<RecentFile>();
 
             public Point Location;
+
             public Size Size;
 
             public bool Maximized;
+
             public bool FullScreen;
         }
 
@@ -282,7 +294,6 @@ namespace FreelancerModStudio.Data
             public string ModSaveLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Mods");
             public Size Size;
         }*/
-
         public class ChooseFileType
         {
             public int SelectedFileType;
@@ -291,6 +302,7 @@ namespace FreelancerModStudio.Data
         public class RecentFile
         {
             public string File;
+
             public int TemplateIndex = -1;
         }
     }

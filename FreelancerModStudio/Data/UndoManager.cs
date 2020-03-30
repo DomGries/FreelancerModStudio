@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-
-namespace FreelancerModStudio.Data
+﻿namespace FreelancerModStudio.Data
 {
+    using System.Collections.Generic;
+
     public class UndoManager<T> where T : class
     {
         public delegate void DataChangedType(T o, bool undo);
 
         public DataChangedType DataChanged;
 
-        private readonly List<T> _changes = new List<T>();
+        private readonly List<T> changes = new List<T>();
 
-        private int _current;
+        private int current;
 
-        private int _savedIndex;
+        private int savedIndex;
 
         private void OnDataChanged(T o, bool undo)
         {
@@ -23,16 +23,17 @@ namespace FreelancerModStudio.Data
         {
             get
             {
-                if (_current > _changes.Count)
+                if (this.current > this.changes.Count)
                 {
                     return null;
                 }
 
-                return _changes[_current - 1];
+                return this.changes[this.current - 1];
             }
+
             set
             {
-                _changes[_current] = value;
+                this.changes[this.current] = value;
             }
         }
 
@@ -40,12 +41,12 @@ namespace FreelancerModStudio.Data
         {
             for (int i = 0; i < amount; ++i)
             {
-                if (_current > 0)
+                if (this.current > 0)
                 {
-                    _current--;
-                    T data = _changes[_current];
+                    this.current--;
+                    T data = this.changes[this.current];
 
-                    OnDataChanged(data, true);
+                    this.OnDataChanged(data, true);
                 }
             }
         }
@@ -54,47 +55,47 @@ namespace FreelancerModStudio.Data
         {
             for (int i = 0; i < amount; ++i)
             {
-                if (_current < _changes.Count)
+                if (this.current < this.changes.Count)
                 {
-                    T data = _changes[_current];
-                    ++_current;
+                    T data = this.changes[this.current];
+                    ++this.current;
 
-                    OnDataChanged(data, false);
+                    this.OnDataChanged(data, false);
                 }
             }
         }
 
         public void Execute(T o)
         {
-            //remove every data which comes after the current
-            _changes.RemoveRange(_current, _changes.Count - _current);
+            // remove every data which comes after the current
+            this.changes.RemoveRange(this.current, this.changes.Count - this.current);
 
-            //add the data
-            _changes.Add(o);
-            ++_current;
+            // add the data
+            this.changes.Add(o);
+            ++this.current;
 
-            //raise event that the data was changed
-            OnDataChanged(o, false);
+            // raise event that the data was changed
+            this.OnDataChanged(o, false);
         }
 
         public bool CanUndo()
         {
-            return _current > 0;
+            return this.current > 0;
         }
 
         public bool CanRedo()
         {
-            return _changes.Count - _current > 0;
+            return this.changes.Count - this.current > 0;
         }
 
         public void SetAsSaved()
         {
-            _savedIndex = _current;
+            this.savedIndex = this.current;
         }
 
         public bool IsModified()
         {
-            return _savedIndex != _current;
+            return this.savedIndex != this.current;
         }
     }
 }

@@ -1,18 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Globalization;
-using System.Reflection;
-using System.Threading;
-using System.Windows.Forms;
-
 namespace FreelancerModStudio.Controls
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Drawing;
+    using System.Globalization;
+    using System.Reflection;
+    using System.Threading;
+    using System.Windows.Forms;
+
     /// <summary>
     /// Enables changes of the UI culture of a collection of <see cref="Form"/> objects at runtime.
     /// </summary>
-    public class UICultureChanger
+    public class UiCultureChanger
     {
         #region ChangeInfo class
 
@@ -30,14 +30,14 @@ namespace FreelancerModStudio.Controls
             {
                 get
                 {
-                    return _name;
+                    return this.name;
                 }
             }
 
             /// <summary>
             /// Stores the name of the form or field.
             /// </summary>
-            private readonly string _name;
+            private readonly string name;
 
             /// <summary>
             /// Gets the instance of the form or field.
@@ -46,14 +46,14 @@ namespace FreelancerModStudio.Controls
             {
                 get
                 {
-                    return _value;
+                    return this.value;
                 }
             }
 
             /// <summary>
             /// Stores the instance of the form or field.
             /// </summary>
-            private readonly object _value;
+            private readonly object value;
 
             /// <summary>
             /// Gets the <see cref="Type"/> object of the form or field.
@@ -62,14 +62,14 @@ namespace FreelancerModStudio.Controls
             {
                 get
                 {
-                    return _type;
+                    return this.type;
                 }
             }
 
             /// <summary>
             /// Stores the <see cref="Type"/> object of the form or field.
             /// </summary>
-            private readonly Type _type;
+            private readonly Type type;
 
             #endregion
 
@@ -83,9 +83,9 @@ namespace FreelancerModStudio.Controls
             /// <param name="type">The <see cref="Type"/> object of the form or field.</param>
             public ChangeInfo(string name, object value, Type type)
             {
-                _name = name;
-                _value = value;
-                _type = type;
+                this.name = name;
+                this.value = value;
+                this.type = type;
             }
 
             #endregion
@@ -151,19 +151,19 @@ namespace FreelancerModStudio.Controls
         #region construction, deconstruction
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UICultureChanger"/> class.
+        /// Initializes a new instance of the <see cref="UiCultureChanger"/> class.
         /// </summary>
-        public UICultureChanger()
+        public UiCultureChanger()
         {
-            ApplyText = true;
-            ApplySize = false;
-            ApplyLocation = false;
-            ApplyRightToLeft = false;
-            ApplyRightToLeftLayout = false;
-            ApplyToolTip = false;
-            ApplyHelp = false;
-            PreserveFormSize = true;
-            PreserveFormLocation = true;
+            this.ApplyText = true;
+            this.ApplySize = false;
+            this.ApplyLocation = false;
+            this.ApplyRightToLeft = false;
+            this.ApplyRightToLeftLayout = false;
+            this.ApplyToolTip = false;
+            this.ApplyHelp = false;
+            this.PreserveFormSize = true;
+            this.PreserveFormLocation = true;
         }
 
         #endregion
@@ -204,10 +204,11 @@ namespace FreelancerModStudio.Controls
                     changeInfos.Add(new ChangeInfo(fields[index].Name, value, fields[index].FieldType));
                 }
             }
+
             changeInfos.TrimExcess();
 
             // Call SuspendLayout for Form and all fields derived from Control, so assignment of 
-            //   localized resources doesn't change layout immediately.
+            // localized resources doesn't change layout immediately.
             for (int index = 0; index < changeInfos.Count; index++)
             {
                 if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
@@ -217,7 +218,7 @@ namespace FreelancerModStudio.Controls
                 }
             }
 
-            if (ApplyText)
+            if (this.ApplyText)
             {
                 // If available, assign localized text to Form and fields.
                 for (int index = 0; index < changeInfos.Count; index++)
@@ -225,7 +226,7 @@ namespace FreelancerModStudio.Controls
                     if (changeInfos[index].Type.GetProperty("Text", typeof(String)) != null &&
                         changeInfos[index].Type.GetProperty("Text", typeof(String)).CanWrite)
                     {
-                        String text = resources.GetString(changeInfos[index].Name + ".Text");
+                        string text = resources.GetString(changeInfos[index].Name + ".Text");
                         if (!string.IsNullOrEmpty(text))
                         {
                             changeInfos[index].Type.InvokeMember("Text", BindingFlags.SetProperty, null,
@@ -235,15 +236,16 @@ namespace FreelancerModStudio.Controls
                 }
             }
 
-            if (ApplySize)
+            if (this.ApplySize)
             {
                 // If available, assign localized sizes to Form and fields.
                 int index = 0;
-                if (PreserveFormSize)
+                if (this.PreserveFormSize)
                 {
                     // Skip the form entry in changeInfos collection.
                     index = 1;
                 }
+
                 for (; index < changeInfos.Count; index++)
                 {
                     object size;
@@ -265,11 +267,13 @@ namespace FreelancerModStudio.Controls
                                     // Control is bound to the left and right edge, so preserve its width.
                                     newSize.Width = control.Width;
                                 }
+
                                 if ((control.Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == (AnchorStyles.Top | AnchorStyles.Bottom))
                                 {
                                     // Control is bound to the top and bottom edge, so preserve its height.
                                     newSize.Height = control.Height;
                                 }
+
                                 control.Size = newSize;
                             }
                             else
@@ -297,11 +301,13 @@ namespace FreelancerModStudio.Controls
                                     // Control is bound to the left and right edge, so preserve the width of its client area.
                                     newSize.Width = control.ClientSize.Width;
                                 }
+
                                 if ((control.Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == (AnchorStyles.Top | AnchorStyles.Bottom))
                                 {
                                     // Control is bound to the top and bottom edge, so preserve the height of its client area.
                                     newSize.Height = control.ClientSize.Height;
                                 }
+
                                 control.ClientSize = newSize;
                             }
                             else
@@ -314,15 +320,16 @@ namespace FreelancerModStudio.Controls
                 }
             }
 
-            if (ApplyLocation)
+            if (this.ApplyLocation)
             {
                 // If available, assign localized locations to Form and fields.
                 int index = 0;
-                if (PreserveFormLocation)
+                if (this.PreserveFormLocation)
                 {
                     // Skip the form entry in changeInfos collection.
                     index = 1;
                 }
+
                 for (; index < changeInfos.Count; index++)
                 {
                     if (changeInfos[index].Type.GetProperty("Location", typeof(Point)) != null &&
@@ -340,11 +347,13 @@ namespace FreelancerModStudio.Controls
                                     // Control is bound to the right but not the left edge, so preserve its x-coordinate.
                                     location = new Point(control.Left, ((Point)location).Y);
                                 }
+
                                 if ((control.Anchor & (AnchorStyles.Top | AnchorStyles.Bottom)) == AnchorStyles.Bottom)
                                 {
                                     // Control is bound to the bottom but not the top edge, so preserve its y-coordinate.
                                     location = new Point(((Point)location).X, control.Top);
                                 }
+
                                 control.Location = (Point)location;
                             }
                             else
@@ -357,7 +366,7 @@ namespace FreelancerModStudio.Controls
                 }
             }
 
-            if (ApplyRightToLeft)
+            if (this.ApplyRightToLeft)
             {
                 // If available, assign localized RightToLeft values to Form and fields.
                 for (int index = 0; index < changeInfos.Count; index++)
@@ -375,7 +384,7 @@ namespace FreelancerModStudio.Controls
                 }
             }
 
-            if (ApplyRightToLeftLayout)
+            if (this.ApplyRightToLeftLayout)
             {
                 // If available, assign localized RightToLeftLayout values to Form and fields.
                 for (int index = 0; index < changeInfos.Count; index++)
@@ -393,7 +402,7 @@ namespace FreelancerModStudio.Controls
                 }
             }
 
-            if (ApplyToolTip)
+            if (this.ApplyToolTip)
             {
                 // If available, assign localized ToolTipText to fields.
                 // Also search for a ToolTip component in the current form.
@@ -406,10 +415,11 @@ namespace FreelancerModStudio.Controls
                         resources.ApplyResources(toolTip, changeInfos[index].Name);
                         changeInfos.Remove(changeInfos[index]);
                     }
+
                     if (changeInfos[index].Type.GetProperty("ToolTipText", typeof(String)) != null &&
                         changeInfos[index].Type.GetProperty("ToolTipText", typeof(String)).CanWrite)
                     {
-                        String text = resources.GetString(changeInfos[index].Name + ".ToolTipText");
+                        string text = resources.GetString(changeInfos[index].Name + ".ToolTipText");
                         if (text != null)
                         {
                             changeInfos[index].Type.InvokeMember("ToolTipText", BindingFlags.SetProperty, null,
@@ -426,7 +436,7 @@ namespace FreelancerModStudio.Controls
                     {
                         if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
                         {
-                            String text = resources.GetString(changeInfos[index].Name + ".ToolTip");
+                            string text = resources.GetString(changeInfos[index].Name + ".ToolTip");
                             if (text != null)
                             {
                                 toolTip.SetToolTip((Control)changeInfos[index].Value, text);
@@ -436,7 +446,7 @@ namespace FreelancerModStudio.Controls
                 }
             }
 
-            if (ApplyHelp)
+            if (this.ApplyHelp)
             {
                 // Search for a HelpProvider component in the current form.
                 HelpProvider helpProvider = null;
@@ -458,7 +468,7 @@ namespace FreelancerModStudio.Controls
                     {
                         if (changeInfos[index].Type.IsSubclassOf(typeof(Control)))
                         {
-                            String text = resources.GetString(changeInfos[index].Name + ".HelpKeyword");
+                            string text = resources.GetString(changeInfos[index].Name + ".HelpKeyword");
                             if (text != null)
                             {
                                 helpProvider.SetHelpKeyword((Control)changeInfos[index].Value, text);

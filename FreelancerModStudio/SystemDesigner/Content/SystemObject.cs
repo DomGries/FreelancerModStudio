@@ -1,12 +1,12 @@
-using System.Windows.Media.Media3D;
-
 namespace FreelancerModStudio.SystemDesigner.Content
 {
+    using global::System.Windows.Media.Media3D;
+
     public class SystemObject : ContentBase
     {
         protected override Model3D GetShapeModel()
         {
-            switch (Block.ObjectType)
+            switch (this.Block.ObjectType)
             {
                 case ContentType.Construct:
                     return SharedGeometries.Construct;
@@ -39,7 +39,7 @@ namespace FreelancerModStudio.SystemDesigner.Content
 
         public override Rect3D GetShapeBounds()
         {
-            switch (Block.ObjectType)
+            switch (this.Block.ObjectType)
             {
                 case ContentType.Planet:
                 case ContentType.Sun:

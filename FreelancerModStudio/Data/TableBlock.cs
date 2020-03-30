@@ -1,11 +1,12 @@
-using System;
-using System.Globalization;
-using FreelancerModStudio.Data.INI;
-using FreelancerModStudio.Properties;
-using FreelancerModStudio.SystemDesigner.Content;
-
 namespace FreelancerModStudio.Data
 {
+    using System;
+    using System.Globalization;
+
+    using FreelancerModStudio.Data.INI;
+    using FreelancerModStudio.Properties;
+    using FreelancerModStudio.SystemDesigner.Content;
+
     [Serializable]
     public class TableBlock /*: IComparable<TableBlock>*/
     {
@@ -15,7 +16,7 @@ namespace FreelancerModStudio.Data
         public string Group;
         public ContentType ObjectType;
 
-        public EditorINIBlock Block;
+        public EditorIniBlock Block;
         public TableModified Modified;
 
         public ArchetypeInfo Archetype;
@@ -23,57 +24,58 @@ namespace FreelancerModStudio.Data
 
         public TableBlock(int index, int id)
         {
-            Index = index;
-            Id = id;
+            this.Index = index;
+            this.Id = id;
         }
 
-        public TableBlock(int index, int id, EditorINIBlock block, int templateIndex)
+        public TableBlock(int index, int id, EditorIniBlock block, int templateIndex)
         {
-            Index = index;
-            Id = id;
+            this.Index = index;
+            this.Id = id;
 
-            //name of block
+            // name of block
             if (block.MainOptionIndex > -1 && block.Options.Count >= block.MainOptionIndex + 1)
             {
                 if (block.Options[block.MainOptionIndex].Values.Count > 0)
                 {
-                    Name = block.Options[block.MainOptionIndex].Values[0].Value.ToString();
+                    this.Name = block.Options[block.MainOptionIndex].Values[0].Value.ToString();
                 }
                 else
                 {
-                    Name = block.Name;
+                    this.Name = block.Name;
                 }
             }
             else
             {
-                //if (Helper.Template.Data.Files[Data.TemplateIndex].Blocks[block.TemplateIndex].Multiple)
-                //    blockName = blockName + i.ToString();
-                //else
-                Name = block.Name;
-                //todo: different block name if they are all the same
+                // if (Helper.Template.Data.Files[Data.TemplateIndex].Blocks[block.TemplateIndex].Multiple)
+                // blockName = blockName + i.ToString();
+                // else
+                this.Name = block.Name;
+
+                // todo: different block name if they are all the same
             }
 
-            //name of group
+            // name of group
             if (Helper.Template.Data.Files[templateIndex].Blocks.Values[block.TemplateIndex].Multiple)
             {
-                Group = block.Name;
+                this.Group = block.Name;
             }
             else
             {
-                Group = Strings.FileDefaultCategory;
+                this.Group = Strings.FileDefaultCategory;
             }
 
-            Block = block;
+            this.Block = block;
         }
 
         public string ToolTip
         {
             get
             {
-                if (Block != null)
+                if (this.Block != null)
                 {
                     Helper.String.StringBuilder.Length = 0;
-                    foreach (EditorINIOption option in Block.Options)
+                    foreach (EditorIniOption option in this.Block.Options)
                     {
                         if (option.Values.Count >= 1)
                         {
@@ -104,6 +106,7 @@ namespace FreelancerModStudio.Data
 
                     return Helper.String.StringBuilder.ToString();
                 }
+
                 return null;
             }
         }
@@ -131,19 +134,18 @@ namespace FreelancerModStudio.Data
 
             return groupComparison;
         }*/
-
         public void SetVisibleIfPossible()
         {
-            if (ObjectType != ContentType.None)
+            if (this.ObjectType != ContentType.None)
             {
-                Visibility = true;
+                this.Visibility = true;
             }
         }
 
         public bool IsRealModel()
         {
             // objects which have real model support (all solid objects except planets and suns)
-            switch (ObjectType)
+            switch (this.ObjectType)
             {
                 case ContentType.Construct:
                 case ContentType.Depot:
@@ -164,9 +166,9 @@ namespace FreelancerModStudio.Data
 
         public void SetModifiedChanged()
         {
-            if (Modified != TableModified.ChangedAdded)
+            if (this.Modified != TableModified.ChangedAdded)
             {
-                Modified = TableModified.Changed;
+                this.Modified = TableModified.Changed;
             }
         }
     }

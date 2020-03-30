@@ -1,9 +1,9 @@
-using System.Windows.Media;
-using System.Windows.Media.Media3D;
-using HelixEngine;
-
 namespace FreelancerModStudio.SystemDesigner.Content
 {
+    using global::System.Windows.Media;
+    using global::System.Windows.Media.Media3D;
+    using HelixEngine;
+
     public class Connection : ContentBase
     {
         public ContentBase From { get; set; }
@@ -15,15 +15,15 @@ namespace FreelancerModStudio.SystemDesigner.Content
         {
             Material material;
 
-            if (FromType == ToType)
+            if (this.FromType == this.ToType)
             {
-                //solid brush
-                material = MaterialHelper.CreateEmissiveMaterial(GetColor(FromType));
+                // solid brush
+                material = MaterialHelper.CreateEmissiveMaterial(GetColor(this.FromType));
             }
             else
             {
-                //gradient brush
-                material = MaterialHelper.CreateEmissiveMaterial(new LinearGradientBrush(GetColor(FromType), GetColor(ToType), 90));
+                // gradient brush
+                material = MaterialHelper.CreateEmissiveMaterial(new LinearGradientBrush(GetColor(this.FromType), GetColor(this.ToType), 90));
             }
 
             return SharedGeometries.GetGeometry(SharedMeshes.Surface, material);

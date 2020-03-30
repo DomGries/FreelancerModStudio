@@ -1,36 +1,37 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
-using FreelancerModStudio.Data.INI;
-
-namespace FreelancerModStudio.Data.IO
+﻿namespace FreelancerModStudio.Data.IO
 {
-    public class BINIManager
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Text;
+
+    using FreelancerModStudio.Data.INI;
+
+    public class BiniManager
     {
         public string File { get; set; }
-        public List<INIBlock> Data { get; set; }
+        public List<IniBlock> Data { get; set; }
 
         private const string FILE_TYPE = "BINI";
 
         private const int FILE_VERSION = 0x1;
 
-        public BINIManager(string file)
+        public BiniManager(string file)
         {
-            File = file;
+            this.File = file;
         }
 
         public bool Read()
         {
-            Data = new List<INIBlock>();
+            this.Data = new List<IniBlock>();
 
-            using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream stream = new FileStream(this.File, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (BinaryReader reader = new BinaryReader(stream, Encoding.Default))
             {
                 long streamLength = stream.Length;
 
-                if (streamLength < ByteLen.FILE_TAG + ByteLen.INT ||
-                    Encoding.ASCII.GetString(reader.ReadBytes(ByteLen.FILE_TAG)) != FILE_TYPE ||
+                if (streamLength < ByteLen.FileTag + ByteLen.Int ||
+                    Encoding.ASCII.GetString(reader.ReadBytes(ByteLen.FileTag)) != FILE_TYPE ||
                     reader.ReadInt32() != FILE_VERSION)
                 {
                     // return false if it is not a bini file
@@ -58,15 +59,20 @@ namespace FreelancerModStudio.Data.IO
                     int sectionNameOffset = reader.ReadInt16();
                     int sectionEntriesCount = reader.ReadInt16();
 
-                    string sectionName = stringBlock.Substring(sectionNameOffset, stringBlock.IndexOf('\0', sectionNameOffset) - sectionNameOffset);
-                    INIOptions block = new INIOptions();
+                    string sectionName = stringBlock.Substring(
+                        sectionNameOffset,
+                        stringBlock.IndexOf('\0', sectionNameOffset) - sectionNameOffset);
+                    IniOptions block = new IniOptions();
+
                     // read each entry
                     for (int i = 0; i < sectionEntriesCount; ++i)
                     {
                         // read entry
                         int entryNameOffset = reader.ReadInt16();
                         int entryValuesCount = reader.ReadByte();
-                        string entryName = stringBlock.Substring(entryNameOffset, stringBlock.IndexOf('\0', entryNameOffset) - entryNameOffset);
+                        string entryName = stringBlock.Substring(
+                            entryNameOffset,
+                            stringBlock.IndexOf('\0', entryNameOffset) - entryNameOffset);
 
                         // read each value
                         List<string> options = new List<string>();
@@ -90,25 +96,24 @@ namespace FreelancerModStudio.Data.IO
                                     {
                                         // read string
                                         int valueNameOffset = reader.ReadInt32();
-                                        entryValue = stringBlock.Substring(valueNameOffset, stringBlock.IndexOf('\0', valueNameOffset) - valueNameOffset);
+                                        entryValue = stringBlock.Substring(
+                                            valueNameOffset,
+                                            stringBlock.IndexOf('\0', valueNameOffset) - valueNameOffset);
                                     }
+
                                     break;
                             }
+
                             options.Add(entryValue);
                         }
-                        block.Add(entryName, new INIOption
-                            {
-                                Value = string.Join(", ", options.ToArray()),
-                                Index = i
-                            });
+
+                        block.Add(entryName, new IniOption { Value = string.Join(", ", options.ToArray()), Index = i });
                     }
-                    Data.Add(new INIBlock
-                        {
-                            Name = sectionName,
-                            Options = block
-                        });
+
+                    this.Data.Add(new IniBlock { Name = sectionName, Options = block });
                 }
             }
+
             return true;
         }
     }

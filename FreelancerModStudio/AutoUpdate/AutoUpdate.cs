@@ -1,14 +1,15 @@
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Threading;
-using System.Windows.Forms;
-using FreelancerModStudio.Properties;
-
 namespace FreelancerModStudio.AutoUpdate
 {
+    using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Net;
+    using System.Threading;
+    using System.Windows.Forms;
+
+    using FreelancerModStudio.Properties;
+
     public class AutoUpdate : IDisposable
     {
         public StatusType Status { get; set; }
@@ -17,83 +18,83 @@ namespace FreelancerModStudio.AutoUpdate
         public bool SilentDownload { get; set; }
         public bool SilentCheck { get; set; }
 
-        private UpdateInformation _updateInfo;
+        private UpdateInformation updateInfo;
 
-        private IAutoUpdateUI _ui;
+        private IAutoUpdateUi ui;
 
-        private readonly WebClient _webClient = new WebClient();
+        private readonly WebClient webClient = new WebClient();
 
         public AutoUpdate()
         {
-            Status = StatusType.Waiting;
+            this.Status = StatusType.Waiting;
         }
 
         public event EventHandler<CancelEventArgs> RestartingApplication;
 
         public void Check()
         {
-            if (Status != StatusType.Waiting)
+            if (this.Status != StatusType.Waiting)
             {
                 return;
             }
 
-            Status = StatusType.Checking;
+            this.Status = StatusType.Checking;
 
-            //display checking form
-            if (!SilentCheck)
+            // display checking form
+            if (!this.SilentCheck)
             {
-                ShowUI();
+                this.ShowUi();
             }
 
-            //set event handlers
-            _webClient.DownloadStringCompleted += Download_CheckFile_Completed;
+            // set event handlers
+            this.webClient.DownloadStringCompleted += this.DownloadCheckFileCompleted;
 
-            //download the checkfile
-            _webClient.DownloadStringAsync(CheckFileUri);
+            // download the checkfile
+            this.webClient.DownloadStringAsync(this.CheckFileUri);
         }
 
-        public void ShowUI()
+        public void ShowUi()
         {
-            //start UI in new thread as this function is always called from main thread
-            new Thread(() => SetPage(Status)).Start();
+            // start UI in new thread as this function is always called from main thread
+            new Thread(() => this.SetPage(this.Status)).Start();
         }
 
         private void UpdateAvailable(bool value)
         {
             if (value)
             {
-                if (SilentDownload && SilentCheck)
+                if (this.SilentDownload && this.SilentCheck)
                 {
-                    DownloadUpdate();
+                    this.DownloadUpdate();
                 }
                 else
                 {
-                    Status = StatusType.UpdateAvailable;
-                    SetPage(Status);
+                    this.Status = StatusType.UpdateAvailable;
+                    this.SetPage(this.Status);
                 }
             }
             else
             {
-                Status = StatusType.UpdateNotAvailable;
-                if (!SilentCheck)
+                this.Status = StatusType.UpdateNotAvailable;
+                if (!this.SilentCheck)
                 {
-                    SetPage(Status);
+                    this.SetPage(this.Status);
                 }
             }
         }
 
         private void SetPage(StatusType value)
         {
-            if (_ui == null)
+            if (this.ui == null)
             {
-                _ui = new frmAutoUpdate();
-                _ui.ActionRequired += UI_ActionRequired;
-                _ui.SetPage(value, false);
-                _ui.ShowUI();
+                this.ui = new FrmAutoUpdate();
+                this.ui.ActionRequired += this.UiActionRequired;
+                this.ui.SetPage(value, false);
+                this.ui.ShowUi();
             }
             else
             {
-                _ui.SetPage(value, true);
+                this.ui.SetPage(value, true);
             }
         }
 
@@ -101,15 +102,15 @@ namespace FreelancerModStudio.AutoUpdate
         {
             try
             {
-                _updateInfo = UpdateInformationParser.Parse(fileContent);
-                if (_updateInfo != null)
+                this.updateInfo = UpdateInformationParser.Parse(fileContent);
+                if (this.updateInfo != null)
                 {
-                    return _updateInfo.Version > Helper.Assembly.Version;
+                    return this.updateInfo.Version > Helper.Assembly.Version;
                 }
             }
             catch (Exception ex)
             {
-                if (!SilentCheck)
+                if (!this.SilentCheck)
                 {
                     Helper.Exceptions.Show(ex);
                 }
@@ -120,35 +121,35 @@ namespace FreelancerModStudio.AutoUpdate
 
         private void DownloadUpdate()
         {
-            Status = StatusType.Downloading;
+            this.Status = StatusType.Downloading;
 
-            //display download form
-            if (!SilentDownload || !SilentCheck)
+            // display download form
+            if (!this.SilentDownload || !this.SilentCheck)
             {
-                SetPage(Status);
+                this.SetPage(this.Status);
             }
 
             string destPath = GetUpdateDirectory();
-            string destFile = Path.Combine(destPath, GetUpdateFileName());
+            string destFile = Path.Combine(destPath, this.GetUpdateFileName());
 
-            //create update directory if not existing
+            // create update directory if not existing
             if (!Directory.Exists(destPath))
             {
                 Directory.CreateDirectory(destPath);
             }
 
-            //set event handlers
-            _webClient.DownloadProgressChanged += Download_Update_ProgressChanged;
-            _webClient.DownloadFileCompleted += Download_Update_Completed;
+            // set event handlers
+            this.webClient.DownloadProgressChanged += this.DownloadUpdateProgressChanged;
+            this.webClient.DownloadFileCompleted += this.DownloadUpdateCompleted;
 
-            //download the update
-            _webClient.DownloadFileAsync(_updateInfo.FileUri, destFile);
+            // download the update
+            this.webClient.DownloadFileAsync(this.updateInfo.FileUri, destFile);
         }
 
-        private void Download_CheckFile_Completed(object sender, DownloadStringCompletedEventArgs e)
+        private void DownloadCheckFileCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
-            //delete event handlers
-            _webClient.DownloadStringCompleted -= Download_CheckFile_Completed;
+            // delete event handlers
+            this.webClient.DownloadStringCompleted -= this.DownloadCheckFileCompleted;
 
             if (!e.Cancelled)
             {
@@ -156,15 +157,15 @@ namespace FreelancerModStudio.AutoUpdate
 
                 if (e.Error == null)
                 {
-                    //check if file is newer
-                    UpdateAvailable(IsNewer(e.Result));
+                    // check if file is newer
+                    this.UpdateAvailable(this.IsNewer(e.Result));
                 }
                 else
                 {
-                    //exception occured while downloading
-                    Status = StatusType.Waiting;
+                    // exception occured while downloading
+                    this.Status = StatusType.Waiting;
 
-                    if (!SilentCheck)
+                    if (!this.SilentCheck)
                     {
                         Helper.Exceptions.Show(string.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error);
                     }
@@ -172,36 +173,36 @@ namespace FreelancerModStudio.AutoUpdate
             }
             else
             {
-                Status = StatusType.Waiting;
+                this.Status = StatusType.Waiting;
             }
         }
 
-        private void Download_Update_Completed(object sender, AsyncCompletedEventArgs e)
+        private void DownloadUpdateCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            //delete event handlers
-            _webClient.DownloadProgressChanged -= Download_Update_ProgressChanged;
-            _webClient.DownloadFileCompleted -= Download_Update_Completed;
+            // delete event handlers
+            this.webClient.DownloadProgressChanged -= this.DownloadUpdateProgressChanged;
+            this.webClient.DownloadFileCompleted -= this.DownloadUpdateCompleted;
 
             if (!e.Cancelled)
             {
                 if (e.Error == null)
                 {
-                    //download update completed
-                    Status = StatusType.DownloadFinished;
+                    // download update completed
+                    this.Status = StatusType.DownloadFinished;
 
-                    Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName = GetUpdateFileName();
+                    Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName = this.GetUpdateFileName();
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = false;
                     Helper.Settings.Data.Data.General.AutoUpdate.Update.Downloaded = true;
-                    Helper.Settings.Data.Data.General.AutoUpdate.Update.SilentInstall = _updateInfo.Silent;
+                    Helper.Settings.Data.Data.General.AutoUpdate.Update.SilentInstall = this.updateInfo.Silent;
 
-                    SetPage(Status);
+                    this.SetPage(this.Status);
                 }
                 else
                 {
-                    //exception occured while downloading
-                    Status = StatusType.UpdateAvailable;
+                    // exception occured while downloading
+                    this.Status = StatusType.UpdateAvailable;
 
-                    if (!SilentCheck)
+                    if (!this.SilentCheck)
                     {
                         Helper.Exceptions.Show(string.Format(Strings.UpdatesDownloadException, Helper.Assembly.Name), e.Error);
                     }
@@ -209,44 +210,44 @@ namespace FreelancerModStudio.AutoUpdate
             }
             else
             {
-                Status = StatusType.UpdateAvailable;
+                this.Status = StatusType.UpdateAvailable;
             }
         }
 
-        private void Download_Update_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        private void DownloadUpdateProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            this._ui?.SetProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
+            this.ui?.SetProgress(e.BytesReceived, e.TotalBytesToReceive, e.ProgressPercentage);
         }
 
         private void Abort()
         {
-            _webClient.CancelAsync();
+            this.webClient.CancelAsync();
         }
 
-        private void UI_ActionRequired(ActionType action)
+        private void UiActionRequired(ActionType action)
         {
             switch (action)
             {
                 case ActionType.Close:
-                    _ui = null;
+                    this.ui = null;
                     break;
                 case ActionType.CloseAndAbort:
-                    _ui = null;
-                    Abort();
+                    this.ui = null;
+                    this.Abort();
                     break;
                 case ActionType.Download:
-                    //start download in new thread to prevent cancel on UI close
-                    new Thread(DownloadUpdate).Start();
+                    // start download in new thread to prevent cancel on UI close
+                    new Thread(this.DownloadUpdate).Start();
                     break;
                 case ActionType.Install:
-                    InstallUpdate(RestartingApplication);
+                    InstallUpdate(this.RestartingApplication);
                     break;
             }
         }
 
         private string GetUpdateFileName()
         {
-            return Path.GetFileName(_updateInfo.FileUri.AbsolutePath) ?? "Update.exe";
+            return Path.GetFileName(this.updateInfo.FileUri.AbsolutePath) ?? "Update.exe";
         }
 
         private static string GetUpdateDirectory()
@@ -256,12 +257,12 @@ namespace FreelancerModStudio.AutoUpdate
 
         public void SetProxy(string proxy)
         {
-            _webClient.Proxy = string.IsNullOrEmpty(proxy) ? null : new WebProxy(proxy);
+            this.webClient.Proxy = string.IsNullOrEmpty(proxy) ? null : new WebProxy(proxy);
         }
 
         public void SetCredentials(string userName, string password)
         {
-            _webClient.Credentials = string.IsNullOrEmpty(userName) ? null : new NetworkCredential(userName, password);
+            this.webClient.Credentials = string.IsNullOrEmpty(userName) ? null : new NetworkCredential(userName, password);
         }
 
         public static bool InstallUpdate()
@@ -278,7 +279,7 @@ namespace FreelancerModStudio.AutoUpdate
 
             string file = Path.Combine(GetUpdateDirectory(), Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName);
 
-            //start file (setup) and exit app
+            // start file (setup) and exit app
             if (File.Exists(file))
             {
                 if (restartingApplication != null)
@@ -294,7 +295,7 @@ namespace FreelancerModStudio.AutoUpdate
                 Helper.Settings.Data.Data.General.AutoUpdate.Update.Downloaded = false;
                 Helper.Settings.Data.Data.General.AutoUpdate.Update.Installed = true;
 
-                //save settings because application was already closed except for this thread
+                // save settings because application was already closed except for this thread
                 Helper.Settings.Save();
 
                 string arguments = string.Empty;
@@ -312,7 +313,7 @@ namespace FreelancerModStudio.AutoUpdate
 
         public static void RemoveUpdate()
         {
-            //don't throw an exception if update file or the directory can't be removed
+            // don't throw an exception if update file or the directory can't be removed
             try
             {
                 string directory = GetUpdateDirectory();
@@ -327,10 +328,11 @@ namespace FreelancerModStudio.AutoUpdate
                     Directory.Delete(directory);
                 }
             }
-                // ReSharper disable EmptyGeneralCatchClause
+
+            // ReSharper disable EmptyGeneralCatchClause
             catch
-                // ReSharper restore EmptyGeneralCatchClause
             {
+                // ReSharper restore EmptyGeneralCatchClause
             }
 
             Helper.Settings.Data.Data.General.AutoUpdate.Update.FileName = null;
@@ -339,7 +341,7 @@ namespace FreelancerModStudio.AutoUpdate
 
         public void Dispose()
         {
-            _webClient.Dispose();
+            this.webClient.Dispose();
             GC.SuppressFinalize(this);
         }
     }

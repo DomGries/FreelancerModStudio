@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-using System.Windows.Media.Media3D;
-
 namespace FreelancerModStudio.SystemDesigner.Content
 {
+    using global::System.Collections.Generic;
+    using global::System.Windows.Media.Media3D;
+
     public class System : ContentBase
     {
         public string Path { get; set; }
@@ -10,7 +10,7 @@ namespace FreelancerModStudio.SystemDesigner.Content
 
         public System()
         {
-            Connections = new List<Connection>();
+            this.Connections = new List<Connection>();
         }
 
         protected override Model3D GetShapeModel()

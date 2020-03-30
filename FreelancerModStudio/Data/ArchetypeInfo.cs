@@ -1,8 +1,9 @@
-using System;
-using FreelancerModStudio.SystemDesigner.Content;
-
 namespace FreelancerModStudio.Data
 {
+    using System;
+
+    using FreelancerModStudio.SystemDesigner.Content;
+
     [Serializable]
     public class ArchetypeInfo
     {
@@ -12,7 +13,7 @@ namespace FreelancerModStudio.Data
 
         public override string ToString()
         {
-            return Type + ", " + Radius;
+            return this.Type + ", " + this.Radius;
         }
     }
 }

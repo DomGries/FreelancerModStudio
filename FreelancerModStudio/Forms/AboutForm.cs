@@ -1,20 +1,21 @@
-﻿using System;
-using System.Windows.Forms;
-using FreelancerModStudio.Properties;
-
-namespace FreelancerModStudio
+﻿namespace FreelancerModStudio
 {
-    internal partial class frmAbout : Form
-    {
-        public frmAbout()
-        {
-            InitializeComponent();
+    using System;
+    using System.Windows.Forms;
 
-            Text = string.Format(Strings.AboutText, Helper.Assembly.Name);
-            lblProductName.Text = Helper.Assembly.Name;
-            lblVersion.Text = string.Format(Strings.AboutVersion, Helper.Assembly.Version);
-            lblCopyright.Text = Helper.Assembly.Copyright;
-            lblCompanyName.Text = Helper.Assembly.Company;
+    using FreelancerModStudio.Properties;
+
+    internal partial class FrmAbout : Form
+    {
+        public FrmAbout()
+        {
+            this.InitializeComponent();
+
+            this.Text = string.Format(Strings.AboutText, Helper.Assembly.Name);
+            this.lblProductName.Text = Helper.Assembly.Name;
+            this.lblVersion.Text = string.Format(Strings.AboutVersion, Helper.Assembly.Version);
+            this.lblCopyright.Text = Helper.Assembly.Copyright;
+            this.lblCompanyName.Text = Helper.Assembly.Company;
         }
     }
 }

@@ -1,47 +1,48 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace FreelancerModStudio.Data
+﻿namespace FreelancerModStudio.Data
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     [Serializable]
     public class Table<TKey, TValue> : IEnumerable<TValue> where TValue : class
     {
-        private readonly SortedList<TKey, TValue> _dictionary;
+        private readonly SortedList<TKey, TValue> dictionary;
 
         public Table()
         {
-            _dictionary = new SortedList<TKey, TValue>();
+            this.dictionary = new SortedList<TKey, TValue>();
         }
 
         public Table(IComparer<TKey> comparer)
         {
-            _dictionary = new SortedList<TKey, TValue>(comparer);
+            this.dictionary = new SortedList<TKey, TValue>(comparer);
         }
 
         public TValue this[TKey key]
         {
             get
             {
-                return _dictionary[key];
+                return this.dictionary[key];
             }
+
             set
             {
-                _dictionary[key] = value;
+                this.dictionary[key] = value;
             }
         }
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            return _dictionary.TryGetValue(key, out value);
+            return this.dictionary.TryGetValue(key, out value);
         }
 
         public bool TryGetValue(TKey key, out TValue value, out int index)
         {
-            index = _dictionary.IndexOfKey(key);
+            index = this.dictionary.IndexOfKey(key);
             if (index != -1)
             {
-                value = _dictionary.Values[index];
+                value = this.dictionary.Values[index];
                 return true;
             }
 
@@ -51,57 +52,57 @@ namespace FreelancerModStudio.Data
 
         public TKey KeyOf(int index)
         {
-            return _dictionary.Keys[index];
+            return this.dictionary.Keys[index];
         }
 
         public int IndexOf(TValue value)
         {
-            return _dictionary.IndexOfValue(value);
+            return this.dictionary.IndexOfValue(value);
         }
 
         public int IndexOf(TKey key)
         {
-            return _dictionary.IndexOfKey(key);
+            return this.dictionary.IndexOfKey(key);
         }
 
         public bool Contains(TValue value)
         {
-            return IndexOf(value) != -1;
+            return this.IndexOf(value) != -1;
         }
 
         public bool Contains(TKey key)
         {
-            return IndexOf(key) != -1;
+            return this.IndexOf(key) != -1;
         }
 
         public void Add(TValue value)
         {
-            _dictionary.Add(((ITableRow<TKey>)value).Id, value);
+            this.dictionary.Add(((ITableRow<TKey>)value).Id, value);
         }
 
         public void AddRange(IList<TValue> values)
         {
             foreach (TValue value in values)
             {
-                Add(value);
+                this.Add(value);
             }
         }
 
         public void Remove(TValue value)
         {
-            _dictionary.Remove(((ITableRow<TKey>)value).Id);
+            this.dictionary.Remove(((ITableRow<TKey>)value).Id);
         }
 
         public void RemoveAt(int index)
         {
-            _dictionary.RemoveAt(index);
+            this.dictionary.RemoveAt(index);
         }
 
         public int Count
         {
             get
             {
-                return _dictionary.Count;
+                return this.dictionary.Count;
             }
         }
 
@@ -109,7 +110,7 @@ namespace FreelancerModStudio.Data
         {
             get
             {
-                return _dictionary.Values;
+                return this.dictionary.Values;
             }
         }
 
@@ -117,23 +118,23 @@ namespace FreelancerModStudio.Data
         {
             get
             {
-                return (IList)Values;
+                return (IList)this.Values;
             }
         }
 
         public void Clear()
         {
-            _dictionary.Clear();
+            this.dictionary.Clear();
         }
 
         public IEnumerator<TValue> GetEnumerator()
         {
-            return _dictionary.Values.GetEnumerator();
+            return this.dictionary.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _dictionary.Values.GetEnumerator();
+            return this.dictionary.Values.GetEnumerator();
         }
     }
 }

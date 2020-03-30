@@ -1,9 +1,9 @@
 namespace FreelancerModStudio.Data.INI
 {
-    public class INIBlock
+    public class IniBlock
     {
         public string Name { get; set; }
-        public INIOptions Options { get; set; }
+        public IniOptions Options { get; set; }
         public string Comments { get; set; }
     }
 }

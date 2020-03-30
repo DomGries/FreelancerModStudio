@@ -1,17 +1,17 @@
-using System;
-using System.Collections.Generic;
-
 namespace FreelancerModStudio.Data.INI
 {
+    using System;
+    using System.Collections.Generic;
+
     [Serializable]
-    public class EditorINIData
+    public class EditorIniData
     {
-        public List<EditorINIBlock> Blocks = new List<EditorINIBlock>();
+        public List<EditorIniBlock> Blocks = new List<EditorIniBlock>();
         public int TemplateIndex;
 
-        public EditorINIData(int templateIndex)
+        public EditorIniData(int templateIndex)
         {
-            TemplateIndex = templateIndex;
+            this.TemplateIndex = templateIndex;
         }
     }
 }

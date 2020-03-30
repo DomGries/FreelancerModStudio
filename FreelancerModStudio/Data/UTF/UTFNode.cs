@@ -1,16 +1,16 @@
-using System.Collections.Generic;
-
 namespace FreelancerModStudio.Data.UTF
 {
-    public class UTFNode
+    using System.Collections.Generic;
+
+    public class UtfNode
     {
         public string Name { get; set; }
         public byte[] Data { get; set; }
-        public List<UTFNode> Nodes { get; set; }
+        public List<UtfNode> Nodes { get; set; }
 
-        public UTFNode()
+        public UtfNode()
         {
-            Nodes = new List<UTFNode>();
+            this.Nodes = new List<UtfNode>();
         }
     }
 }

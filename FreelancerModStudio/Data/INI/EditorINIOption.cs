@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-
 namespace FreelancerModStudio.Data.INI
 {
+    using System;
+    using System.Collections.Generic;
+
     [Serializable]
-    public class EditorINIOption
+    public class EditorIniOption
     {
         public string Name;
         public int TemplateIndex = -1;
@@ -12,12 +12,12 @@ namespace FreelancerModStudio.Data.INI
         public string ChildName;
         public int ChildTemplateIndex = -1;
 
-        public List<EditorINIEntry> Values = new List<EditorINIEntry>();
+        public List<EditorIniEntry> Values = new List<EditorIniEntry>();
 
-        public EditorINIOption(string name, int templateIndex)
+        public EditorIniOption(string name, int templateIndex)
         {
-            Name = name;
-            TemplateIndex = templateIndex;
+            this.Name = name;
+            this.TemplateIndex = templateIndex;
         }
     }
 }

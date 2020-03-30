@@ -1,11 +1,14 @@
 ﻿namespace FreelancerModStudio
 {
-    partial class frmFileType
+    using System.ComponentModel;
+    using System.Windows.Forms;
+
+    partial class FrmFileType
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -17,6 +20,7 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -28,7 +32,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmFileType));
+            ComponentResourceManager resources =
+                new System.ComponentModel.ComponentResourceManager(typeof(FrmFileType));
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.fileTypeComboBox = new System.Windows.Forms.ComboBox();
@@ -36,9 +41,8 @@
             this.pathLabel = new System.Windows.Forms.Label();
             this.pathTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
+
             // cancelButton
-            // 
             this.cancelButton.AccessibleDescription = null;
             this.cancelButton.AccessibleName = null;
             resources.ApplyResources(this.cancelButton, "cancelButton");
@@ -47,9 +51,8 @@
             this.cancelButton.Font = null;
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.UseVisualStyleBackColor = true;
-            // 
+
             // okButton
-            // 
             this.okButton.AccessibleDescription = null;
             this.okButton.AccessibleName = null;
             resources.ApplyResources(this.okButton, "okButton");
@@ -58,9 +61,8 @@
             this.okButton.Font = null;
             this.okButton.Name = "okButton";
             this.okButton.UseVisualStyleBackColor = true;
-            // 
+
             // fileTypeComboBox
-            // 
             this.fileTypeComboBox.AccessibleDescription = null;
             this.fileTypeComboBox.AccessibleName = null;
             resources.ApplyResources(this.fileTypeComboBox, "fileTypeComboBox");
@@ -69,25 +71,22 @@
             this.fileTypeComboBox.Font = null;
             this.fileTypeComboBox.FormattingEnabled = true;
             this.fileTypeComboBox.Name = "fileTypeComboBox";
-            // 
+
             // label1
-            // 
             this.label1.AccessibleDescription = null;
             this.label1.AccessibleName = null;
             resources.ApplyResources(this.label1, "label1");
             this.label1.Font = null;
             this.label1.Name = "label1";
-            // 
+
             // pathLabel
-            // 
             this.pathLabel.AccessibleDescription = null;
             this.pathLabel.AccessibleName = null;
             resources.ApplyResources(this.pathLabel, "pathLabel");
             this.pathLabel.Font = null;
             this.pathLabel.Name = "pathLabel";
-            // 
+
             // pathTextBox
-            // 
             this.pathTextBox.AccessibleDescription = null;
             this.pathTextBox.AccessibleName = null;
             resources.ApplyResources(this.pathTextBox, "pathTextBox");
@@ -96,9 +95,8 @@
             this.pathTextBox.Font = null;
             this.pathTextBox.Name = "pathTextBox";
             this.pathTextBox.ReadOnly = true;
-            // 
+
             // frmFileType
-            // 
             this.AcceptButton = this.okButton;
             this.AccessibleDescription = null;
             this.AccessibleName = null;
@@ -117,22 +115,21 @@
             this.Icon = null;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmFileType";
+            this.Name = "FrmFileType";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmFileType_FormClosed);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmFileTypeFormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
 
-        private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.ComboBox fileTypeComboBox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label pathLabel;
-        private System.Windows.Forms.TextBox pathTextBox;
+        private Button cancelButton;
+        private Button okButton;
+        private ComboBox fileTypeComboBox;
+        private Label label1;
+        private Label pathLabel;
+        private TextBox pathTextBox;
     }
 }

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace FreelancerModStudio.Data
+﻿namespace FreelancerModStudio.Data
 {
+    using System.Collections.Generic;
+
     public class ChangedData
     {
         public List<TableBlock> NewBlocks { get; set; }
@@ -11,42 +11,42 @@ namespace FreelancerModStudio.Data
 
         public ChangedData GetUndoData()
         {
-            switch (Type)
+            switch (this.Type)
             {
                 case ChangedType.Add:
                     return new ChangedData
                         {
                             Type = ChangedType.Delete,
-                            NewBlocks = NewBlocks,
+                            NewBlocks = this.NewBlocks,
                         };
                 case ChangedType.Delete:
                     return new ChangedData
                         {
                             Type = ChangedType.Add,
-                            NewBlocks = NewBlocks,
+                            NewBlocks = this.NewBlocks,
                         };
                 case ChangedType.AddAndEdit:
                     return new ChangedData
                         {
                             Type = ChangedType.DeleteAndEdit,
-                            NewBlocks = NewBlocks,
-                            OldBlocks = NewAdditionalBlocks,
-                            NewAdditionalBlocks = OldBlocks,
+                            NewBlocks = this.NewBlocks,
+                            OldBlocks = this.NewAdditionalBlocks,
+                            NewAdditionalBlocks = this.OldBlocks,
                         };
                 case ChangedType.DeleteAndEdit:
                     return new ChangedData
                         {
                             Type = ChangedType.AddAndEdit,
-                            NewBlocks = NewBlocks,
-                            OldBlocks = NewAdditionalBlocks,
-                            NewAdditionalBlocks = OldBlocks,
+                            NewBlocks = this.NewBlocks,
+                            OldBlocks = this.NewAdditionalBlocks,
+                            NewAdditionalBlocks = this.OldBlocks,
                         };
                 default:
                     return new ChangedData
                         {
-                            Type = Type,
-                            NewBlocks = OldBlocks,
-                            OldBlocks = NewBlocks,
+                            Type = this.Type,
+                            NewBlocks = this.OldBlocks,
+                            OldBlocks = this.NewBlocks,
                         };
             }
         }

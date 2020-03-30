@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using FreelancerModStudio.Data.INI;
-
-namespace FreelancerModStudio.Data.IO
+﻿namespace FreelancerModStudio.Data.IO
 {
-    public class INIManager
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+
+    using FreelancerModStudio.Data.INI;
+
+    public class IniManager
     {
         private const char TOKEN_COMMENT = ';';
 
@@ -24,20 +25,20 @@ namespace FreelancerModStudio.Data.IO
         public bool WriteEmptyLine { get; set; }
         public bool ReadWriteComments { get; set; }
 
-        public INIManager(string file)
+        public IniManager(string file)
         {
-            File = file;
+            this.File = file;
         }
 
-        public List<INIBlock> Read()
+        public List<IniBlock> Read()
         {
-            List<INIBlock> data = new List<INIBlock>();
+            List<IniBlock> data = new List<IniBlock>();
 
-            INIBlock currentBlock = new INIBlock();
+            IniBlock currentBlock = new IniBlock();
             int currentOptionIndex = 0;
             bool currentBlockCommentedOut = false;
 
-            using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream stream = new FileStream(this.File, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (StreamReader streamReader = new StreamReader(stream, Encoding.Default))
             {
                 while (!streamReader.EndOfStream)
@@ -52,7 +53,7 @@ namespace FreelancerModStudio.Data.IO
                     string newComment = null;
 
                     // check for commented out block
-                    if (ReadWriteComments && line.Length > 2 && line[0] == TOKEN_BLOCK_START && line[1] == TOKEN_COMMENT)
+                    if (this.ReadWriteComments && line.Length > 2 && line[0] == TOKEN_BLOCK_START && line[1] == TOKEN_COMMENT)
                     {
                         line = line.Substring(2);
 
@@ -77,7 +78,7 @@ namespace FreelancerModStudio.Data.IO
 
                             // new block
                             string blockName = line.Substring(0, line.Length - 1).Trim();
-                            currentBlock = CreateBlock(blockName, new INIOptions(), currentBlock.Name == null ? currentBlock.Comments : null);
+                            currentBlock = CreateBlock(blockName, new IniOptions(), currentBlock.Name == null ? currentBlock.Comments : null);
 
                             currentBlockCommentedOut = true;
 
@@ -91,7 +92,7 @@ namespace FreelancerModStudio.Data.IO
                     if (commentIndex != -1)
                     {
                         // add comment
-                        if (ReadWriteComments)
+                        if (this.ReadWriteComments)
                         {
                             newComment = line.Substring(commentIndex + 1);
                         }
@@ -122,7 +123,7 @@ namespace FreelancerModStudio.Data.IO
                         {
                             // new block
                             string blockName = line.Substring(1, line.Length - 2).Trim();
-                            currentBlock = CreateBlock(blockName, new INIOptions(), currentBlock.Name == null ? currentBlock.Comments : null);
+                            currentBlock = CreateBlock(blockName, new IniOptions(), currentBlock.Name == null ? currentBlock.Comments : null);
                         }
                         else
                         {
@@ -148,7 +149,7 @@ namespace FreelancerModStudio.Data.IO
                             string optionName = line.Substring(0, valueIndex).Trim();
                             string optionValue = line.Substring(valueIndex + 1, line.Length - valueIndex - 1).Trim();
 
-                            currentBlock.Options.Add(optionName, new INIOption
+                            currentBlock.Options.Add(optionName, new IniOption
                                 {
                                     Value = optionValue,
                                     Index = currentOptionIndex
@@ -158,7 +159,7 @@ namespace FreelancerModStudio.Data.IO
                         else
                         {
                             // entry without value
-                            currentBlock.Options.Add(line, new INIOption
+                            currentBlock.Options.Add(line, new IniOption
                                 {
                                     Value = string.Empty,
                                     Index = currentOptionIndex
@@ -181,7 +182,7 @@ namespace FreelancerModStudio.Data.IO
             return data;
         }
 
-        private static void AddComment(INIBlock block, string value)
+        private static void AddComment(IniBlock block, string value)
         {
             if (value == null)
             {
@@ -192,12 +193,13 @@ namespace FreelancerModStudio.Data.IO
             {
                 block.Comments += Environment.NewLine;
             }
+
             block.Comments += value;
         }
 
-        private static INIBlock CreateBlock(string name, INIOptions options, string comments)
+        private static IniBlock CreateBlock(string name, IniOptions options, string comments)
         {
-            return new INIBlock
+            return new IniBlock
                 {
                     Name = name,
                     Options = options,
@@ -205,17 +207,17 @@ namespace FreelancerModStudio.Data.IO
                 };
         }
 
-        public void Write(List<INIBlock> data)
+        public void Write(List<IniBlock> data)
         {
-            using (StreamWriter streamWriter = new StreamWriter(File, false, Encoding.Default))
+            using (StreamWriter streamWriter = new StreamWriter(this.File, false, Encoding.Default))
             {
                 int i = 0;
-                foreach (INIBlock block in data)
+                foreach (IniBlock block in data)
                 {
                     if (i > 0)
                     {
                         streamWriter.WriteLine();
-                        if (WriteEmptyLine)
+                        if (this.WriteEmptyLine)
                         {
                             streamWriter.WriteLine();
                         }
@@ -229,19 +231,19 @@ namespace FreelancerModStudio.Data.IO
                     {
                         streamWriter.WriteLine();
 
-                        //write each option
+                        // write each option
                         int k = 0;
-                        foreach (KeyValuePair<string, List<INIOption>> option in block.Options)
+                        foreach (KeyValuePair<string, List<IniOption>> option in block.Options)
                         {
                             for (int h = 0; h < option.Value.Count; ++h)
                             {
-                                //write the key
+                                // write the key
                                 streamWriter.Write(option.Value[h].Parent ?? option.Key);
 
                                 // dont write the '=' for entries with no value
                                 if (option.Value[h].Value.Length != 0)
                                 {
-                                    if (WriteSpaces)
+                                    if (this.WriteSpaces)
                                     {
                                         streamWriter.Write(MAPPING_VALUE_WRITE_FORMAT);
                                     }
@@ -268,8 +270,8 @@ namespace FreelancerModStudio.Data.IO
                         }
                     }
 
-                    //write comments
-                    if (ReadWriteComments && block.Comments != null)
+                    // write comments
+                    if (this.ReadWriteComments && block.Comments != null)
                     {
                         streamWriter.WriteLine();
                         streamWriter.Write(TOKEN_COMMENT);

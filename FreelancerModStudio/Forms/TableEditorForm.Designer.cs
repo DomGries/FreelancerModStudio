@@ -1,11 +1,16 @@
 ﻿namespace FreelancerModStudio
 {
-    partial class frmTableEditor
+    using System.ComponentModel;
+    using System.Windows.Forms;
+
+    using BrightIdeasSoftware;
+
+    partial class FrmTableEditor
     {
         /// <summary>
         /// Erforderliche Designervariable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Verwendete Ressourcen bereinigen.
@@ -17,6 +22,7 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -29,7 +35,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTableEditor));
+            ComponentResourceManager resources =
+                new System.ComponentModel.ComponentResourceManager(typeof(FrmTableEditor));
             this.objectListView1 = new BrightIdeasSoftware.FastObjectListView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuAdd = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,13 +48,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
+
             // objectListView1
-            // 
             this.objectListView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.objectListView1.ContextMenuStrip = this.contextMenuStrip1;
             resources.ApplyResources(this.objectListView1, "objectListView1");
-            this.objectListView1.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.objectListView1.EmptyListMsgFont = new System.Drawing.Font(
+                "Microsoft Sans Serif",
+                8.25F,
+                System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Point,
+                ((byte)(0)));
             this.objectListView1.FullRowSelect = true;
             this.objectListView1.GridLines = true;
             this.objectListView1.HideSelection = false;
@@ -59,88 +70,78 @@
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.VirtualMode = true;
-            this.objectListView1.Dropped += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.objectListView1_Dropped);
-            this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
-            this.objectListView1.CanDrop += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.objectListView1_CanDrop);
-            // 
+            this.objectListView1.Dropped += new System.EventHandler<OlvDropEventArgs>(this.ObjectListView1Dropped);
+            this.objectListView1.SelectionChanged += new System.EventHandler(this.ObjectListView1SelectionChanged);
+            this.objectListView1.CanDrop += new System.EventHandler<OlvDropEventArgs>(this.ObjectListView1CanDrop);
+
             // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuAdd,
-            this.mnuDelete,
-            this.toolStripSeparator2,
-            this.mnuCut,
-            this.mnuCopy,
-            this.mnuPaste});
+            this.contextMenuStrip1.Items.AddRange(
+                new ToolStripItem[]
+                    {
+                        this.mnuAdd, this.mnuDelete, this.toolStripSeparator2, this.mnuCut, this.mnuCopy, this.mnuPaste
+                    });
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             resources.ApplyResources(this.contextMenuStrip1, "contextMenuStrip1");
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
+            this.contextMenuStrip1.Opening +=
+                new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1Opening);
+
             // mnuAdd
-            // 
             this.mnuAdd.Image = global::FreelancerModStudio.Properties.Resources.Add;
             this.mnuAdd.Name = "mnuAdd";
             resources.ApplyResources(this.mnuAdd, "mnuAdd");
-            // 
+
             // mnuDelete
-            // 
             resources.ApplyResources(this.mnuDelete, "mnuDelete");
             this.mnuDelete.Image = global::FreelancerModStudio.Properties.Resources.Delete;
             this.mnuDelete.Name = "mnuDelete";
-            this.mnuDelete.Click += new System.EventHandler(this.mnuDelete_Click);
-            // 
+            this.mnuDelete.Click += new System.EventHandler(this.MnuDeleteClick);
+
             // toolStripSeparator2
-            // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
-            // 
+
             // mnuCut
-            // 
             resources.ApplyResources(this.mnuCut, "mnuCut");
             this.mnuCut.Image = global::FreelancerModStudio.Properties.Resources.Cut;
             this.mnuCut.Name = "mnuCut";
-            this.mnuCut.Click += new System.EventHandler(this.mnuCut_Click);
-            // 
+            this.mnuCut.Click += new System.EventHandler(this.MnuCutClick);
+
             // mnuCopy
-            // 
             resources.ApplyResources(this.mnuCopy, "mnuCopy");
             this.mnuCopy.Image = global::FreelancerModStudio.Properties.Resources.Copy;
             this.mnuCopy.Name = "mnuCopy";
-            this.mnuCopy.Click += new System.EventHandler(this.mnuCopy_Click);
-            // 
+            this.mnuCopy.Click += new System.EventHandler(this.MnuCopyClick);
+
             // mnuPaste
-            // 
             resources.ApplyResources(this.mnuPaste, "mnuPaste");
             this.mnuPaste.Image = global::FreelancerModStudio.Properties.Resources.Paste;
             this.mnuPaste.Name = "mnuPaste";
-            this.mnuPaste.Click += new System.EventHandler(this.mnuPaste_Click);
-            // 
+            this.mnuPaste.Click += new System.EventHandler(this.MnuPasteClick);
+
             // frmTableEditor
-            // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.objectListView1);
             this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
-            this.Name = "frmTableEditor";
+            this.Name = "FrmTableEditor";
             this.ShowHint = WeifenLuo.WinFormsUI.Docking.DockState.Document;
             this.TabText = "Default Editor";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmDefaultEditor_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmDefaultEditorFormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
 
         #endregion
 
-        private BrightIdeasSoftware.FastObjectListView objectListView1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem mnuAdd;
-        private System.Windows.Forms.ToolStripMenuItem mnuDelete;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem mnuCut;
-        private System.Windows.Forms.ToolStripMenuItem mnuCopy;
-        private System.Windows.Forms.ToolStripMenuItem mnuPaste;
+        private FastObjectListView objectListView1;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem mnuAdd;
+        private ToolStripMenuItem mnuDelete;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem mnuCut;
+        private ToolStripMenuItem mnuCopy;
+        private ToolStripMenuItem mnuPaste;
 
     }
 }

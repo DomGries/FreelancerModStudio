@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using FreelancerModStudio.Data.INI;
-using FreelancerModStudio.Data.IO;
-using FreelancerModStudio.SystemDesigner;
-
-namespace FreelancerModStudio.Data
+﻿namespace FreelancerModStudio.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
+    using FreelancerModStudio.Data.INI;
+    using FreelancerModStudio.Data.IO;
+    using FreelancerModStudio.SystemDesigner;
+
     public class ArchetypeManager
     {
-        private Dictionary<string, ArchetypeInfo> _archetypes;
+        private Dictionary<string, ArchetypeInfo> archetypes;
 
         public ArchetypeManager(string file, int templateIndex)
         {
@@ -19,15 +20,15 @@ namespace FreelancerModStudio.Data
             }
 
             FileManager fileManager = new FileManager(file);
-            EditorINIData iniContent = fileManager.Read(FileEncoding.Automatic, templateIndex);
+            EditorIniData iniContent = fileManager.Read(FileEncoding.Automatic, templateIndex);
 
-            CreateContentTable(iniContent.Blocks);
+            this.CreateContentTable(iniContent.Blocks);
         }
 
         public ArchetypeInfo TypeOf(string archetype)
         {
             ArchetypeInfo info;
-            if (_archetypes != null && _archetypes.TryGetValue(archetype, out info))
+            if (this.archetypes != null && this.archetypes.TryGetValue(archetype, out info))
             {
                 return info;
             }
@@ -54,16 +55,16 @@ namespace FreelancerModStudio.Data
             return null;
         }
 
-        private void CreateContentTable(List<EditorINIBlock> blocks)
+        private void CreateContentTable(List<EditorIniBlock> blocks)
         {
-            _archetypes = new Dictionary<string, ArchetypeInfo>(StringComparer.OrdinalIgnoreCase);
+            this.archetypes = new Dictionary<string, ArchetypeInfo>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (EditorINIBlock block in blocks)
+            foreach (EditorIniBlock block in blocks)
             {
                 KeyValuePair<string, ArchetypeInfo> info = SystemParser.GetArchetypeInfo(block);
                 if (info.Key != null)
                 {
-                    _archetypes[info.Key] = info.Value;
+                    this.archetypes[info.Key] = info.Value;
                 }
             }
         }

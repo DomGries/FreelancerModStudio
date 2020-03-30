@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using FreelancerModStudio.Data.INI;
-
-namespace FreelancerModStudio.Data
+﻿namespace FreelancerModStudio.Data
 {
+    using System.Collections.Generic;
+
+    using FreelancerModStudio.Data.INI;
+
     public class TableData
     {
         public List<TableBlock> Blocks;
@@ -11,27 +12,27 @@ namespace FreelancerModStudio.Data
 
         public TableData()
         {
-            Blocks = new List<TableBlock>();
+            this.Blocks = new List<TableBlock>();
         }
 
-        public TableData(EditorINIData data)
+        public TableData(EditorIniData data)
         {
-            Blocks = new List<TableBlock>();
-            TemplateIndex = data.TemplateIndex;
+            this.Blocks = new List<TableBlock>();
+            this.TemplateIndex = data.TemplateIndex;
 
-            MaxId = data.Blocks.Count;
+            this.MaxId = data.Blocks.Count;
 
-            for (int i = 0; i < MaxId; ++i)
+            for (int i = 0; i < this.MaxId; ++i)
             {
-                Blocks.Add(new TableBlock(i, i, data.Blocks[i], TemplateIndex));
+                this.Blocks.Add(new TableBlock(i, i, data.Blocks[i], this.TemplateIndex));
             }
         }
 
-        public EditorINIData GetEditorData()
+        public EditorIniData GetEditorData()
         {
-            EditorINIData data = new EditorINIData(TemplateIndex);
+            EditorIniData data = new EditorIniData(this.TemplateIndex);
 
-            foreach (TableBlock block in Blocks)
+            foreach (TableBlock block in this.Blocks)
             {
                 data.Blocks.Add(block.Block);
             }
@@ -41,9 +42,9 @@ namespace FreelancerModStudio.Data
 
         public void RefreshIndices(int startIndex)
         {
-            for (int i = startIndex; i < Blocks.Count; ++i)
+            for (int i = startIndex; i < this.Blocks.Count; ++i)
             {
-                Blocks[i].Index = i;
+                this.Blocks[i].Index = i;
             }
         }
     }

@@ -1,76 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Media3D;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.Properties;
-using FreelancerModStudio.SystemDesigner.Content;
-using HelixEngine;
-using ContextMenu = System.Windows.Controls.ContextMenu;
-using MenuItem = System.Windows.Controls.MenuItem;
-
-namespace FreelancerModStudio.SystemDesigner
+﻿namespace FreelancerModStudio.SystemDesigner
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Windows;
+    using System.Windows.Forms;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Media3D;
+
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.Properties;
+    using FreelancerModStudio.SystemDesigner.Content;
+
+    using HelixEngine;
+
+    using ContextMenu = System.Windows.Controls.ContextMenu;
+    using MenuItem = System.Windows.Controls.MenuItem;
+    using Sys = System;
+
     public class Presenter
     {
-        public HelixViewport3D Viewport;
-        public ViewerType ViewerType;
-        public bool IsModelMode;
-        public string DataPath;
-
-        private int _secondLayerId;
-
-        private readonly Dictionary<string, Model3D> _modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
-
-        private Visual3D _lighting;
-
-        private BoundingBoxWireFrameVisual3D _selectionBox;
-
-        private LineVisual3D _trackedLine;
-
-        private ContentBase _selectedContent;
-
-        private ContentBase _trackedContent;
-
-        private FixedLineVisual3D _manipulatorX;
-
-        private FixedLineVisual3D _manipulatorY;
-
-        private FixedLineVisual3D _manipulatorZ;
-
-        private bool _manipulating;
-
-        private ManipulationMode _manipulationMode;
-
-        private ManipulationAxis _manipulationAxis;
-
-        private Point3D? _manipulationLastPosition;
-
         public delegate void SelectionChangedType(TableBlock block, bool toggle);
-
-        public SelectionChangedType SelectionChanged;
-
-        private void OnSelectionChanged(TableBlock block, bool toggle)
-        {
-            this.SelectionChanged?.Invoke(block, toggle);
-        }
-
         public delegate void FileOpenType(string file);
-
-        public FileOpenType FileOpen;
-
-        private void OnFileOpen(string file)
-        {
-            this.FileOpen?.Invoke(file);
-        }
-
         public delegate void DataManipulatedType(TableBlock newBlock, TableBlock oldBlock);
 
-        public DataManipulatedType DataManipulated;
+        internal DataManipulatedType DataManipulated;
+        internal HelixViewport3D Viewport;
+        internal ViewerType ViewerType;
+        internal bool IsModelMode;
+        internal string DataPath;
+        internal SelectionChangedType SelectionChanged;
+        internal FileOpenType FileOpen;
+
+        private readonly Dictionary<string, Model3D> modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
+        private int secondLayerId;
+        private Visual3D lighting;
+        private BoundingBoxWireFrameVisual3D selectionBox;
+        private LineVisual3D trackedLine;
+        private ContentBase selectedContent;
+        private ContentBase trackedContent;
+        private FixedLineVisual3D manipulatorX;
+        private FixedLineVisual3D manipulatorY;
+        private FixedLineVisual3D manipulatorZ;
+        private bool manipulating;
+        private ManipulationMode manipulationMode;
+        private ManipulationAxis manipulationAxis;
+        private Point3D? manipulationLastPosition;
+
+        private void OnSelectionChanged(TableBlock block, bool toggle) => this.SelectionChanged?.Invoke(block, toggle);
+        private void OnFileOpen(string file) => this.FileOpen?.Invoke(file);
+        
 
         private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
         {
@@ -81,12 +61,13 @@ namespace FreelancerModStudio.SystemDesigner
         {
             get
             {
-                return _lighting;
+                return this.lighting;
             }
+
             set
             {
-                AddOrReplace(_lighting, value);
-                _lighting = value;
+                this.AddOrReplace(this.lighting, value);
+                this.lighting = value;
             }
         }
 
@@ -94,12 +75,13 @@ namespace FreelancerModStudio.SystemDesigner
         {
             get
             {
-                return _selectionBox;
+                return this.selectionBox;
             }
+
             set
             {
-                AddOrReplace(_selectionBox, value);
-                _selectionBox = value;
+                this.AddOrReplace(this.selectionBox, value);
+                this.selectionBox = value;
             }
         }
 
@@ -107,12 +89,13 @@ namespace FreelancerModStudio.SystemDesigner
         {
             get
             {
-                return _trackedLine;
+                return this.trackedLine;
             }
+
             set
             {
-                AddOrReplace(_trackedLine, value);
-                _trackedLine = value;
+                this.AddOrReplace(this.trackedLine, value);
+                this.trackedLine = value;
             }
         }
 
@@ -120,12 +103,13 @@ namespace FreelancerModStudio.SystemDesigner
         {
             get
             {
-                return _manipulatorX;
+                return this.manipulatorX;
             }
+
             set
             {
-                AddOrReplace(_manipulatorX, value);
-                _manipulatorX = value;
+                this.AddOrReplace(this.manipulatorX, value);
+                this.manipulatorX = value;
             }
         }
 
@@ -133,12 +117,13 @@ namespace FreelancerModStudio.SystemDesigner
         {
             get
             {
-                return _manipulatorY;
+                return this.manipulatorY;
             }
+
             set
             {
-                AddOrReplace(_manipulatorY, value);
-                _manipulatorY = value;
+                this.AddOrReplace(this.manipulatorY, value);
+                this.manipulatorY = value;
             }
         }
 
@@ -146,12 +131,13 @@ namespace FreelancerModStudio.SystemDesigner
         {
             get
             {
-                return _manipulatorZ;
+                return this.manipulatorZ;
             }
+
             set
             {
-                AddOrReplace(_manipulatorZ, value);
-                _manipulatorZ = value;
+                this.AddOrReplace(this.manipulatorZ, value);
+                this.manipulatorZ = value;
             }
         }
 
@@ -159,21 +145,23 @@ namespace FreelancerModStudio.SystemDesigner
         {
             get
             {
-                return _selectedContent;
+                return this.selectedContent;
             }
+
             set
             {
-                if (_manipulating && _selectedContent != value)
+                if (this.manipulating && this.selectedContent != value)
                 {
-                    StopManipulating(true);
+                    this.StopManipulating(true);
                 }
-                _selectedContent = value;
 
-                //select content visually
-                SetSelectionBox();
-                SetTrackedLine(true);
-                SetManipulatorLines();
-                SetTitle();
+                this.selectedContent = value;
+
+                // select content visually
+                this.SetSelectionBox();
+                this.SetTrackedLine(true);
+                this.SetManipulatorLines();
+                this.SetTitle();
             }
         }
 
@@ -181,15 +169,16 @@ namespace FreelancerModStudio.SystemDesigner
         {
             get
             {
-                return _trackedContent;
+                return this.trackedContent;
             }
+
             set
             {
-                _trackedContent = value;
+                this.trackedContent = value;
 
-                //track content visually
-                SetTrackedLine(false);
-                SetTitle();
+                // track content visually
+                this.SetTrackedLine(false);
+                this.SetTitle();
             }
         }
 
@@ -197,57 +186,58 @@ namespace FreelancerModStudio.SystemDesigner
         {
             get
             {
-                return _manipulationMode;
+                return this.manipulationMode;
             }
+
             set
             {
-                if (_manipulating && _manipulationMode != value)
+                if (this.manipulating && this.manipulationMode != value)
                 {
-                    StopManipulating(false);
+                    this.StopManipulating(false);
                 }
 
-                _manipulationMode = value;
+                this.manipulationMode = value;
 
-                SetManipulatorLines();
+                this.SetManipulatorLines();
             }
         }
 
         public Presenter(HelixViewport3D viewport)
         {
-            Viewport = viewport;
-            Viewport.MouseDown += Viewport_MouseDown;
-            Viewport.MouseUp += Viewport_MouseUp;
-            Viewport.MouseMove += Viewport_MouseMove;
-            Viewport.KeyDown += Viewport_KeyDown;
-            Viewport.KeyUp += Viewport_KeyUp;
+            this.Viewport = viewport;
+            this.Viewport.MouseDown += this.ViewportMouseDown;
+            this.Viewport.MouseUp += this.ViewportMouseUp;
+            this.Viewport.MouseMove += this.ViewportMouseMove;
+            this.Viewport.KeyDown += this.ViewportKeyDown;
+            this.Viewport.KeyUp += this.ViewportKeyUp;
 
-            Viewport.ViewCubeLeftBrush = new SolidColorBrush(SharedMaterials.ManipulatorZ);
-            Viewport.ViewCubeRightBrush = Viewport.ViewCubeLeftBrush;
-            Viewport.ViewCubeTopBrush = new SolidColorBrush(SharedMaterials.ManipulatorY);
-            Viewport.ViewCubeBottomBrush = Viewport.ViewCubeTopBrush;
-            Viewport.ViewCubeFrontBrush = new SolidColorBrush(SharedMaterials.ManipulatorX);
-            Viewport.ViewCubeBackBrush = Viewport.ViewCubeFrontBrush;
-            Viewport.ViewCubeLeftText = "F";
-            Viewport.ViewCubeRightText = "B";
-            Viewport.ViewCubeFrontText = "R";
-            Viewport.ViewCubeBackText = "L";
+            this.Viewport.ViewCubeLeftBrush = new SolidColorBrush(SharedMaterials.ManipulatorZ);
+            this.Viewport.ViewCubeRightBrush = this.Viewport.ViewCubeLeftBrush;
+            this.Viewport.ViewCubeTopBrush = new SolidColorBrush(SharedMaterials.ManipulatorY);
+            this.Viewport.ViewCubeBottomBrush = this.Viewport.ViewCubeTopBrush;
+            this.Viewport.ViewCubeFrontBrush = new SolidColorBrush(SharedMaterials.ManipulatorX);
+            this.Viewport.ViewCubeBackBrush = this.Viewport.ViewCubeFrontBrush;
+            this.Viewport.ViewCubeLeftText = "F";
+            this.Viewport.ViewCubeRightText = "B";
+            this.Viewport.ViewCubeFrontText = "R";
+            this.Viewport.ViewCubeBackText = "L";
 
-            Lighting = new SystemLightsVisual3D();
+            this.Lighting = new SystemLightsVisual3D();
         }
 
         public void LookAt(ContentBase content)
         {
-            Viewport.LookAt(content.GetPositionPoint(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
+            this.Viewport.LookAt(content.GetPositionPoint(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
         }
 
         public void LookAt(Point3D point)
         {
-            Viewport.LookAt(point, Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
+            this.Viewport.LookAt(point, Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
         }
 
         public void LookAtAndZoom(ContentBase content, double zoomFactor, bool animate)
         {
-            Rect3D bounds = GetBounds(content);
+            Rect3D bounds = this.GetBounds(content);
             Matrix3D matrix = content.Transform.Value;
 
             // prepend translation to account for model scale
@@ -258,7 +248,7 @@ namespace FreelancerModStudio.SystemDesigner
             matrix.TranslatePrepend(new Vector3D(bounds.SizeX, bounds.SizeY, bounds.SizeZ));
             double distance = Math.Max(Math.Max(Math.Abs(matrix.OffsetX - point.X), Math.Abs(matrix.OffsetY - point.Y)), Math.Abs(matrix.OffsetZ - point.Z));
 
-            Viewport.ZoomExtents(point, distance * 0.5 * zoomFactor, animate ? Animator.AnimationDuration.TimeSpan.TotalMilliseconds : 0);
+            this.Viewport.ZoomExtents(point, distance * 0.5 * zoomFactor, animate ? Animator.AnimationDuration.TimeSpan.TotalMilliseconds : 0);
         }
 
         private void AddContent(ContentBase content)
@@ -266,15 +256,15 @@ namespace FreelancerModStudio.SystemDesigner
             // load model if it was not loaded yet
             if (content.Content == null)
             {
-                LoadModel(content);
+                this.LoadModel(content);
             }
 
-            AddModel(content);
+            this.AddModel(content);
 
             // reset reference of previously invisible selected content
-            if (_selectedContent != null && content.Block == _selectedContent.Block)
+            if (this.selectedContent != null && content.Block == this.selectedContent.Block)
             {
-                SelectedContent = content;
+                this.SelectedContent = content;
             }
         }
 
@@ -286,7 +276,7 @@ namespace FreelancerModStudio.SystemDesigner
             {
                 if (block.Visibility)
                 {
-                    AddBlock(block);
+                    this.AddBlock(block);
                 }
             }
 
@@ -297,17 +287,17 @@ namespace FreelancerModStudio.SystemDesigner
         {
             Animator.AnimationDuration = new Duration(TimeSpan.Zero);
 
-            AddBlock(block);
+            this.AddBlock(block);
 
             Animator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
         private void AddBlock(TableBlock block)
         {
-            ContentBase content = CreateContent(block);
+            ContentBase content = this.CreateContent(block);
             if (content != null)
             {
-                AddContent(content);
+                this.AddContent(content);
             }
         }
 
@@ -315,41 +305,42 @@ namespace FreelancerModStudio.SystemDesigner
         {
             if (content.IsEmissive())
             {
-                Viewport.Children.Add(content);
+                this.Viewport.Children.Add(content);
             }
             else
             {
-                Viewport.Children.Insert(_secondLayerId, content);
-                ++_secondLayerId;
+                this.Viewport.Children.Insert(this.secondLayerId, content);
+                ++this.secondLayerId;
             }
         }
 
         public void Delete(ContentBase content)
         {
-            //if we delete a system also delete all universe connections to and from it
-            if (ViewerType == ViewerType.Universe)
+            // if we delete a system also delete all universe connections to and from it
+            if (this.ViewerType == ViewerType.Universe)
             {
-                Content.System system = content as Content.System;
+                System system = content as Content.System;
                 if (system != null)
                 {
-                    DeleteConnections(system);
+                    this.DeleteConnections(system);
                 }
             }
 
-            RemoveModel(content);
+            this.RemoveModel(content);
         }
 
         private void RemoveModel(ContentBase content)
         {
-            Viewport.Children.Remove(content);
+            this.Viewport.Children.Remove(content);
 
             if (!content.IsEmissive())
             {
-                --_secondLayerId;
+                --this.secondLayerId;
             }
-            if (content == _trackedContent)
+
+            if (content == this.trackedContent)
             {
-                TrackedContent = null;
+                this.TrackedContent = null;
             }
         }
 
@@ -390,7 +381,7 @@ namespace FreelancerModStudio.SystemDesigner
             int selectionPriority = -1;
 
             VisualTreeHelper.HitTest(
-                Viewport.Viewport,
+                this.Viewport.Viewport,
                 null,
                 delegate(HitTestResult hit)
                 {
@@ -400,21 +391,23 @@ namespace FreelancerModStudio.SystemDesigner
                         if (checkManipulators)
                         {
                             // start manipulation on manipulator selection
-                            if (rayHit.VisualHit == _manipulatorX)
+                            if (rayHit.VisualHit == this.manipulatorX)
                             {
-                                StartManipulation(ManipulationAxis.X, _manipulatorX, position);
+                                this.StartManipulation(ManipulationAxis.X, this.manipulatorX, position);
                                 visual = null;
                                 return HitTestResultBehavior.Stop;
                             }
-                            if (rayHit.VisualHit == _manipulatorY)
+
+                            if (rayHit.VisualHit == this.manipulatorY)
                             {
-                                StartManipulation(ManipulationAxis.Y, _manipulatorY, position);
+                                this.StartManipulation(ManipulationAxis.Y, this.manipulatorY, position);
                                 visual = null;
                                 return HitTestResultBehavior.Stop;
                             }
-                            if (rayHit.VisualHit == _manipulatorZ)
+
+                            if (rayHit.VisualHit == this.manipulatorZ)
                             {
-                                StartManipulation(ManipulationAxis.Z, _manipulatorZ, position);
+                                this.StartManipulation(ManipulationAxis.Z, this.manipulatorZ, position);
                                 visual = null;
                                 return HitTestResultBehavior.Stop;
                             }
@@ -453,13 +446,13 @@ namespace FreelancerModStudio.SystemDesigner
                             }
 
                             // then transform the Visual3D hierarchy up to the Viewport3D ancestor
-                            GeneralTransform3D t = Viewport3DHelper.GetTransform(Viewport.Viewport, rayHit.VisualHit);
+                            GeneralTransform3D t = Viewport3DHelper.GetTransform(this.Viewport.Viewport, rayHit.VisualHit);
                             if (t != null)
                             {
                                 p = t.Transform(p);
                             }
 
-                            double newDistance = (Viewport.Camera.Position - p).LengthSquared;
+                            double newDistance = (this.Viewport.Camera.Position - p).LengthSquared;
                             int newSelectionPriority = GetSelectionPriority(newHit);
 
                             if (newSelectionPriority > selectionPriority ||
@@ -482,17 +475,17 @@ namespace FreelancerModStudio.SystemDesigner
             return visual;
         }
 
-        private void Viewport_KeyDown(object sender, global::System.Windows.Input.KeyEventArgs e)
+        private void ViewportKeyDown(object sender,  Sys.Windows.Input.KeyEventArgs e)
         {
-            ViewportKeyEvent(e, false);
+            this.ViewportKeyEvent(e, false);
         }
 
-        private void Viewport_KeyUp(object sender, global::System.Windows.Input.KeyEventArgs e)
+        private void ViewportKeyUp(object sender, Sys.Windows.Input.KeyEventArgs e)
         {
-            ViewportKeyEvent(e, true);
+            this.ViewportKeyEvent(e, true);
         }
 
-        private void ViewportKeyEvent(global::System.Windows.Input.KeyEventArgs e, bool isKeyUp)
+        private void ViewportKeyEvent(Sys.Windows.Input.KeyEventArgs e, bool isKeyUp)
         {
             bool isCtrl = (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
             bool isAlt = (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
@@ -507,90 +500,98 @@ namespace FreelancerModStudio.SystemDesigner
                     {
                         if (isKeyUp || (!isAlt && !isCtrl))
                         {
-                            StartOffsetManipulation(CameraDirection.Up, isKeyUp, isShift);
+                            this.StartOffsetManipulation(CameraDirection.Up, isKeyUp, isShift);
                         }
                     }
                     else if (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt))
                     {
-                        Fly(CameraDirection.Forward, isKeyUp);
+                        this.Fly(CameraDirection.Forward, isKeyUp);
                     }
+
                     break;
                 case Key.A:
                     if (isCaps)
                     {
                         if (isKeyUp || (!isAlt && !isCtrl))
                         {
-                            StartOffsetManipulation(CameraDirection.Left, isKeyUp, isShift);
+                            this.StartOffsetManipulation(CameraDirection.Left, isKeyUp, isShift);
                         }
                     }
                     else if (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt))
                     {
-                        Fly(CameraDirection.Left, isKeyUp);
+                        this.Fly(CameraDirection.Left, isKeyUp);
                     }
+
                     break;
                 case Key.S:
                     if (isCaps)
                     {
                         if (isKeyUp || (!isAlt && !isCtrl))
                         {
-                            StartOffsetManipulation(CameraDirection.Down, isKeyUp, isShift);
+                            this.StartOffsetManipulation(CameraDirection.Down, isKeyUp, isShift);
                         }
                     }
                     else if (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt))
                     {
-                        Fly(CameraDirection.Backward, isKeyUp);
+                        this.Fly(CameraDirection.Backward, isKeyUp);
                     }
+
                     break;
                 case Key.D:
                     if (isCaps)
                     {
                         if (isKeyUp || (!isAlt && !isCtrl))
                         {
-                            StartOffsetManipulation(CameraDirection.Right, isKeyUp, isShift);
+                            this.StartOffsetManipulation(CameraDirection.Right, isKeyUp, isShift);
                         }
                     }
                     else if (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt))
                     {
-                        Fly(CameraDirection.Right, isKeyUp);
+                        this.Fly(CameraDirection.Right, isKeyUp);
                     }
+
                     break;
                 case Key.Space:
                     if (!isCaps && (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt)))
                     {
-                        Fly(CameraDirection.Up, isKeyUp);
+                        this.Fly(CameraDirection.Up, isKeyUp);
                     }
+
                     break;
                 case Key.E:
                     if (!isCaps && (isKeyUp || (!e.IsRepeat && !isCtrl && !isAlt)))
                     {
-                        Fly(CameraDirection.Down, isKeyUp);
+                        this.Fly(CameraDirection.Down, isKeyUp);
                     }
+
                     break;
                 case Key.F:
                     if (!isKeyUp && !e.IsRepeat && !isCtrl && !isAlt)
                     {
                         if (isShift)
                         {
-                            LookAtSelected();
+                            this.LookAtSelected();
                         }
                         else
                         {
-                            FocusSelected();
+                            this.FocusSelected();
                         }
                     }
+
                     break;
                 case Key.T:
                     if (!isKeyUp && !e.IsRepeat && !isCtrl && !isAlt)
                     {
-                        TrackSelected();
+                        this.TrackSelected();
                     }
+
                     break;
             }
         }
 
         private void StartOffsetManipulation(CameraDirection direction, bool complete, bool small)
         {
-            if (ViewerType != ViewerType.System && ViewerType != ViewerType.Universe)
+            if (this.ViewerType != ViewerType.System && this.ViewerType != ViewerType.Universe)
             {
                 return;
             }
@@ -598,28 +599,28 @@ namespace FreelancerModStudio.SystemDesigner
             if (complete)
             {
                 // update data globally
-                UpdateSelectedBlock();
+                this.UpdateSelectedBlock();
             }
             else
             {
-                Vector3D offset = Viewport.CameraController.GetDirection(direction);
+                Vector3D offset = this.Viewport.CameraController.GetDirection(direction);
 
-                if (ViewerType == ViewerType.Universe)
+                if (this.ViewerType == ViewerType.Universe)
                 {
-                    offset *= (small ? 0.1 : 1) * SystemParser.UNIVERSE_SCALE;
+                    offset *= (small ? 0.1 : 1) * SystemParser.UniverseScale;
                 }
                 else
                 {
-                    offset *= (small ? 1 : 25) * SystemParser.SYSTEM_SCALE;
+                    offset *= (small ? 1 : 25) * SystemParser.SystemScale;
                 }
 
-                ManipulateOffset(offset);
+                this.ManipulateOffset(offset);
 
                 // update transform
-                _selectedContent.UpdateTransform(false);
+                this.selectedContent.UpdateTransform(false);
 
                 // update selection box and tracked line
-                SelectedContent = _selectedContent;
+                this.SelectedContent = this.selectedContent;
             }
         }
 
@@ -627,30 +628,30 @@ namespace FreelancerModStudio.SystemDesigner
         {
             if (stop)
             {
-                Viewport.CameraController.StopFly(direction);
+                this.Viewport.CameraController.StopFly(direction);
             }
             else
             {
-                Viewport.CameraController.StartFly(direction);
+                this.Viewport.CameraController.StartFly(direction);
             }
         }
 
         public Rect3D GetAllBounds()
         {
             Rect3D bounds = Rect3D.Empty;
-            for (int i = GetContentStartId(); i < Viewport.Children.Count; ++i)
+            for (int i = this.GetContentStartId(); i < this.Viewport.Children.Count; ++i)
             {
-                Rect3D contentBounds = Visual3DHelper.FindBounds(Viewport.Children[i], Transform3D.Identity);
+                Rect3D contentBounds = Visual3DHelper.FindBounds(this.Viewport.Children[i], Transform3D.Identity);
                 bounds.Union(contentBounds);
             }
 
             return bounds;
         }
 
-        private void Viewport_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ViewportMouseDown(object sender, MouseButtonEventArgs e)
         {
             // workaround to focus viewport for key events
-            Viewport.Focus();
+            this.Viewport.Focus();
 
             bool isDoubleClick = e.ClickCount > 1;
 
@@ -663,8 +664,8 @@ namespace FreelancerModStudio.SystemDesigner
                 (e.ChangedButton == MouseButton.Middle ||
                 (e.ChangedButton == MouseButton.Right && isShift)))
             {
-                Viewport.CameraController.ResetCamera();
-                CameraHelper.ZoomExtents(Viewport.Camera, Viewport.Viewport, GetAllBounds(), 0);
+                this.Viewport.CameraController.ResetCamera();
+                CameraHelper.ZoomExtents(this.Viewport.Camera, this.Viewport.Viewport, this.GetAllBounds(), 0);
 
                 return;
             }
@@ -675,91 +676,91 @@ namespace FreelancerModStudio.SystemDesigner
             if (isSelect || isLookAt)
             {
                 Point3D point;
-                ContentBase visual = GetSelection(e.GetPosition(Viewport.Viewport), isShift, !isLookAt, out point);
+                ContentBase visual = this.GetSelection(e.GetPosition(this.Viewport.Viewport), isShift, !isLookAt, out point);
                 if (visual != null)
                 {
                     if (isLookAt)
                     {
                         // change the 'lookat' point
-                        LookAt(point);
+                        this.LookAt(point);
                     }
                     else
                     {
-                        Select(visual, isCtrl);
+                        this.Select(visual, isCtrl);
                     }
                 }
             }
         }
 
-        private void Viewport_MouseUp(object sender, MouseButtonEventArgs e)
+        private void ViewportMouseUp(object sender, MouseButtonEventArgs e)
         {
-            StopManipulating(false);
+            this.StopManipulating(false);
         }
 
         private void StopManipulating(bool cancelled)
         {
-            if (!_manipulating)
+            if (!this.manipulating)
             {
                 return;
             }
 
-            switch (_manipulationAxis)
+            switch (this.manipulationAxis)
             {
                 case ManipulationAxis.X:
-                    ManipulatorLineX.Color = SharedMaterials.ManipulatorX;
+                    this.ManipulatorLineX.Color = SharedMaterials.ManipulatorX;
                     break;
                 case ManipulationAxis.Y:
-                    ManipulatorLineY.Color = SharedMaterials.ManipulatorY;
+                    this.ManipulatorLineY.Color = SharedMaterials.ManipulatorY;
                     break;
                 case ManipulationAxis.Z:
-                    ManipulatorLineZ.Color = SharedMaterials.ManipulatorZ;
+                    this.ManipulatorLineZ.Color = SharedMaterials.ManipulatorZ;
                     break;
             }
 
             if (cancelled)
             {
-                SystemParser.SetValues(_selectedContent, _selectedContent.Block, true);
+                SystemParser.SetValues(this.selectedContent, this.selectedContent.Block, true);
             }
             else
             {
                 // update data globally
-                UpdateSelectedBlock();
+                this.UpdateSelectedBlock();
             }
 
             // stop manipulating
-            _manipulating = false;
-            Viewport.Viewport.ReleaseMouseCapture();
+            this.manipulating = false;
+            this.Viewport.Viewport.ReleaseMouseCapture();
         }
 
         private void UpdateSelectedBlock()
         {
-            TableBlock oldBlock = _selectedContent.Block;
+            TableBlock oldBlock = this.selectedContent.Block;
             TableBlock newBlock = ObjectClone.Clone(oldBlock);
             newBlock.SetModifiedChanged();
 
-            _selectedContent.Block = newBlock;
-            SystemParser.WriteBlock(_selectedContent);
-            OnDataManipulated(newBlock, oldBlock);
+            this.selectedContent.Block = newBlock;
+            SystemParser.WriteBlock(this.selectedContent);
+            this.OnDataManipulated(newBlock, oldBlock);
         }
 
         private Point3D? GetMousePoint(Point mousePosition)
         {
-            return Viewport.CameraController.UnProject(mousePosition, _selectedContent.GetPositionPoint(), Viewport.CameraController.Camera.LookDirection);
+            return this.Viewport.CameraController.UnProject(mousePosition, this.selectedContent.GetPositionPoint(), this.Viewport.CameraController.Camera.LookDirection);
         }
 
         private Vector3D GetMouseDelta(Point mousePosition)
         {
             // get mouse delta
-            Point3D? thisPoint3D = GetMousePoint(mousePosition);
-            Vector3D delta3D = thisPoint3D.Value - _manipulationLastPosition.Value;
-            _manipulationLastPosition = thisPoint3D;
+            Point3D? thisPoint3D = this.GetMousePoint(mousePosition);
+            Vector3D delta3D = thisPoint3D.Value - this.manipulationLastPosition.Value;
+            this.manipulationLastPosition = thisPoint3D;
 
             // transform mouse delta using matrix
-            Matrix3D matrix = ContentBase.RotationMatrix(_selectedContent.Rotation);
+            Matrix3D matrix = ContentBase.RotationMatrix(this.selectedContent.Rotation);
             matrix.Invert();
             delta3D = matrix.Transform(delta3D);
 
-            if (_manipulationMode == ManipulationMode.Rotate)
+            if (this.manipulationMode == ManipulationMode.Rotate)
             {
                 double length = delta3D.Length;
                 if (length > 0)
@@ -767,23 +768,23 @@ namespace FreelancerModStudio.SystemDesigner
                     delta3D *= 2 / length;
                 }
             }
-            else if (_manipulationMode == ManipulationMode.Scale)
+            else if (this.manipulationMode == ManipulationMode.Scale)
             {
-                if (ManipulatorLineY == null)
+                if (this.ManipulatorLineY == null)
                 {
-                    if (ManipulatorLineZ == null)
+                    if (this.ManipulatorLineZ == null)
                     {
                         return new Vector3D(delta3D.X, delta3D.X, delta3D.X);
                     }
 
-                    if (_manipulationAxis == ManipulationAxis.X)
+                    if (this.manipulationAxis == ManipulationAxis.X)
                     {
                         return new Vector3D(delta3D.X, 0, delta3D.X);
                     }
                 }
             }
 
-            switch (_manipulationAxis)
+            switch (this.manipulationAxis)
             {
                 default:
                     return new Vector3D(delta3D.X, 0, 0);
@@ -794,105 +795,103 @@ namespace FreelancerModStudio.SystemDesigner
             }
         }
 
-        private void Viewport_MouseMove(object sender, global::System.Windows.Input.MouseEventArgs e)
+        private void ViewportMouseMove(object sender, Sys.Windows.Input.MouseEventArgs e)
         {
-            if (!_manipulating)
+            if (!this.manipulating)
             {
                 return;
             }
 
-            switch (_manipulationMode)
+            switch (this.manipulationMode)
             {
                 case ManipulationMode.Translate:
                     // relative transation
-                    ManipulateTranslate(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
+                    this.ManipulateTranslate(this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport)));
                     break;
                 case ManipulationMode.Rotate:
                     // relative rotation
-                    ManipulateRotate(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
+                    this.ManipulateRotate(this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport)));
                     break;
                 case ManipulationMode.Scale:
                     // relative scale
-                    ManipulateScale(GetMouseDelta(e.GetPosition(Viewport.Viewport)));
+                    this.ManipulateScale(this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport)));
                     break;
             }
 
             // update transform
-            _selectedContent.UpdateTransform(false);
+            this.selectedContent.UpdateTransform(false);
 
             // update selection box and tracked line
-            SelectedContent = _selectedContent;
+            this.SelectedContent = this.selectedContent;
         }
 
         private void ManipulateTranslate(Vector3D delta)
         {
             // calculate using matrix
-            Matrix3D matrix = ContentBase.RotationMatrix(_selectedContent.Rotation);
-            matrix.Translate(_selectedContent.Position);
+            Matrix3D matrix = ContentBase.RotationMatrix(this.selectedContent.Rotation);
+            matrix.Translate(this.selectedContent.Position);
             matrix.TranslatePrepend(delta);
 
             // update position
-            _selectedContent.Position = new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
+            this.selectedContent.Position = new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
         }
 
         private void ManipulateOffset(Vector3D offset)
         {
             // update position
-            _selectedContent.Position += offset;
+            this.selectedContent.Position += offset;
         }
 
         private void ManipulateRotate(Vector3D delta)
         {
             // calculate using matrix
-            Matrix3D matrix = ContentBase.RotationMatrix(_selectedContent.Rotation);
+            Matrix3D matrix = ContentBase.RotationMatrix(this.selectedContent.Rotation);
             matrix.Prepend(ContentBase.RotationMatrix(delta));
 
             // update rotation
-            _selectedContent.Rotation = ContentBase.GetRotation(matrix);
+            this.selectedContent.Rotation = ContentBase.GetRotation(matrix);
         }
 
         private void ManipulateScale(Vector3D delta)
         {
             // update position
-            _selectedContent.Scale += delta;
+            this.selectedContent.Scale += delta;
 
             // prevent negative scaling
-            const double minScale = 10 * SystemParser.SYSTEM_SCALE;
+            const double MinScale = 10 * SystemParser.SystemScale;
 
-            if (_selectedContent.Scale.X < minScale ||
-                _selectedContent.Scale.Y < minScale ||
-                _selectedContent.Scale.Z < minScale)
+            if (this.selectedContent.Scale.X < MinScale || this.selectedContent.Scale.Y < MinScale || this.selectedContent.Scale.Z < MinScale)
             {
-                _selectedContent.Scale -= delta;
+                this.selectedContent.Scale -= delta;
             }
         }
 
         private void StartManipulation(ManipulationAxis axis, ScreenSpaceVisual3D line, Point mousePosition)
         {
-            _manipulating = true;
-            _manipulationAxis = axis;
-            _manipulationLastPosition = GetMousePoint(mousePosition);
+            this.manipulating = true;
+            this.manipulationAxis = axis;
+            this.manipulationLastPosition = this.GetMousePoint(mousePosition);
 
             line.Color = SharedMaterials.Selection;
 
-            Viewport.Viewport.CaptureMouse();
+            this.Viewport.Viewport.CaptureMouse();
         }
 
         private void Select(ContentBase content, bool toggle)
         {
-            if (!toggle && _selectedContent == content)
+            if (!toggle && this.selectedContent == content)
             {
-                if (ViewerType == ViewerType.Universe)
+                if (this.ViewerType == ViewerType.Universe)
                 {
-                    Content.System system = content as Content.System;
+                    System system = content as Content.System;
                     if (system != null)
                     {
-                        DisplayContextMenu(system.Path);
+                        this.DisplayContextMenu(system.Path);
                     }
                 }
             }
 
-            OnSelectionChanged(content.Block, toggle);
+            this.OnSelectionChanged(content.Block, toggle);
         }
 
         private void DisplayContextMenu(string path)
@@ -903,61 +902,61 @@ namespace FreelancerModStudio.SystemDesigner
                     Header = string.Format(Strings.SystemPresenterOpen, Path.GetFileName(path)),
                     Tag = path
                 };
-            item.Click += item_Click;
+            item.Click += this.ItemClick;
 
             menu.Items.Add(item);
             menu.IsOpen = true;
         }
 
-        private void item_Click(object sender, RoutedEventArgs e)
+        private void ItemClick(object sender, RoutedEventArgs e)
         {
-            OnFileOpen((string)((MenuItem)sender).Tag);
+            this.OnFileOpen((string)((MenuItem)sender).Tag);
         }
 
         private void SetSelectionBox()
         {
-            if (_selectedContent == null)
+            if (this.selectedContent == null)
             {
-                SelectionBox = null;
+                this.SelectionBox = null;
                 return;
             }
 
             Color color = SharedMaterials.Selection;
-            if (_trackedContent == _selectedContent)
+            if (this.trackedContent == this.selectedContent)
             {
                 color = SharedMaterials.TrackedLine;
             }
 
-            if (SelectionBox != null)
+            if (this.SelectionBox != null)
             {
-                BoundingBoxWireFrameVisual3D selectionBox = SelectionBox;
+                BoundingBoxWireFrameVisual3D selectionBox = this.SelectionBox;
                 selectionBox.Color = color;
-                selectionBox.BoundingBox = GetBounds(_selectedContent);
-                selectionBox.Transform = _selectedContent.Transform;
+                selectionBox.BoundingBox = this.GetBounds(this.selectedContent);
+                selectionBox.Transform = this.selectedContent.Transform;
             }
             else
             {
-                SelectionBox = new BoundingBoxWireFrameVisual3D
+                this.SelectionBox = new BoundingBoxWireFrameVisual3D
                     {
                         Color = color,
-                        BoundingBox = GetBounds(_selectedContent),
-                        Transform = _selectedContent.Transform,
+                        BoundingBox = this.GetBounds(this.selectedContent),
+                        Transform = this.selectedContent.Transform,
                     };
             }
         }
 
         private void SetTrackedLine(bool update)
         {
-            if (_selectedContent == null)
+            if (this.selectedContent == null)
             {
-                TrackedLine = null;
+                this.TrackedLine = null;
                 return;
             }
 
             if (!update)
             {
-                BoundingBoxWireFrameVisual3D selectionBox = SelectionBox;
-                if (_trackedContent == _selectedContent)
+                BoundingBoxWireFrameVisual3D selectionBox = this.SelectionBox;
+                if (this.trackedContent == this.selectedContent)
                 {
                     selectionBox.Color = SharedMaterials.TrackedLine;
                 }
@@ -967,24 +966,24 @@ namespace FreelancerModStudio.SystemDesigner
                 }
             }
 
-            if (_trackedContent == null)
+            if (this.trackedContent == null)
             {
-                TrackedLine = null;
+                this.TrackedLine = null;
                 return;
             }
 
-            if (TrackedLine != null)
+            if (this.TrackedLine != null)
             {
-                LineVisual3D trackedLine = TrackedLine;
-                trackedLine.Point1 = _selectedContent.GetPositionPoint();
-                trackedLine.Point2 = _trackedContent.GetPositionPoint();
+                LineVisual3D trackedLine = this.TrackedLine;
+                trackedLine.Point1 = this.selectedContent.GetPositionPoint();
+                trackedLine.Point2 = this.trackedContent.GetPositionPoint();
             }
             else
             {
-                TrackedLine = new LineVisual3D
+                this.TrackedLine = new LineVisual3D
                     {
-                        Point1 = _selectedContent.GetPositionPoint(),
-                        Point2 = _trackedContent.GetPositionPoint(),
+                        Point1 = this.selectedContent.GetPositionPoint(),
+                        Point2 = this.trackedContent.GetPositionPoint(),
                         Color = SharedMaterials.TrackedLine,
                         DepthOffset = 1,
                     };
@@ -993,114 +992,115 @@ namespace FreelancerModStudio.SystemDesigner
 
         public void SetManipulatorLines()
         {
-            if (ViewerType != ViewerType.System && ViewerType != ViewerType.Universe)
+            if (this.ViewerType != ViewerType.System && this.ViewerType != ViewerType.Universe)
             {
                 return;
             }
 
-            if (_selectedContent == null || _manipulationMode == ManipulationMode.None)
+            if (this.selectedContent == null || this.manipulationMode == ManipulationMode.None)
             {
-                ManipulatorLineX = null;
-                ManipulatorLineY = null;
-                ManipulatorLineZ = null;
+                this.ManipulatorLineX = null;
+                this.ManipulatorLineY = null;
+                this.ManipulatorLineZ = null;
                 return;
             }
 
-            if (ViewerType == ViewerType.Universe && _manipulationMode != ManipulationMode.Translate)
+            if (this.ViewerType == ViewerType.Universe && this.manipulationMode != ManipulationMode.Translate)
             {
                 return;
             }
 
             int axisCount = 3;
-            if (_manipulationMode == ManipulationMode.Scale || ViewerType == ViewerType.Universe)
+            if (this.manipulationMode == ManipulationMode.Scale || this.ViewerType == ViewerType.Universe)
             {
-                axisCount = GetAxisCount(_selectedContent.Block.ObjectType);
+                axisCount = GetAxisCount(this.selectedContent.Block.ObjectType);
                 if (axisCount == 0)
                 {
-                    ManipulatorLineX = null;
-                    ManipulatorLineY = null;
-                    ManipulatorLineZ = null;
+                    this.ManipulatorLineX = null;
+                    this.ManipulatorLineY = null;
+                    this.ManipulatorLineZ = null;
                     return;
                 }
             }
 
             Matrix3D matrix = new Matrix3D();
+
             // scale used as workaround for fixed screen space line visual glitches
             matrix.Scale(new Vector3D(0.0001, 0.0001, 0.0001));
-            matrix *= ContentBase.RotationMatrix(_selectedContent.Rotation);
-            matrix.Translate(_selectedContent.Position);
+            matrix *= ContentBase.RotationMatrix(this.selectedContent.Rotation);
+            matrix.Translate(this.selectedContent.Position);
 
             Transform3D transform = new MatrixTransform3D(matrix);
 
             if (axisCount >= 3)
             {
-                if (ManipulatorLineY != null)
+                if (this.ManipulatorLineY != null)
                 {
-                    FixedLineVisual3D manipulatorLine = ManipulatorLineY;
+                    FixedLineVisual3D manipulatorLine = this.ManipulatorLineY;
                     manipulatorLine.Point2 = new Point3D(0, 0, 1);
                     manipulatorLine.Transform = transform;
                 }
                 else
                 {
-                    ManipulatorLineY = new FixedLineVisual3D
-                        {
-                            Point2 = new Point3D(0, 0, 1),
-                            Transform = transform,
-                            Color = SharedMaterials.ManipulatorY,
-                            Thickness = 5,
-                            DepthOffset = 0.5,
-                            FixedLength = 100,
-                        };
+                    this.ManipulatorLineY = new FixedLineVisual3D
+                                                {
+                                                    Point2 = new Point3D(0, 0, 1),
+                                                    Transform = transform,
+                                                    Color = SharedMaterials.ManipulatorY,
+                                                    Thickness = 5,
+                                                    DepthOffset = 0.5,
+                                                    FixedLength = 100,
+                                                };
                 }
             }
             else
             {
-                ManipulatorLineY = null;
+                this.ManipulatorLineY = null;
             }
 
             if (axisCount >= 2)
             {
-                if (ManipulatorLineZ != null)
+                if (this.ManipulatorLineZ != null)
                 {
-                    FixedLineVisual3D manipulatorLine = ManipulatorLineZ;
+                    FixedLineVisual3D manipulatorLine = this.ManipulatorLineZ;
                     manipulatorLine.Point2 = new Point3D(0, 1, 0);
                     manipulatorLine.Transform = transform;
                 }
                 else
                 {
-                    ManipulatorLineZ = new FixedLineVisual3D
-                        {
-                            Point2 = new Point3D(0, 1, 0),
-                            Transform = transform,
-                            Color = SharedMaterials.ManipulatorZ,
-                            Thickness = 5,
-                            DepthOffset = 0.5,
-                            FixedLength = 100,
-                        };
+                    this.ManipulatorLineZ = new FixedLineVisual3D
+                                                {
+                                                    Point2 = new Point3D(0, 1, 0),
+                                                    Transform = transform,
+                                                    Color = SharedMaterials.ManipulatorZ,
+                                                    Thickness = 5,
+                                                    DepthOffset = 0.5,
+                                                    FixedLength = 100,
+                                                };
                 }
             }
             else
             {
-                ManipulatorLineZ = null;
+                this.ManipulatorLineZ = null;
             }
 
-            if (ManipulatorLineX != null)
+            if (this.ManipulatorLineX != null)
             {
-                FixedLineVisual3D manipulatorLine = ManipulatorLineX;
+                FixedLineVisual3D manipulatorLine = this.ManipulatorLineX;
                 manipulatorLine.Point2 = new Point3D(1, 0, 0);
                 manipulatorLine.Transform = transform;
             }
             else
             {
-                ManipulatorLineX = new FixedLineVisual3D
-                    {
-                        Point2 = new Point3D(1, 0, 0),
-                        Transform = transform,
-                        Color = SharedMaterials.ManipulatorX,
-                        Thickness = 5,
-                        DepthOffset = 0.5,
-                        FixedLength = 100,
-                    };
+                this.ManipulatorLineX = new FixedLineVisual3D
+                                            {
+                                                Point2 = new Point3D(1, 0, 0),
+                                                Transform = transform,
+                                                Color = SharedMaterials.ManipulatorX,
+                                                Thickness = 5,
+                                                DepthOffset = 0.5,
+                                                FixedLength = 100,
+                                            };
             }
         }
 
@@ -1132,7 +1132,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         private Rect3D GetBounds(ContentBase content)
         {
-            if (IsModelMode && content.Block.IsRealModel())
+            if (this.IsModelMode && content.Block.IsRealModel())
             {
                 // return bounds of shown model
                 if (content.Block.Visibility && content.Content != null)
@@ -1144,7 +1144,7 @@ namespace FreelancerModStudio.SystemDesigner
                 if (content.Block.Archetype != null)
                 {
                     Model3D contentModel;
-                    if (_modelCache.TryGetValue(content.Block.Archetype.ModelPath, out contentModel))
+                    if (this.modelCache.TryGetValue(content.Block.Archetype.ModelPath, out contentModel))
                     {
                         return contentModel.Bounds;
                     }
@@ -1157,43 +1157,48 @@ namespace FreelancerModStudio.SystemDesigner
 
         public void ClearDisplay(bool light)
         {
-            Viewport.Children.Clear();
+            this.Viewport.Children.Clear();
 
-            if (light || Lighting == null)
+            if (light || this.Lighting == null)
             {
-                _secondLayerId = 0;
+                this.secondLayerId = 0;
             }
             else
             {
-                Viewport.Children.Add(Lighting);
-                _secondLayerId = 1;
+                this.Viewport.Children.Add(this.Lighting);
+                this.secondLayerId = 1;
             }
         }
 
         public int GetContentStartId()
         {
             int index = 0;
-            if (Lighting != null)
+            if (this.Lighting != null)
             {
                 ++index;
             }
-            if (SelectionBox != null)
+
+            if (this.SelectionBox != null)
             {
                 ++index;
             }
-            if (TrackedLine != null)
+
+            if (this.TrackedLine != null)
             {
                 ++index;
             }
-            if (ManipulatorLineX != null)
+
+            if (this.ManipulatorLineX != null)
             {
                 ++index;
             }
-            if (ManipulatorLineY != null)
+
+            if (this.ManipulatorLineY != null)
             {
                 ++index;
             }
-            if (ManipulatorLineZ != null)
+
+            if (this.ManipulatorLineZ != null)
             {
                 ++index;
             }
@@ -1203,7 +1208,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         public void DisplayUniverse(string path, int systemTemplate, List<TableBlock> blocks, ArchetypeManager archetype)
         {
-            //filter the systems to improve speed as we need to loop them often in the analyzer
+            // filter the systems to improve speed as we need to loop them often in the analyzer
             List<TableBlock> systems = new List<TableBlock>();
             foreach (TableBlock block in blocks)
             {
@@ -1222,29 +1227,29 @@ namespace FreelancerModStudio.SystemDesigner
                 };
             analyzer.Analyze();
 
-            DisplayUniverseConnections(analyzer.Connections);
+            this.DisplayUniverseConnections(analyzer.Connections);
         }
 
         private void DisplayUniverseConnections(Dictionary<int, UniverseConnection> connections)
         {
-            Viewport.Dispatcher.Invoke((MethodInvoker)(delegate
+            this.Viewport.Dispatcher.Invoke((MethodInvoker)(delegate
                 {
                     foreach (UniverseConnection connection in connections.Values)
                     {
-                        Viewport.Children.Add(GetConnection(connection));
+                        this.Viewport.Children.Add(this.GetConnection(connection));
                     }
                 }));
         }
 
-        private void DeleteConnections(Content.System system)
+        private void DeleteConnections(System system)
         {
             foreach (Connection connection in system.Connections)
             {
-                Delete(connection);
+                this.Delete(connection);
             }
         }
 
-        private void UpdateConnections(Content.System system)
+        private void UpdateConnections(System system)
         {
             foreach (Connection connection in system.Connections)
             {
@@ -1255,7 +1260,7 @@ namespace FreelancerModStudio.SystemDesigner
         private Connection GetConnection(UniverseConnection connection)
         {
             Connection line = new Connection();
-            SetConnection(line, connection);
+            this.SetConnection(line, connection);
 
             line.LoadModel();
             return line;
@@ -1265,9 +1270,9 @@ namespace FreelancerModStudio.SystemDesigner
         {
             int count = 2;
 
-            for (int i = GetContentStartId(); i < Viewport.Children.Count && count > 0; ++i)
+            for (int i = this.GetContentStartId(); i < this.Viewport.Children.Count && count > 0; ++i)
             {
-                ContentBase content = (ContentBase)Viewport.Children[i];
+                ContentBase content = (ContentBase)this.Viewport.Children[i];
                 if (content.Block.Index == connection.From.Id)
                 {
                     line.From = content;
@@ -1295,11 +1300,11 @@ namespace FreelancerModStudio.SystemDesigner
             Vector3D toPosition = line.To.Position;
 
             line.Position = (fromPosition + toPosition) / 2;
-            line.Scale = new Vector3D(SystemParser.UNIVERSE_CONNECTION_SCALE, (fromPosition - toPosition).Length, 1);
+            line.Scale = new Vector3D(SystemParser.UniverseConnectionScale, (fromPosition - toPosition).Length, 1);
 
             if (line.FromType == ConnectionType.JumpGateAndHole || line.ToType == ConnectionType.JumpGateAndHole)
             {
-                line.Scale.X = SystemParser.UNIVERSE_DOUBLE_CONNECTION_SCALE;
+                line.Scale.X = SystemParser.UniverseDoubleConnectionScale;
             }
 
             Vector v1 = new Vector(fromPosition.X, fromPosition.Y);
@@ -1321,10 +1326,10 @@ namespace FreelancerModStudio.SystemDesigner
                 factor *= -1;
             }
 
-            const double radToDeg = 180 / Math.PI;
+            const double RadToDeg = 180 / Math.PI;
 
             double c = Math.Sqrt(a * a + b * b);
-            double angle = Math.Acos(a / c) * radToDeg;
+            double angle = Math.Acos(a / c) * RadToDeg;
 
             line.Rotation = new Vector3D(0, 0, (angle + angleOffset) * factor);
             line.UpdateTransform(false);
@@ -1336,10 +1341,12 @@ namespace FreelancerModStudio.SystemDesigner
             {
                 return ConnectionType.JumpGateAndHole;
             }
+
             if (jumpgate)
             {
                 return ConnectionType.JumpGate;
             }
+
             if (jumphole)
             {
                 return ConnectionType.JumpHole;
@@ -1362,23 +1369,23 @@ namespace FreelancerModStudio.SystemDesigner
         {
             if (block.ObjectType == ContentType.None)
             {
-                //delete content if it was changed back to an invalid type
-                Delete(content);
-                if (_selectedContent == content)
+                // delete content if it was changed back to an invalid type
+                this.Delete(content);
+                if (this.selectedContent == content)
                 {
-                    SelectedContent = null;
+                    this.SelectedContent = null;
                 }
             }
             else
             {
-                SetValues(content, block);
+                this.SetValues(content, block);
             }
         }
 
         private void SetValues(ContentBase content, TableBlock block)
         {
             bool modelChanged;
-            if (ViewerType == ViewerType.SolarArchetype || ViewerType == ViewerType.ModelPreview)
+            if (this.ViewerType == ViewerType.SolarArchetype || this.ViewerType == ViewerType.ModelPreview)
             {
                 modelChanged = SystemParser.SetModelPreviewValues(content, block);
             }
@@ -1389,22 +1396,22 @@ namespace FreelancerModStudio.SystemDesigner
 
             if (modelChanged && content.Content != null)
             {
-                LoadModel(content);
+                this.LoadModel(content);
             }
 
-            if (ViewerType == ViewerType.Universe)
+            if (this.ViewerType == ViewerType.Universe)
             {
-                Content.System system = content as Content.System;
+                System system = content as Content.System;
                 if (system != null)
                 {
-                    UpdateConnections(system);
+                    this.UpdateConnections(system);
                 }
             }
 
-            if (_selectedContent == content)
+            if (this.selectedContent == content)
             {
-                //update selection if changed content is selected
-                SelectedContent = content;
+                // update selection if changed content is selected
+                this.SelectedContent = content;
             }
         }
 
@@ -1418,35 +1425,36 @@ namespace FreelancerModStudio.SystemDesigner
             {
                 // try to get the cached model
                 Model3D contentModel;
-                if (ViewerType == ViewerType.System && _modelCache.TryGetValue(modelPath, out contentModel))
+                if (this.ViewerType == ViewerType.System && this.modelCache.TryGetValue(modelPath, out contentModel))
                 {
                     return contentModel;
                 }
 
-                string file = Path.Combine(DataPath, modelPath);
+                string file = Path.Combine(this.DataPath, modelPath);
                 if (File.Exists(file))
                 {
                     contentModel = UtfModel.LoadModel(file);
 
                     // cache model
-                    if (ViewerType == ViewerType.System)
+                    if (this.ViewerType == ViewerType.System)
                     {
-                        _modelCache[modelPath] = contentModel;
+                        this.modelCache[modelPath] = contentModel;
                     }
 
                     return contentModel;
                 }
             }
+
             return null;
         }
 
         private void LoadModel(ContentBase content)
         {
-            if (IsModelMode && content.Block.IsRealModel())
+            if (this.IsModelMode && content.Block.IsRealModel())
             {
                 if (content.Block.Archetype != null && content.Block.Archetype.ModelPath != null)
                 {
-                    content.Content = LoadModel(content.Block.Archetype.ModelPath);
+                    content.Content = this.LoadModel(content.Block.Archetype.ModelPath);
 
                     // return if model was loaded successfully
                     if (content.Content != null)
@@ -1461,19 +1469,19 @@ namespace FreelancerModStudio.SystemDesigner
 
         public void ReloadModels()
         {
-            for (int i = GetContentStartId(); i < Viewport.Children.Count; ++i)
+            for (int i = this.GetContentStartId(); i < this.Viewport.Children.Count; ++i)
             {
-                ContentBase content = (ContentBase)Viewport.Children[i];
+                ContentBase content = (ContentBase)this.Viewport.Children[i];
                 if (content.Block.IsRealModel())
                 {
-                    LoadModel(content);
+                    this.LoadModel(content);
                 }
             }
 
-            if (_selectedContent != null && _selectedContent.Block.IsRealModel())
+            if (this.selectedContent != null && this.selectedContent.Block.IsRealModel())
             {
                 // update selection box
-                SelectedContent = _selectedContent;
+                this.SelectedContent = this.selectedContent;
             }
         }
 
@@ -1485,7 +1493,7 @@ namespace FreelancerModStudio.SystemDesigner
                 return null;
             }
 
-            SetValues(content, block);
+            this.SetValues(content, block);
 
             return content;
         }
@@ -1521,23 +1529,23 @@ namespace FreelancerModStudio.SystemDesigner
 
         private void AddOrReplace(Visual3D visual, Visual3D value)
         {
-            int index = Viewport.Children.IndexOf(visual);
+            int index = this.Viewport.Children.IndexOf(visual);
             if (index != -1)
             {
                 if (value != null)
                 {
-                    Viewport.Children[index] = value;
+                    this.Viewport.Children[index] = value;
                 }
                 else
                 {
-                    Viewport.Children.RemoveAt(index);
-                    --_secondLayerId;
+                    this.Viewport.Children.RemoveAt(index);
+                    --this.secondLayerId;
                 }
             }
             else if (value != null)
             {
-                Viewport.Children.Insert(0, value);
-                ++_secondLayerId;
+                this.Viewport.Children.Insert(0, value);
+                ++this.secondLayerId;
             }
         }
 
@@ -1548,7 +1556,7 @@ namespace FreelancerModStudio.SystemDesigner
                 visual.StopRendering();
             }
 
-            AddOrReplace(visual, (Visual3D)value);
+            this.AddOrReplace(visual, (Visual3D)value);
 
             if (visual == null)
             {
@@ -1558,30 +1566,30 @@ namespace FreelancerModStudio.SystemDesigner
 
         public void SetTitle()
         {
-            if (_selectedContent == null)
+            if (this.selectedContent == null)
             {
-                Viewport.Title = null;
+                this.Viewport.Title = null;
                 return;
             }
 
             Helper.String.StringBuilder.Length = 0;
-            Helper.String.StringBuilder.AppendLine(_selectedContent.Block.Name);
+            Helper.String.StringBuilder.AppendLine(this.selectedContent.Block.Name);
 
-            if (_trackedContent != null && _trackedContent != _selectedContent)
+            if (this.trackedContent != null && this.trackedContent != this.selectedContent)
             {
-                AddTrackInfo();
+                this.AddTrackInfo();
             }
 
-            Viewport.Title = Helper.String.StringBuilder.ToString();
+            this.Viewport.Title = Helper.String.StringBuilder.ToString();
         }
 
         private void AddTrackInfo()
         {
             Helper.String.StringBuilder.AppendLine();
-            Helper.String.StringBuilder.AppendLine(_trackedContent.Block.Name);
+            Helper.String.StringBuilder.AppendLine(this.trackedContent.Block.Name);
 
-            Vector3D a = _selectedContent.Position / SystemParser.SYSTEM_SCALE;
-            Vector3D b = _trackedContent.Position / SystemParser.SYSTEM_SCALE;
+            Vector3D a = this.selectedContent.Position / SystemParser.SystemScale;
+            Vector3D b = this.trackedContent.Position / SystemParser.SystemScale;
             Vector3D delta = b - a;
 
             Helper.String.StringBuilder.Append(Strings.SystemPresenterTrackedDistance);
@@ -1590,7 +1598,7 @@ namespace FreelancerModStudio.SystemDesigner
             Helper.String.StringBuilder.AppendLine();
             Helper.String.StringBuilder.Append(Strings.SystemPresenterTrackedAngles);
 
-            const double radToDeg = 180 / Math.PI;
+            const double RadToDeg = 180 / Math.PI;
 
             if (delta.Y == 0.0)
             {
@@ -1598,9 +1606,9 @@ namespace FreelancerModStudio.SystemDesigner
             }
             else
             {
-                Helper.String.StringBuilder.Append(Math.Round(-Math.Atan(delta.Z / delta.Y) * radToDeg));
+                Helper.String.StringBuilder.Append(Math.Round(-Math.Atan(delta.Z / delta.Y) * RadToDeg));
                 Helper.String.StringBuilder.Append(", ");
-                Helper.String.StringBuilder.Append(Math.Round(-Math.Atan(delta.X / delta.Y) * radToDeg));
+                Helper.String.StringBuilder.Append(Math.Round(-Math.Atan(delta.X / delta.Y) * RadToDeg));
                 Helper.String.StringBuilder.Append(", ");
             }
 
@@ -1610,42 +1618,43 @@ namespace FreelancerModStudio.SystemDesigner
             }
             else
             {
-                Helper.String.StringBuilder.Append(Math.Round(Math.Atan(delta.Z / delta.X) * radToDeg));
+                Helper.String.StringBuilder.Append(Math.Round(Math.Atan(delta.Z / delta.X) * RadToDeg));
             }
         }
 
         public ContentBase FindContent(TableBlock block)
         {
-            for (int i = GetContentStartId(); i < Viewport.Children.Count; ++i)
+            for (int i = this.GetContentStartId(); i < this.Viewport.Children.Count; ++i)
             {
-                ContentBase content = (ContentBase)Viewport.Children[i];
+                ContentBase content = (ContentBase)this.Viewport.Children[i];
                 if (content.Block != null && content.Block.Id == block.Id)
                 {
                     return content;
                 }
             }
+
             return null;
         }
 
         public void LookAtSelected()
         {
-            if (SelectedContent == null)
+            if (this.SelectedContent == null)
             {
                 return;
             }
 
-            LookAt(SelectedContent);
+            this.LookAt(this.SelectedContent);
         }
 
         public void FocusSelected()
         {
-            if (SelectedContent == null)
+            if (this.SelectedContent == null)
             {
                 return;
             }
 
             double zoomFactor;
-            switch (ViewerType)
+            switch (this.ViewerType)
             {
                 case ViewerType.Universe:
                     zoomFactor = 20;
@@ -1657,24 +1666,25 @@ namespace FreelancerModStudio.SystemDesigner
                     zoomFactor = 1.25;
                     break;
             }
-            LookAtAndZoom(SelectedContent, zoomFactor, true);
+
+            this.LookAtAndZoom(this.SelectedContent, zoomFactor, true);
         }
 
         public void TrackSelected()
         {
-            if (ViewerType != ViewerType.System)
+            if (this.ViewerType != ViewerType.System)
             {
                 return;
             }
 
             // change tracked object
-            if (SelectedContent == TrackedContent)
+            if (this.SelectedContent == this.TrackedContent)
             {
-                TrackedContent = null;
+                this.TrackedContent = null;
             }
             else
             {
-                TrackedContent = SelectedContent;
+                this.TrackedContent = this.SelectedContent;
             }
         }
     }

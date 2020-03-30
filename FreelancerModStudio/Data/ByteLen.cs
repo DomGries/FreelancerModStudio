@@ -5,12 +5,12 @@
     /// </summary>
     public static class ByteLen
     {
-        public const int FILE_TAG = 4;
+        public const int FileTag = 4;
 
-        public const int INT16 = 2;
-        public const int INT = 4;
-        public const int FLOAT = 4;
+        public const int Int16 = 2;
+        public const int Int = 4;
+        public const int Float = 4;
 
-        public const int CONSTANT_STRING = 64;
+        public const int ConstantString = 64;
     }
 }

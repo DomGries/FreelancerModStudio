@@ -6,9 +6,9 @@
     {
         public OptionsForm()
         {
-            InitializeComponent();
-            propertyGrid.SelectedObject = Helper.Settings.Data.Data.General;
-            propertyGrid.ExpandAllGridItems();
+            this.InitializeComponent();
+            this.propertyGrid.SelectedObject = Helper.Settings.Data.Data.General;
+            this.propertyGrid.ExpandAllGridItems();
         }
     }
 }

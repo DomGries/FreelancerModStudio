@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows.Media.Media3D;
-using FreelancerModStudio.Data;
-
-namespace FreelancerModStudio.SystemDesigner.Content
+﻿namespace FreelancerModStudio.SystemDesigner.Content
 {
+    using global::System;
+    using global::System.Windows.Media.Media3D;
+    using FreelancerModStudio.Data;
+
     public abstract class ContentBase : ModelVisual3D
     {
         public TableBlock Block;
@@ -18,24 +18,24 @@ namespace FreelancerModStudio.SystemDesigner.Content
 
         public void UpdateTransform(Matrix3D matrix, bool animate)
         {
-            if (Content != null && animate)
+            if (this.Content != null && animate)
             {
                 ContentAnimation animation = new ContentAnimation
                     {
-                        OldMatrix = Transform.Value,
+                        OldMatrix = this.Transform.Value,
                         NewMatrix = matrix,
                     };
                 Animator.Animate(this, animation);
             }
             else
             {
-                Transform = new MatrixTransform3D(matrix);
+                this.Transform = new MatrixTransform3D(matrix);
             }
         }
 
         public void UpdateTransform(bool animate)
         {
-            UpdateTransform(GetMatrix(), animate);
+            this.UpdateTransform(this.GetMatrix(), animate);
         }
 
         private static Matrix3D CreateRotationMatrix(Quaternion value)
@@ -49,9 +49,9 @@ namespace FreelancerModStudio.SystemDesigner.Content
         {
             Matrix3D matrix = new Matrix3D();
 
-            matrix.Scale(Scale);
-            matrix *= RotationMatrix(Rotation);
-            matrix.Translate(Position);
+            matrix.Scale(this.Scale);
+            matrix *= RotationMatrix(this.Rotation);
+            matrix.Translate(this.Position);
 
             return matrix;
         }
@@ -65,40 +65,40 @@ namespace FreelancerModStudio.SystemDesigner.Content
 
         public static Vector3D GetRotation(Matrix3D matrix)
         {
-            const double radToDeg = 180 / Math.PI;
+            const double RadToDeg = 180 / Math.PI;
 
             if (matrix.M12 >= 1)
             {
                 // Not a unique solution: thetaY - thetaX = atan2(M31, M33)
                 return new Vector3D(
-                    Math.Atan2(matrix.M31, matrix.M33) * radToDeg,
+                    Math.Atan2(matrix.M31, matrix.M33) * RadToDeg,
                     0,
-                    0.5 * Math.PI * radToDeg);
+                    0.5 * Math.PI * RadToDeg);
             }
 
             if (matrix.M12 <= -1)
             {
                 // Not a unique solution: thetaY + thetaX = atan2(M31, M33)
                 return new Vector3D(
-                    Math.Atan2(matrix.M31, matrix.M33) * radToDeg,
+                    Math.Atan2(matrix.M31, matrix.M33) * RadToDeg,
                     0,
-                    -0.5 * Math.PI * radToDeg);
+                    -0.5 * Math.PI * RadToDeg);
             }
 
             return new Vector3D(
-                Math.Atan2(-matrix.M32, matrix.M22) * radToDeg,
-                Math.Atan2(-matrix.M13, matrix.M11) * radToDeg,
-                Math.Asin(matrix.M12) * radToDeg);
+                Math.Atan2(-matrix.M32, matrix.M22) * RadToDeg,
+                Math.Atan2(-matrix.M13, matrix.M11) * RadToDeg,
+                Math.Asin(matrix.M12) * RadToDeg);
         }
 
         public void LoadModel()
         {
-            Content = GetShapeModel();
+            this.Content = this.GetShapeModel();
         }
 
         public Point3D GetPositionPoint()
         {
-            return new Point3D(Position.X, Position.Y, Position.Z);
+            return new Point3D(this.Position.X, this.Position.Y, this.Position.Z);
         }
     }
 }

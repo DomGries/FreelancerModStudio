@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Windows.Media.Media3D;
-
-namespace FreelancerModStudio.Data.UTF
+﻿namespace FreelancerModStudio.Data.UTF
 {
+    using System.Collections.Generic;
+    using System.Windows.Media.Media3D;
+
     internal static class PrisConstruct
     {
         public static void Parse(List<CmpPart> constructs, byte[] data)
@@ -21,9 +21,9 @@ namespace FreelancerModStudio.Data.UTF
                 part.Matrix = CmpParser.ParseRotation(data, ref pos);
                 part.Matrix.Translate(origin + offset);
 
-                CmpParser.ParseVector3D(data, ref pos); //AxisRotation
-                CmpParser.ParseFloat(data, ref pos); //Min
-                CmpParser.ParseFloat(data, ref pos); //Max
+                CmpParser.ParseVector3D(data, ref pos); // AxisRotation
+                CmpParser.ParseFloat(data, ref pos); // Min
+                CmpParser.ParseFloat(data, ref pos); // Max
 
                 constructs.Add(part);
             }

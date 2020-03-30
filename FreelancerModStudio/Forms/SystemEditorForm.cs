@@ -19,9 +19,9 @@
 
     public partial class SystemEditorForm : DockContent
     {
-        private Presenter _presenter;
+        private Presenter presenter;
 
-        private Thread _universeLoadingThread;
+        private Thread universeLoadingThread;
 
         public Presenter.SelectionChangedType SelectionChanged;
 
@@ -46,13 +46,13 @@
 
         public SystemEditorForm()
         {
-            InitializeComponent();
-            InitializeView();
+            this.InitializeComponent();
+            this.InitializeView();
         }
 
         public void RefreshSettings()
         {
-            _presenter.SetTitle();
+            this.presenter.SetTitle();
         }
 
         private void InitializeView()
@@ -61,62 +61,59 @@
             Stopwatch st = new Stopwatch();
             st.Start();
 #endif
-            //create viewport using the Helix Engine
+
+            // create viewport using the Helix Engine
             HelixViewport3D viewport = new HelixViewport3D
-                {
-                    Background = Brushes.Black,
-                    Foreground = Brushes.Yellow,
-                    FontSize = 14,
-                    ClipToBounds = false,
-                    ShowViewCube = true
-                };
+                                           {
+                                               Background = Brushes.Black,
+                                               Foreground = Brushes.Yellow,
+                                               FontSize = 14,
+                                               ClipToBounds = false,
+                                               ShowViewCube = true
+                                           };
 #if DEBUG
             st.Stop();
             Debug.WriteLine("init HelixView: " + st.ElapsedMilliseconds + "ms");
             st.Reset();
             st.Start();
 #endif
-            ElementHost host = new ElementHost
-                {
-                    Child = viewport,
-                    Dock = DockStyle.Fill
-                };
-            Controls.Add(host);
+            ElementHost host = new ElementHost { Child = viewport, Dock = DockStyle.Fill };
+            this.Controls.Add(host);
 #if DEBUG
             st.Stop();
             Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");
 #endif
-            _presenter = new Presenter(viewport);
-            _presenter.SelectionChanged += systemPresenter_SelectionChanged;
-            _presenter.FileOpen += systemPresenter_FileOpen;
-            _presenter.DataManipulated += systemPresenter_DataManipulated;
+            this.presenter = new Presenter(viewport);
+            this.presenter.SelectionChanged += this.SystemPresenterSelectionChanged;
+            this.presenter.FileOpen += this.SystemPresenterFileOpen;
+            this.presenter.DataManipulated += this.SystemPresenterDataManipulated;
         }
 
-        private void systemPresenter_SelectionChanged(TableBlock block, bool toggle)
+        private void SystemPresenterSelectionChanged(TableBlock block, bool toggle)
         {
-            OnSelectionChanged(block, toggle);
+            this.OnSelectionChanged(block, toggle);
         }
 
-        private void systemPresenter_FileOpen(string file)
+        private void SystemPresenterFileOpen(string file)
         {
-            OnFileOpen(file);
+            this.OnFileOpen(file);
         }
 
-        private void systemPresenter_DataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        private void SystemPresenterDataManipulated(TableBlock newBlock, TableBlock oldBlock)
         {
-            OnDataManipulated(newBlock, oldBlock);
+            this.OnDataManipulated(newBlock, oldBlock);
         }
 
         public void ShowViewer(ViewerType viewerType)
         {
-            Clear(false, false);
-            _presenter.ViewerType = viewerType;
+            this.Clear(false, false);
+            this.presenter.ViewerType = viewerType;
         }
 
         public void ShowData(TableData data)
         {
-            _presenter.Add(data.Blocks);
-            _presenter.Viewport.ZoomExtents(0);
+            this.presenter.Add(data.Blocks);
+            this.presenter.Viewport.ZoomExtents(0);
         }
 
         public void ShowUniverseConnections(string file, List<TableBlock> blocks, ArchetypeManager archetype)
@@ -125,60 +122,61 @@
             {
                 string path = Path.GetDirectoryName(file);
 
-                ThreadStart threadStart = () => _presenter.DisplayUniverse(path, Helper.Template.Data.SystemFile, blocks, archetype);
+                ThreadStart threadStart = () => this.presenter.DisplayUniverse(path, Helper.Template.Data.SystemFile, blocks, archetype);
 
-                Helper.Thread.Start(ref _universeLoadingThread, threadStart, ThreadPriority.Normal, true);
+                Helper.Thread.Start(ref this.universeLoadingThread, threadStart, ThreadPriority.Normal, true);
             }
         }
 
         public new void Dispose()
         {
-            if (_presenter != null)
+            if (this.presenter != null)
             {
-                Clear(true, true);
+                this.Clear(true, true);
             }
 
-            Dispose(true);
+            this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         public void Clear(bool clearLight, bool waitForThread)
         {
-            Helper.Thread.Abort(ref _universeLoadingThread, waitForThread);
-            _presenter.SelectedContent = null;
-            _presenter.TrackedContent = null;
-            _presenter.ClearDisplay(clearLight);
+            Helper.Thread.Abort(ref this.universeLoadingThread, waitForThread);
+            this.presenter.SelectedContent = null;
+            this.presenter.TrackedContent = null;
+            this.presenter.ClearDisplay(clearLight);
         }
 
         public void Select(TableBlock block)
         {
             // return if object is already selected
-            if (_presenter.SelectedContent != null && _presenter.SelectedContent.Block.Id == block.Id)
+            if (this.presenter.SelectedContent != null && this.presenter.SelectedContent.Block.Id == block.Id)
             {
                 return;
             }
 
             if (block.Visibility)
             {
-                bool isModelPreview = _presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview;
+                bool isModelPreview = this.presenter.ViewerType == ViewerType.SolarArchetype || this.presenter.ViewerType == ViewerType.ModelPreview;
                 if (isModelPreview)
                 {
-                    _presenter.SelectedContent = null;
-                    _presenter.ClearDisplay(false);
-                    _presenter.Add(block);
+                    this.presenter.SelectedContent = null;
+                    this.presenter.ClearDisplay(false);
+                    this.presenter.Add(block);
                 }
 
                 // select object
-                ContentBase content = _presenter.FindContent(block);
+                ContentBase content = this.presenter.FindContent(block);
                 if (content != null)
                 {
-                    _presenter.SelectedContent = content;
+                    this.presenter.SelectedContent = content;
 
                     if (isModelPreview)
                     {
                         // focus and zoom into object
-                        _presenter.LookAtAndZoom(content, 1.25, false);
+                        this.presenter.LookAtAndZoom(content, 1.25, false);
                     }
+
                     return;
                 }
             }
@@ -189,22 +187,22 @@
                 if (content != null)
                 {
                     SystemParser.SetValues(content, block, false);
-                    _presenter.SelectedContent = content;
+                    this.presenter.SelectedContent = content;
                     return;
                 }
             }
 
             // deselect currect selection if nothing could be selected
-            Deselect();
+            this.Deselect();
         }
 
         public void Deselect()
         {
-            _presenter.SelectedContent = null;
+            this.presenter.SelectedContent = null;
 
-            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
+            if (this.presenter.ViewerType == ViewerType.SolarArchetype || this.presenter.ViewerType == ViewerType.ModelPreview)
             {
-                _presenter.ClearDisplay(false);
+                this.presenter.ClearDisplay(false);
             }
         }
 
@@ -212,14 +210,14 @@
         {
             if (block.Visibility)
             {
-                _presenter.Add(block);
+                this.presenter.Add(block);
             }
             else
             {
-                ContentBase content = _presenter.FindContent(block);
+                ContentBase content = this.presenter.FindContent(block);
                 if (content != null)
                 {
-                    _presenter.Delete(content);
+                    this.presenter.Delete(content);
                 }
             }
         }
@@ -230,17 +228,17 @@
 
             foreach (TableBlock block in blocks)
             {
-                ContentBase content = _presenter.FindContent(block);
+                ContentBase content = this.presenter.FindContent(block);
                 if (content != null)
                 {
                     // visual is visible as it was found so we need to remove it
                     if (block.Visibility)
                     {
-                        _presenter.ChangeValues(content, block);
+                        this.presenter.ChangeValues(content, block);
                     }
                     else
                     {
-                        _presenter.Delete(content);
+                        this.presenter.Delete(content);
                     }
                 }
                 else
@@ -251,33 +249,33 @@
 
             if (newBlocks.Count > 0)
             {
-                Add(newBlocks);
+                this.Add(newBlocks);
             }
         }
 
         public void Add(List<TableBlock> blocks)
         {
-            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
+            if (this.presenter.ViewerType == ViewerType.SolarArchetype || this.presenter.ViewerType == ViewerType.ModelPreview)
             {
                 return;
             }
 
-            _presenter.Add(blocks);
+            this.presenter.Add(blocks);
         }
 
         public void Delete(List<TableBlock> blocks)
         {
-            if (_presenter.ViewerType == ViewerType.SolarArchetype || _presenter.ViewerType == ViewerType.ModelPreview)
+            if (this.presenter.ViewerType == ViewerType.SolarArchetype || this.presenter.ViewerType == ViewerType.ModelPreview)
             {
                 return;
             }
 
             foreach (TableBlock block in blocks)
             {
-                ContentBase content = _presenter.FindContent(block);
+                ContentBase content = this.presenter.FindContent(block);
                 if (content != null)
                 {
-                    _presenter.Delete(content);
+                    this.presenter.Delete(content);
                 }
             }
         }
@@ -286,22 +284,23 @@
         {
             get
             {
-                return _presenter.IsModelMode;
+                return this.presenter.IsModelMode;
             }
+
             set
             {
-                if (_presenter.IsModelMode == value)
+                if (this.presenter.IsModelMode == value)
                 {
                     return;
                 }
 
                 // switch model mode
-                _presenter.IsModelMode = value;
+                this.presenter.IsModelMode = value;
 #if DEBUG
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
 #endif
-                _presenter.ReloadModels();
+                this.presenter.ReloadModels();
 #if DEBUG
                 sw.Stop();
                 Debug.WriteLine("loading models: " + sw.ElapsedMilliseconds + "ms");
@@ -313,44 +312,46 @@
         {
             get
             {
-                return _presenter.ManipulationMode;
+                return this.presenter.ManipulationMode;
             }
+
             set
             {
-                if (_presenter.ManipulationMode == value)
+                if (this.presenter.ManipulationMode == value)
                 {
                     return;
                 }
 
                 // switch manipulation mode
-                _presenter.ManipulationMode = value;
+                this.presenter.ManipulationMode = value;
             }
         }
 
         public void FocusSelected()
         {
-            _presenter.FocusSelected();
+            this.presenter.FocusSelected();
         }
 
         public void LookAtSelected()
         {
-            _presenter.LookAtSelected();
+            this.presenter.LookAtSelected();
         }
 
         public void TrackSelected()
         {
-            _presenter.TrackSelected();
+            this.presenter.TrackSelected();
         }
 
         public string DataPath
         {
             get
             {
-                return _presenter.DataPath;
+                return this.presenter.DataPath;
             }
+
             set
             {
-                _presenter.DataPath = value;
+                this.presenter.DataPath = value;
             }
         }
     }

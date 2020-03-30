@@ -1,11 +1,14 @@
 ﻿namespace FreelancerModStudio
 {
+    using System.ComponentModel;
+    using System.Windows.Forms;
+
     partial class OptionsForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -17,6 +20,7 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -28,19 +32,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
+            ComponentResourceManager resources =
+                new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.SuspendLayout();
-            // 
+
             // propertyGrid
-            // 
             resources.ApplyResources(this.propertyGrid, "propertyGrid");
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.propertyGrid.ToolbarVisible = false;
-            // 
+
             // frmOptions
-            // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.propertyGrid);
@@ -48,11 +51,10 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.ResumeLayout(false);
-
         }
 
         #endregion
 
-        private System.Windows.Forms.PropertyGrid propertyGrid;
+        private PropertyGrid propertyGrid;
     }
 }

@@ -1,10 +1,11 @@
-﻿using System.IO;
-using System.Text;
-using FreelancerModStudio.Data.UTF;
-
-namespace FreelancerModStudio.Data.IO
+﻿namespace FreelancerModStudio.Data.IO
 {
-    public class UTFManager
+    using System.IO;
+    using System.Text;
+
+    using FreelancerModStudio.Data.UTF;
+
+    public class UtfManager
     {
         public string File { get; set; }
 
@@ -12,37 +13,38 @@ namespace FreelancerModStudio.Data.IO
 
         private const int FILE_VERSION = 0x101;
 
-        public UTFManager(string file)
+        public UtfManager(string file)
         {
-            File = file;
+            this.File = file;
         }
 
-        public UTFNode Read()
+        public UtfNode Read()
         {
-            using (FileStream stream = new FileStream(File, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (FileStream stream = new FileStream(this.File, FileMode.Open, FileAccess.Read, FileShare.Read))
             using (BinaryReader reader = new BinaryReader(stream))
             {
-                if (stream.Length < ByteLen.FILE_TAG + ByteLen.INT ||
-                    Encoding.ASCII.GetString(reader.ReadBytes(ByteLen.FILE_TAG)) != FILE_TYPE ||
-                    reader.ReadInt32() != FILE_VERSION)
+                if (stream.Length < ByteLen.FileTag + ByteLen.Int
+                    || Encoding.ASCII.GetString(reader.ReadBytes(ByteLen.FileTag)) != FILE_TYPE
+                    || reader.ReadInt32() != FILE_VERSION)
                 {
                     return null;
                 }
 
                 // get node info
                 int nodeBlockOffset = reader.ReadInt32();
-                //int nodeBlockSize = reader.ReadInt32();
 
-                //int unknown1 = reader.ReadInt32();
-                //int header_size = reader.ReadInt32();
-                stream.Position += ByteLen.INT * 3;
+                // int nodeBlockSize = reader.ReadInt32();
+
+                // int unknown1 = reader.ReadInt32();
+                // int header_size = reader.ReadInt32();
+                stream.Position += ByteLen.Int * 3;
 
                 // get string info
                 int stringBlockOffset = reader.ReadInt32();
                 int stringBlockSize = reader.ReadInt32();
 
-                //int unknown2 = reader.ReadInt32();
-                stream.Position += ByteLen.INT;
+                // int unknown2 = reader.ReadInt32();
+                stream.Position += ByteLen.Int;
 
                 // get data info
                 int dataBlockOffset = reader.ReadInt32();
@@ -55,13 +57,13 @@ namespace FreelancerModStudio.Data.IO
                 reader.Read(buffer, 0, stringBlockSize);
                 string stringBlock = Encoding.ASCII.GetString(buffer);
 
-                UTFNode info = new UTFNode();
+                UtfNode info = new UtfNode();
                 ParseNode(reader, stringBlock, nodeBlockOffset, 0, dataBlockOffset, info);
                 return info;
             }
         }
 
-        private static void ParseNode(BinaryReader reader, string stringBlock, int nodeBlockStart, int nodeStart, int dataBlockOffset, UTFNode parent)
+        private static void ParseNode(BinaryReader reader, string stringBlock, int nodeBlockStart, int nodeStart, int dataBlockOffset, UtfNode parent)
         {
             int offset = nodeBlockStart + nodeStart;
             reader.BaseStream.Position = offset;
@@ -70,10 +72,10 @@ namespace FreelancerModStudio.Data.IO
             int nameOffset = reader.ReadInt32(); // string for this node
             NodeFlags flags = (NodeFlags)reader.ReadInt32();
 
-            //int zero = reader.ReadInt32();
-            reader.BaseStream.Position += ByteLen.INT;
+            // int zero = reader.ReadInt32();
+            reader.BaseStream.Position += ByteLen.Int;
 
-            UTFNode node = new UTFNode
+            UtfNode node = new UtfNode
                 {
                     Name = stringBlock.Substring(nameOffset, stringBlock.IndexOf('\0', nameOffset) - nameOffset)
                 };
@@ -86,29 +88,28 @@ namespace FreelancerModStudio.Data.IO
                     ParseNode(reader, stringBlock, nodeBlockStart, childOffset, dataBlockOffset, node);
                 }
 
-                //int allocatedSize = reader.ReadInt32();
-                //int size = reader.ReadInt32();
-                //int size2 = reader.ReadInt32();
-                //int timestamp1 = reader.ReadInt32();
-                //int timestamp2 = reader.ReadInt32();
-                //int timestamp3 = reader.ReadInt32();
+                // int allocatedSize = reader.ReadInt32();
+                // int size = reader.ReadInt32();
+                // int size2 = reader.ReadInt32();
+                // int timestamp1 = reader.ReadInt32();
+                // int timestamp2 = reader.ReadInt32();
+                // int timestamp3 = reader.ReadInt32();
             }
             else if ((flags & NodeFlags.Leaf) == NodeFlags.Leaf)
             {
                 int dataOffset = reader.ReadInt32();
 
-                //int allocatedSize = reader.ReadInt32();
-                reader.BaseStream.Position += ByteLen.INT;
+                // int allocatedSize = reader.ReadInt32();
+                reader.BaseStream.Position += ByteLen.Int;
 
                 int size = reader.ReadInt32();
-                //int size2 = reader.ReadInt32();
-                //int timestamp1 = reader.ReadInt32();
-                //int timestamp2 = reader.ReadInt32();
-                //int timestamp3 = reader.ReadInt32();
 
+                // int size2 = reader.ReadInt32();
+                // int timestamp1 = reader.ReadInt32();
+                // int timestamp2 = reader.ReadInt32();
+                // int timestamp3 = reader.ReadInt32();
                 reader.BaseStream.Position = dataBlockOffset + dataOffset;
                 node.Data = reader.ReadBytes(size);
-
             }
 
             parent.Nodes.Add(node);

@@ -286,7 +286,7 @@
     <value>2</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>frmFileType</value>
+    <value>FrmFileType</value>
   </data>
   <data name="&gt;&gt;pathTextBox.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

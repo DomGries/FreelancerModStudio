@@ -1,35 +1,35 @@
-using System;
-using System.Collections.Generic;
-
 namespace FreelancerModStudio.Data.INI
 {
-    public class INIOptions : Dictionary<string, List<INIOption>>
+    using System;
+    using System.Collections.Generic;
+
+    public class IniOptions : Dictionary<string, List<IniOption>>
     {
-        public INIOptions()
+        public IniOptions()
             : base(StringComparer.OrdinalIgnoreCase)
         {
         }
 
-        public new void Add(string key, List<INIOption> values)
+        public new void Add(string key, List<IniOption> values)
         {
-            if (ContainsKey(key))
+            if (this.ContainsKey(key))
             {
-                //add value to existing option
-                foreach (INIOption option in values)
+                // add value to existing option
+                foreach (IniOption option in values)
                 {
                     this[key].Add(option);
                 }
             }
             else
             {
-                //add new option
+                // add new option
                 base.Add(key, values);
             }
         }
 
-        public void Add(string key, INIOption value)
+        public void Add(string key, IniOption value)
         {
-            Add(key, new List<INIOption>
+            this.Add(key, new List<IniOption>
                 {
                     value
                 });

@@ -1,54 +1,54 @@
-﻿using System.Windows.Forms;
-
-namespace FreelancerModStudio
+﻿namespace FreelancerModStudio
 {
-    public partial class frmFileType : Form
+    using System.Windows.Forms;
+
+    public partial class FrmFileType : Form
     {
         public int FileTypeIndex { get; set; }
 
-        public frmFileType(string filePath)
+        public FrmFileType(string filePath)
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             if (!string.IsNullOrEmpty(filePath))
             {
-                pathTextBox.Text = filePath;
-                pathTextBox.SelectionStart = pathTextBox.Text.Length - 1;
-                pathTextBox.ScrollToCaret();
+                this.pathTextBox.Text = filePath;
+                this.pathTextBox.SelectionStart = this.pathTextBox.Text.Length - 1;
+                this.pathTextBox.ScrollToCaret();
             }
             else
             {
-                pathLabel.Visible = false;
-                pathTextBox.Visible = false;
-                Height -= 26;
+                this.pathLabel.Visible = false;
+                this.pathTextBox.Visible = false;
+                this.Height -= 26;
             }
 
-            //set available file types
+            // set available file types
             for (int i = 0; i < Helper.Template.Data.Files.Count; ++i)
             {
-                fileTypeComboBox.Items.Add(new FileTypeItem
+                this.fileTypeComboBox.Items.Add(new FileTypeItem
                     {
                         Name = Helper.Template.Data.Files[i].Name,
                         Index = i
                     });
             }
 
-            fileTypeComboBox.Sorted = true;
+            this.fileTypeComboBox.Sorted = true;
 
-            if (fileTypeComboBox.Items.Count > Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType)
+            if (this.fileTypeComboBox.Items.Count > Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType)
             {
-                fileTypeComboBox.SelectedIndex = Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType;
+                this.fileTypeComboBox.SelectedIndex = Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType;
             }
             else
             {
-                fileTypeComboBox.SelectedIndex = 0;
+                this.fileTypeComboBox.SelectedIndex = 0;
             }
         }
 
-        private void frmFileType_FormClosed(object sender, FormClosedEventArgs e)
+        private void FrmFileTypeFormClosed(object sender, FormClosedEventArgs e)
         {
-            FileTypeIndex = ((FileTypeItem)fileTypeComboBox.SelectedItem).Index;
-            Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType = fileTypeComboBox.SelectedIndex;
+            this.FileTypeIndex = ((FileTypeItem)this.fileTypeComboBox.SelectedItem).Index;
+            Helper.Settings.Data.Data.Forms.ChooseFileType.SelectedFileType = this.fileTypeComboBox.SelectedIndex;
         }
     }
 
@@ -59,7 +59,7 @@ namespace FreelancerModStudio
 
         public override string ToString()
         {
-            return Name;
+            return this.Name;
         }
     }
 }

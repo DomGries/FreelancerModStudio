@@ -25,10 +25,11 @@ namespace FreelancerModStudio
                 Stopwatch st = new Stopwatch();
                 st.Start();
 #endif
-                //load settings
+
+                // load settings
                 Settings.Load();
 
-                //install downloaded update if it exists
+                // install downloaded update if it exists
                 if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
                 {
                     if (AutoUpdate.AutoUpdate.InstallUpdate())
@@ -43,29 +44,29 @@ namespace FreelancerModStudio
                 Debug.WriteLine("loading settings.xml and template.xml: " + st.ElapsedMilliseconds + "ms");
 #endif
 
-                //whidbey color table (gray colors of menustrip and tabstrip)
-                ProfessionalColorTable whidbeyColorTable = new ProfessionalColorTable
-                    {
-                        UseSystemColors = true
-                    };
+                // whidbey color table (gray colors of menustrip and tabstrip)
+                ProfessionalColorTable whidbeyColorTable = new ProfessionalColorTable { UseSystemColors = true };
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer(whidbeyColorTable);
 
-                //remove installed update if it exists
+                // remove installed update if it exists
                 if (Settings.Data.Data.General.AutoUpdate.Update.Installed)
                 {
                     AutoUpdate.AutoUpdate.RemoveUpdate();
                 }
 
-                //check for update
-                if (Settings.Data.Data.General.AutoUpdate.Enabled && Settings.Data.Data.General.AutoUpdate.UpdateFile != null && Settings.Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Settings.Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
+                // check for update
+                if (Settings.Data.Data.General.AutoUpdate.Enabled
+                    && Settings.Data.Data.General.AutoUpdate.UpdateFile != null
+                    && Settings.Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(
+                        Settings.Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
                 {
                     Update.Check(true, Settings.Data.Data.General.AutoUpdate.SilentDownload);
                 }
 
-                //start main form
+                // start main form
                 Application.Run(new MainForm());
 
-                //save settings
+                // save settings
                 Settings.Save();
             }
         }
@@ -78,7 +79,7 @@ namespace FreelancerModStudio
             {
                 if (AutoUpdate.Status != StatusType.Waiting)
                 {
-                    AutoUpdate.ShowUI();
+                    AutoUpdate.ShowUi();
                     return;
                 }
 
@@ -118,7 +119,7 @@ namespace FreelancerModStudio
 
         internal struct Template
         {
-            private static FreelancerModStudio.Data.Template _data;
+            private static FreelancerModStudio.Data.Template data;
 
             public static void Load()
             {
@@ -127,11 +128,11 @@ namespace FreelancerModStudio
 
             public static void Load(string file)
             {
-                _data = new FreelancerModStudio.Data.Template();
+                data = new FreelancerModStudio.Data.Template();
 
                 try
                 {
-                    _data.Load(file);
+                    data.Load(file);
                     Data.SetSpecialFiles();
                 }
                 catch (Exception ex)
@@ -155,20 +156,20 @@ namespace FreelancerModStudio
                 {
                     get
                     {
-                        return _data.Data.Files;
+                        return data.Data.Files;
                     }
+
                     set
                     {
-                        _data.Data.Files = value;
+                        data.Data.Files = value;
                     }
                 }
 
-                //public static FreelancerModStudio.Data.Template.CostumTypes CostumTypes
-                //{
-                //    get { return data.Data.CostumTypes; }
-                //    set { data.Data.CostumTypes = value; }
-                //}
-
+                // public static FreelancerModStudio.Data.Template.CostumTypes CostumTypes
+                // {
+                // get { return data.Data.CostumTypes; }
+                // set { data.Data.CostumTypes = value; }
+                // }
                 public static int GetIndex(string file)
                 {
                     for (int i = 0; i < Files.Count; ++i)
@@ -182,6 +183,7 @@ namespace FreelancerModStudio
                             }
                         }
                     }
+
                     return -1;
                 }
 
@@ -205,8 +207,10 @@ namespace FreelancerModStudio
                         {
                             break;
                         }
+
                         builder.Remove(lastIndex, builder.Length - lastIndex);
                     }
+
                     return builder.ToString();
                 }
 
@@ -308,6 +312,7 @@ namespace FreelancerModStudio
 
                     return "en";
                 }
+
                 set
                 {
                     if (value.Equals("de", StringComparison.OrdinalIgnoreCase))

@@ -26,7 +26,6 @@
 
                 Environment.Exit(1);
             }
-
             else
                 Debugger.Break();
         }

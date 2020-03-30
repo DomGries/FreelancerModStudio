@@ -20,23 +20,23 @@
 
         public void Analyze()
         {
-            LoadUniverseConnections();
+            this.LoadUniverseConnections();
         }
 
         public void LoadUniverseConnections()
         {
-            Connections = new Dictionary<int, UniverseConnection>();
+            this.Connections = new Dictionary<int, UniverseConnection>();
 
-            foreach (TableBlock block in Universe)
+            foreach (TableBlock block in this.Universe)
             {
-                foreach (EditorINIOption option in block.Block.Options)
+                foreach (EditorIniOption option in block.Block.Options)
                 {
                     if (option.Name.Equals("file", StringComparison.OrdinalIgnoreCase) && option.Values.Count > 0)
                     {
-                        Table<int, ConnectionPart> systemConnections = GetConnections(block.Index, Path.Combine(UniversePath, option.Values[0].Value.ToString()));
+                        Table<int, ConnectionPart> systemConnections = this.GetConnections(block.Index, Path.Combine(this.UniversePath, option.Values[0].Value.ToString()));
                         if (systemConnections != null)
                         {
-                            AddConnections(block.Index, systemConnections);
+                            this.AddConnections(block.Index, systemConnections);
                         }
 
                         break;
@@ -65,14 +65,14 @@
 
                 int connectionHash = connection.GetHashCode();
                 UniverseConnection existingConnection;
-                if (Connections.TryGetValue(connectionHash, out existingConnection))
+                if (this.Connections.TryGetValue(connectionHash, out existingConnection))
                 {
                     existingConnection.To.JumpGate = connection.From.JumpGate;
                     existingConnection.To.JumpHole = connection.From.JumpHole;
                 }
                 else
                 {
-                    Connections[connectionHash] = connection;
+                    this.Connections[connectionHash] = connection;
                 }
             }
         }
@@ -85,11 +85,11 @@
             }
 
             FileManager fileManager = new FileManager(file);
-            EditorINIData iniContent;
+            EditorIniData iniContent;
 
             try
             {
-                iniContent = fileManager.Read(FileEncoding.Automatic, SystemTemplate);
+                iniContent = fileManager.Read(FileEncoding.Automatic, this.SystemTemplate);
             }
             catch
             {
@@ -99,14 +99,14 @@
 
             Table<int, ConnectionPart> connections = new Table<int, ConnectionPart>();
 
-            foreach (EditorINIBlock block in iniContent.Blocks)
+            foreach (EditorIniBlock block in iniContent.Blocks)
             {
                 if (block.Name.Equals("object", StringComparison.OrdinalIgnoreCase))
                 {
                     string archetypeString = null;
                     string gotoString = null;
 
-                    foreach (EditorINIOption option in block.Options)
+                    foreach (EditorIniOption option in block.Options)
                     {
                         if (option.Values.Count > 0)
                         {
@@ -125,12 +125,12 @@
 
                     if (archetypeString != null && gotoString != null)
                     {
-                        ArchetypeInfo archetypeInfo = Archetype.TypeOf(archetypeString);
+                        ArchetypeInfo archetypeInfo = this.Archetype.TypeOf(archetypeString);
                         if (archetypeInfo != null)
                         {
                             ConnectionPart connection = new ConnectionPart
                                 {
-                                    Id = GetConnectionId(BeforeSeperator(gotoString, ","))
+                                    Id = this.GetConnectionId(BeforeSeperator(gotoString, ","))
                                 };
 
                             switch (archetypeInfo.Type)
@@ -181,13 +181,14 @@
 
         private int GetConnectionId(string blockName)
         {
-            foreach (TableBlock block in Universe)
+            foreach (TableBlock block in this.Universe)
             {
                 if (block.Name.Equals(blockName, StringComparison.OrdinalIgnoreCase))
                 {
                     return block.Index;
                 }
             }
+
             return -1;
         }
     }
@@ -196,11 +197,11 @@
     {
         public override int GetHashCode()
         {
-            const int idOffset = 0x1000;
+            const int IdOffset = 0x1000;
 
-            if (From != null && To != null)
+            if (this.From != null && this.To != null)
             {
-                return (From.Id + idOffset)*(To.Id + idOffset);
+                return (this.From.Id + IdOffset)*(this.To.Id + IdOffset);
             }
 
             return -1;

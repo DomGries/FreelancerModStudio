@@ -1,24 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Windows.Media.Media3D;
-using FreelancerModStudio.Data;
-using FreelancerModStudio.Data.INI;
-using FreelancerModStudio.SystemDesigner.Content;
-
-namespace FreelancerModStudio.SystemDesigner
+﻿namespace FreelancerModStudio.SystemDesigner
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Windows.Media.Media3D;
+
+    using FreelancerModStudio.Data;
+    using FreelancerModStudio.Data.INI;
+    using FreelancerModStudio.SystemDesigner.Content;
+
+    using System = FreelancerModStudio.SystemDesigner.Content.System;
+
     public static class SystemParser
     {
-        public const double SYSTEM_SCALE = 0.005;
-        public const double MODEL_PREVIEW_SCALE = 1000;
-        public const double UNIVERSE_SCALE = 1;
-        public const double UNIVERSE_SYSTEM_SCALE = 0.2 * UNIVERSE_SCALE;
-        public const double UNIVERSE_CONNECTION_SCALE = 0.04 * UNIVERSE_SCALE;
-        public const double UNIVERSE_DOUBLE_CONNECTION_SCALE = 2.5 * UNIVERSE_CONNECTION_SCALE;
-        public const double UNIVERSE_AXIS_CENTER = 7.5;
+        public const double SystemScale = 0.005;
+        public const double ModelPreviewScale = 1000;
+        public const double UniverseScale = 1;
+        public const double UniverseSystemScale = 0.2 * UniverseScale;
+        public const double UniverseConnectionScale = 0.04 * UniverseScale;
+        public const double UniverseDoubleConnectionScale = 2.5 * UniverseConnectionScale;
+        public const double UniverseAxisCenter = 7.5;
 
-        public static KeyValuePair<string, ArchetypeInfo> GetArchetypeInfo(EditorINIBlock block)
+        public static KeyValuePair<string, ArchetypeInfo> GetArchetypeInfo(EditorIniBlock block)
         {
             if (block.Name.Equals("solar", StringComparison.OrdinalIgnoreCase))
             {
@@ -27,7 +30,7 @@ namespace FreelancerModStudio.SystemDesigner
                 double radius = 0d;
                 string cmpFile = null;
 
-                foreach (EditorINIOption option in block.Options)
+                foreach (EditorIniOption option in block.Options)
                 {
                     if (option.Values.Count > 0)
                     {
@@ -53,7 +56,7 @@ namespace FreelancerModStudio.SystemDesigner
                 {
                     if (type == ContentType.Planet || type == ContentType.Sun)
                     {
-                        //save radius only for planets and suns
+                        // save radius only for planets and suns
                         if (radius != 0.0)
                         {
                             return new KeyValuePair<string, ArchetypeInfo>(name, new ArchetypeInfo
@@ -65,7 +68,7 @@ namespace FreelancerModStudio.SystemDesigner
                     }
                     else if (type != ContentType.None && cmpFile != null)
                     {
-                        //save model path only for supported objects (not planets and suns)
+                        // save model path only for supported objects (not planets and suns)
                         return new KeyValuePair<string, ArchetypeInfo>(name, new ArchetypeInfo
                             {
                                 Type = type,
@@ -74,12 +77,13 @@ namespace FreelancerModStudio.SystemDesigner
                     }
                 }
             }
+
             return new KeyValuePair<string, ArchetypeInfo>(null, null);
         }
 
-        public static ArchetypeInfo GetModelPreviewInfo(EditorINIBlock block)
+        public static ArchetypeInfo GetModelPreviewInfo(EditorIniBlock block)
         {
-            foreach (EditorINIOption option in block.Options)
+            foreach (EditorIniOption option in block.Options)
             {
                 if (option.Values.Count > 0)
                 {
@@ -94,6 +98,7 @@ namespace FreelancerModStudio.SystemDesigner
                     }
                 }
             }
+
             return null;
         }
 
@@ -136,8 +141,8 @@ namespace FreelancerModStudio.SystemDesigner
                     {
                         if (archetypeManager != null)
                         {
-                            //get type of object based on archetype
-                            foreach (EditorINIOption option in block.Block.Options)
+                            // get type of object based on archetype
+                            foreach (EditorIniOption option in block.Block.Options)
                             {
                                 if (option.Name.Equals("archetype", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -150,20 +155,23 @@ namespace FreelancerModStudio.SystemDesigner
                                             return;
                                         }
                                     }
+
                                     break;
                                 }
                             }
                         }
+
                         break;
                     }
+
                 case "zone":
                     {
                         string shape = "box";
                         int flags = 0;
 
-                        const int exclusionFlag = 0x10000 | 0x20000; // exclusion type 1 + exclusion type 2
+                        const int ExclusionFlag = 0x10000 | 0x20000; // exclusion type 1 + exclusion type 2
 
-                        foreach (EditorINIOption option in block.Block.Options)
+                        foreach (EditorIniOption option in block.Block.Options)
                         {
                             if (option.Values.Count > 0)
                             {
@@ -184,6 +192,7 @@ namespace FreelancerModStudio.SystemDesigner
                                                 return;
                                             }
                                         }
+
                                         block.ObjectType = ContentType.ZonePath;
                                         return;
                                     case "vignette_type":
@@ -206,7 +215,7 @@ namespace FreelancerModStudio.SystemDesigner
                             }
                         }
 
-                        bool isExclusion = (flags & exclusionFlag) != 0;
+                        bool isExclusion = (flags & ExclusionFlag) != 0;
 
                         // set type based on shape and flags
                         switch (shape.ToLowerInvariant())
@@ -251,7 +260,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         public static bool SetModelPreviewValues(ContentBase content, TableBlock block)
         {
-            content.Scale = new Vector3D(MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE, MODEL_PREVIEW_SCALE);
+            content.Scale = new Vector3D(ModelPreviewScale, ModelPreviewScale, ModelPreviewScale);
 
             return SetBlock(content, block, false);
         }
@@ -263,8 +272,8 @@ namespace FreelancerModStudio.SystemDesigner
             string scaleString = "1,1,1";
             string fileString = string.Empty;
 
-            //get properties of content
-            foreach (EditorINIOption option in block.Block.Options)
+            // get properties of content
+            foreach (EditorIniOption option in block.Block.Options)
             {
                 if (option.Values.Count > 0)
                 {
@@ -289,14 +298,14 @@ namespace FreelancerModStudio.SystemDesigner
 
             content.Position = ParsePosition(positionString);
 
-            //set content values
+            // set content values
             switch (block.ObjectType)
             {
                 case ContentType.System:
                     content.Position = ParseUniverseVector(positionString);
-                    content.Scale = new Vector3D(UNIVERSE_SYSTEM_SCALE, UNIVERSE_SYSTEM_SCALE, UNIVERSE_SYSTEM_SCALE);
+                    content.Scale = new Vector3D(UniverseSystemScale, UniverseSystemScale, UniverseSystemScale);
 
-                    Content.System system = (Content.System)content;
+                    System system = (Content.System)content;
                     system.Path = fileString;
                     break;
                 case ContentType.LightSource:
@@ -322,9 +331,10 @@ namespace FreelancerModStudio.SystemDesigner
                     {
                         if (block.Archetype.Radius != 0.0)
                         {
-                            content.Scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) * SYSTEM_SCALE;
+                            content.Scale = new Vector3D(block.Archetype.Radius, block.Archetype.Radius, block.Archetype.Radius) * SystemScale;
                         }
                     }
+
                     break;
                 default: // all zones
                     content.Scale = ParseScale(scaleString, block.ObjectType);
@@ -337,7 +347,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         public static Vector3D ParseVector(string vector)
         {
-            //Use Vector3D.Parse after implementation of type handling
+            // Use Vector3D.Parse after implementation of type handling
             string[] values = vector.Split(new[] { ',' });
             if (values.Length > 2)
             {
@@ -349,7 +359,7 @@ namespace FreelancerModStudio.SystemDesigner
 
         public static Vector3D ParsePosition(string vector)
         {
-            return ParseVector(vector) * SYSTEM_SCALE;
+            return ParseVector(vector) * SystemScale;
         }
 
         public static Vector3D ParseRotation(string vector, bool isCylinder)
@@ -377,8 +387,9 @@ namespace FreelancerModStudio.SystemDesigner
                     if (values.Length > 0)
                     {
                         double tempScale = Parser.ParseDouble(values[0], 1);
-                        return new Vector3D(tempScale, tempScale, tempScale) * SYSTEM_SCALE;
+                        return new Vector3D(tempScale, tempScale, tempScale) * SystemScale;
                     }
+
                     break;
                 case ContentType.ZonePath:
                 case ContentType.ZonePathTrade:
@@ -386,14 +397,16 @@ namespace FreelancerModStudio.SystemDesigner
                     {
                         double tempScale1 = Parser.ParseDouble(values[0], 1);
                         double tempScale2 = Parser.ParseDouble(values[1], 1);
-                        return new Vector3D(tempScale1, tempScale2, tempScale1) * SYSTEM_SCALE;
+                        return new Vector3D(tempScale1, tempScale2, tempScale1) * SystemScale;
                     }
+
                     break;
                 default:
                     if (values.Length > 2)
                     {
-                        return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) * SYSTEM_SCALE;
+                        return new Vector3D(Parser.ParseDouble(values[0], 1), Parser.ParseDouble(values[2], 1), Parser.ParseDouble(values[1], 1)) * SystemScale;
                     }
+
                     break;
             }
 
@@ -402,14 +415,15 @@ namespace FreelancerModStudio.SystemDesigner
 
         public static Vector3D ParseUniverseVector(string vector)
         {
-            //Use Point.Parse after implementation of type handling
+            // Use Point.Parse after implementation of type handling
             string[] values = vector.Split(new[] { ',' });
             if (values.Length > 1)
             {
                 double tempScale1 = Parser.ParseDouble(values[0], 0);
                 double tempScale2 = Parser.ParseDouble(values[1], 0);
-                return new Vector3D(tempScale1 - UNIVERSE_AXIS_CENTER, -tempScale2 + UNIVERSE_AXIS_CENTER, 0) * UNIVERSE_SCALE;
+                return new Vector3D(tempScale1 - UniverseAxisCenter, -tempScale2 + UniverseAxisCenter, 0) * UniverseScale;
             }
+
             return new Vector3D(0, 0, 0);
         }
 
@@ -466,8 +480,8 @@ namespace FreelancerModStudio.SystemDesigner
         {
             bool isUniverse = content.Block.ObjectType == ContentType.System;
 
-            //get properties of content
-            foreach (EditorINIOption option in content.Block.Block.Options)
+            // get properties of content
+            foreach (EditorIniOption option in content.Block.Block.Options)
             {
                 switch (option.Name.ToLowerInvariant())
                 {
@@ -478,11 +492,12 @@ namespace FreelancerModStudio.SystemDesigner
                         }
                         else
                         {
-                            option.Values.Add(new EditorINIEntry
+                            option.Values.Add(new EditorIniEntry
                                 (
                                     WritePosition(content.Position, isUniverse)
                                 ));
                         }
+
                         break;
                     case "rotate":
                         if (option.Values.Count > 0)
@@ -498,11 +513,12 @@ namespace FreelancerModStudio.SystemDesigner
                         }
                         else if (!IsZeroRounded(content.Rotation))
                         {
-                            option.Values.Add(new EditorINIEntry
+                            option.Values.Add(new EditorIniEntry
                                 (
                                     WriteRotation(content.Rotation, IsCylinder(content.Block.ObjectType))
                                 ));
                         }
+
                         break;
                     case "size":
                         if (option.Values.Count > 0)
@@ -511,11 +527,12 @@ namespace FreelancerModStudio.SystemDesigner
                         }
                         else
                         {
-                            option.Values.Add(new EditorINIEntry
+                            option.Values.Add(new EditorIniEntry
                                 (
                                     WriteScale(content.Scale, content.Block.ObjectType)
                                 ));
                         }
+
                         break;
                 }
             }
@@ -525,9 +542,9 @@ namespace FreelancerModStudio.SystemDesigner
         {
             Helper.String.StringBuilder.Length = 0;
 
-            WriteDouble(Math.Round((value.X + UNIVERSE_AXIS_CENTER) / UNIVERSE_SCALE, 1));
+            WriteDouble(Math.Round((value.X + UniverseAxisCenter) / UniverseScale, 1));
             Helper.String.StringBuilder.Append(", ");
-            WriteDouble(Math.Round((-value.Y + UNIVERSE_AXIS_CENTER) / UNIVERSE_SCALE, 1));
+            WriteDouble(Math.Round((-value.Y + UniverseAxisCenter) / UniverseScale, 1));
 
             return Helper.String.StringBuilder.ToString();
         }
@@ -552,7 +569,7 @@ namespace FreelancerModStudio.SystemDesigner
                 return WriteUniverseVector(value);
             }
 
-            return WriteVector(value / SYSTEM_SCALE);
+            return WriteVector(value / SystemScale);
         }
 
         public static string WriteRotation(Vector3D value, bool isCylinder)
@@ -575,20 +592,20 @@ namespace FreelancerModStudio.SystemDesigner
                 case ContentType.ZoneSphere:
                 case ContentType.ZoneSphereExclusion:
                 case ContentType.ZoneVignette:
-                    WriteDouble(Math.Round(value.X / SYSTEM_SCALE));
+                    WriteDouble(Math.Round(value.X / SystemScale));
                     break;
                 case ContentType.ZonePath:
                 case ContentType.ZonePathTrade:
-                    WriteDouble(Math.Round(value.X / SYSTEM_SCALE));
+                    WriteDouble(Math.Round(value.X / SystemScale));
                     Helper.String.StringBuilder.Append(", ");
-                    WriteDouble(Math.Round(value.Y / SYSTEM_SCALE));
+                    WriteDouble(Math.Round(value.Y / SystemScale));
                     break;
                 default:
-                    WriteDouble(Math.Round(value.X / SYSTEM_SCALE));
+                    WriteDouble(Math.Round(value.X / SystemScale));
                     Helper.String.StringBuilder.Append(", ");
-                    WriteDouble(Math.Round(value.Z / SYSTEM_SCALE));
+                    WriteDouble(Math.Round(value.Z / SystemScale));
                     Helper.String.StringBuilder.Append(", ");
-                    WriteDouble(Math.Round(value.Y / SYSTEM_SCALE));
+                    WriteDouble(Math.Round(value.Y / SystemScale));
                     break;
             }
 

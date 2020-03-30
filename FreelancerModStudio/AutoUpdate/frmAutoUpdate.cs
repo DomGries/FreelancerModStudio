@@ -1,17 +1,18 @@
-using System;
-using System.Windows.Forms;
-using FreelancerModStudio.Properties;
-
 namespace FreelancerModStudio.AutoUpdate
 {
-    public partial class frmAutoUpdate : Form, IAutoUpdateUI
-    {
-        private StatusType _currentPage;
+    using System;
+    using System.Windows.Forms;
 
-        public frmAutoUpdate()
+    using FreelancerModStudio.Properties;
+
+    public partial class FrmAutoUpdate : Form, IAutoUpdateUi
+    {
+        private StatusType currentPage;
+
+        public FrmAutoUpdate()
         {
-            InitializeComponent();
-            Icon = Resources.LogoIcon;
+            this.InitializeComponent();
+            this.Icon = Resources.LogoIcon;
         }
 
         private delegate void SetStatusInvoker(StatusType status);
@@ -23,20 +24,20 @@ namespace FreelancerModStudio.AutoUpdate
             this.ActionRequired?.Invoke(action);
         }
 
-        public void ShowUI()
+        public void ShowUi()
         {
-            ShowDialog();
+            this.ShowDialog();
         }
 
         public void SetPage(StatusType page, bool async)
         {
             if (async)
             {
-                Invoke(new SetStatusInvoker(SetPage), page);
+                this.Invoke(new SetStatusInvoker(this.SetPage), page);
             }
             else
             {
-                SetPage(page);
+                this.SetPage(page);
             }
         }
 
@@ -46,137 +47,136 @@ namespace FreelancerModStudio.AutoUpdate
             {
                 case StatusType.Waiting:
                 case StatusType.Checking:
-                    pnlDownload.Visible = true;
-                    lblDownloaded.Visible = false;
-                    btnNext.Visible = false;
-                    btnAbort.Visible = true;
+                    this.pnlDownload.Visible = true;
+                    this.lblDownloaded.Visible = false;
+                    this.btnNext.Visible = false;
+                    this.btnAbort.Visible = true;
 
-                    pgbDownload.Style = ProgressBarStyle.Marquee;
+                    this.pgbDownload.Style = ProgressBarStyle.Marquee;
 
-                    lblHeader.Text = Strings.UpdatesCheckingHeader;
-                    lblDescription.Text = string.Format(Strings.UpdatesCheckingDescription, Helper.Assembly.Name);
+                    this.lblHeader.Text = Strings.UpdatesCheckingHeader;
+                    this.lblDescription.Text = string.Format(Strings.UpdatesCheckingDescription, Helper.Assembly.Name);
 
-                    btnAbort.Text = Strings.UpdatesAbortButton;
+                    this.btnAbort.Text = Strings.UpdatesAbortButton;
 
-                    Text = Strings.UpdatesFormText;
+                    this.Text = Strings.UpdatesFormText;
 
                     break;
 
                 case StatusType.UpdateAvailable:
-                    pnlDownload.Visible = false;
-                    lblDownloaded.Visible = false;
-                    btnNext.Visible = true;
-                    btnAbort.Visible = true;
+                    this.pnlDownload.Visible = false;
+                    this.lblDownloaded.Visible = false;
+                    this.btnNext.Visible = true;
+                    this.btnAbort.Visible = true;
 
-                    lblHeader.Text = Strings.UpdatesAviableHeader;
-                    lblDescription.Text = string.Format(Strings.UpdatesAviableDescription, Helper.Assembly.Name);
+                    this.lblHeader.Text = Strings.UpdatesAviableHeader;
+                    this.lblDescription.Text = string.Format(Strings.UpdatesAviableDescription, Helper.Assembly.Name);
 
-                    btnNext.Text = Strings.UpdatesDownloadButton;
-                    btnAbort.Text = Strings.UpdatesAbortButton;
+                    this.btnNext.Text = Strings.UpdatesDownloadButton;
+                    this.btnAbort.Text = Strings.UpdatesAbortButton;
 
-                    Text = Strings.UpdatesFormText;
+                    this.Text = Strings.UpdatesFormText;
 
                     break;
 
                 case StatusType.UpdateNotAvailable:
-                    pnlDownload.Visible = false;
-                    lblDownloaded.Visible = false;
-                    btnNext.Visible = false;
-                    btnAbort.Visible = true;
+                    this.pnlDownload.Visible = false;
+                    this.lblDownloaded.Visible = false;
+                    this.btnNext.Visible = false;
+                    this.btnAbort.Visible = true;
 
-                    lblHeader.Text = Strings.UpdatesNotAviableHeader;
-                    lblDescription.Text = string.Format(Strings.UpdatesNotAviableDescription, Helper.Assembly.Name);
+                    this.lblHeader.Text = Strings.UpdatesNotAviableHeader;
+                    this.lblDescription.Text = string.Format(Strings.UpdatesNotAviableDescription, Helper.Assembly.Name);
 
-                    btnAbort.Text = Strings.UpdatesFinishButton;
+                    this.btnAbort.Text = Strings.UpdatesFinishButton;
 
-                    Text = Strings.UpdatesFormText;
+                    this.Text = Strings.UpdatesFormText;
 
                     break;
 
                 case StatusType.Downloading:
-                    pnlDownload.Visible = true;
-                    lblDownloaded.Visible = true;
-                    btnNext.Visible = true;
-                    btnAbort.Visible = true;
+                    this.pnlDownload.Visible = true;
+                    this.lblDownloaded.Visible = true;
+                    this.btnNext.Visible = true;
+                    this.btnAbort.Visible = true;
 
-                    pgbDownload.Style = ProgressBarStyle.Blocks;
+                    this.pgbDownload.Style = ProgressBarStyle.Blocks;
 
-                    lblHeader.Text = Strings.UpdatesDownloadingHeader;
-                    lblDescription.Text = string.Format(Strings.UpdatesDownloadingDescription, Helper.Assembly.Name);
+                    this.lblHeader.Text = Strings.UpdatesDownloadingHeader;
+                    this.lblDescription.Text = string.Format(Strings.UpdatesDownloadingDescription, Helper.Assembly.Name);
 
-                    btnNext.Text = Strings.UpdatesHideButton;
-                    btnAbort.Text = Strings.UpdatesAbortButton;
+                    this.btnNext.Text = Strings.UpdatesHideButton;
+                    this.btnAbort.Text = Strings.UpdatesAbortButton;
 
-                    Text = Strings.UpdatesFormText;
+                    this.Text = Strings.UpdatesFormText;
 
                     break;
 
                 case StatusType.DownloadFinished:
-                    pnlDownload.Visible = false;
-                    lblDownloaded.Visible = true;
-                    btnNext.Visible = true;
-                    btnAbort.Visible = true;
+                    this.pnlDownload.Visible = false;
+                    this.lblDownloaded.Visible = true;
+                    this.btnNext.Visible = true;
+                    this.btnAbort.Visible = true;
 
-                    lblHeader.Text = Strings.UpdatesDownloadedHeader;
-                    lblDescription.Text = string.Format(Strings.UpdatesDownloadedDescription, Helper.Assembly.Name);
+                    this.lblHeader.Text = Strings.UpdatesDownloadedHeader;
+                    this.lblDescription.Text = string.Format(Strings.UpdatesDownloadedDescription, Helper.Assembly.Name);
 
-                    btnNext.Text = Strings.UpdatesInstallButton;
-                    btnAbort.Text = Strings.UpdatesLaterButton;
+                    this.btnNext.Text = Strings.UpdatesInstallButton;
+                    this.btnAbort.Text = Strings.UpdatesLaterButton;
 
-                    Text = Strings.UpdatesFormText;
+                    this.Text = Strings.UpdatesFormText;
 
                     break;
             }
 
-            _currentPage = page;
+            this.currentPage = page;
         }
 
         public void SetProgress(long bytes, long bytesTotal, int percent)
         {
-            BeginInvoke((MethodInvoker)delegate
+            this.BeginInvoke((MethodInvoker)delegate
                 {
-                    pgbDownload.Value = percent;
+                    this.pgbDownload.Value = percent;
 
                     // 1MB = 1048576 (1024 * 1024) bytes
-                    lblDownloaded.Text = string.Format(Strings.UpdatesDownloadSpeed, ((double)bytes/1048576).ToString("N1"), ((double)bytesTotal/1048576).ToString("N1"));
+                    this.lblDownloaded.Text = string.Format(Strings.UpdatesDownloadSpeed, ((double)bytes/1048576).ToString("N1"), ((double)bytesTotal/1048576).ToString("N1"));
 
-                    Text = string.Format(Strings.UpdatesFormDownloadText, percent);
+                    this.Text = string.Format(Strings.UpdatesFormDownloadText, percent);
                 });
         }
 
-        private void btnAbort_Click(object sender, EventArgs e)
+        private void BtnAbortClick(object sender, EventArgs e)
         {
-            Close();
+            this.Close();
         }
 
-        private void btnNext_Click(object sender, EventArgs e)
+        private void BtnNextClick(object sender, EventArgs e)
         {
-            switch (_currentPage)
+            switch (this.currentPage)
             {
                 case StatusType.UpdateAvailable:
-                    OnAction(ActionType.Download);
+                    this.OnAction(ActionType.Download);
                     break;
                 case StatusType.Downloading:
-                    //hide form
-                    Close();
+                    // hide form
+                    this.Close();
                     break;
                 case StatusType.DownloadFinished:
-                    OnAction(ActionType.Install);
-                    Close();
+                    this.OnAction(ActionType.Install);
+                    this.Close();
                     break;
             }
         }
 
-        private void frmAutoUpdate_FormClosed(object sender, FormClosedEventArgs e)
+        private void FrmAutoUpdateFormClosed(object sender, FormClosedEventArgs e)
         {
-            if (_currentPage == StatusType.Checking ||
-                _currentPage == StatusType.Downloading)
+            if (this.currentPage == StatusType.Checking || this.currentPage == StatusType.Downloading)
             {
-                OnAction(ActionType.CloseAndAbort);
+                this.OnAction(ActionType.CloseAndAbort);
             }
             else
             {
-                OnAction(ActionType.Close);
+                this.OnAction(ActionType.Close);
             }
         }
     }

@@ -12,7 +12,7 @@
             lightGroup.Children.Add(new AmbientLight(Color.FromRgb(100, 100, 100)));
             lightGroup.Children.Add(new DirectionalLight(Colors.White, new Vector3D(0.2, -0.2, -1)));
 
-            Content = lightGroup;
+            this.Content = lightGroup;
         }
     }
 }

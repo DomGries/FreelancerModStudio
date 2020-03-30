@@ -481,25 +481,23 @@ namespace FreelancerModStudio
         private void OpenFile(string file)
         {
             int templateIndex = -1;
-            int documentIndex = FileOpened(file);
+            int documentIndex = this.FileOpened(file);
             if (documentIndex == -1)
             {
                 templateIndex = Helper.Template.Data.GetIndex(file);
                 if (templateIndex == -1)
                 {
-                    // let the user choose the ini file type
+                    // Let the user choose the ini file type
                     templateIndex = GetTemplateIndexDialog(file);
+
+                    // The user cancelled out of the menu.
+                    if (templateIndex == -1)
+                        return;
                 }
             }
 
-            try
-            {
-                OpenFile(file, templateIndex);
-            }
-            catch (Exception ex)
-            {
-                Helper.Exceptions.Show(string.Format(Strings.FileErrorOpen, file), ex);
-            }
+            try { this.OpenFile(file, templateIndex); }
+            catch (Exception ex) { Helper.Exceptions.Show(string.Format(Strings.FileErrorOpen, file), ex); }
         }
 
         private void OpenFile(string file, int templateIndex)

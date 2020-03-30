@@ -7,6 +7,8 @@ namespace FreelancerModStudio
     using System.Diagnostics;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
+    using System.Resources;
     using System.Windows.Forms;
 
     using BrightIdeasSoftware;
@@ -21,7 +23,7 @@ namespace FreelancerModStudio
 
     using WeifenLuo.WinFormsUI.Docking;
 
-    using Clipboard = FreelancerModStudio.Data.Clipboard;
+    using Clipboard = Data.Clipboard;
 
     public partial class FrmTableEditor : DockContent, IDocumentForm
     {
@@ -586,6 +588,67 @@ namespace FreelancerModStudio
             return blocks;
         }
 
+        /// <summary>
+        /// A basic function to check whether a value is of the right type as indicated by Template.xml. Defaults to a string.
+        /// </summary>
+        /// <param name="val">The value casted to a string</param>
+        /// <param name="type">The thing we want to see if it can parse as</param>
+        /// <returns>True if it is in the right format, false otherwise.</returns>
+        private bool CanCast(string val, Template.OptionType type)
+        {
+            val = val.Replace(" ", string.Empty);
+            switch (type)
+            {
+                // Freelancer is a bit weird. 0, 1, true, and false are all allowed for Bool.
+                case Template.OptionType.Bool:
+                    return val == "true" || val == "false" || val == "0" || val == "1";
+
+                // Default case
+                case Template.OptionType.String:
+                    return true;
+
+                case Template.OptionType.Int:
+                    return int.TryParse(val, out int i);
+
+                // Points in Freelancer are almost always floats, rather than ints. 
+                case Template.OptionType.Point:
+                    if (val.Count(s => s == ',') != 1)
+                        return false;
+
+                    string[] point = val.Split(',');
+                    return float.TryParse(point[0], out float f) && float.TryParse(point[1], out float ff);
+
+                case Template.OptionType.Double:
+                    return double.TryParse(val, out double d);
+
+                case Template.OptionType.Enum:
+                    throw new NotImplementedException();
+
+                case Template.OptionType.Vector:
+                    if (val.Count(s => s == ',') != 2)
+                        return false;
+
+                    string[] vec = val.Split(',');
+                    return double.TryParse(vec[0], out double dd) && double.TryParse(vec[1], out double ddd) && double.TryParse(vec[2], out double dddd);
+
+                case Template.OptionType.Rgb:
+                    if (val.Count(s => s == ',') != 2)
+                        return false;
+
+                    string[] rgb = val.Split(',');
+                    return byte.TryParse(rgb[0], out byte b) && byte.TryParse(rgb[1], out byte bb) && byte.TryParse(rgb[2], out byte bbb);
+
+                case Template.OptionType.StringArray:
+                    throw new NotImplementedException();
+                case Template.OptionType.IntArray:
+                    throw new NotImplementedException();
+                case Template.OptionType.DoubleArray:
+                    throw new NotImplementedException();
+                default:
+                    return false;
+            }
+        }
+
         public void ChangeBlocks(PropertyBlock[] propertyBlocks)
         {
             List<TableBlock> newBlocks = new List<TableBlock>();
@@ -600,7 +663,7 @@ namespace FreelancerModStudio
                 newBlocks.Add(newBlock);
 
                 PropertyBlock propertyBlock = propertyBlocks[i];
-
+                
                 // set comments (last property option)
                 string comments = (string)propertyBlock[propertyBlock.Count - 1].Value;
                 newBlock.Block.Comments = comments;
@@ -610,8 +673,7 @@ namespace FreelancerModStudio
                 {
                     List<EditorIniEntry> options = newBlock.Block.Options[j].Values;
 
-                    PropertySubOptions propertyOptions = propertyBlock[j].Value as PropertySubOptions;
-                    if (propertyOptions != null)
+                    if (propertyBlock[j].Value is PropertySubOptions propertyOptions)
                     {
                         options.Clear();
 
@@ -619,6 +681,15 @@ namespace FreelancerModStudio
                         foreach (PropertyOption value in propertyOptions)
                         {
                             string text = ((string)value.Value).Trim();
+
+                            if (!this.CanCast(text, value.Type))
+                            {
+                                if (Helper.Settings.Data.Data.General.AlertIncorrectPropertyType)
+                                    MessageBox.Show(string.Format(Strings.InvalidIniPropertyNotificationText, value.Name, value.Type.ToString()), Strings.InvalidIniPropertyNotificationCaption, MessageBoxButtons.OK);
+                                this.ChangeBlocks(newBlocks, oldBlocks);
+                                return;
+                            }
+
                             if (text.Length != 0)
                             {
                                 if (text.Contains(Environment.NewLine))
@@ -641,7 +712,16 @@ namespace FreelancerModStudio
                     }
                     else
                     {
-                        string text = ((string)propertyBlock[j].Value).Trim();
+                        var blk = propertyBlock[j];
+                        string text = ((string)blk.Value).Trim();
+                        if (!this.CanCast(text, propertyBlock[j].Type))
+                        {
+                            if (Helper.Settings.Data.Data.General.AlertIncorrectPropertyType)
+                                MessageBox.Show(string.Format(Strings.InvalidIniPropertyNotificationText, blk.Name, blk.Type.ToString()), Strings.InvalidIniPropertyNotificationCaption, MessageBoxButtons.OK);
+                            this.ChangeBlocks(newBlocks, oldBlocks);
+                            return;
+                        }
+
                         if (text.Length != 0)
                         {
                             if (options.Count > 0)

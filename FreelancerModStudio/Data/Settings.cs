@@ -104,8 +104,8 @@ namespace FreelancerModStudio.Data
             public bool FormattingComments { get; set; }
 
             [Category("INI Formatting")]
-            [DisplayName("Automatically round floating point values")]
-            public bool RoundFloatingPoints { get; set; }
+            [DisplayName("Alert when providing invalid ini property type")]
+            public bool AlertIncorrectPropertyType { get; set; }
 
             [Browsable(false)]
             public string EditorModifiedAddedColorXml
@@ -182,6 +182,7 @@ namespace FreelancerModStudio.Data
                 this.FormattingSpaces = true;
                 this.FormattingEmptyLine = true;
                 this.FormattingComments = true;
+                this.AlertIncorrectPropertyType = true;
 
                 this.AutoUpdate = new AutoUpdate { Enabled = true, Proxy = new Proxy(), };
                 this.SetDefaultAutoUpdate();

@@ -16,10 +16,7 @@ namespace FreelancerModStudio
 
         public OptionsChangedType OptionsChanged;
 
-        private void OnOptionsChanged(PropertyBlock[] blocks)
-        {
-            this.OptionsChanged?.Invoke(blocks);
-        }
+        private void OnOptionsChanged(PropertyBlock[] blocks) => this.OptionsChanged?.Invoke(blocks);
 
         public PropertiesForm()
         {

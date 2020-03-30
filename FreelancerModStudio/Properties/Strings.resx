@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutText" xml:space="preserve">
     <value>About {0}</value>
@@ -266,5 +266,13 @@ If that problem persists, download and install the update manually.</value>
   </data>
   <data name="SystemPresenterTrackedDistance" xml:space="preserve">
     <value>Distance: </value>
+  </data>
+  <data name="InvalidIniPropertyNotificationText" xml:space="preserve">
+    <value>{0} was given an invalid type. It expects: {1}
+
+This warning can be disabled in the options menu.</value>
+  </data>
+  <data name="InvalidIniPropertyNotificationCaption" xml:space="preserve">
+    <value>Invalid INI Property</value>
   </data>
 </root>

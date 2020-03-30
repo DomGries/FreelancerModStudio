@@ -1,33 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Xml.Serialization;
+// ReSharper disable MemberHidesStaticFromOuterClass
+#pragma warning disable CA1051 // Do not declare visible instance fields
+#pragma warning disable CA1034 // Nested types should not be visible
 
 namespace FreelancerModStudio.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Xml.Serialization;
+
     public class Template
     {
-        public TemplateData Data = new TemplateData();
+        public TemplateData Data { get; set; } = new TemplateData();
+        public void Load(string path) => this.Data = (TemplateData)Serializer.Load(path, typeof(TemplateData));
+        public void Save(string path) => Serializer.Save(path, this.Data, typeof(TemplateData));
 
-        public void Load(Stream stream)
+        public void GenerateFileStructure(string freelancerIniPath)
         {
-            Data = (TemplateData)Serializer.Load(stream, typeof(TemplateData));
-        }
-
-        public void Load(string path)
-        {
-            Data = (TemplateData)Serializer.Load(path, typeof(TemplateData));
-        }
-
-        public void Save(Stream stream)
-        {
-            Serializer.Save(stream, Data, typeof(TemplateData));
-        }
-
-        public void Save(string path)
-        {
-            Serializer.Save(path, Data, typeof(TemplateData));
+            // Hardcoded structure 
         }
 
         [XmlRoot("FreelancerModStudio-Template-1.0")]
@@ -36,7 +26,7 @@ namespace FreelancerModStudio.Data
             [XmlArrayItem("File")]
             public List<File> Files = new List<File>();
 
-            //public CostumTypes CostumTypes;
+            // public CostumTypes CostumTypes;
         }
 
         public class File
@@ -44,14 +34,14 @@ namespace FreelancerModStudio.Data
             [XmlAttribute("name")]
             public string Name;
 
-            //public FileType Type = FileType.ini;
-
+            // public FileType Type = FileType.ini;
             [XmlArrayItem("Path")]
             public List<string> Paths;
 
             [XmlArrayItem("Block")]
             public Table<string, Block> Blocks = new Table<string, Block>(StringComparer.OrdinalIgnoreCase);
         }
+
 
         public class Block : ITableRow<string>
         {
@@ -68,16 +58,10 @@ namespace FreelancerModStudio.Data
             [XmlArrayItem("Option")]
             public Options Options;
 
-            public string Id
-            {
-                get
-                {
-                    return Name;
-                }
-            }
+            public string Id => this.Name;
         }
 
-        public class Option : IComparable<Option>
+        public sealed class Option : IComparable<Option>
         {
             [XmlAttribute("multiple")]
             [DefaultValue(false)]
@@ -86,11 +70,11 @@ namespace FreelancerModStudio.Data
             [XmlAttribute("parent")]
             public string Parent;
 
-            //[XmlAttribute("type")]
-            //public OptionType Type = OptionType.String;
+            [XmlAttribute("type")]
+            public OptionType Type = OptionType.String;
 
-            //[XmlAttribute("enum")]
-            //public string EnumName;
+            [XmlAttribute("enum")]
+            public string EnumName;
 
             [XmlAttribute("renameFrom")]
             public string RenameFrom;
@@ -104,16 +88,13 @@ namespace FreelancerModStudio.Data
             [XmlText]
             public string Name;
 
-            int IComparable<Option>.CompareTo(Option obj)
-            {
-                return string.CompareOrdinal(Name, obj.Name);
-            }
+            int IComparable<Option>.CompareTo(Option obj) => string.CompareOrdinal(this.Name, obj.Name);
         }
 
-        /*public class Language
+        public class Language
         {
             [XmlAttribute("id")]
-            public string ID;
+            public string Id;
 
             public List<Description> Comments;
 
@@ -123,7 +104,7 @@ namespace FreelancerModStudio.Data
         public class Category
         {
             [XmlAttribute("id")]
-            public int ID;
+            public int Id;
 
             [XmlText]
             public string Value;
@@ -162,15 +143,48 @@ namespace FreelancerModStudio.Data
             public List<string> Values;
         }
 
-        public enum FileType { ini, dll, exe, thn, utf, wav, db, threedb, cmp, mat, sur, txm, ale, vms, txt, hta, fl, other };
+        public enum FileType
+        {
+            Ini,
+            Dll,
+            Exe,
+            Thn,
+            Utf,
+            Wav,
+            Db,
+            Threedb,
+            Cmp,
+            Mat,
+            Sur,
+            Txm,
+            Ale,
+            Vms,
+            Txt,
+            Hta,
+            Fl,
+            Other
+        }
 
-        public enum OptionType { String, Int, Bool, Point, Double, Enum, RGB, StringArray, IntArray, DoubleArray };*/
+        public enum OptionType
+        {
+            String,
+            Int,
+            Bool,
+            Point,
+            Double,
+            Enum,
+            Vector,
+            Rgb,
+            StringArray,
+            IntArray,
+            DoubleArray
+        }
 
         public class Options : List<Option>
         {
             public int IndexOf(string name)
             {
-                for (int i = 0; i < Count; ++i)
+                for (int i = 0; i < this.Count; ++i)
                 {
                     if (this[i].Name.Equals(name, StringComparison.OrdinalIgnoreCase))
                     {

@@ -14,21 +14,9 @@
 
     public class PropertyOptionCollectionConverter : ExpandableObjectConverter
     {
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-        {
-            PropertySubOptions propertySubOptions = value as PropertySubOptions;
-            if (propertySubOptions != null)
-            {
-                return "[" + ((propertySubOptions).Count - 1).ToString(CultureInfo.InvariantCulture) + "]";
-            }
-
-            return string.Empty;
-        }
-
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        {
-            return false;
-        }
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType) => 
+            value is PropertySubOptions opt ? $"[{(opt.Count - 1).ToString(CultureInfo.InvariantCulture)}]" : string.Empty;
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => false;
     }
 
     public class PropertyBlock : PropertyOptionCollection
@@ -60,24 +48,25 @@
         [Browsable(false)]
         public Attribute[] Attributes;
 
+        [Browsable(false)]
+        public Template.OptionType Type;
+
         public PropertyOption(string name, string value)
         {
             // comments
             this.Name = name;
             this.Value = value ?? string.Empty;
 
-            this.Attributes = new Attribute[]
-                {
-                    new EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor))
-                };
+            this.Attributes = new Attribute[] { new EditorAttribute(typeof(MultilineStringEditor), typeof(UITypeEditor)) };
+
         }
 
         public PropertyOption(List<EditorIniEntry> options, Template.Option templateOption, bool children)
         {
             this.Name = templateOption.Name;
-
             this.Category = templateOption.Category;
             this.Description = templateOption.Description;
+            this.Type = templateOption.Type;
 
             if (templateOption.Multiple)
             {
@@ -117,7 +106,7 @@
                             valueCollection.Append(Environment.NewLine);
                         }
 
-                        valueCollection.Append(subValue.ToString());
+                        valueCollection.Append(subValue);
                     }
                 }
 
@@ -147,73 +136,20 @@
 
     public class PropertyOptionCollection : CollectionBase, ICustomTypeDescriptor
     {
-        public void Add(PropertyOption value)
-        {
-            this.List.Add(value);
-        }
-
-        public void Remove(PropertyOption value)
-        {
-            this.List.Remove(value);
-        }
-
-        public PropertyOption this[int index]
-        {
-            get
-            {
-                return (PropertyOption)this.List[index];
-            }
-        }
-
-        public AttributeCollection GetAttributes()
-        {
-            return TypeDescriptor.GetAttributes(this, true);
-        }
-
-        public string GetClassName()
-        {
-            return TypeDescriptor.GetClassName(this, true);
-        }
-
-        public string GetComponentName()
-        {
-            return TypeDescriptor.GetComponentName(this, true);
-        }
-
-        public TypeConverter GetConverter()
-        {
-            return TypeDescriptor.GetConverter(this, true);
-        }
-
-        public EventDescriptor GetDefaultEvent()
-        {
-            return TypeDescriptor.GetDefaultEvent(this, true);
-        }
-
-        public PropertyDescriptor GetDefaultProperty()
-        {
-            return TypeDescriptor.GetDefaultProperty(this, true);
-        }
-
-        public object GetEditor(Type editorBaseType)
-        {
-            return TypeDescriptor.GetEditor(this, editorBaseType, true);
-        }
-
-        public EventDescriptorCollection GetEvents(Attribute[] attributes)
-        {
-            return TypeDescriptor.GetEvents(this, attributes, true);
-        }
-
-        public EventDescriptorCollection GetEvents()
-        {
-            return TypeDescriptor.GetEvents(this, true);
-        }
-
-        public object GetPropertyOwner(PropertyDescriptor pd)
-        {
-            return this;
-        }
+        public void Add(PropertyOption value) => this.List.Add(value);
+        public void Remove(PropertyOption value) => this.List.Remove(value);
+        public PropertyOption this[int index] => (PropertyOption)this.List[index];
+        public AttributeCollection GetAttributes() => TypeDescriptor.GetAttributes(this, true);
+        public string GetClassName() => TypeDescriptor.GetClassName(this, true);
+        public string GetComponentName() => TypeDescriptor.GetComponentName(this, true);
+        public TypeConverter GetConverter() => TypeDescriptor.GetConverter(this, true);
+        public EventDescriptor GetDefaultEvent() => TypeDescriptor.GetDefaultEvent(this, true);
+        public PropertyDescriptor GetDefaultProperty() => TypeDescriptor.GetDefaultProperty(this, true);
+        public object GetEditor(Type editorBaseType) => TypeDescriptor.GetEditor(this, editorBaseType, true);
+        public EventDescriptorCollection GetEvents(Attribute[] attributes) => TypeDescriptor.GetEvents(this, attributes, true);
+        public PropertyDescriptorCollection GetProperties() => TypeDescriptor.GetProperties(this, true);
+        public EventDescriptorCollection GetEvents() => TypeDescriptor.GetEvents(this, true);
+        public object GetPropertyOwner(PropertyDescriptor pd) => this;
 
         public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
@@ -227,98 +163,23 @@
 
             return new PropertyDescriptorCollection(properties);
         }
-
-        public PropertyDescriptorCollection GetProperties()
-        {
-            return TypeDescriptor.GetProperties(this, true);
-        }
     }
 
     public class PropertyOptionDescriptor : PropertyDescriptor
     {
         public PropertyOption PropertyOption;
 
-        public PropertyOptionDescriptor(PropertyOption propertyValue, Attribute[] attributes)
-            : base(propertyValue.Name, attributes)
-        {
-            this.PropertyOption = propertyValue;
-        }
-
-        public override bool CanResetValue(object component)
-        {
-            return true;
-        }
-
-        public override Type ComponentType
-        {
-            get
-            {
-                return typeof(PropertyOption);
-            }
-        }
-
-        public override string DisplayName
-        {
-            get
-            {
-                return this.PropertyOption.Name;
-            }
-        }
-
-        public override string Category
-        {
-            get
-            {
-                return this.PropertyOption.Category;
-            }
-        }
-
-        public override string Description
-        {
-            get
-            {
-                return this.PropertyOption.Description;
-            }
-        }
-
-        public override object GetValue(object component)
-        {
-            return this.PropertyOption.Value;
-        }
-
-        public override bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public override Type PropertyType
-        {
-            get
-            {
-                if (this.PropertyOption.Value != null)
-                {
-                    return this.PropertyOption.Value.GetType();
-                }
-
-                return typeof(object);
-            }
-        }
-
-        public override void ResetValue(object component)
-        {
-        }
-
-        public override bool ShouldSerializeValue(object component)
-        {
-            return false;
-        }
-
-        public override void SetValue(object component, object value)
-        {
-            this.PropertyOption.Value = value;
-        }
+        public PropertyOptionDescriptor(PropertyOption propertyValue, Attribute[] attributes) : base(propertyValue.Name, attributes) => this.PropertyOption = propertyValue;
+        public override bool CanResetValue(object component) => true;
+        public override Type ComponentType => typeof(PropertyOption);   
+        public override string DisplayName => this.PropertyOption.Name;
+        public override string Category => this.PropertyOption.Category;
+        public override string Description => this.PropertyOption.Description;
+        public override object GetValue(object component) => this.PropertyOption.Value;
+        public override bool IsReadOnly => false;
+        public override Type PropertyType => this.PropertyOption.Value != null ? this.PropertyOption.Value.GetType() : typeof(object);
+        public override void ResetValue(object component) => throw new NotImplementedException();
+        public override bool ShouldSerializeValue(object component) => false;
+        public override void SetValue(object component, object value) => this.PropertyOption.Value = value;
     }
 }

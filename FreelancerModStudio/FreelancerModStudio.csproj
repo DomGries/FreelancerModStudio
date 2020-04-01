@@ -34,7 +34,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -83,13 +83,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoUpdate\ActionType.cs" />
-    <Compile Include="AutoUpdate\AutoUpdate.cs">
-    </Compile>
-    <Compile Include="AutoUpdate\IAutoUpdateUI.cs" />
-    <Compile Include="AutoUpdate\StatusType.cs" />
-    <Compile Include="AutoUpdate\UpdateInformation.cs" />
-    <Compile Include="AutoUpdate\UpdateInformationParser.cs" />
     <Compile Include="Data\ChangedType.cs" />
     <Compile Include="Data\Clipboard.cs" />
     <Compile Include="ObjectClone.cs" />
@@ -138,12 +131,6 @@
     </Compile>
     <Compile Include="Forms\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AutoUpdate\frmAutoUpdate.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AutoUpdate\frmAutoUpdate.Designer.cs">
-      <DependentUpon>frmAutoUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\SystemEditorForm.cs">
       <SubType>Form</SubType>
@@ -251,10 +238,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AutoUpdate\frmAutoUpdate.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>frmAutoUpdate.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SystemEditorForm.resx">
       <DependentUpon>SystemEditorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -314,9 +297,17 @@
       <Project>{BB650B0C-AB45-44B0-900E-6187EC208C95}</Project>
       <Name>DockPanelSuite</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FLUtils\FLUtils.csproj">
+      <Project>{2ebbca03-fab7-499a-849f-23ef97e0bd61}</Project>
+      <Name>FLUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HelixEngine\HelixEngine.csproj">
       <Project>{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}</Project>
       <Name>HelixEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Patch Time\PatchTime.csproj">
+      <Project>{eec4841e-3d37-44f4-b971-6178922b97d5}</Project>
+      <Name>PatchTime</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -333,6 +324,9 @@
       <Version>2.9.8</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="NETStandard.Library">
+      <Version>2.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

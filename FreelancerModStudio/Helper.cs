@@ -6,12 +6,15 @@ namespace FreelancerModStudio
     using System.Drawing;
     using System.IO;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows.Forms;
 
-    using FreelancerModStudio.AutoUpdate;
+    using FLUtils;
+
     using FreelancerModStudio.Data;
     using FreelancerModStudio.Properties;
 
@@ -21,46 +24,19 @@ namespace FreelancerModStudio
         {
             public static void Start()
             {
-#if DEBUG
-                Stopwatch st = new Stopwatch();
-                st.Start();
-#endif
-
                 // load settings
                 Settings.Load();
-
-                // install downloaded update if it exists
-                if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
-                {
-                    if (AutoUpdate.AutoUpdate.InstallUpdate())
-                    {
-                        return;
-                    }
-                }
-
                 Template.Load();
-#if DEBUG
-                st.Stop();
-                Debug.WriteLine("loading settings.xml and template.xml: " + st.ElapsedMilliseconds + "ms");
-#endif
 
                 // whidbey color table (gray colors of menustrip and tabstrip)
                 ProfessionalColorTable whidbeyColorTable = new ProfessionalColorTable { UseSystemColors = true };
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer(whidbeyColorTable);
 
-                // remove installed update if it exists
-                if (Settings.Data.Data.General.AutoUpdate.Update.Installed)
-                {
-                    AutoUpdate.AutoUpdate.RemoveUpdate();
-                }
-
                 // check for update
-                if (Settings.Data.Data.General.AutoUpdate.Enabled
-                    && Settings.Data.Data.General.AutoUpdate.UpdateFile != null
-                    && Settings.Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(
-                        Settings.Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
+                if (Settings.Data.Data.General.AutoUpdate.Enabled && !string.IsNullOrWhiteSpace(Settings.Data.Data.General.AutoUpdate.UpdateFile) && 
+                    Settings.Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Settings.Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
                 {
-                    Update.Check(true, Settings.Data.Data.General.AutoUpdate.SilentDownload);
+                    Update.Check();
                 }
 
                 // start main form
@@ -73,31 +49,18 @@ namespace FreelancerModStudio
 
         internal struct Update
         {
-            public static AutoUpdate.AutoUpdate AutoUpdate = new AutoUpdate.AutoUpdate();
-
-            public static void Check(bool silentCheck, bool silentDownload)
+            public static void Check()
             {
-                if (AutoUpdate.Status != StatusType.Waiting)
-                {
-                    AutoUpdate.ShowUi();
-                    return;
-                }
-
                 Uri checkFileUri;
                 if (!Uri.TryCreate(Settings.Data.Data.General.AutoUpdate.UpdateFile, UriKind.Absolute, out checkFileUri))
                 {
-                    if (!silentCheck)
-                    {
-                        MessageBox.Show(string.Format(Strings.UpdatesDownloadException, Assembly.Name), Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
+                    MessageBox.Show(string.Format(Strings.UpdatesDownloadException, AssemblyUtils.Name(true)), AssemblyUtils.Name(true), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
+                    Settings.Save();
                     return;
                 }
 
-                AutoUpdate.CheckFileUri = checkFileUri;
-
-                string proxy = string.Empty;
+                string proxy    = string.Empty;
                 string userName = string.Empty;
                 string password = string.Empty;
 
@@ -108,12 +71,11 @@ namespace FreelancerModStudio
                     password = Settings.Data.Data.General.AutoUpdate.Proxy.Password;
                 }
 
-                AutoUpdate.SilentCheck = silentCheck;
-                AutoUpdate.SilentDownload = silentDownload;
-                AutoUpdate.SetProxy(proxy);
-                AutoUpdate.SetCredentials(userName, password);
-
-                AutoUpdate.Check();
+                Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
+                Settings.Save();
+                Process.Start(
+                    "PatchTime.exe",
+                    $"version={AssemblyUtils.Version(true)} uri={checkFileUri} proxy={proxy} username={userName} password={password}");
             }
         }
 
@@ -383,84 +345,22 @@ namespace FreelancerModStudio
             public static readonly StringBuilder StringBuilder = new StringBuilder();
         }
 
-        internal struct Exceptions
+        internal class Exceptions
         {
             public static void Show(Exception exception)
             {
-                MessageBox.Show(Get(exception), Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ExceptionUtils.Get(exception), AssemblyUtils.Name(true), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             public static void Show(string errorDescription, Exception exception)
             {
-                MessageBox.Show(errorDescription + Environment.NewLine + Environment.NewLine + Get(exception), Assembly.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    errorDescription + Environment.NewLine + Environment.NewLine + ExceptionUtils.Get(exception),
+                    AssemblyUtils.Name(true),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
 
-            public static string Get(Exception exception)
-            {
-                StringBuilder stringBuilder = new StringBuilder(exception.Message);
-
-                if (exception.InnerException != null)
-                {
-                    stringBuilder.Append(Environment.NewLine + Environment.NewLine + Get(exception.InnerException));
-                }
-
-                return stringBuilder.ToString();
-            }
-        }
-
-        internal struct Assembly
-        {
-            public static string Name
-            {
-                get
-                {
-                    return Application.ProductName;
-                }
-            }
-
-            public static Version Version
-            {
-                get
-                {
-                    return new Version(Application.ProductVersion);
-                }
-            }
-
-            public static string Company
-            {
-                get
-                {
-                    return Application.CompanyName;
-                }
-            }
-
-            public static string Description
-            {
-                get
-                {
-                    object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-                    if (attributes.Length == 0)
-                    {
-                        return string.Empty;
-                    }
-
-                    return ((AssemblyDescriptionAttribute)attributes[0]).Description;
-                }
-            }
-
-            public static string Copyright
-            {
-                get
-                {
-                    object[] attributes = System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-                    if (attributes.Length == 0)
-                    {
-                        return string.Empty;
-                    }
-
-                    return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
-                }
-            }
         }
     }
 }

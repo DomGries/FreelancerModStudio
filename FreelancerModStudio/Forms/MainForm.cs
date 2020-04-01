@@ -9,6 +9,8 @@ namespace FreelancerModStudio
     using System.IO;
     using System.Windows.Forms;
 
+    using FLUtils;
+
     using FreelancerModStudio.Controls;
     using FreelancerModStudio.Data;
     using FreelancerModStudio.Properties;
@@ -36,9 +38,6 @@ namespace FreelancerModStudio
 
             // initialize content windows after language was set
             this.InitContentWindows();
-
-            // register event to restart app if update was downloaded and button 'Install' pressed
-            Helper.Update.AutoUpdate.RestartingApplication += this.AutoUpdateRestartingApplication;
         }
 
         private void FrmMainLoad(object sender, EventArgs e)
@@ -372,7 +371,7 @@ namespace FreelancerModStudio
                                                            this.mnuFullScreen.Image,
                                                            this.MnuFullScreenClick) {
                                                                                         Checked = true 
-                                                                                     };
+                                                                                    };
                 this.MainMenuStrip.Items.Add(fullScreenMenuItem);
 
                 Helper.Settings.Data.Data.Forms.Main.Location = this.Location;
@@ -501,7 +500,7 @@ namespace FreelancerModStudio
             {
                 if (MessageBox.Show(
                         string.Format(Strings.FileErrorOpenRecent, file),
-                        Helper.Assembly.Name,
+                        AssemblyUtils.Name(true),
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -688,20 +687,7 @@ namespace FreelancerModStudio
 
         private void MnuCheckUpdateClick(object sender, EventArgs e)
         {
-            Helper.Update.Check(false, false);
-        }
-
-        private void AutoUpdateRestartingApplication(object sender, CancelEventArgs e)
-        {
-            // close all MdiChildren and check if user canceled one
-            if (this.CloseAllDocuments())
-            {
-                this.BeginInvoke((MethodInvoker)this.Close);
-            }
-            else
-            {
-                e.Cancel = true;
-            }
+            Helper.Update.Check();
         }
 
         private void MnuOpenModClick(object sender, EventArgs e)

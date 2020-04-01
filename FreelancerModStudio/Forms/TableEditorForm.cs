@@ -13,6 +13,8 @@ namespace FreelancerModStudio
 
     using BrightIdeasSoftware;
 
+    using FLUtils;
+
     using FreelancerModStudio.Controls;
     using FreelancerModStudio.Data;
     using FreelancerModStudio.Data.INI;
@@ -508,7 +510,7 @@ namespace FreelancerModStudio
         {
             if (this.undoManager.IsModified())
             {
-                DialogResult dialogResult = MessageBox.Show(string.Format(Strings.FileCloseSave, this.GetTitle()), Helper.Assembly.Name, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult dialogResult = MessageBox.Show(string.Format(Strings.FileCloseSave, this.GetTitle()), AssemblyUtils.Name(true), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Cancel)
                 {
                     return true;

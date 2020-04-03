@@ -11,11 +11,11 @@
         {
             this.InitializeComponent();
 
-            this.Text = string.Format(Strings.AboutText, Helper.Assembly.Name);
-            this.lblProductName.Text = Helper.Assembly.Name;
-            this.lblVersion.Text = string.Format(Strings.AboutVersion, Helper.Assembly.Version);
-            this.lblCopyright.Text = Helper.Assembly.Copyright;
-            this.lblCompanyName.Text = Helper.Assembly.Company;
+            this.Text = string.Format(Strings.AboutText, FLUtils.AssemblyUtils.Name(true));
+            this.lblProductName.Text = FLUtils.AssemblyUtils.Name(true);
+            this.lblVersion.Text = string.Format(Strings.AboutVersion, FLUtils.AssemblyUtils.Version(true));
+            this.lblCopyright.Text = FLUtils.AssemblyUtils.Copyright(true);
+            this.lblCompanyName.Text = FLUtils.AssemblyUtils.Company(true);
         }
     }
 }

@@ -75,7 +75,7 @@ namespace FreelancerModStudio
                 Settings.Save();
                 Process.Start(
                     "PatchTime.exe",
-                    $"version={AssemblyUtils.Version(true)} uri={checkFileUri} proxy={proxy} username={userName} password={password}");
+                    $"version='{AssemblyUtils.Version(true)}' uri='{checkFileUri}' proxy='{proxy}' username='{userName}' password='{password}' alert='{Settings.Data.Data.General.AutoUpdate.SilentCheck}'");
             }
         }
 
@@ -97,7 +97,7 @@ namespace FreelancerModStudio
                     data.Load(file);
                     Data.SetSpecialFiles();
                 }
-                catch (Exception ex)
+                catch (IOException ex)
                 {
                     Exceptions.Show(string.Format(Strings.TemplateLoadException, Resources.TemplatePath), ex);
                     Environment.Exit(0);
@@ -116,15 +116,8 @@ namespace FreelancerModStudio
 
                 public static List<FreelancerModStudio.Data.Template.File> Files
                 {
-                    get
-                    {
-                        return data.Data.Files;
-                    }
-
-                    set
-                    {
-                        data.Data.Files = value;
-                    }
+                    get => data.Data.Files;
+                    set => data.Data.Files = value;
                 }
 
                 // public static FreelancerModStudio.Data.Template.CostumTypes CostumTypes
@@ -235,7 +228,7 @@ namespace FreelancerModStudio
 
                     Data.Save(file);
                 }
-                catch (Exception ex)
+                catch (IOException ex)
                 {
                     Exceptions.Show(string.Format(Strings.SettingsSaveException, Resources.SettingsPath), ex);
                 }
@@ -252,7 +245,7 @@ namespace FreelancerModStudio
                     {
                         Data.Load(file);
                     }
-                    catch (Exception ex)
+                    catch (IOException ex)
                     {
                         Exceptions.Show(string.Format(Strings.SettingsLoadException, Resources.SettingsPath), ex);
                     }

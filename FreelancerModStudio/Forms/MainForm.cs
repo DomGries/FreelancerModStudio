@@ -150,50 +150,17 @@ namespace FreelancerModStudio
             frmAbout.ShowDialog();
         }
 
-        private void MnuVisitForumClick(object sender, EventArgs e)
-        {
-            Process.Start("https://github.com/AftermathFreelancer/FLModStudio");
-        }
-
-        private void MnuReportIssueClick(object sender, EventArgs e)
-        {
-            Process.Start("https://github.com/AftermathFreelancer/FLModStudio/issues");
-        }
+        private void MnuVisitForumClick(object sender, EventArgs e) => Process.Start("https://github.com/AftermathFreelancer/FLModStudio");
+        private void MnuReportIssueClick(object sender, EventArgs e) => Process.Start("https://github.com/AftermathFreelancer/FLModStudio/issues");
 
         private void MnuCloseAllDocumentsClick(object sender, EventArgs e)
-        {
-            this.CloseAllDocuments();
-        }
-
-        private bool CloseAllDocuments()
         {
             foreach (Form child in this.MdiChildren)
             {
                 child.Close();
                 if (!child.IsDisposed)
-                {
-                    return false;
-                }
+                    return;
             }
-
-            return true;
-        }
-
-        private bool CloseOtherDocuments()
-        {
-            foreach (Form child in this.MdiChildren)
-            {
-                if (child != this.dockPanel1.ActiveDocument)
-                {
-                    child.Close();
-                    if (!child.IsDisposed)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
         }
 
         private void MnuNewWindowClick(object sender, EventArgs e)
@@ -964,10 +931,7 @@ namespace FreelancerModStudio
             document?.Redo();
         }
 
-        private void MnuCloseClick(object sender, EventArgs e)
-        {
-            this.dockPanel1.ActiveDocument?.DockHandler.Close();
-        }
+        private void MnuCloseClick(object sender, EventArgs e) => this.dockPanel1.ActiveDocument?.DockHandler.Close();
 
         private void MnuDeleteClick(object sender, EventArgs e)
         {
@@ -1071,7 +1035,17 @@ namespace FreelancerModStudio
 
         private void MnuCloseOtherClick(object sender, EventArgs e)
         {
-            this.CloseOtherDocuments();
+            foreach (Form child in this.MdiChildren)
+            {
+                if (child != this.dockPanel1.ActiveDocument)
+                {
+                    child.Close();
+                    if (!child.IsDisposed)
+                    {
+                        return;
+                    }
+                }
+            }
         }
 
         private void MnuCopyFullPathClick(object sender, EventArgs e)
@@ -1301,6 +1275,36 @@ namespace FreelancerModStudio
                 bool enabled = !string.IsNullOrEmpty(document.File);
                 this.mnuOpenContainingFolder.Enabled = enabled;
                 this.mnuCopyFullPath.Enabled = enabled;
+            }
+        }
+
+        private void MnuCloseAllToLeft_Click(object sender, EventArgs e)
+        {
+            int index = Array.IndexOf(this.MdiChildren, this.dockPanel1.ActiveDocument);
+            if (index == 0 || index == -1)
+                return;
+
+            for (int i = --index; i != -1; i--)
+            {
+                Form f = this.MdiChildren[i];
+                f.Close();
+                if (!f.IsDisposed)
+                    return;
+            }
+        }
+
+        private void MnuCloseAllToRight_Click(object sender, EventArgs e)
+        {
+            int index = Array.IndexOf(this.MdiChildren, this.dockPanel1.ActiveDocument);
+            if (index == this.MdiChildren.Length - 1 || index == -1)
+                return;
+
+            for (int i = ++index; i != this.MdiChildren.Length; i++)
+            {
+                Form f = this.MdiChildren[i--];
+                f.Close();
+                if (!f.IsDisposed)
+                    return;
             }
         }
     }

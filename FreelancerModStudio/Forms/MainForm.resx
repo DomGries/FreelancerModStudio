@@ -310,7 +310,7 @@
     <value>Ctrl+Z</value>
   </data>
   <data name="mnuUndo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuUndo.Text" xml:space="preserve">
     <value>&amp;Undo</value>
@@ -322,13 +322,13 @@
     <value>Ctrl+Y</value>
   </data>
   <data name="mnuRedo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuRedo.Text" xml:space="preserve">
     <value>&amp;Redo</value>
   </data>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+    <value>161, 6</value>
   </data>
   <data name="mnuCut.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -337,7 +337,7 @@
     <value>Ctrl+X</value>
   </data>
   <data name="mnuCut.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuCut.Text" xml:space="preserve">
     <value>&amp;Cut</value>
@@ -349,7 +349,7 @@
     <value>Ctrl+C</value>
   </data>
   <data name="mnuCopy.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuCopy.Text" xml:space="preserve">
     <value>&amp;Copy</value>
@@ -361,19 +361,19 @@
     <value>Ctrl+V</value>
   </data>
   <data name="mnuPaste.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuPaste.Text" xml:space="preserve">
     <value>&amp;Paste</value>
   </data>
   <data name="toolStripMenuItem4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+    <value>161, 6</value>
   </data>
   <data name="mnuAdd.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="mnuAdd.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuAdd.Text" xml:space="preserve">
     <value>&amp;Add</value>
@@ -385,7 +385,7 @@
     <value>Del</value>
   </data>
   <data name="mnuDelete.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuDelete.Text" xml:space="preserve">
     <value>&amp;Delete</value>
@@ -397,7 +397,7 @@
     <value>Ctrl+G</value>
   </data>
   <data name="mnuGoTo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuGoTo.Text" xml:space="preserve">
     <value>&amp;Go To...</value>
@@ -406,7 +406,7 @@
     <value>False</value>
   </data>
   <data name="toolStripSeparator4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 6</value>
+    <value>161, 6</value>
   </data>
   <data name="mnuSelectAll.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -415,7 +415,7 @@
     <value>Ctrl+A</value>
   </data>
   <data name="mnuSelectAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>164, 22</value>
   </data>
   <data name="mnuSelectAll.Text" xml:space="preserve">
     <value>&amp;Select All</value>
@@ -637,7 +637,7 @@
     <value>&amp;View</value>
   </data>
   <data name="mnuOptions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 22</value>
+    <value>125, 22</value>
   </data>
   <data name="mnuOptions.Text" xml:space="preserve">
     <value>&amp;Options...</value>
@@ -823,7 +823,7 @@
     <value>dockPanel1</value>
   </data>
   <data name="&gt;&gt;dockPanel1.Type" xml:space="preserve">
-    <value>WeifenLuo.WinFormsUI.Docking.DockPanel, WeifenLuo.WinFormsUI.Docking, Version=2.3.7392.23204, Culture=neutral, PublicKeyToken=null</value>
+    <value>WeifenLuo.WinFormsUI.Docking.DockPanel, WeifenLuo.WinFormsUI.Docking, Version=2.3.7392.25597, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;dockPanel1.Parent" xml:space="preserve">
     <value>$this</value>
@@ -864,11 +864,23 @@
   <data name="mnuClose2.Text" xml:space="preserve">
     <value>&amp;Close</value>
   </data>
+  <data name="MnuCloseAllToLeft.Size" type="System.Drawing.Size, System.Drawing">
+    <value>197, 22</value>
+  </data>
+  <data name="MnuCloseAllToLeft.Text" xml:space="preserve">
+    <value>Close All to Left</value>
+  </data>
+  <data name="MnuCloseAllToRight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>197, 22</value>
+  </data>
+  <data name="MnuCloseAllToRight.Text" xml:space="preserve">
+    <value>Close All to Right</value>
+  </data>
   <data name="mnuCloseOther.Size" type="System.Drawing.Size, System.Drawing">
     <value>197, 22</value>
   </data>
   <data name="mnuCloseOther.Text" xml:space="preserve">
-    <value>Close &amp;other</value>
+    <value>Close All But This</value>
   </data>
   <data name="mnuCopyFullPathSeperator.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 6</value>
@@ -892,7 +904,7 @@
     <value>Open containing &amp;folder</value>
   </data>
   <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 98</value>
+    <value>198, 142</value>
   </data>
   <data name="&gt;&gt;contextMenuStrip1.Name" xml:space="preserve">
     <value>contextMenuStrip1</value>
@@ -1311,6 +1323,18 @@
   <data name="&gt;&gt;mnuClose2.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;MnuCloseAllToLeft.Name" xml:space="preserve">
+    <value>MnuCloseAllToLeft</value>
+  </data>
+  <data name="&gt;&gt;MnuCloseAllToLeft.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MnuCloseAllToRight.Name" xml:space="preserve">
+    <value>MnuCloseAllToRight</value>
+  </data>
+  <data name="&gt;&gt;MnuCloseAllToRight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;mnuCloseOther.Name" xml:space="preserve">
     <value>mnuCloseOther</value>
   </data>
@@ -1336,7 +1360,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>frmMain</value>
+    <value>MainForm</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

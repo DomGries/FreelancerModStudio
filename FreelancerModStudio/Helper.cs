@@ -17,6 +17,7 @@ namespace FreelancerModStudio
 
     using FreelancerModStudio.Data;
     using FreelancerModStudio.Properties;
+    using FreelancerModStudio.SystemDesigner;
 
     internal static class Helper
     {
@@ -254,6 +255,7 @@ namespace FreelancerModStudio
                 // check for valid data
                 Data.Data.General.CheckVersion();
                 Data.Data.General.CheckValidData();
+                SharedGeometries.LoadColors(Data.Data.General.ColorBox);
             }
 
             public static string ShortLanguage

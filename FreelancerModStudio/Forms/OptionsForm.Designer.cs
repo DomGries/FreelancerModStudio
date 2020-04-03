@@ -32,25 +32,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ComponentResourceManager resources =
-                new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.SuspendLayout();
-
+            // 
             // propertyGrid
+            // 
             resources.ApplyResources(this.propertyGrid, "propertyGrid");
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
             this.propertyGrid.ToolbarVisible = false;
-
-            // frmOptions
+            // 
+            // OptionsForm
+            // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.propertyGrid);
-            this.Name = "frmOptions";
+            this.Name = "OptionsForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionsForm_FormClosing);
             this.ResumeLayout(false);
+
         }
 
         #endregion

@@ -7,7 +7,13 @@ namespace FreelancerModStudio.Data
     using System.Globalization;
     using System.IO;
     using System.Windows.Forms;
+    using System.Windows.Media;
     using System.Xml.Serialization;
+
+    using FreelancerModStudio.SystemDesigner;
+
+    using Color = System.Windows.Media.Color;
+    using ColorD = System.Drawing.Color;
 
     public class Settings
     {
@@ -74,22 +80,22 @@ namespace FreelancerModStudio.Data
             [XmlIgnore]
             [Category("INI Editor")]
             [DisplayName("Added row color")]
-            public Color EditorModifiedAddedColor { get; set; }
+            public ColorD EditorModifiedAddedColor { get; set; }
 
             [XmlIgnore]
             [Category("INI Editor")]
             [DisplayName("Modified row color")]
-            public Color EditorModifiedColor { get; set; }
+            public ColorD EditorModifiedColor { get; set; }
 
             [XmlIgnore]
             [Category("INI Editor")]
             [DisplayName("Saved row color")]
-            public Color EditorModifiedSavedColor { get; set; }
+            public ColorD EditorModifiedSavedColor { get; set; }
 
             [XmlIgnore]
             [Category("INI Editor")]
             [DisplayName("Hidden text color")]
-            public Color EditorHiddenColor { get; set; }
+            public ColorD EditorHiddenColor { get; set; }
 
             [Category("INI Formatting")]
             [DisplayName("Spaces around equal sign")]
@@ -163,6 +169,9 @@ namespace FreelancerModStudio.Data
                 }
             }
 
+            [XmlElement("ColorBox")]
+            public ColorBox ColorBox { get; set; }
+
             public AutoUpdate AutoUpdate { get; set; }
 
             public General()
@@ -174,10 +183,10 @@ namespace FreelancerModStudio.Data
                 this.PropertiesSortType = PropertySort.NoSort;
                 this.PropertiesShowHelp = false;
 
-                this.EditorModifiedAddedColor = Color.FromArgb(255, 255, 164);
-                this.EditorModifiedColor = Color.FromArgb(255, 227, 164);
-                this.EditorModifiedSavedColor = Color.FromArgb(192, 255, 192);
-                this.EditorHiddenColor = Color.FromArgb(128, 128, 128);
+                this.EditorModifiedAddedColor = ColorD.FromArgb(255, 255, 164);
+                this.EditorModifiedColor = ColorD.FromArgb(255, 227, 164);
+                this.EditorModifiedSavedColor = ColorD.FromArgb(192, 255, 192);
+                this.EditorHiddenColor = ColorD.FromArgb(128, 128, 128);
 
                 this.FormattingSpaces = true;
                 this.FormattingEmptyLine = true;
@@ -186,6 +195,7 @@ namespace FreelancerModStudio.Data
 
                 this.AutoUpdate = new AutoUpdate { Enabled = true, Proxy = new Proxy(), };
                 this.SetDefaultAutoUpdate();
+                this.ColorBox = new ColorBox();
             }
 
             public void CheckVersion()
@@ -253,6 +263,72 @@ namespace FreelancerModStudio.Data
             public string UserName { get; set; }
 
             public string Password { get; set; }
+        }
+
+        [Category("Colours")]
+        [DisplayName("Colours")]
+        [TypeConverter(typeof(SettingsConverter))]
+        public class ColorBox
+        {
+            [DisplayName("Construct")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "Construct")]
+            public Color Construct { get; set; } = Colors.Fuchsia;
+
+            [DisplayName("Depot")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "Depot")]
+            public Color Depot { get; set; } = Colors.SlateGray;
+
+            [DisplayName("DockingRing")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "DockingRing")]
+            public Color DockingRing { get; set; } = Colors.DimGray;
+
+            [DisplayName("JumpGate")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "JumpGate")]
+            public Color JumpGate { get; set; } = Colors.Green;
+
+            [DisplayName("JumpHole")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "JumpHole")]
+            public Color JumpHole { get; set; } = Colors.Firebrick;
+
+            [DisplayName("Planet")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "Planet")]
+            public Color Planet { get; set; } = Color.FromRgb(0, 60, 120);
+
+            [DisplayName("Satellite")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "Satellite")]
+            public Color Satellite { get; set; } = Colors.BlueViolet;
+
+            [DisplayName("Ship")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "Ship")]
+            public Color Ship { get; set; } = Colors.Gold;
+
+            [DisplayName("Station")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "Station")]
+            public Color Station { get; set; } = Colors.Orange;
+
+            [DisplayName("Sun")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "Sun")]
+            public Color Sun { get; set; } = Colors.OrangeRed;
+
+            [DisplayName("Tradelane")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "Tradelane")]
+            public Color Tradelane { get; set; } = Colors.Cyan;
+
+            [DisplayName("Weapons Platforms")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "WeaponsPlatform")]
+            public Color WeaponsPlatform { get; set; } = Colors.BurlyWood;
+
+            [DisplayName("ZoneVigentte")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "ZoneVignette")]
+            public Color ZoneVignette { get; set; } = Color.FromRgb(0, 30, 15);
+
+            [DisplayName("ZonePathTrade")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "ZonePathTrade")]
+            public Color ZonePathTrade { get; set; } = Color.FromRgb(0, 30, 30);
+
+            [DisplayName("ZonePathTradelane")]
+            [XmlElement(Type = typeof(XmlColor), ElementName = "ZonePathTradeLane")]
+            public Color ZonePathTradeLane { get; set; } = Color.FromRgb(0, 30, 30);
         }
 
         public class Forms

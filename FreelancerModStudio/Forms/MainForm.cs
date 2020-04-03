@@ -150,8 +150,11 @@ namespace FreelancerModStudio
             frmAbout.ShowDialog();
         }
 
-        private void MnuVisitForumClick(object sender, EventArgs e) => Process.Start("https://github.com/AftermathFreelancer/FLModStudio");
-        private void MnuReportIssueClick(object sender, EventArgs e) => Process.Start("https://github.com/AftermathFreelancer/FLModStudio/issues");
+        private void MnuVisitForumClick(object sender, EventArgs e) =>
+            Process.Start("https://github.com/AftermathFreelancer/FLModStudio");
+
+        private void MnuReportIssueClick(object sender, EventArgs e) =>
+            Process.Start("https://github.com/AftermathFreelancer/FLModStudio/issues");
 
         private void MnuCloseAllDocumentsClick(object sender, EventArgs e)
         {
@@ -336,9 +339,7 @@ namespace FreelancerModStudio
                 ToolStripMenuItem fullScreenMenuItem = new ToolStripMenuItem(
                                                            this.mnuFullScreen.Text,
                                                            this.mnuFullScreen.Image,
-                                                           this.MnuFullScreenClick) {
-                                                                                        Checked = true 
-                                                                                    };
+                                                           this.MnuFullScreenClick) { Checked = true };
                 this.MainMenuStrip.Items.Add(fullScreenMenuItem);
 
                 Helper.Settings.Data.Data.Forms.Main.Location = this.Location;
@@ -772,6 +773,7 @@ namespace FreelancerModStudio
                     this.OpenFile(file);
                 }
             }
+
             fileOpener.Dispose();
         }
 
@@ -1304,6 +1306,26 @@ namespace FreelancerModStudio
                 Form f = this.MdiChildren[i--];
                 f.Close();
                 if (!f.IsDisposed)
+                    return;
+            }
+        }
+
+        private void MnuCloseAllUnchanged_Click(object sender, EventArgs e)
+        {
+            List<Form> forms = new List<Form>();
+            foreach (var badForm in this.MdiChildren)
+            {
+                FrmTableEditor form = (FrmTableEditor)badForm;
+                if (form.undoManager.IsModified())
+                    continue;
+
+                forms.Add(form);
+            }
+
+            foreach (var form in forms)
+            {
+                form.Close();
+                if (!form.IsDisposed)
                     return;
             }
         }

@@ -33,9 +33,9 @@ namespace FreelancerModStudio
         public string File { get; private set; }
         public string DataPath { get; private set; }
 
-        private readonly bool isBini;
+        internal readonly UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
 
-        private readonly UndoManager<ChangedData> undoManager = new UndoManager<ChangedData>();
+        private readonly bool isBini;
 
         public ViewerType ViewerType { get; set; }
         public ArchetypeManager Archetype { get; set; }

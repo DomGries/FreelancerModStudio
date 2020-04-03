@@ -130,6 +130,7 @@
             this.mnuCopyFullPathSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.mnuCopyFullPath = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.MnuCloseAllUnchanged = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripPanel2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -696,9 +697,10 @@
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuClose2,
+            this.mnuCloseOther,
+            this.MnuCloseAllUnchanged,
             this.MnuCloseAllToLeft,
             this.MnuCloseAllToRight,
-            this.mnuCloseOther,
             this.mnuCopyFullPathSeperator,
             this.mnuCopyFullPath,
             this.mnuOpenContainingFolder});
@@ -746,6 +748,12 @@
             resources.ApplyResources(this.mnuOpenContainingFolder, "mnuOpenContainingFolder");
             this.mnuOpenContainingFolder.Name = "mnuOpenContainingFolder";
             this.mnuOpenContainingFolder.Click += new System.EventHandler(this.MnuOpenContainingFolderClick);
+            // 
+            // MnuCloseAllUnchanged
+            // 
+            this.MnuCloseAllUnchanged.Name = "MnuCloseAllUnchanged";
+            resources.ApplyResources(this.MnuCloseAllUnchanged, "MnuCloseAllUnchanged");
+            this.MnuCloseAllUnchanged.Click += new System.EventHandler(this.MnuCloseAllUnchanged_Click);
             // 
             // MainForm
             // 
@@ -856,6 +864,7 @@
         private ToolStripMenuItem mnuCopyFullPath;
         private ToolStripMenuItem MnuCloseAllToLeft;
         private ToolStripMenuItem MnuCloseAllToRight;
+        private ToolStripMenuItem MnuCloseAllUnchanged;
     }
 }
 

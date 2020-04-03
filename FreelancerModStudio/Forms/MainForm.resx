@@ -864,6 +864,18 @@
   <data name="mnuClose2.Text" xml:space="preserve">
     <value>&amp;Close</value>
   </data>
+  <data name="mnuCloseOther.Size" type="System.Drawing.Size, System.Drawing">
+    <value>197, 22</value>
+  </data>
+  <data name="mnuCloseOther.Text" xml:space="preserve">
+    <value>Close All But This</value>
+  </data>
+  <data name="MnuCloseAllUnchanged.Size" type="System.Drawing.Size, System.Drawing">
+    <value>197, 22</value>
+  </data>
+  <data name="MnuCloseAllUnchanged.Text" xml:space="preserve">
+    <value>Close All Unchanged</value>
+  </data>
   <data name="MnuCloseAllToLeft.Size" type="System.Drawing.Size, System.Drawing">
     <value>197, 22</value>
   </data>
@@ -875,12 +887,6 @@
   </data>
   <data name="MnuCloseAllToRight.Text" xml:space="preserve">
     <value>Close All to Right</value>
-  </data>
-  <data name="mnuCloseOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>197, 22</value>
-  </data>
-  <data name="mnuCloseOther.Text" xml:space="preserve">
-    <value>Close All But This</value>
   </data>
   <data name="mnuCopyFullPathSeperator.Size" type="System.Drawing.Size, System.Drawing">
     <value>194, 6</value>
@@ -904,7 +910,7 @@
     <value>Open containing &amp;folder</value>
   </data>
   <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 142</value>
+    <value>198, 186</value>
   </data>
   <data name="&gt;&gt;contextMenuStrip1.Name" xml:space="preserve">
     <value>contextMenuStrip1</value>
@@ -1357,6 +1363,12 @@
     <value>mnuOpenContainingFolder</value>
   </data>
   <data name="&gt;&gt;mnuOpenContainingFolder.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MnuCloseAllUnchanged.Name" xml:space="preserve">
+    <value>MnuCloseAllUnchanged</value>
+  </data>
+  <data name="&gt;&gt;MnuCloseAllUnchanged.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

@@ -805,6 +805,7 @@ namespace FreelancerModStudio
                     this.OpenFile(file);
                 }
             }
+            fileOpener.Dispose();
         }
 
         private void MnuSaveAllClick(object sender, EventArgs e)

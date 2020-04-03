@@ -106,7 +106,7 @@ namespace FreelancerModStudio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INI-Files (*.ini)|*.ini|FLMM Backup INI-Files (*.ini.flmmbak)|*.ini.flmmbak.
+        ///   Looks up a localized string similar to INI-Files (*.ini)|*.ini;*.INI|FLMM Backup INI-Files (*.ini.flmmbak)|*.ini.flmmbak|All Files (*.*)|*.*.
         /// </summary>
         internal static string FileDialogFilter {
             get {

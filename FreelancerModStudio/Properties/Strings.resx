@@ -217,7 +217,7 @@ If that problem persists, download and install the update manually.</value>
     <value>General</value>
   </data>
   <data name="FileDialogFilter" xml:space="preserve">
-    <value>INI-Files (*.ini)|*.ini|FLMM Backup INI-Files (*.ini.flmmbak)|*.ini.flmmbak</value>
+    <value>INI-Files (*.ini)|*.ini;*.INI|FLMM Backup INI-Files (*.ini.flmmbak)|*.ini.flmmbak|All Files (*.*)|*.*</value>
   </data>
   <data name="FileEditorEmpty" xml:space="preserve">
     <value>No entries existing...</value>

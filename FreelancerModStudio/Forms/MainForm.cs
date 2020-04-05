@@ -202,8 +202,9 @@ namespace FreelancerModStudio
             if (data != null)
             {
                 this.propertiesFormForm.ShowData(data, templateIndex);
-
-                this.systemEditorForm?.Select(data[0]);
+                this.systemEditorForm?.Deselect();
+                foreach (TableBlock block in data)
+                    this.systemEditorForm?.Select(block);
             }
             else
             {
@@ -747,7 +748,8 @@ namespace FreelancerModStudio
                 List<TableBlock> blocks = tableEditor.GetSelectedBlocks();
                 if (blocks != null)
                 {
-                    this.systemEditorForm.Select(blocks[0]);
+                    foreach (TableBlock block in blocks)
+                        this.systemEditorForm.Select(block);
                 }
             }
         }

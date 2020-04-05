@@ -7,14 +7,13 @@
     public abstract class ContentBase : ModelVisual3D
     {
         public TableBlock Block;
-
         public Vector3D Position;
         public Vector3D Rotation;
         public Vector3D Scale;
 
-        protected abstract Model3D GetShapeModel();
         public abstract Rect3D GetShapeBounds();
         public abstract bool IsEmissive();
+        protected abstract Model3D GetShapeModel();
 
         public void UpdateTransform(Matrix3D matrix, bool animate)
         {
@@ -27,34 +26,12 @@
                     };
                 Animator.Animate(this, animation);
             }
+
             else
-            {
                 this.Transform = new MatrixTransform3D(matrix);
-            }
         }
 
-        public void UpdateTransform(bool animate)
-        {
-            this.UpdateTransform(this.GetMatrix(), animate);
-        }
-
-        private static Matrix3D CreateRotationMatrix(Quaternion value)
-        {
-            Matrix3D matrix = Matrix3D.Identity;
-            matrix.Rotate(value);
-            return matrix;
-        }
-
-        protected virtual Matrix3D GetMatrix()
-        {
-            Matrix3D matrix = new Matrix3D();
-
-            matrix.Scale(this.Scale);
-            matrix *= RotationMatrix(this.Rotation);
-            matrix.Translate(this.Position);
-
-            return matrix;
-        }
+        public void UpdateTransform(bool animate) => this.UpdateTransform(this.GetMatrix(), animate);
 
         public static Matrix3D RotationMatrix(Vector3D rotation)
         {
@@ -91,14 +68,25 @@
                 Math.Asin(matrix.M12) * RadToDeg);
         }
 
-        public void LoadModel()
+        public void LoadModel() => this.Content = this.GetShapeModel();
+        public Point3D GetPositionPoint() => new Point3D(this.Position.X, this.Position.Y, this.Position.Z);
+
+        protected virtual Matrix3D GetMatrix()
         {
-            this.Content = this.GetShapeModel();
+            Matrix3D matrix = new Matrix3D();
+
+            matrix.Scale(this.Scale);
+            matrix *= RotationMatrix(this.Rotation);
+            matrix.Translate(this.Position);
+
+            return matrix;
         }
 
-        public Point3D GetPositionPoint()
+        private static Matrix3D CreateRotationMatrix(Quaternion value)
         {
-            return new Point3D(this.Position.X, this.Position.Y, this.Position.Z);
+            Matrix3D matrix = Matrix3D.Identity;
+            matrix.Rotate(value);
+            return matrix;
         }
     }
 }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Forms;
     using System.Windows.Input;
@@ -19,6 +20,45 @@
     using MenuItem = System.Windows.Controls.MenuItem;
     using Sys = System;
 
+    public class ContentBaseList : List<ContentBase>
+    {
+        public static void PresentSelect(Presenter present)
+        {
+            present.SetSelectionBox();
+            present.SetTrackedLine(true);
+            present.SetManipulatorLines();
+            present.SetTitle();
+        }
+
+        public static void AddItem(Presenter present, ContentBase content)
+        {
+
+            if (present.Manipulating && present.SelectedContent.Any(x => x != content))
+                present.StopManipulating(true);
+
+            present.SelectedContent.Insert(0, content);
+            PresentSelect(present);
+        }
+
+        public static void ClearAll(Presenter present)
+        {
+            present.SelectedContent.Clear();
+            PresentSelect(present);
+        }
+
+        public static void EditAt(Presenter present, ContentBase content, int index)
+        {
+            present.SelectedContent[index] = content;
+            PresentSelect(present);
+        }
+
+        public static void RemoveAt(Presenter present, int index)
+        {
+            present.SelectedContent.RemoveAt(index);
+            PresentSelect(present);
+        }
+    }
+
     public class Presenter
     {
         public delegate void SelectionChangedType(TableBlock block, bool toggle);
@@ -32,21 +72,23 @@
         internal string DataPath;
         internal SelectionChangedType SelectionChanged;
         internal FileOpenType FileOpen;
+        internal ContentBaseList SelectedContent = new ContentBaseList();
+        internal bool Manipulating;
 
         private readonly Dictionary<string, Model3D> modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
         private int secondLayerId;
         private Visual3D lighting;
         private BoundingBoxWireFrameVisual3D selectionBox;
         private LineVisual3D trackedLine;
-        private ContentBase selectedContent;
+        
         private ContentBase trackedContent;
         private FixedLineVisual3D manipulatorX;
         private FixedLineVisual3D manipulatorY;
         private FixedLineVisual3D manipulatorZ;
-        private bool manipulating;
         private ManipulationMode manipulationMode;
         private ManipulationAxis manipulationAxis;
-        private Point3D? manipulationLastPosition;
+        // A dictionary of index to last pos
+        private Dictionary<int, Point3D?> manipulationLastPosition = new Dictionary<int, Point3D?>();
 
         private void OnSelectionChanged(TableBlock block, bool toggle) => this.SelectionChanged?.Invoke(block, toggle);
         private void OnFileOpen(string file) => this.FileOpen?.Invoke(file);
@@ -59,10 +101,7 @@
 
         public Visual3D Lighting
         {
-            get
-            {
-                return this.lighting;
-            }
+            get => this.lighting;
 
             set
             {
@@ -73,10 +112,7 @@
 
         public BoundingBoxWireFrameVisual3D SelectionBox
         {
-            get
-            {
-                return this.selectionBox;
-            }
+            get => this.selectionBox;
 
             set
             {
@@ -87,10 +123,7 @@
 
         public LineVisual3D TrackedLine
         {
-            get
-            {
-                return this.trackedLine;
-            }
+            get => this.trackedLine;
 
             set
             {
@@ -101,10 +134,7 @@
 
         public FixedLineVisual3D ManipulatorLineX
         {
-            get
-            {
-                return this.manipulatorX;
-            }
+            get => this.manipulatorX;
 
             set
             {
@@ -115,10 +145,7 @@
 
         public FixedLineVisual3D ManipulatorLineY
         {
-            get
-            {
-                return this.manipulatorY;
-            }
+            get => this.manipulatorY;
 
             set
             {
@@ -129,10 +156,7 @@
 
         public FixedLineVisual3D ManipulatorLineZ
         {
-            get
-            {
-                return this.manipulatorZ;
-            }
+            get => this.manipulatorZ;
 
             set
             {
@@ -141,36 +165,9 @@
             }
         }
 
-        public ContentBase SelectedContent
-        {
-            get
-            {
-                return this.selectedContent;
-            }
-
-            set
-            {
-                if (this.manipulating && this.selectedContent != value)
-                {
-                    this.StopManipulating(true);
-                }
-
-                this.selectedContent = value;
-
-                // select content visually
-                this.SetSelectionBox();
-                this.SetTrackedLine(true);
-                this.SetManipulatorLines();
-                this.SetTitle();
-            }
-        }
-
         public ContentBase TrackedContent
         {
-            get
-            {
-                return this.trackedContent;
-            }
+            get => this.trackedContent;
 
             set
             {
@@ -184,20 +181,12 @@
 
         public ManipulationMode ManipulationMode
         {
-            get
-            {
-                return this.manipulationMode;
-            }
+            get => this.manipulationMode;
 
             set
             {
-                if (this.manipulating && this.manipulationMode != value)
-                {
-                    this.StopManipulating(false);
-                }
-
+                if (this.Manipulating && this.manipulationMode != value) this.StopManipulating(false);
                 this.manipulationMode = value;
-
                 this.SetManipulatorLines();
             }
         }
@@ -225,15 +214,9 @@
             this.Lighting = new SystemLightsVisual3D();
         }
 
-        public void LookAt(ContentBase content)
-        {
-            this.Viewport.LookAt(content.GetPositionPoint(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
-        }
+        public void LookAt(ContentBase content) => this.Viewport.LookAt(content.GetPositionPoint(), Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
 
-        public void LookAt(Point3D point)
-        {
-            this.Viewport.LookAt(point, Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
-        }
+        public void LookAt(Point3D point) => this.Viewport.LookAt(point, Animator.AnimationDuration.TimeSpan.TotalMilliseconds);
 
         public void LookAtAndZoom(ContentBase content, double zoomFactor, bool animate)
         {
@@ -249,23 +232,6 @@
             double distance = Math.Max(Math.Max(Math.Abs(matrix.OffsetX - point.X), Math.Abs(matrix.OffsetY - point.Y)), Math.Abs(matrix.OffsetZ - point.Z));
 
             this.Viewport.ZoomExtents(point, distance * 0.5 * zoomFactor, animate ? Animator.AnimationDuration.TimeSpan.TotalMilliseconds : 0);
-        }
-
-        private void AddContent(ContentBase content)
-        {
-            // load model if it was not loaded yet
-            if (content.Content == null)
-            {
-                this.LoadModel(content);
-            }
-
-            this.AddModel(content);
-
-            // reset reference of previously invisible selected content
-            if (this.selectedContent != null && content.Block == this.selectedContent.Block)
-            {
-                this.SelectedContent = content;
-            }
         }
 
         public void Add(List<TableBlock> blocks)
@@ -292,28 +258,6 @@
             Animator.AnimationDuration = new Duration(TimeSpan.FromMilliseconds(500));
         }
 
-        private void AddBlock(TableBlock block)
-        {
-            ContentBase content = this.CreateContent(block);
-            if (content != null)
-            {
-                this.AddContent(content);
-            }
-        }
-
-        private void AddModel(ContentBase content)
-        {
-            if (content.IsEmissive())
-            {
-                this.Viewport.Children.Add(content);
-            }
-            else
-            {
-                this.Viewport.Children.Insert(this.secondLayerId, content);
-                ++this.secondLayerId;
-            }
-        }
-
         public void Delete(ContentBase content)
         {
             // if we delete a system also delete all universe connections to and from it
@@ -327,48 +271,6 @@
             }
 
             this.RemoveModel(content);
-        }
-
-        private void RemoveModel(ContentBase content)
-        {
-            this.Viewport.Children.Remove(content);
-
-            if (!content.IsEmissive())
-            {
-                --this.secondLayerId;
-            }
-
-            if (content == this.trackedContent)
-            {
-                this.TrackedContent = null;
-            }
-        }
-
-        private static int GetSelectionPriority(ContentBase content)
-        {
-            switch (content.Block.ObjectType)
-            {
-                case ContentType.LightSource:
-                case ContentType.Construct:
-                case ContentType.Depot:
-                case ContentType.DockingRing:
-                case ContentType.JumpGate:
-                case ContentType.JumpHole:
-                case ContentType.Planet:
-                case ContentType.Satellite:
-                case ContentType.Ship:
-                case ContentType.Station:
-                case ContentType.Sun:
-                case ContentType.TradeLane:
-                case ContentType.WeaponsPlatform:
-                    return 2;
-                case ContentType.ZonePath:
-                case ContentType.ZonePathTrade:
-                case ContentType.ZonePathTradeLane:
-                    return 1;
-                default:
-                    return 0;
-            }
         }
 
         public ContentBase GetSelection(Point position, bool farthest, bool checkManipulators, out Point3D point)
@@ -475,15 +377,133 @@
             return visual;
         }
 
-        private void ViewportKeyDown(object sender,  Sys.Windows.Input.KeyEventArgs e)
+        public Rect3D GetAllBounds()
         {
-            this.ViewportKeyEvent(e, false);
+            Rect3D bounds = Rect3D.Empty;
+            for (int i = this.GetContentStartId(); i < this.Viewport.Children.Count; ++i)
+            {
+                Rect3D contentBounds = Visual3DHelper.FindBounds(this.Viewport.Children[i], Transform3D.Identity);
+                bounds.Union(contentBounds);
+            }
+
+            return bounds;
         }
 
-        private void ViewportKeyUp(object sender, Sys.Windows.Input.KeyEventArgs e)
+        internal void StopManipulating(bool cancelled)
         {
-            this.ViewportKeyEvent(e, true);
+            if (!this.Manipulating)
+                return;
+
+            switch (this.manipulationAxis)
+            {
+                case ManipulationAxis.X:
+                    this.ManipulatorLineX.Color = SharedMaterials.ManipulatorX;
+                    break;
+                case ManipulationAxis.Y:
+                    this.ManipulatorLineY.Color = SharedMaterials.ManipulatorY;
+                    break;
+                case ManipulationAxis.Z:
+                    this.ManipulatorLineZ.Color = SharedMaterials.ManipulatorZ;
+                    break;
+            }
+
+            if (cancelled)
+            {
+                foreach (var content in this.SelectedContent)
+                    SystemParser.SetValues(content, content.Block, true);
+            }
+            else
+            {
+                // update data globally
+                this.UpdateSelectedBlock();
+            }
+
+            // stop manipulating
+            this.Manipulating = false;
+            this.Viewport.Viewport.ReleaseMouseCapture();
         }
+
+        private void AddContent(ContentBase content)
+        {
+            // load model if it was not loaded yet
+            if (content.Content == null)
+                this.LoadModel(content);
+
+            this.AddModel(content);
+
+            // reset reference of previously invisible selected content
+            int index = this.SelectedContent.FindIndex(x => x.Block == content.Block);
+            if (index != -1)
+                this.SelectedContent[index] = content;
+        }
+
+        private void AddBlock(TableBlock block)
+        {
+            ContentBase content = this.CreateContent(block);
+            if (content != null)
+            {
+                this.AddContent(content);
+            }
+        }
+
+        private void AddModel(ContentBase content)
+        {
+            if (content.IsEmissive())
+            {
+                this.Viewport.Children.Add(content);
+            }
+            else
+            {
+                this.Viewport.Children.Insert(this.secondLayerId, content);
+                ++this.secondLayerId;
+            }
+        }
+
+        private void RemoveModel(ContentBase content)
+        {
+            this.Viewport.Children.Remove(content);
+
+            if (!content.IsEmissive())
+            {
+                --this.secondLayerId;
+            }
+
+            if (content == this.trackedContent)
+            {
+                this.TrackedContent = null;
+            }
+        }
+
+        private static int GetSelectionPriority(ContentBase content)
+        {
+            switch (content.Block.ObjectType)
+            {
+                case ContentType.LightSource:
+                case ContentType.Construct:
+                case ContentType.Depot:
+                case ContentType.DockingRing:
+                case ContentType.JumpGate:
+                case ContentType.JumpHole:
+                case ContentType.Planet:
+                case ContentType.Satellite:
+                case ContentType.Ship:
+                case ContentType.Station:
+                case ContentType.Sun:
+                case ContentType.TradeLane:
+                case ContentType.WeaponsPlatform:
+                    return 2;
+                case ContentType.ZonePath:
+                case ContentType.ZonePathTrade:
+                case ContentType.ZonePathTradeLane:
+                    return 1;
+                default:
+                    return 0;
+            }
+        }
+
+        private void ViewportKeyDown(object sender,  Sys.Windows.Input.KeyEventArgs e) => this.ViewportKeyEvent(e, false);
+
+        private void ViewportKeyUp(object sender, Sys.Windows.Input.KeyEventArgs e) => this.ViewportKeyEvent(e, true);
 
         private void ViewportKeyEvent(Sys.Windows.Input.KeyEventArgs e, bool isKeyUp)
         {
@@ -592,15 +612,12 @@
         private void StartOffsetManipulation(CameraDirection direction, bool complete, bool small)
         {
             if (this.ViewerType != ViewerType.System && this.ViewerType != ViewerType.Universe)
-            {
                 return;
-            }
 
             if (complete)
-            {
                 // update data globally
                 this.UpdateSelectedBlock();
-            }
+
             else
             {
                 Vector3D offset = this.Viewport.CameraController.GetDirection(direction);
@@ -614,38 +631,22 @@
                     offset *= (small ? 1 : 25) * SystemParser.SystemScale;
                 }
 
-                this.ManipulateOffset(offset);
-
                 // update transform
-                this.selectedContent.UpdateTransform(false);
-
-                // update selection box and tracked line
-                this.SelectedContent = this.selectedContent;
+                foreach (ContentBase content in this.SelectedContent)
+                {
+                    this.ManipulateOffset(offset, content);
+                    content.UpdateTransform(false);
+                    ContentBaseList.PresentSelect(this);
+                }
             }
         }
 
         private void Fly(CameraDirection direction, bool stop)
         {
             if (stop)
-            {
                 this.Viewport.CameraController.StopFly(direction);
-            }
             else
-            {
                 this.Viewport.CameraController.StartFly(direction);
-            }
-        }
-
-        public Rect3D GetAllBounds()
-        {
-            Rect3D bounds = Rect3D.Empty;
-            for (int i = this.GetContentStartId(); i < this.Viewport.Children.Count; ++i)
-            {
-                Rect3D contentBounds = Visual3DHelper.FindBounds(this.Viewport.Children[i], Transform3D.Identity);
-                bounds.Union(contentBounds);
-            }
-
-            return bounds;
         }
 
         private void ViewportMouseDown(object sender, MouseButtonEventArgs e)
@@ -692,71 +693,34 @@
             }
         }
 
-        private void ViewportMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            this.StopManipulating(false);
-        }
-
-        private void StopManipulating(bool cancelled)
-        {
-            if (!this.manipulating)
-            {
-                return;
-            }
-
-            switch (this.manipulationAxis)
-            {
-                case ManipulationAxis.X:
-                    this.ManipulatorLineX.Color = SharedMaterials.ManipulatorX;
-                    break;
-                case ManipulationAxis.Y:
-                    this.ManipulatorLineY.Color = SharedMaterials.ManipulatorY;
-                    break;
-                case ManipulationAxis.Z:
-                    this.ManipulatorLineZ.Color = SharedMaterials.ManipulatorZ;
-                    break;
-            }
-
-            if (cancelled)
-            {
-                SystemParser.SetValues(this.selectedContent, this.selectedContent.Block, true);
-            }
-            else
-            {
-                // update data globally
-                this.UpdateSelectedBlock();
-            }
-
-            // stop manipulating
-            this.manipulating = false;
-            this.Viewport.Viewport.ReleaseMouseCapture();
-        }
+        private void ViewportMouseUp(object sender, MouseButtonEventArgs e) => this.StopManipulating(false);
 
         private void UpdateSelectedBlock()
         {
-            TableBlock oldBlock = this.selectedContent.Block;
-            TableBlock newBlock = ObjectClone.Clone(oldBlock);
-            newBlock.SetModifiedChanged();
+            for (var index = 0; index < this.SelectedContent.Count; index++)
+            {
+                var content = this.SelectedContent[index];
+                TableBlock oldBlock = content.Block;
+                TableBlock newBlock = ObjectClone.Clone(oldBlock);
+                newBlock.SetModifiedChanged();
 
-            this.selectedContent.Block = newBlock;
-            SystemParser.WriteBlock(this.selectedContent);
-            this.OnDataManipulated(newBlock, oldBlock);
+                content.Block = newBlock;
+                SystemParser.WriteBlock(content);
+                this.OnDataManipulated(newBlock, oldBlock);
+            }
         }
 
-        private Point3D? GetMousePoint(Point mousePosition)
-        {
-            return this.Viewport.CameraController.UnProject(mousePosition, this.selectedContent.GetPositionPoint(), this.Viewport.CameraController.Camera.LookDirection);
-        }
+        private Point3D? GetMousePoint(Point mousePosition, ContentBase content) => this.Viewport.CameraController.UnProject(mousePosition, content.GetPositionPoint(), this.Viewport.CameraController.Camera.LookDirection);
 
-        private Vector3D GetMouseDelta(Point mousePosition)
+        private Vector3D GetMouseDelta(Point mousePosition, ContentBase content, int index)
         {
             // get mouse delta
-            Point3D? thisPoint3D = this.GetMousePoint(mousePosition);
-            Vector3D delta3D = thisPoint3D.Value - this.manipulationLastPosition.Value;
-            this.manipulationLastPosition = thisPoint3D;
+            Point3D? thisPoint3D = this.GetMousePoint(mousePosition, content);
+            Vector3D delta3D = thisPoint3D.Value - this.manipulationLastPosition[index].Value;
+            this.manipulationLastPosition[index] = thisPoint3D;
 
             // transform mouse delta using matrix
-            Matrix3D matrix = ContentBase.RotationMatrix(this.selectedContent.Rotation);
+            Matrix3D matrix = ContentBase.RotationMatrix(content.Rotation);
             matrix.Invert();
             delta3D = matrix.Transform(delta3D);
 
@@ -797,94 +761,95 @@
 
         private void ViewportMouseMove(object sender, Sys.Windows.Input.MouseEventArgs e)
         {
-            if (!this.manipulating)
+            // This variable name explains my frustration like no other
+            for (var index = 0; index < this.SelectedContent.Count; index++)
             {
-                return;
+                var content = this.SelectedContent[index];
+                if (!this.Manipulating)
+                    return;
+
+                switch (this.manipulationMode)
+                {
+                    case ManipulationMode.Translate:
+                        // relative transation
+                        this.ManipulateTranslate(
+                            this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport), content, index), content);
+                        break;
+                    case ManipulationMode.Rotate:
+                        // relative rotation
+                        this.ManipulateRotate(
+                            this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport), content, index), content);
+                        break;
+                    case ManipulationMode.Scale:
+                        // relative scale
+                        this.ManipulateScale(
+                            this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport), content, index), content);
+                        break;
+                }
+
+                // update transform
+                content.UpdateTransform(false);
             }
 
-            switch (this.manipulationMode)
-            {
-                case ManipulationMode.Translate:
-                    // relative transation
-                    this.ManipulateTranslate(this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport)));
-                    break;
-                case ManipulationMode.Rotate:
-                    // relative rotation
-                    this.ManipulateRotate(this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport)));
-                    break;
-                case ManipulationMode.Scale:
-                    // relative scale
-                    this.ManipulateScale(this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport)));
-                    break;
-            }
-
-            // update transform
-            this.selectedContent.UpdateTransform(false);
-
-            // update selection box and tracked line
-            this.SelectedContent = this.selectedContent;
+            ContentBaseList.PresentSelect(this);
         }
 
-        private void ManipulateTranslate(Vector3D delta)
+        private void ManipulateTranslate(Vector3D delta, ContentBase content)
         {
             // calculate using matrix
-            Matrix3D matrix = ContentBase.RotationMatrix(this.selectedContent.Rotation);
-            matrix.Translate(this.selectedContent.Position);
+            Matrix3D matrix = ContentBase.RotationMatrix(content.Rotation);
+            matrix.Translate(content.Position);
             matrix.TranslatePrepend(delta);
 
             // update position
-            this.selectedContent.Position = new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
+            var pos = new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
+            content.Position = pos;
         }
 
-        private void ManipulateOffset(Vector3D offset)
-        {
-            // update position
-            this.selectedContent.Position += offset;
-        }
+        private void ManipulateOffset(Vector3D offset, ContentBase content) => content.Position += offset;
 
-        private void ManipulateRotate(Vector3D delta)
+        private void ManipulateRotate(Vector3D delta, ContentBase content)
         {
             // calculate using matrix
-            Matrix3D matrix = ContentBase.RotationMatrix(this.selectedContent.Rotation);
+            Matrix3D matrix = ContentBase.RotationMatrix(content.Rotation);
             matrix.Prepend(ContentBase.RotationMatrix(delta));
 
             // update rotation
-            this.selectedContent.Rotation = ContentBase.GetRotation(matrix);
+            content.Rotation = ContentBase.GetRotation(matrix);
         }
 
-        private void ManipulateScale(Vector3D delta)
+        private void ManipulateScale(Vector3D delta, ContentBase content)
         {
             // update position
-            this.selectedContent.Scale += delta;
+            content.Scale += delta;
 
             // prevent negative scaling
             const double MinScale = 10 * SystemParser.SystemScale;
 
-            if (this.selectedContent.Scale.X < MinScale || this.selectedContent.Scale.Y < MinScale || this.selectedContent.Scale.Z < MinScale)
-            {
-                this.selectedContent.Scale -= delta;
-            }
+            if (content.Scale.X < MinScale || content.Scale.Y < MinScale || content.Scale.Z < MinScale)
+                content.Scale -= delta;
         }
 
         private void StartManipulation(ManipulationAxis axis, ScreenSpaceVisual3D line, Point mousePosition)
         {
-            this.manipulating = true;
+            this.manipulationLastPosition.Clear();
+            this.Manipulating = true;
             this.manipulationAxis = axis;
-            this.manipulationLastPosition = this.GetMousePoint(mousePosition);
+
+            for (var index = 0; index < this.SelectedContent.Count; index++)
+                this.manipulationLastPosition[index] = this.GetMousePoint(mousePosition, this.SelectedContent[index]);
 
             line.Color = SharedMaterials.Selection;
-
             this.Viewport.Viewport.CaptureMouse();
         }
 
         private void Select(ContentBase content, bool toggle)
         {
-            if (!toggle && this.selectedContent == content)
+            if (!toggle && this.SelectedContent.Any(x => x == content))
             {
                 if (this.ViewerType == ViewerType.Universe)
                 {
-                    System system = content as Content.System;
-                    if (system != null)
+                    if (content is System system)
                     {
                         this.DisplayContextMenu(system.Path);
                     }
@@ -913,16 +878,16 @@
             this.OnFileOpen((string)((MenuItem)sender).Tag);
         }
 
-        private void SetSelectionBox()
+        internal void SetSelectionBox()
         {
-            if (this.selectedContent == null)
+            if (this.SelectedContent.Count == 0)
             {
                 this.SelectionBox = null;
                 return;
             }
 
             Color color = SharedMaterials.Selection;
-            if (this.trackedContent == this.selectedContent)
+            if (this.trackedContent == this.SelectedContent[0])
             {
                 color = SharedMaterials.TrackedLine;
             }
@@ -931,23 +896,23 @@
             {
                 BoundingBoxWireFrameVisual3D selectionBox = this.SelectionBox;
                 selectionBox.Color = color;
-                selectionBox.BoundingBox = this.GetBounds(this.selectedContent);
-                selectionBox.Transform = this.selectedContent.Transform;
+                selectionBox.BoundingBox = this.GetBounds(this.SelectedContent[0]);
+                selectionBox.Transform = this.SelectedContent[0].Transform;
             }
             else
             {
                 this.SelectionBox = new BoundingBoxWireFrameVisual3D
                     {
                         Color = color,
-                        BoundingBox = this.GetBounds(this.selectedContent),
-                        Transform = this.selectedContent.Transform,
+                        BoundingBox = this.GetBounds(this.SelectedContent[0]),
+                        Transform = this.SelectedContent[0].Transform
                     };
             }
         }
 
-        private void SetTrackedLine(bool update)
+        internal void SetTrackedLine(bool update)
         {
-            if (this.selectedContent == null)
+            if (this.SelectedContent.Count == 0)
             {
                 this.TrackedLine = null;
                 return;
@@ -956,7 +921,7 @@
             if (!update)
             {
                 BoundingBoxWireFrameVisual3D selectionBox = this.SelectionBox;
-                if (this.trackedContent == this.selectedContent)
+                if (this.trackedContent == this.SelectedContent[0])
                 {
                     selectionBox.Color = SharedMaterials.TrackedLine;
                 }
@@ -975,14 +940,14 @@
             if (this.TrackedLine != null)
             {
                 LineVisual3D trackedLine = this.TrackedLine;
-                trackedLine.Point1 = this.selectedContent.GetPositionPoint();
+                trackedLine.Point1 = this.SelectedContent[0].GetPositionPoint();
                 trackedLine.Point2 = this.trackedContent.GetPositionPoint();
             }
             else
             {
                 this.TrackedLine = new LineVisual3D
                     {
-                        Point1 = this.selectedContent.GetPositionPoint(),
+                        Point1 = this.SelectedContent[0].GetPositionPoint(),
                         Point2 = this.trackedContent.GetPositionPoint(),
                         Color = SharedMaterials.TrackedLine,
                         DepthOffset = 1,
@@ -993,11 +958,9 @@
         public void SetManipulatorLines()
         {
             if (this.ViewerType != ViewerType.System && this.ViewerType != ViewerType.Universe)
-            {
                 return;
-            }
 
-            if (this.selectedContent == null || this.manipulationMode == ManipulationMode.None)
+            if (this.SelectedContent.Count == 0 || this.manipulationMode == ManipulationMode.None)
             {
                 this.ManipulatorLineX = null;
                 this.ManipulatorLineY = null;
@@ -1006,14 +969,12 @@
             }
 
             if (this.ViewerType == ViewerType.Universe && this.manipulationMode != ManipulationMode.Translate)
-            {
                 return;
-            }
 
             int axisCount = 3;
             if (this.manipulationMode == ManipulationMode.Scale || this.ViewerType == ViewerType.Universe)
             {
-                axisCount = GetAxisCount(this.selectedContent.Block.ObjectType);
+                axisCount = GetAxisCount(this.SelectedContent[0].Block.ObjectType);
                 if (axisCount == 0)
                 {
                     this.ManipulatorLineX = null;
@@ -1027,8 +988,8 @@
 
             // scale used as workaround for fixed screen space line visual glitches
             matrix.Scale(new Vector3D(0.0001, 0.0001, 0.0001));
-            matrix *= ContentBase.RotationMatrix(this.selectedContent.Rotation);
-            matrix.Translate(this.selectedContent.Position);
+            matrix *= ContentBase.RotationMatrix(this.SelectedContent[0].Rotation);
+            matrix.Translate(this.SelectedContent[0].Position);
 
             Transform3D transform = new MatrixTransform3D(matrix);
 
@@ -1371,10 +1332,9 @@
             {
                 // delete content if it was changed back to an invalid type
                 this.Delete(content);
-                if (this.selectedContent == content)
-                {
-                    this.SelectedContent = null;
-                }
+                int index = this.SelectedContent.IndexOf(content);
+                if (index != -1)
+                    ContentBaseList.RemoveAt(this, index);
             }
             else
             {
@@ -1408,11 +1368,10 @@
                 }
             }
 
-            if (this.selectedContent == content)
-            {
+            int index = this.SelectedContent.IndexOf(content);
+            if (index != -1)
                 // update selection if changed content is selected
-                this.SelectedContent = content;
-            }
+                ContentBaseList.EditAt(this, content, index);
         }
 
         private Model3D LoadModel(string modelPath)
@@ -1478,23 +1437,17 @@
                 }
             }
 
-            if (this.selectedContent != null && this.selectedContent.Block.IsRealModel())
-            {
-                // update selection box
-                this.SelectedContent = this.selectedContent;
-            }
+            if (this.SelectedContent.Count != -1 && this.SelectedContent.Any(x => x.Block.IsRealModel()))
+                ContentBaseList.PresentSelect(this);
         }
 
         private ContentBase CreateContent(TableBlock block)
         {
             ContentBase content = CreateContent(block.ObjectType);
             if (content == null)
-            {
                 return null;
-            }
 
             this.SetValues(content, block);
-
             return content;
         }
 
@@ -1566,16 +1519,16 @@
 
         public void SetTitle()
         {
-            if (this.selectedContent == null)
+            if (this.SelectedContent.Count == 0)
             {
                 this.Viewport.Title = null;
                 return;
             }
 
             Helper.String.StringBuilder.Length = 0;
-            Helper.String.StringBuilder.AppendLine(this.selectedContent.Block.Name);
+            Helper.String.StringBuilder.AppendLine(this.SelectedContent[0].Block.Name);
 
-            if (this.trackedContent != null && this.trackedContent != this.selectedContent)
+            if (this.trackedContent != null && this.trackedContent != this.SelectedContent[0])
             {
                 this.AddTrackInfo();
             }
@@ -1588,7 +1541,7 @@
             Helper.String.StringBuilder.AppendLine();
             Helper.String.StringBuilder.AppendLine(this.trackedContent.Block.Name);
 
-            Vector3D a = this.selectedContent.Position / SystemParser.SystemScale;
+            Vector3D a = this.SelectedContent[0].Position / SystemParser.SystemScale;
             Vector3D b = this.trackedContent.Position / SystemParser.SystemScale;
             Vector3D delta = b - a;
 
@@ -1638,17 +1591,17 @@
 
         public void LookAtSelected()
         {
-            if (this.SelectedContent == null)
+            if (this.SelectedContent.Count == 0)
             {
                 return;
             }
 
-            this.LookAt(this.SelectedContent);
+            this.LookAt(this.SelectedContent[0]);
         }
 
         public void FocusSelected()
         {
-            if (this.SelectedContent == null)
+            if (this.SelectedContent.Count == 0)
             {
                 return;
             }
@@ -1667,24 +1620,24 @@
                     break;
             }
 
-            this.LookAtAndZoom(this.SelectedContent, zoomFactor, true);
+            this.LookAtAndZoom(this.SelectedContent[0], zoomFactor, true);
         }
 
         public void TrackSelected()
         {
-            if (this.ViewerType != ViewerType.System)
+            if (this.ViewerType != ViewerType.System || this.SelectedContent.Count == 0)
             {
                 return;
             }
 
             // change tracked object
-            if (this.SelectedContent == this.TrackedContent)
+            if (this.SelectedContent[0] == this.TrackedContent)
             {
                 this.TrackedContent = null;
             }
             else
             {
-                this.TrackedContent = this.SelectedContent;
+                this.TrackedContent = this.SelectedContent[0];
             }
         }
     }

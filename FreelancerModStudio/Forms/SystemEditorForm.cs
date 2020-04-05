@@ -142,7 +142,7 @@
         public void Clear(bool clearLight, bool waitForThread)
         {
             Helper.Thread.Abort(ref this.universeLoadingThread, waitForThread);
-            this.presenter.SelectedContent = null;
+            ContentBaseList.ClearAll(this.presenter);
             this.presenter.TrackedContent = null;
             this.presenter.ClearDisplay(clearLight);
         }
@@ -150,17 +150,17 @@
         public void Select(TableBlock block)
         {
             // return if object is already selected
-            if (this.presenter.SelectedContent != null && this.presenter.SelectedContent.Block.Id == block.Id)
+            /*if (this.presenter.SelectedContent != null && this.presenter.SelectedContent.Block.Id == block.Id)
             {
                 return;
-            }
+            }*/
 
             if (block.Visibility)
             {
                 bool isModelPreview = this.presenter.ViewerType == ViewerType.SolarArchetype || this.presenter.ViewerType == ViewerType.ModelPreview;
                 if (isModelPreview)
                 {
-                    this.presenter.SelectedContent = null;
+                    ContentBaseList.ClearAll(this.presenter);
                     this.presenter.ClearDisplay(false);
                     this.presenter.Add(block);
                 }
@@ -169,7 +169,7 @@
                 ContentBase content = this.presenter.FindContent(block);
                 if (content != null)
                 {
-                    this.presenter.SelectedContent = content;
+                    ContentBaseList.AddItem(this.presenter, content);
 
                     if (isModelPreview)
                     {
@@ -187,7 +187,7 @@
                 if (content != null)
                 {
                     SystemParser.SetValues(content, block, false);
-                    this.presenter.SelectedContent = content;
+                    ContentBaseList.AddItem(this.presenter, content);
                     return;
                 }
             }
@@ -198,7 +198,7 @@
 
         public void Deselect()
         {
-            this.presenter.SelectedContent = null;
+            ContentBaseList.ClearAll(this.presenter);
 
             if (this.presenter.ViewerType == ViewerType.SolarArchetype || this.presenter.ViewerType == ViewerType.ModelPreview)
             {

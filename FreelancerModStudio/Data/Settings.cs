@@ -6,11 +6,13 @@ namespace FreelancerModStudio.Data
     using System.Drawing;
     using System.Globalization;
     using System.IO;
+    using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
     using System.Windows.Media;
     using System.Xml.Serialization;
 
     using FreelancerModStudio.SystemDesigner;
+    using FreelancerModStudio.SystemDesigner.Content;
 
     using Color = System.Windows.Media.Color;
     using ColorD = System.Drawing.Color;
@@ -32,7 +34,6 @@ namespace FreelancerModStudio.Data
         public class SettingsData
         {
             public General General = new General();
-
             public Forms Forms = new Forms();
         }
 
@@ -82,6 +83,14 @@ namespace FreelancerModStudio.Data
             [DisplayName("Hidden text color")]
             public ColorD EditorHiddenColor { get; set; }
 
+            [Category("INI Editor")]
+            [DisplayName("Ignored 3D Editor Types")]
+            public List<ContentType> IgnoredEditorTypes { get; set; } = new List<ContentType>()
+                                                                            {
+                                                                                ContentType.ZonePath,
+                                                                                ContentType.ZoneVignette
+                                                                            };
+
             [Category("INI Formatting")]
             [DisplayName("Spaces around equal sign")]
             public bool FormattingSpaces { get; set; }
@@ -101,57 +110,29 @@ namespace FreelancerModStudio.Data
             [Browsable(false)]
             public string EditorModifiedAddedColorXml
             {
-                get
-                {
-                    return ColorTranslator.ToHtml(this.EditorModifiedAddedColor);
-                }
-
-                set
-                {
-                    this.EditorModifiedAddedColor = ColorTranslator.FromHtml(value);
-                }
+                get => ColorTranslator.ToHtml(this.EditorModifiedAddedColor);
+                set => this.EditorModifiedAddedColor = ColorTranslator.FromHtml(value);
             }
 
             [Browsable(false)]
             public string EditorModifiedColorXml
             {
-                get
-                {
-                    return ColorTranslator.ToHtml(this.EditorModifiedColor);
-                }
-
-                set
-                {
-                    this.EditorModifiedColor = ColorTranslator.FromHtml(value);
-                }
+                get => ColorTranslator.ToHtml(this.EditorModifiedColor);
+                set => this.EditorModifiedColor = ColorTranslator.FromHtml(value);
             }
 
             [Browsable(false)]
             public string EditorModifiedSavedColorXml
             {
-                get
-                {
-                    return ColorTranslator.ToHtml(this.EditorModifiedSavedColor);
-                }
-
-                set
-                {
-                    this.EditorModifiedSavedColor = ColorTranslator.FromHtml(value);
-                }
+                get => ColorTranslator.ToHtml(this.EditorModifiedSavedColor);
+                set => this.EditorModifiedSavedColor = ColorTranslator.FromHtml(value);
             }
 
             [Browsable(false)]
             public string EditorHiddenColorXml
             {
-                get
-                {
-                    return ColorTranslator.ToHtml(this.EditorHiddenColor);
-                }
-
-                set
-                {
-                    this.EditorHiddenColor = ColorTranslator.FromHtml(value);
-                }
+                get => ColorTranslator.ToHtml(this.EditorHiddenColor);
+                set => this.EditorHiddenColor = ColorTranslator.FromHtml(value);
             }
 
             [XmlElement("ColorBox")]
@@ -197,19 +178,15 @@ namespace FreelancerModStudio.Data
             public void CheckValidData()
             {
                 if (this.DefaultDataDirectory != null)
-                {
                     if (!Directory.Exists(this.DefaultDataDirectory))
-                    {
                         this.DefaultDataDirectory = null;
-                    }
-                }
             }
 
             private void SetDefaultAutoUpdate()
             {
                 this.AutoUpdate.CheckInterval = 28;
                 this.AutoUpdate.SilentCheck = true;
-                this.AutoUpdate.UpdateFile = @"https://github.com/AftermathFreelancer/FLModStudio/raw/1.3/updates.xml";
+                this.AutoUpdate.UpdateFile = @"https://github.com/AftermathFreelancer/FLModStudio/raw/master/updates.xml";
             }
         }
 
@@ -364,14 +341,7 @@ namespace FreelancerModStudio.Data
 
     public class SettingsConverter : ExpandableObjectConverter
     {
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-        {
-            return string.Empty;
-        }
-
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-        {
-            return false;
-        }
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType) => string.Empty;
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => false;
     }
 }

@@ -136,10 +136,8 @@ namespace FreelancerModStudio.Data
         }*/
         public void SetVisibleIfPossible()
         {
-            if (this.ObjectType != ContentType.None)
-            {
+            if (this.ObjectType != ContentType.None && !Helper.Settings.Data.Data.General.IgnoredEditorTypes.Contains(this.ObjectType))
                 this.Visibility = true;
-            }
         }
 
         public bool IsRealModel()

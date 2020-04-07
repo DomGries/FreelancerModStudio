@@ -74,30 +74,27 @@
         internal FileOpenType FileOpen;
         internal ContentBaseList SelectedContent = new ContentBaseList();
         internal bool Manipulating;
+        internal SystemEditorForm SystemEditorForm;
 
         private readonly Dictionary<string, Model3D> modelCache = new Dictionary<string, Model3D>(StringComparer.OrdinalIgnoreCase);
         private int secondLayerId;
         private Visual3D lighting;
         private BoundingBoxWireFrameVisual3D selectionBox;
         private LineVisual3D trackedLine;
-        
+
         private ContentBase trackedContent;
         private FixedLineVisual3D manipulatorX;
         private FixedLineVisual3D manipulatorY;
         private FixedLineVisual3D manipulatorZ;
         private ManipulationMode manipulationMode;
         private ManipulationAxis manipulationAxis;
+
         // A dictionary of index to last pos
         private Dictionary<int, Point3D?> manipulationLastPosition = new Dictionary<int, Point3D?>();
 
         private void OnSelectionChanged(TableBlock block, bool toggle) => this.SelectionChanged?.Invoke(block, toggle);
         private void OnFileOpen(string file) => this.FileOpen?.Invoke(file);
-        
-
-        private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
-        {
-            this.DataManipulated?.Invoke(newBlock, oldBlock);
-        }
+        private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock) => this.DataManipulated?.Invoke(newBlock, oldBlock);
 
         public Visual3D Lighting
         {
@@ -191,8 +188,10 @@
             }
         }
 
-        public Presenter(HelixViewport3D viewport)
+        public Presenter(HelixViewport3D viewport, SystemEditorForm form)
         {
+            this.SystemEditorForm = form;
+
             this.Viewport = viewport;
             this.Viewport.MouseDown += this.ViewportMouseDown;
             this.Viewport.MouseUp += this.ViewportMouseUp;
@@ -661,9 +660,7 @@
             bool isShift = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
 
             // reset camera
-            if (isDoubleClick &&
-                (e.ChangedButton == MouseButton.Middle ||
-                (e.ChangedButton == MouseButton.Right && isShift)))
+            if (isDoubleClick && e.ChangedButton == MouseButton.Middle && isShift)
             {
                 this.Viewport.CameraController.ResetCamera();
                 CameraHelper.ZoomExtents(this.Viewport.Camera, this.Viewport.Viewport, this.GetAllBounds(), 0);
@@ -681,15 +678,20 @@
                 if (visual != null)
                 {
                     if (isLookAt)
-                    {
                         // change the 'lookat' point
                         this.LookAt(point);
-                    }
                     else
-                    {
                         this.Select(visual, isCtrl);
-                    }
+
+                    return;
                 }
+
+            }
+
+            if (e.ChangedButton == MouseButton.Right && !isDoubleClick)
+            {
+                Point p = e.GetPosition(this.Viewport.Viewport);
+                this.SystemEditorForm.OpenContextMenu(new global::System.Drawing.Point(Convert.ToInt32(Math.Round(p.X)), Convert.ToInt32(Math.Round(p.Y))));
             }
         }
 

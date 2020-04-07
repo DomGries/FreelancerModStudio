@@ -23,25 +23,10 @@ namespace FreelancerModStudio.Data
         // const string FREELANCER_REGISTRY_VALUE = "AppPath";
         public SettingsData Data = new SettingsData();
 
-        public void Load(Stream stream)
-        {
-            this.Data = (SettingsData)Serializer.Load(stream, typeof(SettingsData));
-        }
-
-        public void Load(string path)
-        {
-            this.Data = (SettingsData)Serializer.Load(path, typeof(SettingsData));
-        }
-
-        public void Save(Stream stream)
-        {
-            Serializer.Save(stream, this.Data, typeof(SettingsData));
-        }
-
-        public void Save(string path)
-        {
-            Serializer.Save(path, this.Data, typeof(SettingsData));
-        }
+        public void Load(Stream stream) => this.Data = (SettingsData)Serializer.Load(stream, typeof(SettingsData));
+        public void Load(string path) => this.Data = (SettingsData)Serializer.Load(path, typeof(SettingsData));
+        public void Save(Stream stream) => Serializer.Save(stream, this.Data, typeof(SettingsData));
+        public void Save(string path) => Serializer.Save(path, this.Data, typeof(SettingsData));
 
         [XmlRoot("FreelancerModStudio-Settings-1.0")]
         public class SettingsData

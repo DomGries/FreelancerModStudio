@@ -102,9 +102,7 @@ namespace FreelancerModStudio
         private IDockContent GetContentFromPersistString(string persistString)
         {
             if (persistString == typeof(PropertiesForm).ToString())
-            {
                 return this.propertiesFormForm;
-            }
 
             // else if (persistString == typeof(frmSolutionExplorer).ToString())
             // return solutionExplorerForm;
@@ -1149,8 +1147,8 @@ namespace FreelancerModStudio
 
             this.mnuUndo.Enabled = isDocument && document.CanUndo();
             this.mnuRedo.Enabled = isDocument && document.CanRedo();
-            this.mnuCopy.Enabled = isDocument && document.CanCopy();
-            this.mnuCut.Enabled = isDocument && document.CanCut();
+            this.mnuCopy.Enabled = isDocument && document.ObjectSelected();
+            this.mnuCut.Enabled = isDocument && document.ObjectSelected();
             this.mnuPaste.Enabled = isDocument && document.CanPaste();
             this.mnuAdd.Enabled = isDocument && document.CanAdd();
             this.mnuAdd.DropDown = isDocument ? document.MultipleAddDropDown() : null;

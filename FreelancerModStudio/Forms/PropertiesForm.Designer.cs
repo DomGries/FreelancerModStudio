@@ -54,7 +54,7 @@
             this.propertyGrid.PropertyValueChanged +=
                 new System.Windows.Forms.PropertyValueChangedEventHandler(this.PropertyGridPropertyValueChanged);
 
-            // contextMenuStrip1
+            // TableContextMenu
             this.contextMenuStrip1.Items.AddRange(
                 new ToolStripItem[]
                     {

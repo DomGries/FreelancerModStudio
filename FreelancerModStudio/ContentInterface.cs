@@ -13,8 +13,7 @@
         bool CanUndo();
         bool CanRedo();
 
-        bool CanCopy();
-        bool CanCut();
+        bool ObjectSelected();
         bool CanPaste();
         bool CanAdd();
         bool CanSelectAll();

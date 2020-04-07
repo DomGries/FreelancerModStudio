@@ -693,7 +693,7 @@
             this.toolStripPanel4.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.toolStripPanel4.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
             // 
-            // contextMenuStrip1
+            // TableContextMenu
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuClose2,

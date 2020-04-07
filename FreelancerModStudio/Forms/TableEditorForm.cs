@@ -29,6 +29,8 @@ namespace FreelancerModStudio
 
     public partial class FrmTableEditor : DockContent, IDocumentForm
     {
+        public static FrmTableEditor Instance;
+
         public TableData Data;
         public string File { get; private set; }
         public string DataPath { get; private set; }
@@ -56,28 +58,17 @@ namespace FreelancerModStudio
 
         public DocumentChangedType DocumentChanged;
 
-        private void OnDataChanged(ChangedData data)
-        {
-            this.DataChanged?.Invoke(data);
-        }
+        private void OnDataChanged(ChangedData data) => this.DataChanged?.Invoke(data);
 
-        private void OnSelectionChanged(List<TableBlock> data, int templateIndex)
-        {
-            this.SelectionChanged?.Invoke(data, templateIndex);
-        }
+        private void OnSelectionChanged(List<TableBlock> data, int templateIndex) => this.SelectionChanged?.Invoke(data, templateIndex);
 
-        private void OnDataVisibilityChanged(TableBlock block)
-        {
-            this.DataVisibilityChanged?.Invoke(block);
-        }
+        private void OnDataVisibilityChanged(TableBlock block) => this.DataVisibilityChanged?.Invoke(block);
 
-        private void OnDocumentChanged(IDocumentForm document)
-        {
-            this.DocumentChanged?.Invoke(document);
-        }
+        private void OnDocumentChanged(IDocumentForm document) => this.DocumentChanged?.Invoke(document);
 
         public FrmTableEditor(int templateIndex, string file)
         {
+            FrmTableEditor.Instance = this;
             this.InitializeComponent();
 
             this.LoadIcons();
@@ -861,30 +852,21 @@ namespace FreelancerModStudio
             }
         }
 
-        private void FrmDefaultEditorFormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = this.CancelClose();
-        }
+        private void FrmDefaultEditorFormClosing(object sender, FormClosingEventArgs e) => e.Cancel = this.CancelClose();
 
-        public void SelectAll()
-        {
-            this.objectListView1.SelectAll();
-        }
+        public void SelectAll() => this.objectListView1.SelectAll();
 
-        private void ContextMenuStrip1Opening(object sender, CancelEventArgs e)
-        {
-            this.SetContextMenuEnabled();
-        }
+        private void ContextMenuStrip1Opening(object sender, CancelEventArgs e) => this.SetContextMenuEnabled();
 
         private void SetContextMenuEnabled()
         {
-            bool active = this.CanCut();
+            bool active = this.ObjectSelected();
             this.mnuCut.Visible = active;
             this.mnuCut.Enabled = active;
-
-            active = this.CanCopy();
             this.mnuCopy.Visible = active;
             this.mnuCopy.Enabled = active;
+            this.mnuCreateTemplateFrom.Visible = active;
+            this.mnuCreateTemplateFrom.Enabled = active;
 
             this.mnuPaste.Enabled = this.CanPaste();
 
@@ -924,15 +906,7 @@ namespace FreelancerModStudio
             return true;
         }
 
-        public bool CanCopy()
-        {
-            return this.objectListView1.SelectedObjects.Count > 0;
-        }
-
-        public bool CanCut()
-        {
-            return this.objectListView1.SelectedObjects.Count > 0;
-        }
+        public bool ObjectSelected() => this.objectListView1.SelectedObjects.Count > 0;
 
         public bool CanPaste()
         {

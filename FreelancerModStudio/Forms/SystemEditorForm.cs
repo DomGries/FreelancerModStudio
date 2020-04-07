@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Drawing;
     using System.IO;
     using System.Threading;
     using System.Windows.Forms;
     using System.Windows.Forms.Integration;
-    using System.Windows.Media;
 
     using FreelancerModStudio.Data;
     using FreelancerModStudio.SystemDesigner;
@@ -17,32 +17,16 @@
 
     using WeifenLuo.WinFormsUI.Docking;
 
+    using Brushes = System.Windows.Media.Brushes;
+
     public partial class SystemEditorForm : DockContent
     {
-        private Presenter presenter;
-
-        private Thread universeLoadingThread;
-
         public Presenter.SelectionChangedType SelectionChanged;
-
-        private void OnSelectionChanged(TableBlock block, bool toggle)
-        {
-            this.SelectionChanged?.Invoke(block, toggle);
-        }
-
         public Presenter.FileOpenType FileOpen;
-
-        private void OnFileOpen(string file)
-        {
-            this.FileOpen?.Invoke(file);
-        }
-
         public Presenter.DataManipulatedType DataManipulated;
 
-        private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock)
-        {
-            this.DataManipulated?.Invoke(newBlock, oldBlock);
-        }
+        private Presenter presenter;
+        private Thread universeLoadingThread;
 
         public SystemEditorForm()
         {
@@ -50,59 +34,9 @@
             this.InitializeView();
         }
 
-        public void RefreshSettings()
-        {
-            this.presenter.SetTitle();
-        }
+        public void RefreshSettings() => this.presenter.SetTitle();
 
-        private void InitializeView()
-        {
-#if DEBUG
-            Stopwatch st = new Stopwatch();
-            st.Start();
-#endif
-
-            // create viewport using the Helix Engine
-            HelixViewport3D viewport = new HelixViewport3D
-                                           {
-                                               Background = Brushes.Black,
-                                               Foreground = Brushes.Yellow,
-                                               FontSize = 14,
-                                               ClipToBounds = false,
-                                               ShowViewCube = true
-                                           };
-#if DEBUG
-            st.Stop();
-            Debug.WriteLine("init HelixView: " + st.ElapsedMilliseconds + "ms");
-            st.Reset();
-            st.Start();
-#endif
-            ElementHost host = new ElementHost { Child = viewport, Dock = DockStyle.Fill };
-            this.Controls.Add(host);
-#if DEBUG
-            st.Stop();
-            Debug.WriteLine("init host: " + st.ElapsedMilliseconds + "ms");
-#endif
-            this.presenter = new Presenter(viewport);
-            this.presenter.SelectionChanged += this.SystemPresenterSelectionChanged;
-            this.presenter.FileOpen += this.SystemPresenterFileOpen;
-            this.presenter.DataManipulated += this.SystemPresenterDataManipulated;
-        }
-
-        private void SystemPresenterSelectionChanged(TableBlock block, bool toggle)
-        {
-            this.OnSelectionChanged(block, toggle);
-        }
-
-        private void SystemPresenterFileOpen(string file)
-        {
-            this.OnFileOpen(file);
-        }
-
-        private void SystemPresenterDataManipulated(TableBlock newBlock, TableBlock oldBlock)
-        {
-            this.OnDataManipulated(newBlock, oldBlock);
-        }
+        public void OpenContextMenu(Point pos) => FrmTableEditor.Instance.TableContextMenu.Show(pos);
 
         public void ShowViewer(ViewerType viewerType)
         {
@@ -130,10 +64,8 @@
 
         public new void Dispose()
         {
-            if (this.presenter != null)
-            {
+            if (this.presenter != null) 
                 this.Clear(true, true);
-            }
 
             this.Dispose(true);
             GC.SuppressFinalize(this);
@@ -201,17 +133,14 @@
             ContentBaseList.ClearAll(this.presenter);
 
             if (this.presenter.ViewerType == ViewerType.SolarArchetype || this.presenter.ViewerType == ViewerType.ModelPreview)
-            {
                 this.presenter.ClearDisplay(false);
-            }
         }
 
         public void SetVisibility(TableBlock block)
         {
             if (block.Visibility)
-            {
                 this.presenter.Add(block);
-            }
+
             else
             {
                 ContentBase content = this.presenter.FindContent(block);
@@ -233,32 +162,22 @@
                 {
                     // visual is visible as it was found so we need to remove it
                     if (block.Visibility)
-                    {
                         this.presenter.ChangeValues(content, block);
-                    }
                     else
-                    {
                         this.presenter.Delete(content);
-                    }
                 }
                 else
-                {
                     newBlocks.Add(block);
-                }
             }
 
             if (newBlocks.Count > 0)
-            {
                 this.Add(newBlocks);
-            }
         }
 
         public void Add(List<TableBlock> blocks)
         {
             if (this.presenter.ViewerType == ViewerType.SolarArchetype || this.presenter.ViewerType == ViewerType.ModelPreview)
-            {
                 return;
-            }
 
             this.presenter.Add(blocks);
         }
@@ -266,9 +185,7 @@
         public void Delete(List<TableBlock> blocks)
         {
             if (this.presenter.ViewerType == ViewerType.SolarArchetype || this.presenter.ViewerType == ViewerType.ModelPreview)
-            {
                 return;
-            }
 
             foreach (TableBlock block in blocks)
             {
@@ -282,10 +199,7 @@
 
         public bool IsModelMode
         {
-            get
-            {
-                return this.presenter.IsModelMode;
-            }
+            get => this.presenter.IsModelMode;
 
             set
             {
@@ -310,10 +224,7 @@
 
         public ManipulationMode ManipulationMode
         {
-            get
-            {
-                return this.presenter.ManipulationMode;
-            }
+            get => this.presenter.ManipulationMode;
 
             set
             {
@@ -327,32 +238,41 @@
             }
         }
 
-        public void FocusSelected()
-        {
-            this.presenter.FocusSelected();
-        }
-
-        public void LookAtSelected()
-        {
-            this.presenter.LookAtSelected();
-        }
-
-        public void TrackSelected()
-        {
-            this.presenter.TrackSelected();
-        }
+        public void FocusSelected() => this.presenter.FocusSelected();
+        public void LookAtSelected() => this.presenter.LookAtSelected();
+        public void TrackSelected() => this.presenter.TrackSelected();
 
         public string DataPath
         {
-            get
-            {
-                return this.presenter.DataPath;
-            }
-
-            set
-            {
-                this.presenter.DataPath = value;
-            }
+            get => this.presenter.DataPath;
+            set => this.presenter.DataPath = value;
         }
+
+        private void OnSelectionChanged(TableBlock block, bool toggle) => this.SelectionChanged?.Invoke(block, toggle);
+        private void OnFileOpen(string file) => this.FileOpen?.Invoke(file);
+        private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock) => this.DataManipulated?.Invoke(newBlock, oldBlock);
+        private void InitializeView()
+        {
+            // create viewport using the Helix Engine
+            HelixViewport3D viewport = new HelixViewport3D
+            {
+                Background = Brushes.Black,
+                Foreground = Brushes.Yellow,
+                FontSize = 14,
+                ClipToBounds = false,
+                ShowViewCube = true
+            };
+
+            ElementHost host = new ElementHost { Child = viewport, Dock = DockStyle.Fill };
+            this.Controls.Add(host);
+            this.presenter = new Presenter(viewport, this);
+            this.presenter.SelectionChanged += this.SystemPresenterSelectionChanged;
+            this.presenter.FileOpen += this.SystemPresenterFileOpen;
+            this.presenter.DataManipulated += this.SystemPresenterDataManipulated;
+        }
+
+        private void SystemPresenterSelectionChanged(TableBlock block, bool toggle) => this.OnSelectionChanged(block, toggle);
+        private void SystemPresenterFileOpen(string file) => this.OnFileOpen(file);
+        private void SystemPresenterDataManipulated(TableBlock newBlock, TableBlock oldBlock) => this.OnDataManipulated(newBlock, oldBlock);
     }
 }

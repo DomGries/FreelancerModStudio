@@ -151,7 +151,7 @@
   <data name="mnuDelete.Text" xml:space="preserve">
     <value>&amp;Löschen</value>
   </data>
-  <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="TableContextMenu.Size" type="System.Drawing.Size, System.Drawing">
     <value>179, 120</value>
   </data>
 </root>

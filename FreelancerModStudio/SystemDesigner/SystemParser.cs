@@ -350,11 +350,9 @@
             // Use Vector3D.Parse after implementation of type handling
             string[] values = vector.Split(new[] { ',' });
             if (values.Length > 2)
-            {
                 return new Vector3D(Parser.ParseDouble(values[0], 0), -Parser.ParseDouble(values[2], 0), Parser.ParseDouble(values[1], 0));
-            }
 
-            return new Vector3D(0, 0, 0);
+            return new Vector3D(0d, 0d, 0d);
         }
 
         public static Vector3D ParsePosition(string vector)
@@ -367,10 +365,8 @@
             Vector3D rotation = ParseVector(vector);
 
             // our cylinder meshes are by default not rotated like DirectX cylinders
-            if (isCylinder)
-            {
-                rotation.X += 90;
-            }
+            if (isCylinder) 
+                rotation.X += 90d;
 
             return rotation;
         }
@@ -487,16 +483,9 @@
                 {
                     case "pos":
                         if (option.Values.Count > 0)
-                        {
                             option.Values[0].Value = WritePosition(content.Position, isUniverse);
-                        }
                         else
-                        {
-                            option.Values.Add(new EditorIniEntry
-                                (
-                                    WritePosition(content.Position, isUniverse)
-                                ));
-                        }
+                            option.Values.Add(new EditorIniEntry(WritePosition(content.Position, isUniverse)));
 
                         break;
                     case "rotate":
@@ -542,9 +531,9 @@
         {
             Helper.String.StringBuilder.Length = 0;
 
-            WriteDouble(Math.Round((value.X + UniverseAxisCenter) / UniverseScale, 1));
+            WriteDouble((value.X + UniverseAxisCenter) / UniverseScale);
             Helper.String.StringBuilder.Append(", ");
-            WriteDouble(Math.Round((-value.Y + UniverseAxisCenter) / UniverseScale, 1));
+            WriteDouble((-value.Y + UniverseAxisCenter) / UniverseScale);
 
             return Helper.String.StringBuilder.ToString();
         }
@@ -553,11 +542,11 @@
         {
             Helper.String.StringBuilder.Length = 0;
 
-            WriteDouble(Math.Round(value.X));
+            WriteDouble(value.X);
             Helper.String.StringBuilder.Append(", ");
-            WriteDouble(Math.Round(value.Z));
+            WriteDouble(value.Z);
             Helper.String.StringBuilder.Append(", ");
-            WriteDouble(Math.Round(-value.Y));
+            WriteDouble(-value.Y);
 
             return Helper.String.StringBuilder.ToString();
         }
@@ -565,9 +554,7 @@
         public static string WritePosition(Vector3D value, bool isUniverse)
         {
             if (isUniverse)
-            {
                 return WriteUniverseVector(value);
-            }
 
             return WriteVector(value / SystemScale);
         }
@@ -592,20 +579,20 @@
                 case ContentType.ZoneSphere:
                 case ContentType.ZoneSphereExclusion:
                 case ContentType.ZoneVignette:
-                    WriteDouble(Math.Round(value.X / SystemScale));
+                    WriteDouble(value.X / SystemScale);
                     break;
                 case ContentType.ZonePath:
                 case ContentType.ZonePathTrade:
-                    WriteDouble(Math.Round(value.X / SystemScale));
+                    WriteDouble(value.X / SystemScale);
                     Helper.String.StringBuilder.Append(", ");
-                    WriteDouble(Math.Round(value.Y / SystemScale));
+                    WriteDouble(value.Y / SystemScale);
                     break;
                 default:
-                    WriteDouble(Math.Round(value.X / SystemScale));
+                    WriteDouble(value.X / SystemScale);
                     Helper.String.StringBuilder.Append(", ");
-                    WriteDouble(Math.Round(value.Z / SystemScale));
+                    WriteDouble(value.Z / SystemScale);
                     Helper.String.StringBuilder.Append(", ");
-                    WriteDouble(Math.Round(value.Y / SystemScale));
+                    WriteDouble(value.Y / SystemScale);
                     break;
             }
 
@@ -614,6 +601,7 @@
 
         private static void WriteDouble(double value)
         {
+            value = Helper.Settings.Data.Data.General.RoundFloatingPointValues ? Math.Round(value, 1) : value;
             Helper.String.StringBuilder.Append(value.ToString(CultureInfo.InvariantCulture));
         }
 

@@ -91,6 +91,10 @@ namespace FreelancerModStudio.Data
                                                                                 ContentType.ZoneVignette
                                                                             };
 
+            [Category("INI Editor")]
+            [DisplayName("Round floating point values")]
+            public bool RoundFloatingPointValues { get; set; } = false;
+
             [Category("INI Formatting")]
             [DisplayName("Spaces around equal sign")]
             public bool FormattingSpaces { get; set; }

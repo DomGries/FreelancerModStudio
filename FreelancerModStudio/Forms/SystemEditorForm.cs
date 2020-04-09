@@ -145,9 +145,7 @@
             {
                 ContentBase content = this.presenter.FindContent(block);
                 if (content != null)
-                {
                     this.presenter.Delete(content);
-                }
             }
         }
 

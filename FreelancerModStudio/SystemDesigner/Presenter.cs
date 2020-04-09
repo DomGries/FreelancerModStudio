@@ -36,7 +36,7 @@
             if (present.Manipulating && present.SelectedContent.Any(x => x != content))
                 present.StopManipulating(true);
 
-            present.SelectedContent.Insert(0, content);
+            present.SelectedContent.Add(content);
             PresentSelect(present);
         }
 
@@ -622,13 +622,9 @@
                 Vector3D offset = this.Viewport.CameraController.GetDirection(direction);
 
                 if (this.ViewerType == ViewerType.Universe)
-                {
                     offset *= (small ? 0.1 : 1) * SystemParser.UniverseScale;
-                }
                 else
-                {
                     offset *= (small ? 1 : 25) * SystemParser.SystemScale;
-                }
 
                 // update transform
                 foreach (ContentBase content in this.SelectedContent)
@@ -745,7 +741,7 @@
 
                     if (this.manipulationAxis == ManipulationAxis.X)
                     {
-                        return new Vector3D(delta3D.X, 0, delta3D.X);
+                        return new Vector3D(delta3D.X, 0d, delta3D.X);
                     }
                 }
             }
@@ -753,72 +749,89 @@
             switch (this.manipulationAxis)
             {
                 default:
-                    return new Vector3D(delta3D.X, 0, 0);
+                    return new Vector3D(delta3D.X, 0d, 0d);
                 case ManipulationAxis.Y:
-                    return new Vector3D(0, 0, delta3D.Z);
+                    return new Vector3D(0d, 0d, delta3D.Z);
                 case ManipulationAxis.Z:
-                    return new Vector3D(0, delta3D.Y, 0);
+                    return new Vector3D(0d, delta3D.Y, 0d);
             }
         }
 
         private void ViewportMouseMove(object sender, Sys.Windows.Input.MouseEventArgs e)
         {
-            // This variable name explains my frustration like no other
-            for (var index = 0; index < this.SelectedContent.Count; index++)
-            {
-                var content = this.SelectedContent[index];
-                if (!this.Manipulating)
-                    return;
+            if (!this.Manipulating || this.SelectedContent.Count == 0)
+                return;
 
+            ContentBase first = this.SelectedContent[0];
+
+            Vector3D delta = this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport), first, 0);
+            Matrix3D originTM = ContentBase.RotationMatrix(first.Rotation);
+            Matrix3D resultTM = new Matrix3D();
+
+            switch (this.manipulationMode)
+            {
+                case ManipulationMode.Translate:
+                    delta = originTM.Transform(delta);
+                    break;
+                case ManipulationMode.Rotate:
+                    originTM.Translate(first.Position);
+
+                    // TODO: Replace line below with proper Clone method.
+                    Matrix3D originInverseTM = new Matrix3D(
+                        originTM.M11,
+                        originTM.M12,
+                        originTM.M13,
+                        originTM.M14,
+                        originTM.M21,
+                        originTM.M22,
+                        originTM.M23,
+                        originTM.M24,
+                        originTM.M31,
+                        originTM.M32,
+                        originTM.M33,
+                        originTM.M34,
+                        originTM.OffsetX, 
+                        originTM.OffsetY, 
+                        originTM.OffsetZ, 
+                        originTM.M44);
+                    originInverseTM.Invert();
+
+                    resultTM = Matrix3D.Multiply(originInverseTM, ContentBase.RotationMatrix(delta));
+                    resultTM = Matrix3D.Multiply(resultTM, originTM);
+
+                    break;
+            }
+
+            foreach (var target in this.SelectedContent)
+            {
                 switch (this.manipulationMode)
                 {
                     case ManipulationMode.Translate:
-                        // relative transation
-                        this.ManipulateTranslate(
-                            this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport), content, index), content);
+                        target.Position += delta;
                         break;
                     case ManipulationMode.Rotate:
-                        // relative rotation
-                        this.ManipulateRotate(
-                            this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport), content, index), content);
+                        Matrix3D targetTM = ContentBase.RotationMatrix(target.Rotation);
+                        targetTM.Translate(target.Position);
+                        targetTM.Append(resultTM);
+
+                        target.Rotation = ContentBase.GetRotation(targetTM);
+                        target.Position = new Vector3D(targetTM.OffsetX, targetTM.OffsetY, targetTM.OffsetZ);
+
                         break;
                     case ManipulationMode.Scale:
                         // relative scale
-                        this.ManipulateScale(
-                            this.GetMouseDelta(e.GetPosition(this.Viewport.Viewport), content, index), content);
+                        this.ManipulateScale(delta, target);
                         break;
                 }
 
                 // update transform
-                content.UpdateTransform(false);
+                target.UpdateTransform(false);
             }
 
             ContentBaseList.PresentSelect(this);
         }
 
-        private void ManipulateTranslate(Vector3D delta, ContentBase content)
-        {
-            // calculate using matrix
-            Matrix3D matrix = ContentBase.RotationMatrix(content.Rotation);
-            matrix.Translate(content.Position);
-            matrix.TranslatePrepend(delta);
-
-            // update position
-            var pos = new Vector3D(matrix.OffsetX, matrix.OffsetY, matrix.OffsetZ);
-            content.Position = pos;
-        }
-
         private void ManipulateOffset(Vector3D offset, ContentBase content) => content.Position += offset;
-
-        private void ManipulateRotate(Vector3D delta, ContentBase content)
-        {
-            // calculate using matrix
-            Matrix3D matrix = ContentBase.RotationMatrix(content.Rotation);
-            matrix.Prepend(ContentBase.RotationMatrix(delta));
-
-            // update rotation
-            content.Rotation = ContentBase.GetRotation(matrix);
-        }
 
         private void ManipulateScale(Vector3D delta, ContentBase content)
         {
@@ -889,11 +902,11 @@
             }
 
             Color color = SharedMaterials.Selection;
-            if (this.trackedContent == this.SelectedContent[0])
-            {
+            if (this.trackedContent == this.SelectedContent[0]) 
                 color = SharedMaterials.TrackedLine;
-            }
 
+            Transform3D newTransform = Transform3D.Identity.Clone();
+            Rect3D bounds = new Rect3D();
             if (this.SelectionBox != null)
             {
                 BoundingBoxWireFrameVisual3D selectionBox = this.SelectionBox;

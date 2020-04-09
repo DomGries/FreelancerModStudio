@@ -425,7 +425,7 @@
 
         public static ContentType ParseContentType(string type)
         {
-            switch (type.ToLowerInvariant())
+            switch (type?.ToLowerInvariant())
             {
                 case "jump_hole":
                     return ContentType.JumpHole;
@@ -492,35 +492,19 @@
                         if (option.Values.Count > 0)
                         {
                             if (!IsZeroRounded(content.Rotation))
-                            {
                                 option.Values[0].Value = WriteRotation(content.Rotation, IsCylinder(content.Block.ObjectType));
-                            }
                             else
-                            {
                                 option.Values.Clear();
-                            }
                         }
                         else if (!IsZeroRounded(content.Rotation))
-                        {
-                            option.Values.Add(new EditorIniEntry
-                                (
-                                    WriteRotation(content.Rotation, IsCylinder(content.Block.ObjectType))
-                                ));
-                        }
+                            option.Values.Add(new EditorIniEntry(WriteRotation(content.Rotation, IsCylinder(content.Block.ObjectType))));
 
                         break;
                     case "size":
                         if (option.Values.Count > 0)
-                        {
                             option.Values[0].Value = WriteScale(content.Scale, content.Block.ObjectType);
-                        }
                         else
-                        {
-                            option.Values.Add(new EditorIniEntry
-                                (
-                                    WriteScale(content.Scale, content.Block.ObjectType)
-                                ));
-                        }
+                            option.Values.Add(new EditorIniEntry(WriteScale(content.Scale, content.Block.ObjectType)));
 
                         break;
                 }
@@ -551,21 +535,13 @@
             return Helper.String.StringBuilder.ToString();
         }
 
-        public static string WritePosition(Vector3D value, bool isUniverse)
-        {
-            if (isUniverse)
-                return WriteUniverseVector(value);
-
-            return WriteVector(value / SystemScale);
-        }
+        public static string WritePosition(Vector3D value, bool isUniverse) => isUniverse ? WriteUniverseVector(value) : WriteVector(value / SystemScale);
 
         public static string WriteRotation(Vector3D value, bool isCylinder)
         {
             // our cylinder meshes are by default not rotated like DirectX cylinders
             if (isCylinder)
-            {
                 value.X -= 90;
-            }
 
             return WriteVector(value);
         }
@@ -605,14 +581,8 @@
             Helper.String.StringBuilder.Append(value.ToString(CultureInfo.InvariantCulture));
         }
 
-        private static bool IsZeroRounded(Vector3D value)
-        {
-            return IsZeroRounded(value.X) && IsZeroRounded(value.Y) && IsZeroRounded(value.Z);
-        }
+        private static bool IsZeroRounded(Vector3D value) => IsZeroRounded(value.X) && IsZeroRounded(value.Y) && IsZeroRounded(value.Z);
 
-        private static bool IsZeroRounded(double value)
-        {
-            return value > -0.5 && value < 0.5;
-        }
+        private static bool IsZeroRounded(double value) => value > -0.5 && value < 0.5;
     }
 }

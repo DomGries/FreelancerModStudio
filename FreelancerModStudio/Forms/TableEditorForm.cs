@@ -881,63 +881,32 @@ namespace FreelancerModStudio
             this.AddBlock(menuItem.Text, (int)menuItem.Tag);
         }
 
-        private void MnuDeleteClick(object sender, EventArgs e)
-        {
-            this.DeleteSelectedBlocks();
-        }
+        private void MnuDeleteClick(object sender, EventArgs e) => this.DeleteSelectedBlocks();
 
-        private void MnuCutClick(object sender, EventArgs e)
-        {
-            this.Cut();
-        }
+        private void MnuCutClick(object sender, EventArgs e) => this.Cut();
 
-        private void MnuCopyClick(object sender, EventArgs e)
-        {
-            this.Copy();
-        }
+        private void MnuCopyClick(object sender, EventArgs e) => this.Copy();
 
-        private void MnuPasteClick(object sender, EventArgs e)
-        {
-            this.Paste();
-        }
+        private void MnuPasteClick(object sender, EventArgs e) => this.Paste();
 
-        public bool CanSave()
-        {
-            return true;
-        }
+        public bool CanSave() => true;
 
         public bool ObjectSelected() => this.objectListView1.SelectedObjects.Count > 0;
 
-        public bool CanPaste()
-        {
-            return Clipboard.CanPaste(typeof(EditorIniData));
-        }
+        public bool CanPaste() => Clipboard.CanPaste(typeof(EditorIniData));
 
-        public bool CanAdd()
-        {
-            return true;
-        }
+        public bool CanAdd() => true;
 
-        public bool CanDelete()
-        {
-            return this.objectListView1.SelectedObjects.Count > 0;
-        }
+        public bool CanDelete() => this.objectListView1.SelectedObjects.Count > 0;
 
-        public bool CanSelectAll()
-        {
-            return true;
-        }
+        public bool CanSelectAll() => true;
 
         public void Save()
         {
             if (this.File.Length == 0)
-            {
                 this.SaveAs();
-            }
             else
-            {
                 this.Save(this.File);
-            }
         }
 
         public void SaveAs()
@@ -952,30 +921,13 @@ namespace FreelancerModStudio
             }
         }
 
-        public void Delete()
-        {
-            this.DeleteSelectedBlocks();
-        }
+        public void Delete() => this.DeleteSelectedBlocks();
 
-        public ToolStripDropDown MultipleAddDropDown()
-        {
-            return this.mnuAdd.DropDown;
-        }
+        public ToolStripDropDown MultipleAddDropDown() => this.mnuAdd.DropDown;
 
-        private string GetFileName()
-        {
-            if (this.File.Length == 0)
-            {
-                return this.File;
-            }
+        private string GetFileName() => this.File.Length == 0 ? this.File : Path.GetFileName(this.File);
 
-            return Path.GetFileName(this.File);
-        }
-
-        public string GetTitle()
-        {
-            return this.File.Length == 0 ? Strings.FileEditorNewFile : Path.GetFileName(this.File);
-        }
+        public string GetTitle() => this.File.Length == 0 ? Strings.FileEditorNewFile : Path.GetFileName(this.File);
 
         public void Copy()
         {

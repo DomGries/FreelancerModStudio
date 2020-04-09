@@ -773,7 +773,9 @@ namespace FreelancerModStudio
         {
             for (int i = 0; i < oldBlocks.Count; ++i)
             {
-                int index = this.Data.Blocks.IndexOf(oldBlocks[i]);
+                // Technically there is a possibility someone copying a table from just the right place in just the right way would crash this
+                // But only way to fix the change in rounding
+                int index = this.Data.Blocks.FindIndex(x => x.Index == oldBlocks[i].Index && x.Name == oldBlocks[i].Name);
                 this.Data.Blocks[index] = newBlocks[i];
             }
 

@@ -248,7 +248,7 @@
 
         private void OnSelectionChanged(TableBlock block, bool toggle) => this.SelectionChanged?.Invoke(block, toggle);
         private void OnFileOpen(string file) => this.FileOpen?.Invoke(file);
-        private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock) => this.DataManipulated?.Invoke(newBlock, oldBlock);
+        private void OnDataManipulated(List<TableBlock> newBlock, List<TableBlock> oldBlock) => this.DataManipulated?.Invoke(newBlock, oldBlock);
         private void InitializeView()
         {
             // create viewport using the Helix Engine
@@ -271,6 +271,6 @@
 
         private void SystemPresenterSelectionChanged(TableBlock block, bool toggle) => this.OnSelectionChanged(block, toggle);
         private void SystemPresenterFileOpen(string file) => this.OnFileOpen(file);
-        private void SystemPresenterDataManipulated(TableBlock newBlock, TableBlock oldBlock) => this.OnDataManipulated(newBlock, oldBlock);
+        private void SystemPresenterDataManipulated(List<TableBlock> newBlock, List<TableBlock> oldBlock) => this.OnDataManipulated(newBlock, oldBlock);
     }
 }

@@ -1252,10 +1252,10 @@ namespace FreelancerModStudio
             tableEditor?.Select(block, toggle);
         }
 
-        private void SystemEditorDataManipulated(TableBlock newBlock, TableBlock oldBlock)
+        private void SystemEditorDataManipulated(List<TableBlock> newBlock, List<TableBlock> oldBlock)
         {
             FrmTableEditor tableEditor = this.dockPanel1.ActiveDocument as FrmTableEditor;
-            tableEditor?.ChangeBlocks(new List<TableBlock> { newBlock }, new List<TableBlock> { oldBlock });
+            tableEditor?.ChangeBlocks(newBlock, oldBlock);
         }
 
         private static int GetTemplateIndexDialog(string file)

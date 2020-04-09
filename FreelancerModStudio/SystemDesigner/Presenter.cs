@@ -63,7 +63,7 @@
     {
         public delegate void SelectionChangedType(TableBlock block, bool toggle);
         public delegate void FileOpenType(string file);
-        public delegate void DataManipulatedType(TableBlock newBlock, TableBlock oldBlock);
+        public delegate void DataManipulatedType(List<TableBlock> newBlock, List<TableBlock> oldBlock);
 
         internal DataManipulatedType DataManipulated;
         internal HelixViewport3D Viewport;
@@ -94,7 +94,7 @@
 
         private void OnSelectionChanged(TableBlock block, bool toggle) => this.SelectionChanged?.Invoke(block, toggle);
         private void OnFileOpen(string file) => this.FileOpen?.Invoke(file);
-        private void OnDataManipulated(TableBlock newBlock, TableBlock oldBlock) => this.DataManipulated?.Invoke(newBlock, oldBlock);
+        private void OnDataManipulated(List<TableBlock> newBlock, List<TableBlock> oldBlock) => this.DataManipulated?.Invoke(newBlock, oldBlock);
 
         public Visual3D Lighting
         {
@@ -698,6 +698,9 @@
 
         private void UpdateSelectedBlock()
         {
+            List<TableBlock> oldBlocks = new List<TableBlock>();
+            List<TableBlock> newBlocks = new List<TableBlock>();
+
             for (var index = 0; index < this.SelectedContent.Count; index++)
             {
                 var content = this.SelectedContent[index];
@@ -706,9 +709,12 @@
                 newBlock.SetModifiedChanged();
 
                 content.Block = newBlock;
+                oldBlocks.Add(oldBlock);
+                newBlocks.Add(newBlock);
+
                 SystemParser.WriteBlock(content);
-                this.OnDataManipulated(newBlock, oldBlock);
             }
+            this.OnDataManipulated(newBlocks, oldBlocks);
         }
 
         private Point3D? GetMousePoint(Point mousePosition, ContentBase content) => this.Viewport.CameraController.UnProject(mousePosition, content.GetPositionPoint(), this.Viewport.CameraController.Camera.LookDirection);

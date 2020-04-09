@@ -199,6 +199,7 @@ namespace FreelancerModStudio
         {
             if (data != null)
             {
+
                 this.propertiesFormForm.ShowData(data, templateIndex);
                 this.systemEditorForm?.Deselect();
                 foreach (TableBlock block in data)
@@ -519,6 +520,7 @@ namespace FreelancerModStudio
 
         private FrmTableEditor DisplayFile(string file, int templateIndex)
         {
+            this.Text = $"Freelancer Mod Studio - {file}";
             FrmTableEditor tableEditor = new FrmTableEditor(templateIndex, file);
             tableEditor.ShowData();
             tableEditor.TabPageContextMenuStrip = this.contextMenuStrip1;
@@ -667,6 +669,7 @@ namespace FreelancerModStudio
             FrmTableEditor tableEditor = this.dockPanel1.ActiveDocument as FrmTableEditor;
             if (tableEditor != null)
             {
+                this.Text = $"Freelancer Mod Studio - {tableEditor.File}";
                 if (this.systemEditorForm != null
                     && (!tableEditor.CanDisplay3DViewer() || this.systemEditorForm.IsHidden))
                 {
@@ -682,6 +685,7 @@ namespace FreelancerModStudio
             }
             else
             {
+                this.Text = $"Freelancer Mod Studio";
                 this.propertiesFormForm.ClearData();
 
                 if (this.systemEditorForm != null)

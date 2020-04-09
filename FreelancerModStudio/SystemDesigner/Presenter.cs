@@ -683,15 +683,18 @@
                 }
 
             }
+        }
 
-            if (e.ChangedButton == MouseButton.Right && !isDoubleClick)
+        private void ViewportMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Right)
             {
                 Point p = e.GetPosition(this.Viewport.Viewport);
                 this.SystemEditorForm.OpenContextMenu(new global::System.Drawing.Point(Convert.ToInt32(Math.Round(p.X)), Convert.ToInt32(Math.Round(p.Y))));
             }
-        }
 
-        private void ViewportMouseUp(object sender, MouseButtonEventArgs e) => this.StopManipulating(false);
+            this.StopManipulating(false);
+        }
 
         private void UpdateSelectedBlock()
         {

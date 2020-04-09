@@ -2,8 +2,10 @@ namespace FreelancerModStudio.Data.INI
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     [Serializable]
+    [DebuggerDisplay("{Name} {Values}")]
     public class EditorIniOption
     {
         public string Name;

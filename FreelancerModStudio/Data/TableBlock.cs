@@ -1,12 +1,14 @@
 namespace FreelancerModStudio.Data
 {
     using System;
+    using System.Diagnostics;
     using System.Globalization;
 
     using FreelancerModStudio.Data.INI;
     using FreelancerModStudio.Properties;
     using FreelancerModStudio.SystemDesigner.Content;
 
+    [DebuggerDisplay("{Name} ({ObjectType})")]
     [Serializable]
     public class TableBlock /*: IComparable<TableBlock>*/
     {

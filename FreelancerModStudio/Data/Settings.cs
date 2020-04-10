@@ -51,7 +51,7 @@ namespace FreelancerModStudio.Data
             public LanguageType Language { get; set; }
 
             [Category("General")]
-            [DisplayName("Default Freelancer DATA folder")]
+            [DisplayName("Fallback Freelancer DATA folder")]
             public string DefaultDataDirectory { get; set; }
 
             [Category("Properties")]

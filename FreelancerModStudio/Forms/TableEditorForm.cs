@@ -1295,15 +1295,9 @@ namespace FreelancerModStudio
             }
         }
 
-        private int GetNewBlockId()
-        {
-            // add new block under selected one if it exists otherwise at the end
-            if (this.objectListView1.SelectedIndices.Count > 0)
-            {
-                return this.objectListView1.SelectedIndices[this.objectListView1.SelectedIndices.Count - 1] + 1;
-            }
-
-            return this.Data.Blocks.Count;
-        }
+        // add new block under selected one if it exists otherwise at the end
+        private int GetNewBlockId() => (this.objectListView1.SelectedIndices.Count > 0 && !Helper.Settings.Data.Data.General.OnlyInsertObjectsAtIniBottom) 
+                                           ? this.objectListView1.SelectedIndices[this.objectListView1.SelectedIndices.Count - 1] + 1
+                                           : this.Data.Blocks.Count;
     }
 }

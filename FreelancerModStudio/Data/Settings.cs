@@ -6,7 +6,6 @@ namespace FreelancerModStudio.Data
     using System.Drawing;
     using System.Globalization;
     using System.IO;
-    using System.Security.Cryptography.X509Certificates;
     using System.Windows.Forms;
     using System.Windows.Media;
     using System.Xml.Serialization;
@@ -108,6 +107,10 @@ namespace FreelancerModStudio.Data
             public bool FormattingComments { get; set; }
 
             [Category("INI Formatting")]
+            [DisplayName("Only insert objects at bottom of INI")]
+            public bool OnlyInsertObjectsAtIniBottom { get; set; }
+
+            [Category("INI Formatting")]
             [DisplayName("Alert when providing invalid ini property type")]
             public bool AlertIncorrectPropertyType { get; set; }
 
@@ -162,6 +165,7 @@ namespace FreelancerModStudio.Data
                 this.FormattingEmptyLine = true;
                 this.FormattingComments = true;
                 this.AlertIncorrectPropertyType = true;
+                this.OnlyInsertObjectsAtIniBottom = false;
 
                 this.AutoUpdate = new AutoUpdate { Enabled = true, Proxy = new Proxy(), };
                 this.SetDefaultAutoUpdate();

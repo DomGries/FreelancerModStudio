@@ -911,27 +911,23 @@
             }
 
             Color color = SharedMaterials.Selection;
+
             if (this.trackedContent == this.SelectedContent[0]) 
                 color = SharedMaterials.TrackedLine;
 
-            Transform3D newTransform = Transform3D.Identity.Clone();
-            Rect3D bounds = new Rect3D();
-            if (this.SelectionBox != null)
-            {
-                BoundingBoxWireFrameVisual3D selectionBox = this.SelectionBox;
-                selectionBox.Color = color;
-                selectionBox.BoundingBox = this.GetBounds(this.SelectedContent[0]);
-                selectionBox.Transform = this.SelectedContent[0].Transform;
-            }
-            else
-            {
-                this.SelectionBox = new BoundingBoxWireFrameVisual3D
-                    {
-                        Color = color,
-                        BoundingBox = this.GetBounds(this.SelectedContent[0]),
-                        Transform = this.SelectedContent[0].Transform
-                    };
-            }
+            if (this.SelectionBox == null)
+                this.SelectionBox = new BoundingBoxWireFrameVisual3D();
+
+            // Initial boundary for first object (don't init empty Rect3D as its extents are at zero)
+            Rect3D bounds = Visual3DHelper.FindBounds(this.SelectedContent[0], Transform3D.Identity);
+
+            // Add all other objects in selection
+            for (int i = 1; i < this.SelectedContent.Count; i++)
+                bounds.Union(Visual3DHelper.FindBounds(this.SelectedContent[i], Transform3D.Identity));
+
+            this.SelectionBox.Color = color;
+            this.SelectionBox.BoundingBox = bounds;
+            this.SelectionBox.Transform = Transform3D.Identity;
         }
 
         internal void SetTrackedLine(bool update)

@@ -614,8 +614,8 @@ namespace FreelancerModStudio
                 case Template.OptionType.Double:
                     return double.TryParse(val, out double d);
 
-                case Template.OptionType.Enum:
-                    throw new NotImplementedException();
+                case Template.OptionType.Path:
+                    return !(val.Contains(Path.GetInvalidFileNameChars().ToString()) || val.Contains(Path.GetInvalidPathChars().ToString()));
 
                 case Template.OptionType.Vector:
                     if (val.Count(s => s == ',') != 2)

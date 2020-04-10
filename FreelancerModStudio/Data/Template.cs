@@ -172,7 +172,7 @@ namespace FreelancerModStudio.Data
             Bool,
             Point,
             Double,
-            Enum,
+            Path,
             Vector,
             Rgb,
             StringArray,

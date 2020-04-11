@@ -600,8 +600,9 @@ namespace FreelancerModStudio
                 case Template.OptionType.String:
                     return true;
 
+                // We parse long because sometimes it would be uint and other times int. I couldn't be arsed writing a case for both.
                 case Template.OptionType.Int:
-                    return int.TryParse(val, out int i);
+                    return long.TryParse(val, out long i);
 
                 // Points in Freelancer are almost always floats, rather than ints. 
                 case Template.OptionType.Point:
@@ -632,11 +633,28 @@ namespace FreelancerModStudio
                     return byte.TryParse(rgb[0], out byte b) && byte.TryParse(rgb[1], out byte bb) && byte.TryParse(rgb[2], out byte bbb);
 
                 case Template.OptionType.StringArray:
-                    throw new NotImplementedException();
+                    return val.Contains(',');
+
                 case Template.OptionType.IntArray:
-                    throw new NotImplementedException();
+                    if (!val.Contains(','))
+                        return false;
+
+                    var intArr = val.Split(',');
+                    foreach (var intVal in intArr)
+                        if (!long.TryParse(intVal, out long iVal))
+                            return false;
+                    return true;
+
                 case Template.OptionType.DoubleArray:
-                    throw new NotImplementedException();
+                    if (!val.Contains(','))
+                        return false;
+
+                    var douArr = val.Split(',');
+                    foreach (var douVal in douArr)
+                        if (!double.TryParse(douVal, out double dVal))
+                            return false;
+                    return true;
+
                 default:
                     return false;
             }

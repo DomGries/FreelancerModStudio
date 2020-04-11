@@ -3665,6 +3665,32 @@
         </Block>
       </Blocks>
     </File>
+    <File name="Territory (Adoxa Plugin)">
+      <Paths>
+        <Path>universe\territory.ini</Path>
+      </Paths>
+      <Blocks>
+        <Block name="Settings">
+          <Options>
+            <Option type="Bool">caps</Option>
+            <Option type="String">codepage</Option>
+          </Options>
+        </Block>
+        <Block name="Houses" multiple="true" identifier="format">
+          <Options>
+            <Option type="String">format</Option>
+            <Option type="String">house</Option>
+            <Option type="String" multiple="true">systems</Option>
+          </Options>
+        </Block>
+        <Block name="Systems" multiple="true" identifier="format">
+          <Options>
+            <Option type="String">format</Option>
+            <Option type="String" multiple="true">systems</Option>
+          </Options>
+        </Block>
+      </Blocks>
+    </File>
     <File name="System Base">
       <Paths>
         <Path>universe\systems\*\bases\*_base.ini</Path>

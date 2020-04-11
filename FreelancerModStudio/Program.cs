@@ -21,7 +21,7 @@
             {
                 string text = "A critical error occured!" + Environment.NewLine + Environment.NewLine + "Do you want to post an issue report?";
                 string details = FLUtils.ExceptionUtils.Get((Exception)ex.ExceptionObject) + Environment.NewLine + ex.ExceptionObject;
-                if (MessageBox.Show(text + Environment.NewLine + Environment.NewLine + details, FLUtils.AssemblyUtils.Name(true), MessageBoxButtons.YesNo, MessageBoxIcon.Error) is DialogResult.Yes)
+                if (MessageBox.Show(text + Environment.NewLine + Environment.NewLine + details, FLUtils. AssemblyUtils.Name, MessageBoxButtons.YesNo, MessageBoxIcon.Error) is DialogResult.Yes)
                     Process.Start("https://github.com/AftermathFreelancer/FLModStudio/issues");
 
                 Environment.Exit(1);

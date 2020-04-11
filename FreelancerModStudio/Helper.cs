@@ -75,7 +75,7 @@ namespace FreelancerModStudio
                 {
                     if (!silentCheck)
                     {
-                        MessageBox.Show(string.Format(Strings.UpdatesDownloadException, AssemblyUtils.Name(true)), AssemblyUtils.Name(true), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(string.Format(Strings.UpdatesDownloadException,  AssemblyUtils.Name),  AssemblyUtils.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
@@ -394,14 +394,14 @@ namespace FreelancerModStudio
         {
             public static void Show(Exception exception)
             {
-                MessageBox.Show(ExceptionUtils.Get(exception), AssemblyUtils.Name(true), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ExceptionUtils.Get(exception),  AssemblyUtils.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             public static void Show(string errorDescription, Exception exception)
             {
                 MessageBox.Show(
                     errorDescription + Environment.NewLine + Environment.NewLine + ExceptionUtils.Get(exception),
-                    AssemblyUtils.Name(true),
+                     AssemblyUtils.Name,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }

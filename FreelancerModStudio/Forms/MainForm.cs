@@ -468,7 +468,7 @@ namespace FreelancerModStudio
             {
                 if (MessageBox.Show(
                         string.Format(Strings.FileErrorOpenRecent, file),
-                        AssemblyUtils.Name(true),
+                         AssemblyUtils.Name,
                         MessageBoxButtons.YesNo,
                         MessageBoxIcon.Question) == DialogResult.Yes)
                 {

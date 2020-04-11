@@ -105,7 +105,7 @@ namespace FreelancerModStudio.AutoUpdate
                 _updateInfo = UpdateInformationParser.Parse(fileContent);
                 if (_updateInfo != null)
                 {
-                    return _updateInfo.Version > AssemblyUtils.Version(true);
+                    return _updateInfo.Version > AssemblyUtils.Version;
                 }
             }
             catch (Exception ex)
@@ -167,7 +167,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     if (!SilentCheck)
                     {
-                        Helper.Exceptions.Show(string.Format(Strings.UpdatesDownloadException, AssemblyUtils.Name(false)), e.Error);
+                        Helper.Exceptions.Show(string.Format(Strings.UpdatesDownloadException, AssemblyUtils.Name), e.Error);
                     }
                 }
             }
@@ -204,7 +204,7 @@ namespace FreelancerModStudio.AutoUpdate
 
                     if (!SilentCheck)
                     {
-                        Helper.Exceptions.Show(string.Format(Strings.UpdatesDownloadException, AssemblyUtils.Name(true)), e.Error);
+                        Helper.Exceptions.Show(string.Format(Strings.UpdatesDownloadException,  AssemblyUtils.Name), e.Error);
                     }
                 }
             }

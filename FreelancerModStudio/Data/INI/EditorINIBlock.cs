@@ -19,5 +19,10 @@ namespace FreelancerModStudio.Data.INI
             this.Name = name;
             this.TemplateIndex = templateIndex;
         }
+
+        public EditorIniBlock()
+        {
+            
+        }
     }
 }

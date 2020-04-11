@@ -8,7 +8,6 @@ namespace FreelancerModStudio
     using System.Drawing;
     using System.IO;
     using System.Linq;
-    using System.Resources;
     using System.Windows.Forms;
 
     using BrightIdeasSoftware;
@@ -73,6 +72,7 @@ namespace FreelancerModStudio
 
             this.LoadIcons();
             this.undoManager.DataChanged += this.UndoManagerDataChanged;
+            Helper.Settings.LoadTemplates();
 
             if (file != null)
             {
@@ -923,6 +923,24 @@ namespace FreelancerModStudio
             }
         }
 
+        public void AddTemplate(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            var template = Helper.Settings.Data.Data.General.Templates.Templates.Where(p => p.Options.Any(x => x.Name == "nickname" && x.Values.Any(y => y.Value.ToString() == item.Text))).First();
+
+            TableBlock block = new TableBlock(this.GetNewBlockId(), this.Data.MaxId++, template, this.Data.TemplateIndex);
+            block.SetVisibleIfPossible();
+
+            if (this.Data.Blocks.Find(x => x.Block.Options.Any(y => y.Name == "nickname" && y.Values.Any(z => z.Value.ToString() == item.Text))) != null)
+            {
+                MessageBox.Show("An item with the nickname of the template already exists within this document.");
+                return;
+            }
+
+            // add actual block
+            this.AddBlocks(new List<TableBlock> { block });
+        }
+
         public void Delete() => this.DeleteSelectedBlocks();
 
         public ToolStripDropDown MultipleAddDropDown() => this.mnuAdd.DropDown;
@@ -1299,5 +1317,28 @@ namespace FreelancerModStudio
         private int GetNewBlockId() => (this.objectListView1.SelectedIndices.Count > 0 && !Helper.Settings.Data.Data.General.OnlyInsertObjectsAtIniBottom) 
                                            ? this.objectListView1.SelectedIndices[this.objectListView1.SelectedIndices.Count - 1] + 1
                                            : this.Data.Blocks.Count;
+
+        private void mnuCreateTemplateFrom_Click(object sender, EventArgs e)
+        {
+            var selection = this.GetSelectedBlocks();
+            if (selection.Count == 0)
+                return;
+
+            if (selection.Count > 1)
+            {
+                var result = MessageBox.Show(
+                    "This will create a template for all the selected objects. Do you want to continue?",
+                    "Are you sure?",
+                    MessageBoxButtons.YesNo);
+                if (result == DialogResult.No)
+                    return;
+            }
+
+            foreach (TableBlock block in selection)
+                Helper.Settings.Data.Data.General.Templates.Templates.Add(block.Block);
+
+            Helper.Settings.LoadTemplates();
+            Helper.Settings.Save();
+        }
     }
 }

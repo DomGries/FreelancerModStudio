@@ -121,6 +121,16 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="nullToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="nullToolStripMenuItem.Text" xml:space="preserve">
+    <value>null</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="nullToolStripMenuItem.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="mnuFromTemplate.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
   </data>
@@ -133,7 +143,6 @@
   <data name="mnuAdd.Text" xml:space="preserve">
     <value>&amp;Add</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="mnuDelete.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
@@ -186,7 +195,7 @@
     <value>Create Template From Item</value>
   </data>
   <data name="TableContextMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>219, 164</value>
+    <value>219, 142</value>
   </data>
   <data name="&gt;&gt;TableContextMenu.Name" xml:space="preserve">
     <value>TableContextMenu</value>
@@ -240,6 +249,18 @@
   <data name="&gt;&gt;mnuAdd.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;mnuFromTemplate.Name" xml:space="preserve">
+    <value>mnuFromTemplate</value>
+  </data>
+  <data name="&gt;&gt;mnuFromTemplate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nullToolStripMenuItem.Name" xml:space="preserve">
+    <value>nullToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;nullToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;mnuDelete.Name" xml:space="preserve">
     <value>mnuDelete</value>
   </data>
@@ -268,12 +289,6 @@
     <value>mnuPaste</value>
   </data>
   <data name="&gt;&gt;mnuPaste.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mnuFromTemplate.Name" xml:space="preserve">
-    <value>mnuFromTemplate</value>
-  </data>
-  <data name="&gt;&gt;mnuFromTemplate.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;mnuCreateTemplateFrom.Name" xml:space="preserve">

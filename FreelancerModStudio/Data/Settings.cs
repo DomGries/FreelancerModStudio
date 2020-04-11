@@ -10,6 +10,8 @@ namespace FreelancerModStudio.Data
     using System.Windows.Media;
     using System.Xml.Serialization;
 
+    using FreelancerModStudio.Controls;
+    using FreelancerModStudio.Data.INI;
     using FreelancerModStudio.SystemDesigner;
     using FreelancerModStudio.SystemDesigner.Content;
 
@@ -81,6 +83,10 @@ namespace FreelancerModStudio.Data
             [Category("INI Editor")]
             [DisplayName("Hidden text color")]
             public ColorD EditorHiddenColor { get; set; }
+
+            [Category("INI Editor")]
+            [DisplayName("Templates")]
+            public ObjectTemplate Templates { get; set; }
 
             [Category("INI Editor")]
             [DisplayName("Ignored 3D Editor Types")]
@@ -170,6 +176,7 @@ namespace FreelancerModStudio.Data
                 this.AutoUpdate = new AutoUpdate { Enabled = true, Proxy = new Proxy(), };
                 this.SetDefaultAutoUpdate();
                 this.ColorBox = new ColorBox();
+                this.Templates = new ObjectTemplate();
             }
 
             public void CheckVersion()
@@ -338,6 +345,48 @@ namespace FreelancerModStudio.Data
             public string File;
 
             public int TemplateIndex = -1;
+        }
+
+        [TypeConverter(typeof(SettingsConverter))]
+        public class ObjectTemplate
+        {
+            public List<EditorIniBlock> Templates { get; set; }
+            /*public string nickname { get; set; }
+            public string ids_name { get; set; }
+            public string pos { get; set; }
+            public string rotate { get; set; }
+            public string ambient_color { get; set; }
+            public string archetype { get; set; }
+            public string star { get; set; }
+            public string spin { get; set; }
+            public string msg_id_prefix { get; set; }
+            public string jump_effect { get; set; }
+            public string atmosphere_range { get; set; }
+            public string burn_color { get; set; }
+            public string prev_ring { get; set; }
+            public string next_ring { get; set; }
+            public string ids_info  { get; set; }
+            public string ring { get; set; }
+            public string Base { get; set; }
+            public string dock_with { get; set; }
+            public string Ambient { get; set; }
+            public string visit { get; set; }
+            public string reputation { get; set; }
+            public string tradelane_space_name { get; set; }
+            public string behavior { get; set; }
+            public string voice { get; set; }
+            public string space_costume { get; set; }
+            public string faction { get; set; }
+            public string difficulty_level { get; set; }
+            public string Goto { get; set; }
+            public string loadout { get; set; }
+            public string pilot { get; set; }
+            public string parent { get; set; }*/
+
+            public ObjectTemplate()
+            {
+                this.Templates = new List<EditorIniBlock>();
+            }
         }
     }
 

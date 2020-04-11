@@ -9,6 +9,11 @@ namespace FreelancerModStudio.Data.INI
         public object Value;
         public List<object> SubOptions;
 
+        public EditorIniEntry()
+        {
+            
+        }
+
         public EditorIniEntry(object value)
         {
             this.Value = value;

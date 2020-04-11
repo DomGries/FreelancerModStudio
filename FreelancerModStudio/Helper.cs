@@ -5,9 +5,7 @@ namespace FreelancerModStudio
     using System.Diagnostics;
     using System.Drawing;
     using System.IO;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-    using System.Runtime.InteropServices;
+    using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
@@ -218,6 +216,10 @@ namespace FreelancerModStudio
 
             public static void Save()
             {
+                // Remove all templates that are manually created
+                Data.Data.General.Templates.Templates = Data.Data.General.Templates.Templates.Where(x => !string.IsNullOrWhiteSpace(x.Name) && x.TemplateIndex > 0).ToList();
+                LoadTemplates();
+
                 string file = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Application.ProductName), Resources.SettingsPath);
                 try
                 {
@@ -256,6 +258,25 @@ namespace FreelancerModStudio
                 Data.Data.General.CheckVersion();
                 Data.Data.General.CheckValidData();
                 SharedGeometries.LoadColors(Data.Data.General.ColorBox);
+            }
+
+            public static void LoadTemplates()
+            {
+                // Form is closing
+                if (FrmTableEditor.Instance.IsDisposed)
+                    return;
+
+                ToolStripMenuItem add = (ToolStripMenuItem)FrmTableEditor.Instance.TableContextMenu.Items["mnuAdd"];
+                ToolStripMenuItem items = (ToolStripMenuItem)add.DropDownItems["mnuFromTemplate"];
+                items.DropDownItems.Clear();
+                foreach (var template in Settings.Data.Data.General.Templates.Templates)
+                {
+                    var item = new ToolStripMenuItem();
+                    item.Click += FrmTableEditor.Instance.AddTemplate;
+                    item.Tag = template.TemplateIndex;
+                    item.Text = template.Options.First(x => x.Name == "nickname").Values.First().ToString();
+                    items.DropDownItems.Add(item);
+                }
             }
 
             public static string ShortLanguage

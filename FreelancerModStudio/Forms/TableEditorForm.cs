@@ -590,6 +590,9 @@ namespace FreelancerModStudio
         private bool CanCast(string val, Template.OptionType type)
         {
             val = val.Replace(" ", string.Empty);
+            if (val.Length == 0) // Allow people to delete values
+                return true;
+
             switch (type)
             {
                 // Freelancer is a bit weird. 0, 1, true, and false are all allowed for Bool.

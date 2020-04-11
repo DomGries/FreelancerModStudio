@@ -3797,6 +3797,7 @@
             <Option type="Rgb">space_color</Option>
             <Option type="String">local_faction</Option>
             <Option type="String">rpop_solar_detection</Option>
+            <Option type="Double">space_farclip</Option>
           </Options>
         </Block>
         <Block name="TexturePanels">

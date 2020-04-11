@@ -656,7 +656,7 @@ namespace FreelancerModStudio
 
         private void MnuCheckUpdateClick(object sender, EventArgs e)
         {
-            Helper.Update.Check();
+            Helper.Update.Check(false, false);
         }
 
         private void MnuOpenModClick(object sender, EventArgs e)

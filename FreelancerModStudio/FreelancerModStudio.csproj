@@ -83,8 +83,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionType.cs" />
+    <Compile Include="AutoUpdate\AutoUpdate.cs" />
+    <Compile Include="Controls\SerializableDictionary.cs" />
     <Compile Include="Data\ChangedType.cs" />
     <Compile Include="Data\Clipboard.cs" />
+    <Compile Include="AutoUpdate\frmAutoUpdate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AutoUpdate\frmAutoUpdate.Designer.cs" />
+    <Compile Include="AutoUpdate\IAutoUpdateUI.cs" />
     <Compile Include="ObjectClone.cs" />
     <Compile Include="ContentInterface.cs" />
     <Compile Include="Controls\PropertyGridExtension.cs" />
@@ -177,6 +185,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AutoUpdate\UpdateInformation.cs" />
+    <Compile Include="AutoUpdate\UpdateInformationParser.cs" />
     <EmbeddedResource Include="Forms\MainForm.de.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -185,6 +195,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AutoUpdate\frmAutoUpdate.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -209,6 +220,7 @@
     <Compile Include="Data\Template.cs">
     </Compile>
     <Compile Include="Data\ChangedData.cs" />
+    <Compile Include="AutoUpdate\StatusType.cs" />
     <Compile Include="SystemDesigner\Animator.cs" />
     <Compile Include="SystemDesigner\Content\Connection.cs" />
     <Compile Include="SystemDesigner\Content\ConnectionType.cs" />
@@ -305,10 +317,6 @@
       <Project>{93BD8CFA-B81B-46FD-8779-0DB02C2A691E}</Project>
       <Name>HelixEngine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Patch Time\PatchTime.csproj">
-      <Project>{eec4841e-3d37-44f4-b971-6178922b97d5}</Project>
-      <Name>PatchTime</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -329,6 +337,7 @@
       <Version>2.0.3</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="GenSerializationAssembly" DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
     <SGen BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(SGenToolPath)">

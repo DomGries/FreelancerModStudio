@@ -200,8 +200,8 @@ namespace FreelancerModStudio.Data
             private void SetDefaultAutoUpdate()
             {
                 this.AutoUpdate.CheckInterval = 28;
-                this.AutoUpdate.SilentCheck = true;
-                this.AutoUpdate.UpdateFile = @"https://github.com/AftermathFreelancer/FLModStudio/raw/master/updates.xml";
+                this.AutoUpdate.SilentDownload = true;
+                this.AutoUpdate.UpdateFile = @"https://raw.githubusercontent.com/AftermathFreelancer/FLModStudio/master/updates.txt";
             }
         }
 
@@ -216,15 +216,24 @@ namespace FreelancerModStudio.Data
             [DisplayName("Check each days")]
             public uint CheckInterval { get; set; }
 
-            [DisplayName("Check silent")]
-            public bool SilentCheck { get; set; }
+            [DisplayName("Download silent")]
+            public bool SilentDownload { get; set; }
 
             [DisplayName("Check file")]
             public string UpdateFile { get; set; }
 
             public DateTime LastCheck;
 
+            public Update Update = new Update();
             public Proxy Proxy { get; set; }
+        }
+
+        public class Update
+        {
+            public string FileName;
+            public bool Downloaded;
+            public bool Installed;
+            public bool SilentInstall;
         }
 
         [TypeConverter(typeof(SettingsConverter))]

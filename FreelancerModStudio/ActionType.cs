@@ -1,4 +1,4 @@
-namespace PatchTime
+namespace FreelancerModStudio.AutoUpdate
 {
     public enum ActionType
     {

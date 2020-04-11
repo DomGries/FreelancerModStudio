@@ -2,7 +2,6 @@ namespace FreelancerModStudio
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -13,6 +12,7 @@ namespace FreelancerModStudio
 
     using FLUtils;
 
+    using FreelancerModStudio.AutoUpdate;
     using FreelancerModStudio.Data;
     using FreelancerModStudio.Properties;
     using FreelancerModStudio.SystemDesigner;
@@ -25,17 +25,29 @@ namespace FreelancerModStudio
             {
                 // load settings
                 Settings.Load();
+
+                // install downloaded update if it exists
+                if (Settings.Data.Data.General.AutoUpdate.Update.Downloaded)
+                    if (AutoUpdate.AutoUpdate.InstallUpdate())
+                        return;
+
                 Template.Load();
 
                 // whidbey color table (gray colors of menustrip and tabstrip)
                 ProfessionalColorTable whidbeyColorTable = new ProfessionalColorTable { UseSystemColors = true };
                 ToolStripManager.Renderer = new ToolStripProfessionalRenderer(whidbeyColorTable);
 
-                // check for update
-                if (Settings.Data.Data.General.AutoUpdate.Enabled && !string.IsNullOrWhiteSpace(Settings.Data.Data.General.AutoUpdate.UpdateFile) && 
+                //remove installed update if it exists
+                if (Settings.Data.Data.General.AutoUpdate.Update.Installed)
+                {
+                    AutoUpdate.AutoUpdate.RemoveUpdate();
+                }
+
+                //check for update
+                if (Settings.Data.Data.General.AutoUpdate.Enabled && Settings.Data.Data.General.AutoUpdate.UpdateFile != null && 
                     Settings.Data.Data.General.AutoUpdate.LastCheck.Date.AddDays(Settings.Data.Data.General.AutoUpdate.CheckInterval) <= DateTime.Now.Date)
                 {
-                    Update.Check();
+                    Update.Check(true, Settings.Data.Data.General.AutoUpdate.SilentDownload);
                 }
 
                 // start main form
@@ -48,18 +60,31 @@ namespace FreelancerModStudio
 
         internal struct Update
         {
-            public static void Check()
+            public static AutoUpdate.AutoUpdate AutoUpdate = new AutoUpdate.AutoUpdate();
+
+            public static void Check(bool silentCheck, bool silentDownload)
             {
-                Uri checkFileUri;
-                if (!Uri.TryCreate(Settings.Data.Data.General.AutoUpdate.UpdateFile, UriKind.Absolute, out checkFileUri))
+                if (AutoUpdate.Status != StatusType.Waiting)
                 {
-                    MessageBox.Show(string.Format(Strings.UpdatesDownloadException, AssemblyUtils.Name(true)), AssemblyUtils.Name(true), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
-                    Settings.Save();
+                    AutoUpdate.ShowUI();
                     return;
                 }
 
-                string proxy    = string.Empty;
+                Uri checkFileUri;
+                if (!Uri.TryCreate(Settings.Data.Data.General.AutoUpdate.UpdateFile, UriKind.Absolute, out checkFileUri))
+                {
+                    if (!silentCheck)
+                    {
+                        MessageBox.Show(string.Format(Strings.UpdatesDownloadException, AssemblyUtils.Name(true)), AssemblyUtils.Name(true), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
+                    return;
+                }
+
+                AutoUpdate.CheckFileUri = checkFileUri;
+
+                string proxy = string.Empty;
                 string userName = string.Empty;
                 string password = string.Empty;
 
@@ -70,11 +95,12 @@ namespace FreelancerModStudio
                     password = Settings.Data.Data.General.AutoUpdate.Proxy.Password;
                 }
 
-                Settings.Data.Data.General.AutoUpdate.LastCheck = DateTime.Now;
-                Settings.Save();
-                Process.Start(
-                    "PatchTime.exe",
-                    $"version='{AssemblyUtils.Version(true)}' uri='{checkFileUri}' proxy='{proxy}' username='{userName}' password='{password}' alert='{Settings.Data.Data.General.AutoUpdate.SilentCheck}'");
+                AutoUpdate.SilentCheck = silentCheck;
+                AutoUpdate.SilentDownload = silentDownload;
+                AutoUpdate.SetProxy(proxy);
+                AutoUpdate.SetCredentials(userName, password);
+
+                AutoUpdate.Check();
             }
         }
 
@@ -258,6 +284,9 @@ namespace FreelancerModStudio
                 Data.Data.General.CheckVersion();
                 Data.Data.General.CheckValidData();
                 SharedGeometries.LoadColors(Data.Data.General.ColorBox);
+
+                if (Data.Data.General.AutoUpdate.UpdateFile == @"http://freelancermodstudio.googlecode.com/svn/trunk/updates.txt")
+                    Data.Data.General.AutoUpdate.UpdateFile = @"https://raw.githubusercontent.com/AftermathFreelancer/FLModStudio/master/updates.txt";
             }
 
             public static void LoadTemplates()
